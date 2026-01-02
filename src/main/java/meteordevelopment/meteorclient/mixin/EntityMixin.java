@@ -245,7 +245,7 @@ public abstract class EntityMixin {
     {
         if (entity != null)
         if (Modules.get().get(ValueSpoofer.class).inList(entity))
-            return (float)Modules.get().get(ValueSpoofer.class).distanceTo.get();
+            return (float)Modules.get().get(ValueSpoofer.class).distanceToEntity.get();
         return original;
     }
 }
