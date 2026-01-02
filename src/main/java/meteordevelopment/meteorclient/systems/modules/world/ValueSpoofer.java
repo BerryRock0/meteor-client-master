@@ -19,5 +19,6 @@ public class ValueSpoofer extends Module {
     );
 
     public ValueSpoofer() {
-        super(Categories.World, "valuespoofer", "Spoofs values");
+        super(Categories.World, "valuespoofer", "Spoofs values.");
     }
+}
