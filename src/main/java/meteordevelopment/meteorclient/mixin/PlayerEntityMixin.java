@@ -121,7 +121,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @ModifyReturnValue(method = "getEntityInteractionRange", at = @At("RETURN"))
-    private double modifyEntityInteractionRange(double original, CallbackInfoReturnable) {
+    private double modifyEntityInteractionRange(double original) {
         if (Modules.get().get(Reach.class).isActive())
            return original + Modules.get().get(Reach.class).entityReach.get();
         return original;
