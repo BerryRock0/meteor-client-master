@@ -17,13 +17,13 @@ import meteordevelopment.meteorclient.utils.Utils;
 public class Reach extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<Double> blockReach = sgGeneral.add(new DoubleSetting.Builder()
+    public final Setting<Double> blockReach = sgGeneral.add(new DoubleSetting.Builder()
         .name("extra-block-reach")
         .description("The distance to add to your block reach.")
         .build()
     );
 
-    private final Setting<Double> entityReach = sgGeneral.add(new DoubleSetting.Builder()
+    public final Setting<Double> entityReach = sgGeneral.add(new DoubleSetting.Builder()
         .name("extra-entity-reach")
         .description("The distance to add to your entity reach.")
         .build()
