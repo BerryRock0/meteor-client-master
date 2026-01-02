@@ -30,7 +30,7 @@ public class ValueSpoofer extends Module {
         .build()
     );
 
-    private final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
+    private final Setting<Boolean> cases = sgGeneral.add(new BoolSetting.Builder()
         .name("cases")
         .description("Disables/enables black/white cases.")
         .defaultValue(false)
