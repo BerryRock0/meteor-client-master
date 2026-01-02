@@ -29,20 +29,20 @@ public class Telekinesis extends Module {
         .build()
     );
 
-   public final Setting<Set<EntityType<?>>> entities = sgGeneral.add(new EntityTypeListSetting.Builder()
+   public final Setting<Set<EntityType<?>>> entities = sgBounds.add(new EntityTypeListSetting.Builder()
         .name("entities")
         .description("Select specific entities.")
         .build()
     );
 
-    private final Setting<Filter> filter = sgGeneral.add(new EnumSetting.Builder<Filter>()
+    private final Setting<Filter> filter = sgBounds.add(new EnumSetting.Builder<Filter>()
         .name("filter")
         .description("Entity filter settings.")
         .defaultValue(Filter.Black)
         .build()
     );
 
-    private final Setting<Boolean> cases = sgGeneral.add(new BoolSetting.Builder()
+    private final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
         .name("cases")
         .description("Disables/enables black/white cases.")
         .defaultValue(false)
