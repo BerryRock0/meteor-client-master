@@ -1,4 +1,4 @@
-package meteordevelopment.meteorclient.systems.modules.player;
+package meteordevelopment.meteorclient.systems.modules.world;
 
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
