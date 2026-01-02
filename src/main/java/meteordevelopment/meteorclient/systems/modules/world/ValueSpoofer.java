@@ -30,6 +30,13 @@ public class ValueSpoofer extends Module {
         .build()
     );
 
+    private final Setting<Filter> filter = sgBounds.add(new EnumSetting.Builder<Filter>()
+        .name("filter")
+        .description("Entity filter settings.")
+        .defaultValue(Filter.Black)
+        .build()
+    );
+
     private final Setting<Boolean> cases = sgGeneral.add(new BoolSetting.Builder()
         .name("cases")
         .description("Disables/enables black/white cases.")
