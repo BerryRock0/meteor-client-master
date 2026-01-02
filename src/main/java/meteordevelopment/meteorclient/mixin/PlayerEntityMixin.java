@@ -115,11 +115,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @ModifyReturnValue(method = "getBlockInteractionRange", at = @At("RETURN"))
     private double modifyBlockInteractionRange(double original) {
-        return Math.max(0, original + Modules.get().get(Reach.class).blockReach());
+        return original + Modules.get().get(Reach.class).blockReach();
     }
 
     @ModifyReturnValue(method = "getEntityInteractionRange", at = @At("RETURN"))
     private double modifyEntityInteractionRange(double original) {
-        return Math.max(0, original + Modules.get().get(Reach.class).entityReach());
+        return original + Modules.get().get(Reach.class).entityReach();
     }
 }
