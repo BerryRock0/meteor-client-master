@@ -9,7 +9,7 @@ import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.Utils;
 
-public class Reach extends Module {
+public class ValueSpoofer extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<Double> distanceToEntity = sgGeneral.add(new DoubleSetting.Builder()
@@ -18,6 +18,6 @@ public class Reach extends Module {
         .build()
     );
 
-    public Reach() {
-        super(Categories.Player, "reach", "Gives you super long arms.");
+    public ValueSpoofer() {
+        super(Categories.World, "valuespoofer", "Spoofs values");
     }
