@@ -18,7 +18,7 @@ import meteordevelopment.meteorclient.utils.Utils;
 public class ValueSpoofer extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     
-    private final Setting<Double> distanceToEntity = sgGeneral.add(new DoubleSetting.Builder()
+    public final Setting<Double> distanceToEntity = sgGeneral.add(new DoubleSetting.Builder()
         .name("distance-to-entity")
         .description("Distance to entities value")
         .build()
