@@ -30,7 +30,7 @@ public class ValueSpoofer extends Module {
         .build()
     );
 
-    private final Setting<Filter> filter = sgBounds.add(new EnumSetting.Builder<Filter>()
+    private final Setting<Filter> filter = sgGeneral.add(new EnumSetting.Builder<Filter>()
         .name("filter")
         .description("Entity filter settings.")
         .defaultValue(Filter.Black)
