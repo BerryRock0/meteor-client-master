@@ -555,7 +555,6 @@ public class Modules extends System<Modules> {
         add(new SpawnProofer());
         add(new Telekinesis());
         add(new Timer());
-        add(new ValueSpoofer());
         add(new VeinMiner());
 
         if (BaritoneUtils.IS_AVAILABLE) {
