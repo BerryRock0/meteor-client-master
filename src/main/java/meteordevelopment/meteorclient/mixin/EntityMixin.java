@@ -239,13 +239,4 @@ public abstract class EntityMixin {
 		if(Modules.get().get(Telekinesis.class).inList(thisObj))
 		thisObj.setVelocity(Modules.get().get(Telekinesis.class).velocity.get().x, Modules.get().get(Telekinesis.class).velocity.get().y, Modules.get().get(Telekinesis.class).velocity.get().z);
 	}
-
-    @ModifyReturnValue(method = "distanceTo", at = @At("RETURN"))
-    private float modifyDistanceTo(float original, Entity entity)
-    {
-        if (entity != null)
-        if (Modules.get().get(ValueSpoofer.class).inList(entity))
-            return Modules.get().get(ValueSpoofer.class).distanceToEntity.get().floatValue();
-        return original;
-    }
 }
