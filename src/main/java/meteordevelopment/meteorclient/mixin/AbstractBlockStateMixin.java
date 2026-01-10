@@ -13,6 +13,7 @@ import meteordevelopment.meteorclient.systems.modules.render.NoRender;
 import meteordevelopment.meteorclient.systems.modules.world.Collisions;
 import meteordevelopment.meteorclient.systems.modules.player.GhostHand;
 import meteordevelopment.meteorclient.MeteorClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
@@ -50,9 +51,14 @@ public abstract class AbstractBlockStateMixin {
 	private void onGetCollisionShape(BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
 		if (Modules.get() == null) return;
+        Entity thisObj = (Entity)(Object)this;
+        
 	    if(Modules.get().get(Collisions.class).full(world.getBlockState(pos).getBlock()))
+        if (Modules.get().get(Collisions.class).inList(thisObj)) 
             cir.setReturnValue(VoxelShapes.fullCube());
+        
 		if(Modules.get().get(Collisions.class).emp(world.getBlockState(pos).getBlock()))
-            cir.setReturnValue(VoxelShapes.empty());	
+        if (Modules.get().get(Collisions.class).inList(thisObj))
+                cir.setReturnValue(VoxelShapes.empty());	
 	}
 }
