@@ -7,23 +7,16 @@ package meteordevelopment.meteorclient.systems.modules.world;
 
 import java.util.List;
 
-import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
-import meteordevelopment.meteorclient.events.packets.PacketEvent;
-import meteordevelopment.meteorclient.mixininterface.IVec3d;
-import meteordevelopment.meteorclient.settings.BlockListSetting;
-import meteordevelopment.meteorclient.settings.BoolSetting;
-import meteordevelopment.meteorclient.settings.Setting;
-import meteordevelopment.meteorclient.settings.SettingGroup;
+import net.minecraft.block.*;
+
+import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
-import net.minecraft.block.*;
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.network.packet.c2s.play.VehicleMoveC2SPacket;
-import net.minecraft.util.shape.VoxelShapes;
 
 public class Collisions extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgControl = settings.createGroup("Control");
     
     public final Setting<List<Block>> fullcube = sgGeneral.add(new BlockListSetting.Builder()
         .name("full-cube")
@@ -37,17 +30,31 @@ public class Collisions extends Module {
         .build()
     );
 
-    private final Setting<Boolean> ignoreBorder = sgGeneral.add(new BoolSetting.Builder()
+    private final Setting<Set<EntityType<?>>> entities = sgTargeting.add(new EntityTypeListSetting.Builder()
+        .name("entities")
+        .description("Entities to attack.")
+        .onlyAttackable()
+        .defaultValue(EntityType.PLAYER)
+        .build()
+    );
+    
+    private final Setting<Boolean> ignoreBorder = sgControl.add(new BoolSetting.Builder()
         .name("ignore-border")
         .description("Removes world border collision.")
         .defaultValue(false)
         .build()
     );
 
-    public Collisions() {
+    public Collisions()
+    {
         super(Categories.World, "collisions", "Adds collision boxes to certain blocks/areas.");
     }
 
+    public boolean inList(Entity entity)
+    {
+        return isActive() && inFrames(entity);
+    }
+    
     public boolean full(Block block)
     {
         return isActive() && fullcube.get().contains(block);
@@ -56,7 +63,9 @@ public class Collisions extends Module {
     {
         return isActive() && empty.get().contains(block);
     }
-    public boolean ignoreBorder() {
+    
+    public boolean ignoreBorder()
+    {
         return isActive() && ignoreBorder.get();
     }
 }
