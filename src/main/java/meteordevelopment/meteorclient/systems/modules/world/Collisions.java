@@ -54,11 +54,17 @@ public class Collisions extends Module {
     {
         return isActive() && inFrames(entity);
     }
+
+    public boolean inFrames(Entity entity)
+    {
+        return entities.get().contains(entity.getType());
+    }
     
     public boolean full(Block block)
     {
         return isActive() && fullcube.get().contains(block);
     }
+    
     public boolean emp(Block block)
     {
         return isActive() && empty.get().contains(block);
