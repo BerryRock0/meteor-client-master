@@ -25,8 +25,22 @@ public class Telekinesis extends Module {
     
    public final Setting<Vector3d> velocity = sgGeneral.add(new Vector3dSetting.Builder()
         .name("velocity")
-        .description("Entites velocity")
+        .description("Entites velocity.")
         .defaultValue(0, 0, 0)
+        .build()
+    );
+
+   private final Setting<Double> yaw = sgGeneral.add(new DoubleSetting.Builder()
+        .name("yaw")
+        .description("Entity yaw value.")
+        .defaultValue(0)
+        .build()
+    );
+
+   private final Setting<Double> pitch = sgGeneral.add(new DoubleSetting.Builder()
+        .name("pitch")
+        .description("Entity pitch value.")
+        .defaultValue(0)
         .build()
     );
 
