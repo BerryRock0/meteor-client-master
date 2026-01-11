@@ -32,12 +32,6 @@ public class Collisions extends Module {
         .description("What blocks should be emptied.")
         .build()
     );
-
-    private final Setting<Set<EntityType<?>>> entities = sgControl.add(new EntityTypeListSetting.Builder()
-        .name("entities")
-        .description("Entities to attack.")
-        .build()
-    );
     
     private final Setting<Boolean> ignoreBorder = sgControl.add(new BoolSetting.Builder()
         .name("ignore-border")
@@ -49,16 +43,6 @@ public class Collisions extends Module {
     public Collisions()
     {
         super(Categories.World, "collisions", "Adds collision boxes to certain blocks/areas.");
-    }
-
-    public boolean inList(Entity entity)
-    {
-        return isActive() && inFrames(entity);
-    }
-
-    public boolean inFrames(Entity entity)
-    {
-        return entities.get().contains(entity.getType());
     }
     
     public boolean full(Block block)
