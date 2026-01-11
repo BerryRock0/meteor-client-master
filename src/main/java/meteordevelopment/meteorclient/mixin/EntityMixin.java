@@ -234,8 +234,12 @@ public abstract class EntityMixin {
     private void inEntityTick(CallbackInfo ci)
     {
 		Entity thisObj = (Entity)(Object)this;
-		
-		if(Modules.get().get(Telekinesis.class).inList(thisObj))
-		thisObj.setVelocity(Modules.get().get(Telekinesis.class).velocity.get().x, Modules.get().get(Telekinesis.class).velocity.get().y, Modules.get().get(Telekinesis.class).velocity.get().z);
+		Telekinesis tk = Modules.get().get(Telekinesis.class);
+        
+		if(tk.inList(thisObj))
+        {
+		    if(tk.kinesis.get() thisObj.setVelocity(tk.velocity.get().x, tk.velocity.get().y, tk.velocity.get().z);
+            if(tk.angle.get()) thisObj.setAngles(tk.yaw.get(), tk.pitch.get());
+        }
 	}
 }
