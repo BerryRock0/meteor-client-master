@@ -21,6 +21,7 @@ import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 public class Telekinesis extends Module {
    private final SettingGroup sgGeneral = settings.getDefaultGroup();
    private final SettingGroup sgBounds = settings.createGroup("Bounds");
+   private final SettingGroup sgFunctions = settings.createGroup("Functions");
     
    public final Setting<Vector3d> velocity = sgGeneral.add(new Vector3dSetting.Builder()
         .name("velocity")
@@ -49,14 +50,14 @@ public class Telekinesis extends Module {
         .build()
     );
 
-    public final Setting<Boolean> kinesis = sgBounds.add(new BoolSetting.Builder()
+    public final Setting<Boolean> kinesis = sgFunctions.add(new BoolSetting.Builder()
         .name("kinesis")
         .description("Disables/enables kinesis change.")
         .defaultValue(false)
         .build()
     );
 
-    public final Setting<Boolean> angle = sgBounds.add(new BoolSetting.Builder()
+    public final Setting<Boolean> angle = sgFunctions.add(new BoolSetting.Builder()
         .name("angle")
         .description("Disables/enables angle change.")
         .defaultValue(false)
