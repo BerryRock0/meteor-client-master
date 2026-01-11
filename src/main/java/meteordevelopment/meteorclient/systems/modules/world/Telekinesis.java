@@ -35,16 +35,30 @@ public class Telekinesis extends Module {
         .build()
     );
 
-    private final Setting<Filter> filter = sgBounds.add(new EnumSetting.Builder<Filter>()
+    public final Setting<Filter> filter = sgBounds.add(new EnumSetting.Builder<Filter>()
         .name("filter")
         .description("Entity filter settings.")
         .defaultValue(Filter.Black)
         .build()
     );
 
-    private final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
+    public final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
         .name("cases")
         .description("Disables/enables black/white cases.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> kinesis = sgBounds.add(new BoolSetting.Builder()
+        .name("kinesis")
+        .description("Disables/enables kinesis change.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> angles = sgBounds.add(new BoolSetting.Builder()
+        .name("angles")
+        .description("Disables/enables angle change.")
         .defaultValue(false)
         .build()
     );
