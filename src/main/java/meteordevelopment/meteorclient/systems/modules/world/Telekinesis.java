@@ -30,14 +30,14 @@ public class Telekinesis extends Module {
         .build()
     );
 
-   private final Setting<Double> yaw = sgGeneral.add(new DoubleSetting.Builder()
+   public final Setting<Double> yaw = sgGeneral.add(new DoubleSetting.Builder()
         .name("yaw")
         .description("Entity yaw value.")
         .defaultValue(0)
         .build()
     );
 
-   private final Setting<Double> pitch = sgGeneral.add(new DoubleSetting.Builder()
+   public final Setting<Double> pitch = sgGeneral.add(new DoubleSetting.Builder()
         .name("pitch")
         .description("Entity pitch value.")
         .defaultValue(0)
