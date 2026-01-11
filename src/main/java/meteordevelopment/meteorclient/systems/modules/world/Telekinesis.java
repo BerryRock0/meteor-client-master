@@ -56,8 +56,8 @@ public class Telekinesis extends Module {
         .build()
     );
 
-    public final Setting<Boolean> angles = sgBounds.add(new BoolSetting.Builder()
-        .name("angles")
+    public final Setting<Boolean> angle = sgBounds.add(new BoolSetting.Builder()
+        .name("angle")
         .description("Disables/enables angle change.")
         .defaultValue(false)
         .build()
