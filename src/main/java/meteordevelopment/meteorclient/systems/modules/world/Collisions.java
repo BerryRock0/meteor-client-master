@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.world;
 
+import java.util.Set;
 import java.util.List;
 
 import net.minecraft.block.*;
