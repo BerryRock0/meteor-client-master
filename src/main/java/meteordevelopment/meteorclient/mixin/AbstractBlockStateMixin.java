@@ -50,9 +50,8 @@ public abstract class AbstractBlockStateMixin {
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/ShapeContext;)Lnet/minecraft/util/shape/VoxelShape;", cancellable = true)
 	private void onGetCollisionShape(BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
+        if (Modules.get() == null ) return;
         Collisions coll = Modules.get().get(Collisions.class);
-        if (coll == null)
-            return;
         
 	    if(coll.full(world.getBlockState(pos).getBlock()))
             cir.setReturnValue(VoxelShapes.fullCube());
