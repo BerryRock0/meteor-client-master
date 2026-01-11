@@ -22,7 +22,6 @@ import meteordevelopment.meteorclient.systems.modules.render.NoRender;
 import meteordevelopment.meteorclient.systems.modules.world.HighwayBuilder;
 import meteordevelopment.meteorclient.systems.modules.world.Telekinesis;
 import meteordevelopment.meteorclient.systems.modules.world.Damages;
-import meteordevelopment.meteorclient.systems.modules.world.ValueSpoofer;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
 import net.minecraft.block.Block;
