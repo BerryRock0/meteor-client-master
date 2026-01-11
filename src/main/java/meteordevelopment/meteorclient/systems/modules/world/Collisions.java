@@ -8,6 +8,8 @@ package meteordevelopment.meteorclient.systems.modules.world;
 import java.util.List;
 
 import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
@@ -30,11 +32,9 @@ public class Collisions extends Module {
         .build()
     );
 
-    private final Setting<Set<EntityType<?>>> entities = sgTargeting.add(new EntityTypeListSetting.Builder()
+    private final Setting<Set<EntityType<?>>> entities = sgControl.add(new EntityTypeListSetting.Builder()
         .name("entities")
         .description("Entities to attack.")
-        .onlyAttackable()
-        .defaultValue(EntityType.PLAYER)
         .build()
     );
     
