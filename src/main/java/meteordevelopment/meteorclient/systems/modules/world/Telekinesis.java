@@ -34,6 +34,8 @@ public class Telekinesis extends Module {
         .name("yaw")
         .description("Entity yaw value.")
         .defaultValue(0)
+        .sliderMin(-180)
+        .sliderMax(180)
         .build()
     );
 
@@ -41,25 +43,61 @@ public class Telekinesis extends Module {
         .name("pitch")
         .description("Entity pitch value.")
         .defaultValue(0)
+        .sliderMin(-180)
+        .sliderMax(180)
         .build()
     );
 
+   private final Setting<Double> range = sgBounds.add(new DoubleSetting.Builder()
+        .name("range")
+        .description("Telekinesis range limit.")
+        .defaultValue(0)
+        .build()
+    );
+
+   public final Setting<Double> fov = sgGeneral.add(new DoubleSetting.Builder()
+        .name("fov")
+        .description("Telekinesis fov limit.")
+        .defaultValue(0)
+        .build()
+    );
    public final Setting<Set<EntityType<?>>> entities = sgBounds.add(new EntityTypeListSetting.Builder()
         .name("entities")
         .description("Select specific entities.")
         .build()
     );
 
-    public final Setting<Filter> filter = sgBounds.add(new EnumSetting.Builder<Filter>()
-        .name("filter")
-        .description("Entity filter settings.")
-        .defaultValue(Filter.Black)
+    public final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
+        .name("list-final-boolean")
+        .description("Switches black/white cases.")
+        .defaultValue(false)
         .build()
     );
 
-    public final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
-        .name("cases")
-        .description("Disables/enables black/white cases.")
+    public final Setting<Boolean> frames = sgBounds.add(new BoolSetting.Builder()
+        .name("frames-final-boolean")
+        .description("Switches true/false frames.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> list = sgBounds.add(new BoolSetting.Builder()
+        .name("list-case-boolean")
+        .description("Switches black/white list.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> rangecase = sgBounds.add(new BoolSetting.Builder()
+        .name("range-case-boolean")
+        .description("Switches black/white list.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> fovcase = sgBounds.add(new BoolSetting.Builder()
+        .name("fov-case-boolean")
+        .description("Switches black/white list.")
         .defaultValue(false)
         .build()
     );
@@ -83,24 +121,26 @@ public class Telekinesis extends Module {
         super(Categories.World, "telekinesis", "Move entities in third axis.");
     }
 
-    public boolean inList(Entity entity)
+    public boolean task(Entity entity)
     {
-        return isActive() && inFrames(entity);
+        return isActive() && inList(entity) && inFrames(entity);
     }
 
-    public boolean inFrames(Entity entity)
-    {
-        switch(filter.get())
-        {
-            case White -> {return entities.get().contains(entity.getType());}
-            case Black -> {return !entities.get().contains(entity.getType());}
-        }
+    public boolean inList(Entity entity)
+    { 
+        if (entities.get().contains(entity.getType()))
+            return list.get();
+        
         return cases.get();
     }
-
-    public enum Filter
+    
+    public boolean inFrames(Entity entity)
     {
-        White,
-        Black
-    }	
+        if (PlayerUtils.isWithin(entity, range.get()))
+            return rangecase.get();
+        if (PlayerUtils.isFov(entity, fov.get()))
+            return fovcase.get();
+        
+        return frames.get();
+    }
 }
