@@ -28,18 +28,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up Node JS
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Get current build number
-        id: build-number
-        run: |
-          cd .github/builds
-          npm install
-          npm run --silent get_number >> $GITHUB_OUTPUT
-
       - name: Build
         run: ./gradlew build -Pcommit=${{ github.sha }} -Pbuild_number=${{ steps.build-number.outputs.number }}
     
