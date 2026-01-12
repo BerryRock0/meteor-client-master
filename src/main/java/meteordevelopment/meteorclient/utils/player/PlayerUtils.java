@@ -288,6 +288,12 @@ public class PlayerUtils {
         return squaredDistanceTo(x, y, z) <= r * r;
     }
 
+    public static boolean inFov(Entity entity, double fov)
+    {
+        float[] angle = PlayerUtils.calculateAngle(entity.getBoundingBox().getCenter());
+        return Math.hypot(MathHelper.angleBetween(angle[0], mc.player.getYaw()), MathHelper.angleBetween(angle[1], mc.player.getPitch())) <= fov;
+    }
+
     public static double distanceToCamera(double x, double y, double z) {
         return Math.sqrt(squaredDistanceToCamera(x, y, z));
     }
