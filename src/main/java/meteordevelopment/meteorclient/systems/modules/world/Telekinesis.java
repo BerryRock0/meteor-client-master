@@ -138,7 +138,7 @@ public class Telekinesis extends Module {
     {
         if (PlayerUtils.isWithin(entity, range.get()))
             return rangecase.get();
-        if (PlayerUtils.isFov(entity, fov.get()))
+        if (PlayerUtils.inFov(entity, fov.get()))
             return fovcase.get();
         
         return frames.get();
