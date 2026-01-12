@@ -55,7 +55,7 @@ public class Telekinesis extends Module {
         .build()
     );
 
-   public final Setting<Double> fov = sgGeneral.add(new DoubleSetting.Builder()
+   public final Setting<Double> fov = sgBounds.add(new DoubleSetting.Builder()
         .name("fov")
         .description("Telekinesis fov limit.")
         .defaultValue(0)
