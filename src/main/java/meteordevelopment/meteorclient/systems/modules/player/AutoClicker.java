@@ -14,6 +14,8 @@ import meteordevelopment.orbit.EventHandler;
 
 public class AutoClicker extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgLeft = settings.createGroup("Left");
+    private final SettingGroup sgRight = settings.createGroup("Right");
 
     private final Setting<Boolean> inScreens = sgGeneral.add(new BoolSetting.Builder()
         .name("while-in-screens")
@@ -22,36 +24,30 @@ public class AutoClicker extends Module {
         .build()
     );
 
-    private final Setting<Mode> leftClickMode = sgGeneral.add(new EnumSetting.Builder<Mode>()
+    private final Setting<Mode> leftClickMode = sgLeft.add(new EnumSetting.Builder<Mode>()
         .name("mode-left")
         .description("The method of clicking for left clicks.")
         .defaultValue(Mode.Press)
         .build()
     );
 
-    private final Setting<Integer> leftClickDelay = sgGeneral.add(new IntSetting.Builder()
+    private final Setting<Integer> leftClickDelay = sgLeft.add(new IntSetting.Builder()
         .name("delay-left")
         .description("The amount of delay between left clicks in ticks.")
-        .defaultValue(2)
-        .min(0)
-        .sliderMax(60)
         .visible(() -> leftClickMode.get() == Mode.Press)
         .build()
     );
 
-    private final Setting<Mode> rightClickMode = sgGeneral.add(new EnumSetting.Builder<Mode>()
+    private final Setting<Mode> rightClickMode = sgRight.add(new EnumSetting.Builder<Mode>()
         .name("mode-right")
         .description("The method of clicking for right clicks.")
         .defaultValue(Mode.Press)
         .build()
     );
 
-    private final Setting<Integer> rightClickDelay = sgGeneral.add(new IntSetting.Builder()
+    private final Setting<Integer> rightClickDelay = sgRight.add(new IntSetting.Builder()
         .name("delay-right")
         .description("The amount of delay between right clicks in ticks.")
-        .defaultValue(2)
-        .min(0)
-        .sliderMax(60)
         .visible(() -> rightClickMode.get() == Mode.Press)
         .build()
     );
