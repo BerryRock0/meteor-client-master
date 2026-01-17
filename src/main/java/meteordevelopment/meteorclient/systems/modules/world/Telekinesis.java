@@ -73,7 +73,13 @@ public class Telekinesis extends Module {
         .defaultValue(false)
         .build()
     );
-
+    
+    public final Setting<Boolean> list = sgBounds.add(new BoolSetting.Builder()
+        .name("list-case-boolean")
+        .description("Switches black/white list.")
+        .defaultValue(false)
+        .build()
+    );
     
     public final Setting<Boolean> frames = sgBounds.add(new BoolSetting.Builder()
         .name("frames-final-boolean")
@@ -81,10 +87,10 @@ public class Telekinesis extends Module {
         .defaultValue(false)
         .build()
     );
-    
-    public final Setting<Boolean> list = sgBounds.add(new BoolSetting.Builder()
-        .name("list-case-boolean")
-        .description("Switches black/white list.")
+
+    public final Setting<Boolean> focus = sgBounds.add(new BoolSetting.Builder()
+        .name("focus-case-boolean")
+        .description("Switches black/white focus.")
         .defaultValue(false)
         .build()
     );
@@ -124,7 +130,7 @@ public class Telekinesis extends Module {
     public boolean inFrames(Entity entity)
     {   
         if (PlayerUtils.isWithin(entity, range.get()) || PlayerUtils.inFov(entity, fov.get()))
-            return true;
+            return focus.get();
         
         return frames.get();
     }
