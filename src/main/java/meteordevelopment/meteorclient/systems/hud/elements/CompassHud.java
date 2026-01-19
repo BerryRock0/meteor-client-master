@@ -67,8 +67,6 @@ public class CompassHud extends HudElement {
         .description("Scale to use for the letters.")
         .visible(customScale::get)
         .defaultValue(1)
-        .min(0.5)
-        .sliderRange(0.5, 3)
         .build()
     );
 
@@ -77,8 +75,6 @@ public class CompassHud extends HudElement {
         .description("Scale of the whole HUD element.")
         .visible(customScale::get)
         .defaultValue(1)
-        .min(0.5)
-        .sliderRange(0.5, 3)
         .onChanged(aDouble -> calculateSize())
         .build()
     );
