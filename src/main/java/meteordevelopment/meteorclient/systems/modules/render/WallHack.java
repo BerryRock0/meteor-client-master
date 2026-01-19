@@ -27,11 +27,7 @@ public class WallHack extends Module {
         .defaultValue(0)
         .range(0, 255)
         .sliderMax(255)
-        .onChanged(onChanged -> {
-            if (this.isActive()) {
-                mc.worldRenderer.reload();
-            }
-        })
+        .onChanged(onChanged -> {if(this.isActive()) mc.worldRenderer.reload();})
         .build()
     );
 
@@ -64,14 +60,6 @@ public class WallHack extends Module {
     @Override
     public void onDeactivate() {
         mc.worldRenderer.reload();
-    }
-
-    @Override
-    public WWidget getWidget(GuiTheme theme) {
-        if (MixinPlugin.isSodiumPresent) return theme.label("Warning: Due to Sodium in use, opacity is overridden to 0.");
-        if (MixinPlugin.isIrisPresent && IrisApi.getInstance().isShaderPackInUse()) return theme.label("Warning: Due to shaders in use, opacity is overridden to 0.");
-
-        return null;
     }
 
     @EventHandler
