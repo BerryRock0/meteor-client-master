@@ -124,7 +124,7 @@ public class CompassHud extends HudElement {
                 axis,
                 (x + getX(direction, yaw)) - (renderer.textWidth(axis, shadow.get(), getTextScale())) / 2,
                 (y + getY(direction, yaw, pitch)) - (renderer.textHeight(shadow.get(), getTextScale()) / 2),
-                direction == Direction.N ? colorNorth.get() : colorOther.get(),
+                colorOther.get(),
                 shadow.get(),
                 getTextScale()
             );
