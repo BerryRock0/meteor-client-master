@@ -96,7 +96,7 @@ public class CompassHud extends HudElement {
     }
 
     private void calculateSize() {
-        setSize(getCompassScale(), getCompassScale());
+        setSize(getCompassScale()*100, getCompassScale()*100);
     }
 
     @Override
