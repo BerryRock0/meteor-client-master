@@ -96,7 +96,7 @@ public class CompassHud extends HudElement {
     }
 
     private void calculateSize() {
-        setSize(100 * getCompassScale(), 100 * getCompassScale());
+        setSize(getCompassScale(), getCompassScale());
     }
 
     @Override
@@ -129,11 +129,11 @@ public class CompassHud extends HudElement {
     }
 
     private double getX(Direction direction, double yaw) {
-        return Math.sin(getPos(direction, yaw)) * getCompassScale() * 40;
+        return Math.sin(getPos(direction, yaw)) * getCompassScale();
     }
 
     private double getY(Direction direction, double yaw, double pitch) {
-        return Math.cos(getPos(direction, yaw)) * Math.sin(pitch) * getCompassScale() * 40;
+        return Math.cos(getPos(direction, yaw)) * Math.sin(pitch) * getCompassScale();
     }
 
     private double getPos(Direction direction, double yaw) {
@@ -152,7 +152,9 @@ public class CompassHud extends HudElement {
         N("Z-"),
         W("X-"),
         S("Z+"),
-        E("X+");
+        E("X+"), 
+        U("Y+"),
+        D("Y-");
 
         private final String axis;
 
