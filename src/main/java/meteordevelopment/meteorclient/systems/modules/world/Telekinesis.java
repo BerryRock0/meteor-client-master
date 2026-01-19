@@ -129,7 +129,7 @@ public class Telekinesis extends Module {
     
     public boolean inFrames(Entity entity)
     {   
-        if (PlayerUtils.isWithin(entity, range.get()) || PlayerUtils.inFov(entity, fov.get()))
+        if (PlayerUtils.isWithin(entity, range.get()) && PlayerUtils.inFov(entity, fov.get()))
             return focus.get();
         
         return frames.get();
