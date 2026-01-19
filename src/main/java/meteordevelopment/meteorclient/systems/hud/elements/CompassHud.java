@@ -31,13 +31,6 @@ public class CompassHud extends HudElement {
         .build()
     );
 
-    private final Setting<SettingColor> colorNorth = sgGeneral.add(new ColorSetting.Builder()
-        .name("color-north")
-        .description("Color of north.")
-        .defaultValue(new SettingColor(225, 45, 45))
-        .build()
-    );
-
     private final Setting<SettingColor> colorOther = sgGeneral.add(new ColorSetting.Builder()
         .name("color-north")
         .description("Color of other directions.")
