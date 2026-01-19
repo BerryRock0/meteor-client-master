@@ -129,11 +129,11 @@ public class CompassHud extends HudElement {
     }
 
     private double getX(Direction direction, double yaw) {
-        return Math.sin(getPos(direction, yaw)) * getCompassScale();
+        return Math.sin(getPos(direction, yaw)) * getCompassScale() * 40;
     }
 
     private double getY(Direction direction, double yaw, double pitch) {
-        return Math.cos(getPos(direction, yaw)) * Math.sin(pitch) * getCompassScale();
+        return Math.cos(getPos(direction, yaw)) * Math.sin(pitch) * getCompassScale() * 40;
     }
 
     private double getPos(Direction direction, double yaw) {
