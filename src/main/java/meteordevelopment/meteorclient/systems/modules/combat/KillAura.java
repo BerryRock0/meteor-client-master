@@ -346,8 +346,8 @@ public class KillAura extends Module {
         }
 
         attacking = true;
-        if (rotation.get() == RotationMode.Always)
-            rotatemode();
+        if ()
+            rotatemode(rotation.get() == RotationMode.Always);
         
         if (pauseOnCombat.get() && PathManagers.get().isPathing() && !wasPathing)
         {
@@ -468,8 +468,7 @@ public class KillAura extends Module {
 
     private void attack(Entity target)
     {
-        if (rotation.get() == RotationMode.OnHit)
-            rotatemode();
+        rotatemode(rotation.get() == RotationMode.OnHit);
 
         mc.interactionManager.attackEntity(mc.player, target);
         mc.player.swingHand(Hand.MAIN_HAND);
@@ -477,8 +476,11 @@ public class KillAura extends Module {
         hitTimer = 0;
     }
 
-    private void rotatemode()
+    private void rotatemode(boolean cancel)
     {
+        if(!cancel)
+            return;
+        
         switch(rotating.get())
         {
             case None -> {}
