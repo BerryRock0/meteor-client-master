@@ -253,67 +253,82 @@ public class KillAura extends Module {
     public Entity targeted;
     public Entity primary;
 
-    public KillAura() {
+    public KillAura()
+    {
         super(Categories.Combat, "kill-aura", "Attacks specified entities around you.");
     }
 
     @Override
-    public void onActivate() {
+    public void onActivate()
+    {
         previousSlot = -1;
         swapped = false;
     }
 
     @Override
-    public void onDeactivate() {
+    public void onDeactivate()
+    {
         targets.clear();
         stopAttacking();
     }
 
     @EventHandler
-    private void onTick(TickEvent.Pre event) {
-        if (!mc.player.isAlive() || PlayerUtils.getGameMode() == GameMode.SPECTATOR) {
+    private void onTick(TickEvent.Pre event)
+    {
+        if (!mc.player.isAlive() || PlayerUtils.getGameMode() == GameMode.SPECTATOR)
+        {
             stopAttacking();
             return;
         }
-        if (pauseOnUse.get() && (mc.interactionManager.isBreakingBlock() || mc.player.isUsingItem())) {
+        if (pauseOnUse.get() && (mc.interactionManager.isBreakingBlock() || mc.player.isUsingItem()))
+        {
             stopAttacking();
             return;
         }
-        if (onlyOnClick.get() && !mc.options.attackKey.isPressed()) {
+        if (onlyOnClick.get() && !mc.options.attackKey.isPressed())
+        {
             stopAttacking();
             return;
         }
-        if (TickRate.INSTANCE.getTimeSinceLastTick() >= 1f && pauseOnLag.get()) {
+        if (TickRate.INSTANCE.getTimeSinceLastTick() >= 1f && pauseOnLag.get())
+        {
             stopAttacking();
             return;
         }
-        if (pauseOnCA.get() && Modules.get().get(CrystalAura.class).isActive() && Modules.get().get(CrystalAura.class).kaTimer > 0) {
+        if (pauseOnCA.get() && Modules.get().get(CrystalAura.class).isActive() && Modules.get().get(CrystalAura.class).kaTimer > 0)
+        {
             stopAttacking();
             return;
         }
-        if (onlyOnLook.get()) {
+        if (onlyOnLook.get())
+        {
             targeted = mc.targetedEntity;
 
-            if (targeted == null || !entityCheck(targeted)) {
+            if (targeted == null || !entityCheck(targeted))
+            {
                 stopAttacking();
                 return;
             }
 
             targets.clear();
             targets.add(mc.targetedEntity);
-        } else {
+        }
+        else
+        {
             targets.clear();
             TargetUtils.getList(targets, this::entityCheck, priority.get(), maxTargets.get());
         }
 
-        if (targets.isEmpty()) {
+        if (targets.isEmpty())
+        {
             stopAttacking();
             return;
         }
 
         primary = targets.getFirst();
 
-        if (autoSwitch.get()) {
+        if (autoSwitch.get())
+        {
             FindItemResult weaponResult = new FindItemResult(mc.player.getInventory().getSelectedSlot(), -1);
             if (attackWhenHolding.get() == AttackItems.Weapons) weaponResult = InvUtils.find(this::acceptableWeapon, 0, 8);
 
@@ -331,24 +346,29 @@ public class KillAura extends Module {
         }
 
         attacking = true;
-        if (rotation.get() == RotationMode.Always) rotatemode();
-        if (pauseOnCombat.get() && PathManagers.get().isPathing() && !wasPathing) {
+        if (rotation.get() == RotationMode.Always)
+            rotatemode();
+        
+        if (pauseOnCombat.get() && PathManagers.get().isPathing() && !wasPathing)
+        {
             PathManagers.get().pause();
             wasPathing = true;
         }
 
-        if (delayCheck()) targets.forEach(this::attack);
+        if (delayCheck())
+            targets.forEach(this::attack);
     }
 
     @EventHandler
-    private void onSendPacket(PacketEvent.Send event) {
-        if (event.packet instanceof UpdateSelectedSlotC2SPacket) {
+    private void onSendPacket(PacketEvent.Send event)
+    {
+        if (event.packet instanceof UpdateSelectedSlotC2SPacket)
             switchTimer = switchDelay.get();
-        }
     }
 
     private void stopAttacking() {
-        if (!attacking) return;
+        if (!attacking)
+            return;
 
         attacking = false;
         if (wasPathing) {
@@ -362,8 +382,10 @@ public class KillAura extends Module {
     }
 
     private boolean entityCheck(Entity entity) {
-        if (entity.equals(mc.player) || entity.equals(mc.getCameraEntity())) return false;
-        if ((entity instanceof LivingEntity livingEntity && livingEntity.isDead()) || !entity.isAlive()) return false;
+        if (entity.equals(mc.player) || entity.equals(mc.getCameraEntity()))
+            return false;
+        if ((entity instanceof LivingEntity livingEntity && livingEntity.isDead()) || !entity.isAlive())
+            return false;
 
         Box hitbox = entity.getBoundingBox();
         if (!PlayerUtils.isWithin(
@@ -371,11 +393,15 @@ public class KillAura extends Module {
             MathHelper.clamp(mc.player.getY(), hitbox.minY, hitbox.maxY),
             MathHelper.clamp(mc.player.getZ(), hitbox.minZ, hitbox.maxZ),
             range.get()
-        )) return false;
+        ))
+            return false;
 
-        if (!entities.get().contains(entity.getType())) return false;
-        if (ignoreNamed.get() && entity.hasCustomName()) return false;
-        if (!PlayerUtils.canSeeEntity(entity) && !PlayerUtils.isWithin(entity, wallsRange.get())) return false;
+        if (!entities.get().contains(entity.getType()))
+            return false;
+        if (ignoreNamed.get() && entity.hasCustomName())
+            return false;
+        if (!PlayerUtils.canSeeEntity(entity) && !PlayerUtils.isWithin(entity, wallsRange.get()))
+            return false;
         
         if (ignoreTamed.get())
         {
@@ -385,16 +411,23 @@ public class KillAura extends Module {
         
         if(ignorePassive.get())
         {
-            if (entity instanceof EndermanEntity enderman && !enderman.isAngry()) return false;
-            if (entity instanceof PiglinEntity piglin && !piglin.isAttacking()) return false;
-            if (entity instanceof ZombifiedPiglinEntity zombifiedPiglin && !zombifiedPiglin.isAttacking()) return false;
-            if (entity instanceof WolfEntity wolf && !wolf.isAttacking()) return false;
+            if (entity instanceof EndermanEntity enderman && !enderman.isAngry())
+                return false;
+            if (entity instanceof PiglinEntity piglin && !piglin.isAttacking())
+                return false;
+            if (entity instanceof ZombifiedPiglinEntity zombifiedPiglin && !zombifiedPiglin.isAttacking())
+                return false;
+            if (entity instanceof WolfEntity wolf && !wolf.isAttacking())
+                return false;
         }
         
         if(entity instanceof PlayerEntity player)
         {
-            if (player.isCreative()) return false;
-            if (!Friends.get().shouldAttack(player)) return false;
+            if (player.isCreative())
+                return false;
+            
+            if (!Friends.get().shouldAttack(player))
+                return false;
         }
         
         if(entity instanceof AnimalEntity animal)
@@ -418,14 +451,19 @@ public class KillAura extends Module {
         }
 
         float delay = (customDelay.get()) ? hitDelay.get() : 0.5f;
-        if (tpsSync.get()) delay /= (TickRate.INSTANCE.getTickRate() / 20);
+        if (tpsSync.get())
+            delay /= (TickRate.INSTANCE.getTickRate() / 20);
 
-        if (customDelay.get()) {
-            if (hitTimer < delay) {
+        if (customDelay.get())
+        {
+            if (hitTimer < delay)
+            {
                 hitTimer++;
                 return false;
-            } else return true;
-        } else return mc.player.getAttackCooldownProgress(delay) >= 1;
+            }
+            else return true;
+        }
+        else return mc.player.getAttackCooldownProgress(delay) >= 1;
     }
 
     private void attack(Entity target)
@@ -451,22 +489,19 @@ public class KillAura extends Module {
 
     private boolean acceptableWeapon(ItemStack stack)
     {
-        if (attackWhenHolding.get() == AttackItems.All) return true;
-
-        return weapons.get().contains(stack.getItem());
+        switch (attackWhenHolding.get())
+        {
+            case All -> return true;
+            case Weapon -> return weapons.get().contains(stack.getItem());
+            case default -> return false;
+                
+        }
     }
 
     public Entity getTarget()
     {
-        if (!targets.isEmpty()) return targets.getFirst();
-        return null;
-    }
-
-    @Override
-    public String getInfoString()
-    {
         if (!targets.isEmpty())
-            return EntityUtils.getName(getTarget());
+            return targets.getFirst();
         
         return null;
     }
