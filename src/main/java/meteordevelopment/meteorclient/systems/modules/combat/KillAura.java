@@ -62,8 +62,6 @@ public class KillAura extends Module {
     private final Setting<List<Item>> weapons = sgGeneral.add(new ItemListSetting.Builder()
         .name("selected-weapon-types")
         .description("Which types of weapons to attack with (if you select the diamond sword, any type of sword may be used to attack).")
-        .defaultValue(Items.DIAMOND_SWORD, Items.DIAMOND_AXE, Items.TRIDENT)
-        .filter(FILTER::contains)
         .visible(() -> attackWhenHolding.get() == AttackItems.Weapons)
         .build()
     );
@@ -75,7 +73,7 @@ public class KillAura extends Module {
         .build()
     );
 
-    private final Setting<Rotating> rotating = sgGeneral.add(new EnumSetting.Builder<RotationMode>()
+    private final Setting<Rotating> rotating = sgGeneral.add(new EnumSetting.Builder<Rotating>()
         .name("rotating")
         .description("Determines rotate mode towards the target.")
         .defaultValue(Rotating.None)
@@ -255,7 +253,6 @@ public class KillAura extends Module {
         .build()
     );
 
-    private final static ArrayList<Item> FILTER = new ArrayList<>(List.of(Items.DIAMOND_SWORD, Items.DIAMOND_AXE, Items.DIAMOND_PICKAXE, Items.DIAMOND_SHOVEL, Items.DIAMOND_HOE, Items.MACE, Items.DIAMOND_SPEAR, Items.TRIDENT));
     private final List<Entity> targets = new ArrayList<>();
     private int switchTimer, hitTimer;
     private boolean wasPathing = false;
@@ -347,7 +344,7 @@ public class KillAura extends Module {
         }
 
         attacking = true;
-        if (rotation.get() == RotationMode.Always) Rotations.rotate(Rotations.getYaw(primary), Rotations.getPitch(primary, Target.Body));
+        if (rotation.get() == RotationMode.Always) rotatemode();
         if (pauseOnCombat.get() && PathManagers.get().isPathing() && !wasPathing) {
             PathManagers.get().pause();
             wasPathing = true;
@@ -404,25 +401,32 @@ public class KillAura extends Module {
         if (!entities.get().contains(entity.getType())) return false;
         if (ignoreNamed.get() && entity.hasCustomName()) return false;
         if (!PlayerUtils.canSeeEntity(entity) && !PlayerUtils.isWithin(entity, wallsRange.get())) return false;
-        if (ignoreTamed.get()) {
-            if (entity instanceof Tameable tameable
-                && tameable.getOwner() != null
-                && tameable.getOwner().equals(mc.player)
-            ) return false;
+        
+        if (ignoreTamed.get())
+        {
+            if (entity instanceof Tameable tameable && tameable.getOwner() != null && tameable.getOwner().equals(mc.player)) 
+                return false;
         }
-        if (ignorePassive.get()) {
+        
+        if(ignorePassive.get())
+        {
             if (entity instanceof EndermanEntity enderman && !enderman.isAngry()) return false;
             if (entity instanceof PiglinEntity piglin && !piglin.isAttacking()) return false;
             if (entity instanceof ZombifiedPiglinEntity zombifiedPiglin && !zombifiedPiglin.isAttacking()) return false;
             if (entity instanceof WolfEntity wolf && !wolf.isAttacking()) return false;
         }
-        if (entity instanceof PlayerEntity player) {
+        
+        if(entity instanceof PlayerEntity player)
+        {
             if (player.isCreative()) return false;
             if (!Friends.get().shouldAttack(player)) return false;
             if (shieldMode.get() == ShieldMode.Ignore && player.isBlocking()) return false;
         }
-        if (entity instanceof AnimalEntity animal) {
-            return switch (mobAgeFilter.get()) {
+        
+        if(entity instanceof AnimalEntity animal)
+        {
+            return switch (mobAgeFilter.get())
+            {
                 case Baby -> animal.isBaby();
                 case Adult -> !animal.isBaby();
                 case Both -> true;
@@ -431,8 +435,10 @@ public class KillAura extends Module {
         return true;
     }
 
-    private boolean delayCheck() {
-        if (switchTimer > 0) {
+    private boolean delayCheck()
+    {
+        if (switchTimer > 0)
+        {
             switchTimer--;
             return false;
         }
@@ -448,8 +454,10 @@ public class KillAura extends Module {
         } else return mc.player.getAttackCooldownProgress(delay) >= 1;
     }
 
-    private void attack(Entity target) {
-        if (rotation.get() == RotationMode.OnHit) Rotations.rotate(Rotations.getYaw(target), Rotations.getPitch(target, Target.Body));
+    private void attack(Entity target)
+    {
+        if (rotation.get() == RotationMode.OnHit)
+            rotatemode();
 
         mc.interactionManager.attackEntity(mc.player, target);
         mc.player.swingHand(Hand.MAIN_HAND);
@@ -467,28 +475,26 @@ public class KillAura extends Module {
         }
     }
 
-    private boolean acceptableWeapon(ItemStack stack) {
+    private boolean acceptableWeapon(ItemStack stack)
+    {
         if (shouldShieldBreak()) return stack.getItem() instanceof AxeItem;
         if (attackWhenHolding.get() == AttackItems.All) return true;
 
-        if (weapons.get().contains(Items.DIAMOND_SWORD) && stack.isIn(ItemTags.SWORDS)) return true;
-        if (weapons.get().contains(Items.DIAMOND_AXE) && stack.isIn(ItemTags.AXES)) return true;
-        if (weapons.get().contains(Items.DIAMOND_PICKAXE) && stack.isIn(ItemTags.PICKAXES)) return true;
-        if (weapons.get().contains(Items.DIAMOND_SHOVEL) && stack.isIn(ItemTags.SHOVELS)) return true;
-        if (weapons.get().contains(Items.DIAMOND_HOE) && stack.isIn(ItemTags.HOES)) return true;
-        if (weapons.get().contains(Items.MACE) && stack.getItem() instanceof MaceItem) return true;
-        if (weapons.get().contains(Items.DIAMOND_SPEAR) && stack.isIn(ItemTags.SPEARS)) return true;
-        return weapons.get().contains(Items.TRIDENT) && stack.getItem() instanceof TridentItem;
+        return weapons.get().contains(stack.getItem());
     }
 
-    public Entity getTarget() {
+    public Entity getTarget()
+    {
         if (!targets.isEmpty()) return targets.getFirst();
         return null;
     }
 
     @Override
-    public String getInfoString() {
-        if (!targets.isEmpty()) return EntityUtils.getName(getTarget());
+    public String getInfoString()
+    {
+        if (!targets.isEmpty())
+            return EntityUtils.getName(getTarget());
+        
         return null;
     }
 
