@@ -71,7 +71,14 @@ public class KillAura extends Module {
     private final Setting<RotationMode> rotation = sgGeneral.add(new EnumSetting.Builder<RotationMode>()
         .name("rotate")
         .description("Determines when you should rotate towards the target.")
-        .defaultValue(RotationMode.Always)
+        .defaultValue(RotationMode.None)
+        .build()
+    );
+
+    private final Setting<Rotating> rotating = sgGeneral.add(new EnumSetting.Builder<RotationMode>()
+        .name("rotating")
+        .description("Determines rotate mode towards the target.")
+        .defaultValue(Rotating.None)
         .build()
     );
 
@@ -254,6 +261,8 @@ public class KillAura extends Module {
     private boolean wasPathing = false;
     public boolean attacking, swapped;
     public static int previousSlot;
+    public Entity targeted;
+    public Entity primary;
 
     public KillAura() {
         super(Categories.Combat, "kill-aura", "Attacks specified entities around you.");
@@ -294,7 +303,7 @@ public class KillAura extends Module {
             return;
         }
         if (onlyOnLook.get()) {
-            Entity targeted = mc.targetedEntity;
+            targeted = mc.targetedEntity;
 
             if (targeted == null || !entityCheck(targeted)) {
                 stopAttacking();
@@ -313,7 +322,7 @@ public class KillAura extends Module {
             return;
         }
 
-        Entity primary = targets.getFirst();
+        primary = targets.getFirst();
 
         if (autoSwitch.get()) {
             FindItemResult weaponResult = new FindItemResult(mc.player.getInventory().getSelectedSlot(), -1);
@@ -448,6 +457,16 @@ public class KillAura extends Module {
         hitTimer = 0;
     }
 
+    private void rotatemode()
+    {
+        switch(rotating.get())
+        {
+            case Client -> {mc.player.setYaw(Rotations.getYaw(primary)); mc.player.setPitch(Rotations.getPitch(primary, Target.Body));}
+            case Packet -> {Rotations.rotate(Rotations.getYaw(primary), Rotations.getPitch(primary, Target.Body));}
+            case None -> {}
+        }
+    }
+
     private boolean acceptableWeapon(ItemStack stack) {
         if (shouldShieldBreak()) return stack.getItem() instanceof AxeItem;
         if (attackWhenHolding.get() == AttackItems.All) return true;
@@ -478,6 +497,12 @@ public class KillAura extends Module {
         All
     }
 
+    public enum Rotating {
+        Client,
+        Packet,
+        None
+    }
+    
     public enum RotationMode {
         Always,
         OnHit,
