@@ -325,11 +325,6 @@ public class KillAura extends Module {
             FindItemResult weaponResult = new FindItemResult(mc.player.getInventory().getSelectedSlot(), -1);
             if (attackWhenHolding.get() == AttackItems.Weapons) weaponResult = InvUtils.find(this::acceptableWeapon, 0, 8);
 
-            if (shouldShieldBreak()) {
-                FindItemResult axeResult = InvUtils.find(itemStack -> itemStack.getItem() instanceof AxeItem, 0, 8);
-                if (axeResult.found()) weaponResult = axeResult;
-            }
-
             if (!swapped) {
                 previousSlot  = mc.player.getInventory().getSelectedSlot();
                 swapped = true;
@@ -372,18 +367,6 @@ public class KillAura extends Module {
             InvUtils.swap(previousSlot, false);
             swapped = false;
         }
-    }
-
-    private boolean shouldShieldBreak() {
-        for (Entity target : targets) {
-            if (target instanceof PlayerEntity player) {
-                if (player.isBlocking() && shieldMode.get() == ShieldMode.Break) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     private boolean entityCheck(Entity entity) {
@@ -477,7 +460,6 @@ public class KillAura extends Module {
 
     private boolean acceptableWeapon(ItemStack stack)
     {
-        if (shouldShieldBreak()) return stack.getItem() instanceof AxeItem;
         if (attackWhenHolding.get() == AttackItems.All) return true;
 
         return weapons.get().contains(stack.getItem());
