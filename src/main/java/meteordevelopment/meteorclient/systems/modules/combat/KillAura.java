@@ -483,7 +483,7 @@ public class KillAura extends Module {
         switch(rotating.get())
         {
             case None -> {}
-            case Client -> {mc.player.setYaw(Rotations.getYaw(primary)); mc.player.setPitch(Rotations.getPitch(primary, Target.Body));}
+            case Client -> {mc.player.setYaw((float)Rotations.getYaw(primary)); mc.player.setPitch((float)Rotations.getPitch(primary, Target.Body));}
             case Packet -> {Rotations.rotate(Rotations.getYaw(primary), Rotations.getPitch(primary, Target.Body));}
         }
     }
