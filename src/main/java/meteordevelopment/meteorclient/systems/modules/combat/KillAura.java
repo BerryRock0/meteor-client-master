@@ -346,8 +346,7 @@ public class KillAura extends Module {
         }
 
         attacking = true;
-        if ()
-            rotatemode(rotation.get() == RotationMode.Always);
+        rotatemode(rotation.get() == RotationMode.Always);
         
         if (pauseOnCombat.get() && PathManagers.get().isPathing() && !wasPathing)
         {
