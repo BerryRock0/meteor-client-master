@@ -493,7 +493,7 @@ public class KillAura extends Module {
         switch (attackWhenHolding.get())
         {
             case All -> {return true;}
-            case Weapon -> {return weapons.get().contains(stack.getItem());}    
+            case Weapons -> {return weapons.get().contains(stack.getItem());}    
         }
         
         return false;
