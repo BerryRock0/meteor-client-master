@@ -481,9 +481,9 @@ public class KillAura extends Module {
     {
         switch(rotating.get())
         {
+            case None -> {}
             case Client -> {mc.player.setYaw(Rotations.getYaw(primary)); mc.player.setPitch(Rotations.getPitch(primary, Target.Body));}
             case Packet -> {Rotations.rotate(Rotations.getYaw(primary), Rotations.getPitch(primary, Target.Body));}
-            case None -> {}
         }
     }
 
@@ -491,8 +491,8 @@ public class KillAura extends Module {
     {
         switch (attackWhenHolding.get())
         {
-            case All -> return true;
-            case Weapon -> return weapons.get().contains(stack.getItem());    
+            case All -> {return true;}
+            case Weapon -> {return weapons.get().contains(stack.getItem());}    
         }
         
         return false;
