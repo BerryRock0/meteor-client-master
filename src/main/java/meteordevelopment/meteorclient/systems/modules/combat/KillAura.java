@@ -95,14 +95,6 @@ public class KillAura extends Module {
         .build()
     );
 
-    private final Setting<ShieldMode> shieldMode = sgGeneral.add(new EnumSetting.Builder<ShieldMode>()
-        .name("shield-mode")
-        .description("Will try and use an axe to break target shields.")
-        .defaultValue(ShieldMode.Break)
-        .visible(autoSwitch::get)
-        .build()
-    );
-
     private final Setting<Boolean> onlyOnClick = sgGeneral.add(new BoolSetting.Builder()
         .name("only-on-click")
         .description("Only attacks when holding left click.")
@@ -403,7 +395,6 @@ public class KillAura extends Module {
         {
             if (player.isCreative()) return false;
             if (!Friends.get().shouldAttack(player)) return false;
-            if (shieldMode.get() == ShieldMode.Ignore && player.isBlocking()) return false;
         }
         
         if(entity instanceof AnimalEntity animal)
@@ -494,12 +485,6 @@ public class KillAura extends Module {
     public enum RotationMode {
         Always,
         OnHit,
-        None
-    }
-
-    public enum ShieldMode {
-        Ignore,
-        Break,
         None
     }
 
