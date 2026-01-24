@@ -32,7 +32,7 @@ public class Automaton extends Module
     @EventHandler
     private void onTick(TickEvent.Post event)
     {
-        String cmd = commands.get(cmdindex);
+        String cmd = commands.get().get(cmdindex);
         String[] parts = cmd.trim().split("\\s+");
         String command = parts[0];
         String arg = parts[1];
