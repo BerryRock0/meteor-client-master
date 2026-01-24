@@ -90,13 +90,15 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
 
             settings.onActivated();
 
-            if (runInMainMenu || Utils.canUpdate()) {
+            if (runInMainMenu || Utils.canUpdate())
+            {
                 if (autoSubscribe) MeteorClient.EVENT_BUS.subscribe(this);
                 onActivate();
             }
         }
         else {
-            if (runInMainMenu || Utils.canUpdate()) {
+            if (runInMainMenu || Utils.canUpdate())
+            {
                 if (autoSubscribe) MeteorClient.EVENT_BUS.unsubscribe(this);
                 onDeactivate();
             }
@@ -106,12 +108,14 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
         }
     }
 
-    public void enable() {
-        if (!isActive()) toggle();
+    public void enable()
+    {
+        active = true;
     }
 
-    public void disable() {
-        if (isActive()) toggle();
+    public void disable()
+    {
+        active = false;
     }
 
     public void sendToggledMsg() {
