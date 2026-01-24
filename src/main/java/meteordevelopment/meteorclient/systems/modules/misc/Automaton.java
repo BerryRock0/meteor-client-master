@@ -26,11 +26,17 @@ public class Automaton extends Module
     
     public int cmdindex;
     public int delay;
-    public int repeats;
     
     public Automaton()
     {
         super(Categories.Misc, "automaton", "Doing actions with instructions. Format: <action> <value argument> <execution ticks>. Actions: yaw, pitch, forward, back, left, right, jump, attack, use, nop.");
+    }
+
+     @Override
+    public void onDeactivate()
+    {
+        cmdindex = 0;
+        delay = 0;
     }
 
     @EventHandler
@@ -74,9 +80,16 @@ public class Automaton extends Module
             case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "attack": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "use": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "restart": restart(); break;
             case "nop": break;
             default: break;
         }
+    }
+
+    public void restart()
+    {
+        disable();
+        enable();
     }
 
     public WWidget getWidget(GuiTheme theme)
