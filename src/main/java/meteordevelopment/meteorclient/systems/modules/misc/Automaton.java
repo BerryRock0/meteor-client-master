@@ -82,7 +82,7 @@ public class Automaton extends Module
             case "attack": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "use": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "to": cmdindex = Integer.parseInt(arg); break;
-            default: break;
+            default: restart() break;
         }
     }
 
