@@ -46,10 +46,10 @@ public class Automaton extends Module
         delay = 0;
 
         
-        if (cmdindex >= commands.get().size())
-            cmdindex = 0;
-        else
+        if (cmdindex < commands.get().size())
             cmdindex++;
+        else
+            cmdindex = 0;
     }
 
     private void execute(String command, String arg)
