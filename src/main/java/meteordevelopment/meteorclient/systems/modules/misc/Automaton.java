@@ -57,7 +57,7 @@ public class Automaton extends Module
         if (mc.player == null)
             return;
         
-        switch (a.toLowerCase())
+        switch (command.toLowerCase())
         {
             case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
             case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
