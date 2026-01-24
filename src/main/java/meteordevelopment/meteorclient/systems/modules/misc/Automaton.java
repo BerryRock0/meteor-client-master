@@ -2,11 +2,14 @@ package meteordevelopment.meteorclient.systems.modules.misc;
 
 import java.util.List;
 
+import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
+import meteordevelopment.meteorclient.events.world.TickEvent;
+
 
 public class Automaton extends Module
 {
@@ -23,7 +26,8 @@ public class Automaton extends Module
         super(Categories.Misc, "automaton", "Doing actions with instructions.");
     }
 
-    public void main()
+    @EventHandler
+    private void onTick(TickEvent.Pre event) {
     {
         for(String cmd : commands.get())
           if(isActive())
@@ -36,15 +40,19 @@ public class Automaton extends Module
         String command = parts[0].toLowerCase();
         String arg = parts[1];  // Не применяем toLowerCase здесь, так как для чисел/boolean это не нужно
 
+        if (mc.player == null)
+            return;
+        
         switch (command)
         {
-            case "set_yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
-            case "set_pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
-            case "press_forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "press_back": mc.options.backKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "press_left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "press_right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "press_jump": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
+            case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
+            case "forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "back": mc.options.backKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
+            default: break;
         }
     }
 }	
