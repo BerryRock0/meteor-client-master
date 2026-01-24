@@ -42,26 +42,27 @@ public class Automaton extends Module
     @EventHandler
     private void onTick(TickEvent.Post event)
     {
-        if (commands.get().isEmpty() || cmdindex > commands.get().size() - 1)
+        try
         {
-            cmdindex = 0;
-            return;
+            String cmd = commands.get().get(cmdindex);
+            String[] parts = cmd.trim().split("\\s+");
+            String command = parts[0];
+            String arg = parts[1];
+
+            if (delay < Integer.parseInt(parts[2]))
+            {
+                delay++;
+                if(isActive())
+                    execute(command, arg);
+                return;
+            }
+            delay = 0;
+            cmdindex++;  
         }
-        else cmdindex++;
-
-        String cmd = commands.get().get(cmdindex);
-        String[] parts = cmd.trim().split("\\s+");
-        String command = parts[0];
-        String arg = parts[1];
-
-        if (delay < Integer.parseInt(parts[2]))
+        catch(Exception e)
         {
-            delay++;
-            if(isActive())
-                execute(command, arg);
-            return;
-        }
-        delay = 0;
+            restart();
+        } 
     }
 
     private void execute(String command, String arg)
