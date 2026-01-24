@@ -51,6 +51,7 @@ public class Automaton extends Module
             delay++;
             if(isActive())
                 execute(command, arg);
+            return;
         }
         delay = 0;
         cmdindex++;
