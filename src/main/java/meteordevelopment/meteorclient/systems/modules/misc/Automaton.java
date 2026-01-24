@@ -46,7 +46,7 @@ public class Automaton extends Module
         delay = 0;
 
         
-        if (cmdindex > commands.size())
+        if (cmdindex > commands.get().size())
             cmdindex = 0;
         else
             cmdindex++;
