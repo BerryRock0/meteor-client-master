@@ -26,10 +26,11 @@ public class Automaton extends Module
     
     public int cmdindex;
     public int delay;
+    public int repeats;
     
     public Automaton()
     {
-        super(Categories.Misc, "automaton", "Doing actions with instructions.");
+        super(Categories.Misc, "automaton", "Doing actions with instructions. Format: <action> <value argument> <execution ticks>. Actions: yaw, pitch, forward, back, left, right, jump, to.");
     }
 
     @EventHandler
@@ -71,7 +72,10 @@ public class Automaton extends Module
             case "left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "end": break;
+            case "attack": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg));
+            case "use": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg));
+            case "to": cmdindex = Integer.parseInt(arg); break;
+            case "": break;
             default: break;
         }
     }
