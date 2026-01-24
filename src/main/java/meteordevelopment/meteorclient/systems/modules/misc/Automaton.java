@@ -27,32 +27,31 @@ public class Automaton extends Module
     }
 
     @EventHandler
-    private void onTick(TickEvent.Pre event) {
+    private void onTick(TickEvent.Pre event)
     {
         for(String cmd : commands.get())
-          if(isActive())
-            parseAndProceed(cmd);
-    }
-
-    public void parseAndProceed(String input)
-    {
-        String[] parts = input.trim().split("\\s+");
-        String command = parts[0].toLowerCase();
-        String arg = parts[1];  // Не применяем toLowerCase здесь, так как для чисел/boolean это не нужно
-
-        if (mc.player == null)
-            return;
-        
-        switch (command)
         {
-            case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
-            case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
-            case "forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "back": mc.options.backKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
-            default: break;
+            String[] parts = cmd.trim().split("\\s+");
+            String command = parts[0].toLowerCase();
+            String arg = parts[1];
+
+            if(isActive())
+            {
+                    if (mc.player == null)
+                        return;
+        
+                    switch (command)
+                    {
+                        case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
+                        case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
+                        case "forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(arg)); break;
+                        case "back": mc.options.backKey.setPressed(Boolean.parseBoolean(arg)); break;
+                        case "left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
+                        case "right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
+                        case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
+                        default: break;
+                    }
+            }
         }
     }
 }	
