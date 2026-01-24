@@ -60,9 +60,7 @@ public class Automaton extends Module
             cmdindex++;  
         }
         catch(Exception e)
-        {
-            restart();
-        } 
+        {} 
     }
 
     private void execute(String command, String arg)
@@ -84,12 +82,6 @@ public class Automaton extends Module
             case "to": cmdindex = Integer.parseInt(arg); break;
             default: break;
         }
-    }
-
-    public void restart()
-    {
-        disable();
-        enable();
     }
 
     public WWidget getWidget(GuiTheme theme)
