@@ -41,7 +41,7 @@ public class Automaton extends Module
         {
             delay--;
             if(isActive())
-                execute();
+                execute(command, arg);
         }
         delay = 0;
 
@@ -52,7 +52,7 @@ public class Automaton extends Module
             cmdindex++;
     }
 
-    private void execute(String a)
+    private void execute(String command, String arg)
     {
         if (mc.player == null)
             return;
