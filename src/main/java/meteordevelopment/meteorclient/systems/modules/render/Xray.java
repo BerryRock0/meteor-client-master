@@ -112,10 +112,12 @@ public class Xray extends Module {
         return !(blocks.get().contains(block) && (!exposedOnly.get() || (blockPos == null || BlockUtils.isExposed(blockPos))));
     }
 
-    public int getAlpha(BlockState state, BlockPos pos)
+    public static int getAlpha(BlockState state, BlockPos pos)
     {
-        if (isActive() && isBlocked(state.getBlock(), pos))
-            return opacity.get();
+        Xray xray = Modules.get().get(Xray.class);
+        
+        if (xray.isActive() && xray.isBlocked(state.getBlock(), pos))
+            return xray.opacity.get();
 
         return -1;
     }
