@@ -42,16 +42,17 @@ public class Automaton extends Module
     @EventHandler
     private void onTick(TickEvent.Post event)
     {
-        String cmd = commands.get().get(cmdindex);
-        String[] parts = cmd.trim().split("\\s+");
-        String command = parts[0];
-        String arg = parts[1];
-
-        if (commands.get().isEmpty() || cmdindex++ >= commands.get().size())
+        if (commands.get().isEmpty() || cmdindex > commands.get().size() - 1)
         {
             cmdindex = 0;
             return;
         }
+        else cmdindex++;
+
+        String cmd = commands.get().get(cmdindex);
+        String[] parts = cmd.trim().split("\\s+");
+        String command = parts[0];
+        String arg = parts[1];
 
         if (delay < Integer.parseInt(parts[2]))
         {
@@ -61,7 +62,6 @@ public class Automaton extends Module
             return;
         }
         delay = 0;
-        cmdindex++;
     }
 
     private void execute(String command, String arg)
