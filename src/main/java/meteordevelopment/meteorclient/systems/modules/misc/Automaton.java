@@ -37,6 +37,12 @@ public class Automaton extends Module
         String command = parts[0];
         String arg = parts[1];
 
+        if (commands.get().isEmpty() || cmdindex >= commands.get().size())
+        {
+            cmdindex = 0;
+            return;
+        }
+
         if (delay < Integer.parseInt(parts[2]))
         {
             delay++;
@@ -44,12 +50,8 @@ public class Automaton extends Module
                 execute(command, arg);
         }
         delay = 0;
+        cmdindex++;
 
-        
-        if (cmdindex < commands.get().size())
-            cmdindex++;
-        else
-            cmdindex = 0;
     }
 
     private void execute(String command, String arg)
