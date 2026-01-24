@@ -48,7 +48,6 @@ public class Xray extends Module {
         .description("The opacity for all other blocks.")
         .defaultValue(25)
         .range(0, 255)
-        .sliderMax(255)
         .onChanged(onChanged -> {
             if (isActive()) mc.worldRenderer.reload();
         })
@@ -80,29 +79,37 @@ public class Xray extends Module {
 
     @Override
     public WWidget getWidget(GuiTheme theme) {
-        if (MixinPlugin.isSodiumPresent) return theme.label("Warning: Due to Sodium in use, opacity is overridden to 0.");
-        if (MixinPlugin.isIrisPresent && IrisApi.getInstance().isShaderPackInUse()) return theme.label("Warning: Due to shaders in use, opacity is overridden to 0.");
+        if (MixinPlugin.isSodiumPresent)
+            return theme.label("Warning: Due to Sodium in use, opacity is overridden to 0.");
+        if (MixinPlugin.isIrisPresent && IrisApi.getInstance().isShaderPackInUse())
+            return theme.label("Warning: Due to shaders in use, opacity is overridden to 0.");
 
         return null;
     }
 
     @EventHandler
-    private void onRenderBlockEntity(RenderBlockEntityEvent event) {
-        if (isBlocked(event.blockEntityState.blockState.getBlock(), event.blockEntityState.pos)) event.cancel();
+    private void onRenderBlockEntity(RenderBlockEntityEvent event)
+    {
+        if (isBlocked(event.blockEntityState.blockState.getBlock(), event.blockEntityState.pos))
+            event.cancel();
     }
 
     @EventHandler
-    private void onChunkOcclusion(ChunkOcclusionEvent event) {
+    private void onChunkOcclusion(ChunkOcclusionEvent event)
+    {
         event.cancel();
     }
 
     @EventHandler
-    private void onAmbientOcclusion(AmbientOcclusionEvent event) {
+    private void onAmbientOcclusion(AmbientOcclusionEvent event)
+    {
         event.lightLevel = 1;
     }
 
-    public boolean modifyDrawSide(BlockState state, BlockView view, BlockPos pos, Direction facing, boolean returns) {
-        if (!returns && !isBlocked(state.getBlock(), pos)) {
+    public boolean modifyDrawSide(BlockState state, BlockView view, BlockPos pos, Direction facing, boolean returns)
+    {
+        if (!returns && !isBlocked(state.getBlock(), pos))
+        {
             BlockPos adjPos = pos.offset(facing);
             BlockState adjState = view.getBlockState(adjPos);
             return adjState.getCullingFace(facing.getOpposite()) != VoxelShapes.fullCube() || adjState.getBlock() != state.getBlock() || !adjState.isOpaqueFullCube() || isBlocked(adjState.getBlock(), adjPos);
@@ -115,23 +122,10 @@ public class Xray extends Module {
         return !(blocks.get().contains(block) && (!exposedOnly.get() || (blockPos == null || BlockUtils.isExposed(blockPos))));
     }
 
-    public static int getAlpha(BlockState state, BlockPos pos) {
-        WallHack wallHack = Modules.get().get(WallHack.class);
-        Xray xray = Modules.get().get(Xray.class);
-
-        if (wallHack.isActive() && wallHack.blocks.get().contains(state.getBlock())) {
-            if (MixinPlugin.isSodiumPresent || (MixinPlugin.isIrisPresent && IrisApi.getInstance().isShaderPackInUse())) return 0;
-
-            int alpha;
-
-            if (xray.isActive()) alpha = xray.opacity.get();
-            else alpha = wallHack.opacity.get();
-
-            return alpha;
-        }
-        else if (xray.isActive() && !wallHack.isActive() && xray.isBlocked(state.getBlock(), pos)) {
-            return (MixinPlugin.isSodiumPresent || (MixinPlugin.isIrisPresent && IrisApi.getInstance().isShaderPackInUse())) ? 0 : xray.opacity.get();
-        }
+    public static int getAlpha(BlockState state, BlockPos pos)
+    {
+        if (isActive() && isBlocked(state.getBlock(), pos))
+            return opacity.get();
 
         return -1;
     }
