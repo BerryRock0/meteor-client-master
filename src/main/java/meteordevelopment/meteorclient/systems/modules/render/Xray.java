@@ -77,16 +77,6 @@ public class Xray extends Module {
         mc.worldRenderer.reload();
     }
 
-    @Override
-    public WWidget getWidget(GuiTheme theme) {
-        if (MixinPlugin.isSodiumPresent)
-            return theme.label("Warning: Due to Sodium in use, opacity is overridden to 0.");
-        if (MixinPlugin.isIrisPresent && IrisApi.getInstance().isShaderPackInUse())
-            return theme.label("Warning: Due to shaders in use, opacity is overridden to 0.");
-
-        return null;
-    }
-
     @EventHandler
     private void onRenderBlockEntity(RenderBlockEntityEvent event)
     {
