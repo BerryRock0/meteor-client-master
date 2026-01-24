@@ -30,7 +30,7 @@ public class Automaton extends Module
     
     public Automaton()
     {
-        super(Categories.Misc, "automaton", "Doing actions with instructions. Format: <action> <value argument> <execution ticks>. Actions: yaw, pitch, forward, back, left, right, jump, to.");
+        super(Categories.Misc, "automaton", "Doing actions with instructions. Format: <action> <value argument> <execution ticks>. Actions: yaw, pitch, forward, back, left, right, jump, attack, use, nop.");
     }
 
     @EventHandler
@@ -74,7 +74,7 @@ public class Automaton extends Module
             case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "attack": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "use": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "to": cmdindex = Integer.parseInt(arg); break;
+            case "nop": break;
             default: break;
         }
     }
