@@ -41,7 +41,7 @@ public class Automaton extends Module
         String command = parts[0];
         String arg = parts[1];
 
-        if (commands.get().isEmpty() || cmdindex >= commands.get().size() - 1)
+        if (commands.get().isEmpty() || cmdindex >= commands.get().size())
         {
             cmdindex = 0;
             return;
@@ -75,7 +75,6 @@ public class Automaton extends Module
             case "attack": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "use": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "to": cmdindex = Integer.parseInt(arg); break;
-            case "": break;
             default: break;
         }
     }
