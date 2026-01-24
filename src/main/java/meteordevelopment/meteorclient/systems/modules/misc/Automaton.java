@@ -41,7 +41,7 @@ public class Automaton extends Module
         String command = parts[0];
         String arg = parts[1];
 
-        if (commands.get().isEmpty() || cmdindex >= commands.get().size())
+        if (commands.get().isEmpty() || cmdindex >= commands.get().size() - 1)
         {
             cmdindex = 0;
             return;
