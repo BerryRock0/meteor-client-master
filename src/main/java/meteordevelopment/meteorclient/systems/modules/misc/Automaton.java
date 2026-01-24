@@ -36,8 +36,8 @@ public class Automaton extends Module
 
         switch (parts[0].toLowerCase())
         {
-            case "set_yaw": MC.player.setYaw(parts[1].toLowerCase());
-            case "set_pitch": MC.player.setPitch(parts[1].toLowerCase());
+            case "set_yaw": mc.player.setYaw(parts[1].toLowerCase());
+            case "set_pitch": mc.player.setPitch(parts[1].toLowerCase());
             case "press_forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(parts[1].toLowerCase()));
             case "press_back": mc.options.backKey.setPressed(Boolean.parseBoolean(parts[1].toLowerCase()));
             case "press_left": mc.options.leftKey.setPressed(Boolean.parseBoolean(parts[1].toLowerCase()));
