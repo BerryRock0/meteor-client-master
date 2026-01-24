@@ -3,6 +3,9 @@ package meteordevelopment.meteorclient.systems.modules.misc;
 import java.util.List;
 
 import meteordevelopment.orbit.EventHandler;
+import meteordevelopment.meteorclient.gui.GuiTheme;
+import meteordevelopment.meteorclient.gui.widgets.WWidget;
+import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
@@ -51,7 +54,6 @@ public class Automaton extends Module
         }
         delay = 0;
         cmdindex++;
-
     }
 
     private void execute(String command, String arg)
@@ -70,5 +72,13 @@ public class Automaton extends Module
             case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
             default: break;
         }
+    }
+
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WButton reset = theme.button("Reset");
+        reset.action = () -> cmdindex = 0;
+
+        return reset;
     }
 }	
