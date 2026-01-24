@@ -72,8 +72,8 @@ public class Automaton extends Module
             case "left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
-            case "attack": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg));
-            case "use": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg));
+            case "attack": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "use": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "to": cmdindex = Integer.parseInt(arg); break;
             case "": break;
             default: break;
