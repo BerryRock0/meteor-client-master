@@ -566,6 +566,7 @@ public class Modules extends System<Modules> {
     private void initMisc() {
         add(new AntiPacketKick());
         add(new AutoReconnect());
+        add(new Automaton());
         add(new BetterBeacons());
         add(new BetterChat());
         add(new BookBot());
