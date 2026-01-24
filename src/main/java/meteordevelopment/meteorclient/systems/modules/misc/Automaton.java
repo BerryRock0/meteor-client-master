@@ -10,17 +10,20 @@ import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 
-
 public class Automaton extends Module
 {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<List<String>> commands = sgGeneral.add(new StringListSetting.Builder()
+    private final Setting<List<String>> commands = sgGeneral.add(new StringListSetting
+        .Builder()
         .name("commands")
         .description("setting commands")
         .build()
     );
-
+    
+    public int cmdindex;
+    public int delay;
+    
     public Automaton()
     {
         super(Categories.Misc, "automaton", "Doing actions with instructions.");
@@ -29,29 +32,41 @@ public class Automaton extends Module
     @EventHandler
     private void onTick(TickEvent.Post event)
     {
-        for(String cmd : commands.get())
-        {
-            String[] parts = cmd.trim().split("\\s+");
-            String command = parts[0].toLowerCase();
-            String arg = parts[1];
+        String cmd = commands.get()
+        String[] parts = cmd.trim().split("\\s+");
+        String command = parts[0];
+        String arg = parts[1];
 
+        if (delay < Integer.parseInt(parts[2]))
+        {
+            delay--;
             if(isActive())
-            {
-                    if (mc.player == null)
-                        return;
+                execute();
+        }
+        delay = 0;
+
         
-                    switch (command)
-                    {
-                        case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
-                        case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
-                        case "forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(arg)); break;
-                        case "back": mc.options.backKey.setPressed(Boolean.parseBoolean(arg)); break;
-                        case "left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
-                        case "right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
-                        case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
-                        default: break;
-                    }
-            }
+        if (cmdindex > commands.size())
+            cmdindex = 0;
+        else
+            cmdindex++;
+    }
+
+    private void execute(String a)
+    {
+        if (mc.player == null)
+            return;
+        
+        switch (a.toLowerCase())
+        {
+            case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
+            case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
+            case "forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "back": mc.options.backKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
+            default: break;
         }
     }
 }	
