@@ -33,16 +33,18 @@ public class Automaton extends Module
     public void parseAndProceed(String input)
     {
         String[] parts = input.trim().split("\\s+");
+        String command = parts[0].toLowerCase();
+        String arg = parts[1];  // Не применяем toLowerCase здесь, так как для чисел/boolean это не нужно
 
-        switch (parts[0].toLowerCase())
+        switch (command)
         {
-            case "set_yaw": mc.player.setYaw(Float.parseFloat(parts[1].toLowerCase()));
-            case "set_pitch": mc.player.setPitch(Float.parseFloat(parts[1].toLowerCase()));
-            case "press_forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(parts[1].toLowerCase()));
-            case "press_back": mc.options.backKey.setPressed(Boolean.parseBoolean(parts[1].toLowerCase()));
-            case "press_left": mc.options.leftKey.setPressed(Boolean.parseBoolean(parts[1].toLowerCase()));
-            case "press_right": mc.options.rightKey.setPressed(Boolean.parseBoolean(parts[1].toLowerCase()));
-            case "press_jump": mc.options.rightKey.setPressed(Boolean.parseBoolean(parts[1].toLowerCase()));
+            case "set_yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
+            case "set_pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
+            case "press_forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "press_back": mc.options.backKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "press_left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "press_right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "press_jump": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
         }
     }
 }	
