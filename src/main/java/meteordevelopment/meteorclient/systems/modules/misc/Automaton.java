@@ -39,7 +39,7 @@ public class Automaton extends Module
 
         if (delay < Integer.parseInt(parts[2]))
         {
-            delay--;
+            delay++;
             if(isActive())
                 execute(command, arg);
         }
