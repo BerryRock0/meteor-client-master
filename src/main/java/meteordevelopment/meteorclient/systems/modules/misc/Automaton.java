@@ -29,7 +29,7 @@ public class Automaton extends Module
     
     public Automaton()
     {
-        super(Categories.Misc, "automaton", "Doing actions with instructions. Format: <action> <value argument> <execution ticks>. Actions: yaw, pitch, forward, back, left, right, jump, attack, use, nop.");
+        super(Categories.Misc, "automaton", "Doing actions with instructions. Format: <action> <value argument> <execution ticks>. Actions: yaw, pitch, forward, back, left, right, jump, attack, use, to.");
     }
 
      @Override
