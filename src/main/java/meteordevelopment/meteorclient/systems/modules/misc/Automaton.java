@@ -114,6 +114,6 @@ public class Automaton extends Module
 
     public WWidget getWidget(GuiTheme theme)
     {
-        return theme.button("Reset").action = () -> cmdindex = 0;
+        return theme.button("Reset").action() -> cmdindex = 0;
     }
 }	
