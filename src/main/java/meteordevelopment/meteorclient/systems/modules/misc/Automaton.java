@@ -46,13 +46,6 @@ public class Automaton extends Module
         super(Categories.Misc, "automaton", "Doing actions with instructions. Format: <action> <value argument> <execution ticks>. Actions: yaw, pitch, forward, back, left, right, jump, attack, use, to.");
     }
 
-     @Override
-    public void onDeactivate()
-    {
-        cmdindex = 0;
-        delay = 0;
-    }
-
     @EventHandler
     private void onPreTick(TickEvent.Pre event)
     {
