@@ -46,7 +46,6 @@ public class Xray extends Module {
     public final Setting<Integer> opacity = sgGeneral.add(new IntSetting.Builder()
         .name("opacity")
         .description("The opacity for all other blocks.")
-        .defaultValue(25)
         .range(0, 255)
         .onChanged(onChanged -> {
             if (isActive()) mc.worldRenderer.reload();
