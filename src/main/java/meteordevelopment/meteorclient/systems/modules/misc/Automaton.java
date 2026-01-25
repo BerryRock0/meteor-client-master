@@ -23,7 +23,9 @@ public class Automaton extends Module
         .description("setting commands")
         .build()
     );
-    
+
+    public boolean pre;
+    public boolean post;
     public int cmdindex;
     public int delay;
     
@@ -40,7 +42,19 @@ public class Automaton extends Module
     }
 
     @EventHandler
-    private void onTick(TickEvent.Pre event)
+    private void onPreTick(TickEvent.Pre event)
+    {
+        main();
+    }
+
+    
+    @EventHandler
+    private void onPostTick(TickEvent.Post event)
+    {
+        main();
+    }
+
+    public void main()
     {
         try
         {
@@ -62,6 +76,8 @@ public class Automaton extends Module
         catch(Exception e)
         {} 
     }
+
+    
 
     private void execute(String command, String arg)
     {
