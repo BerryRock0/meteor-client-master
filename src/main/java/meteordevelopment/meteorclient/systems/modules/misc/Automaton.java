@@ -15,17 +15,29 @@ import meteordevelopment.meteorclient.events.world.TickEvent;
 
 public class Automaton extends Module
 {
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgSettings = settings.createGroup("Settings");
+    private final SettingGroup sgDoings = settings.createGroup("Script");
 
-    private final Setting<List<String>> commands = sgGeneral.add(new StringListSetting
+   private final Setting<Boolean> pre = sgSettings.add(new BoolSetting.Builder()
+        .name("Pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> post = sgSettings.add(new BoolSetting.Builder()
+        .name("Post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    private final Setting<List<String>> commands = sgScript.add(new StringListSetting
         .Builder()
         .name("commands")
         .description("setting commands")
         .build()
     );
 
-    public boolean pre;
-    public boolean post;
     public int cmdindex;
     public int delay;
     
@@ -44,14 +56,16 @@ public class Automaton extends Module
     @EventHandler
     private void onPreTick(TickEvent.Pre event)
     {
-        main();
+        if (pre)
+            main();
     }
 
     
     @EventHandler
     private void onPostTick(TickEvent.Post event)
     {
-        main();
+        if (post)
+            main();
     }
 
     public void main()
@@ -77,8 +91,6 @@ public class Automaton extends Module
         {} 
     }
 
-    
-
     private void execute(String command, String arg)
     {
         if (mc.player == null)
@@ -102,9 +114,7 @@ public class Automaton extends Module
 
     public WWidget getWidget(GuiTheme theme)
     {
-        WButton reset = theme.button("Reset");
-        reset.action = () -> cmdindex = 0;
-
+        theme.button("Reset").action = () -> cmdindex = 0;
         return reset;
     }
 }	
