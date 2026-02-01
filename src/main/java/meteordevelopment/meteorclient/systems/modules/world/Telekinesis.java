@@ -1,4 +1,4 @@
-package meteordevelopment.meteorclient.systems.modules.world;
+ypackage meteordevelopment.meteorclient.systems.modules.world;
 
 import org.joml.Vector3d;
 import java.util.List;
@@ -75,7 +75,7 @@ public class Telekinesis extends Module {
     );
     
     public final Setting<Boolean> list = sgBounds.add(new BoolSetting.Builder()
-        .name("list-case-boolean")
+        .name("entitylist-case-boolean")
         .description("Switches black/white list.")
         .defaultValue(false)
         .build()
