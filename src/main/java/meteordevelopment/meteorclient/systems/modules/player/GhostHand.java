@@ -25,10 +25,25 @@ import net.minecraft.util.math.Vec3d;
 public class GhostHand extends Module {
 	
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgBounds = settings.createGroup("Bounds");
     
     public final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
         .name("blocks")
         .description("What blocks should be emptied.")
+        .build()
+    );
+
+    public final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
+        .name("list-final-boolean")
+        .description("Switches black/white cases.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> list = sgBounds.add(new BoolSetting.Builder()
+        .name("blocklist-case-boolean")
+        .description("Switches black/white list.")
+        .defaultValue(false)
         .build()
     );
     
@@ -38,6 +53,14 @@ public class GhostHand extends Module {
 
     public boolean inBlockList(Block block)
     {
-        return isActive() && blocks.get().contains(block);
+        return isActive() && inList(block);
+    }
+
+    public boolean inList(Block block)
+    { 
+        if (blocks.get().contains(block))
+            return list.get();
+        
+        return cases.get();
     }
 }
