@@ -91,10 +91,8 @@ public class AutoTaking extends Module
         switch(action.get())
 		{
 			case QuickMove -> {im.clickSlot(ply.currentScreenHandler.syncId, tS, fullstack.get() ? 1 : 0, SlotActionType.QUICK_MOVE, ply);}
-			break;
-			
 			case Throw -> {im.clickSlot(ply.currentScreenHandler.syncId, tS, fullstack.get() ? 1 : 0, SlotActionType.THROW, ply);}
-			break;
+            default -> {}
 		}
     }
 
