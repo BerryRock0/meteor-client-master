@@ -25,6 +25,13 @@ public class AutoTaking extends Module
         .build()
     );
 
+    private final Setting<Action> action = sgGeneral.add(new EnumSetting.Builder<Action>()
+        .name("action-mode")
+        .description("Action after taking.")
+        .defaultValue(Action.Throw)
+        .build()
+    );
+
     private final Setting<Boolean> fullstack = sgControl.add(new BoolSetting.Builder()
         .name("fullstack")
         .description("Take full stack.")
@@ -82,13 +89,18 @@ public class AutoTaking extends Module
 		inv = mc.player.getInventory();
         tS = taking_slot.get();
 
-        switch(mode.getSelected())
+        switch(action.get())
 		{
-			case MOVE -> im.clickSlot(ply.currentScreenHandler.syncId, tS, fullstack.get() ? 1 : 0, SlotActionType.QUICK_MOVE, ply);
+			case QuickMove -> {im.clickSlot(ply.currentScreenHandler.syncId, tS, fullstack.get() ? 1 : 0, SlotActionType.QUICK_MOVE, ply);}
 			break;
 			
-			case DROP -> im.clickSlot(ply.currentScreenHandler.syncId, tS, fullstack.get() ? 1 : 0, SlotActionType.THROW, ply);
+			case Throw -> {im.clickSlot(ply.currentScreenHandler.syncId, tS, fullstack.get() ? 1 : 0, SlotActionType.THROW, ply);}
 			break;
 		}
+    }
+
+    public enum Action
+    {
+        QuickMove, Throw
     }
 }
