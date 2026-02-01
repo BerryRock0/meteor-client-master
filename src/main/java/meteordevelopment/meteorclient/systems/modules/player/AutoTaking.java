@@ -11,13 +11,15 @@ import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
+import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.orbit.EventHandler;
 
 public class AutoTaking extends Module
 {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgControl = settings.createGroup("Control");
 
-    private final Setting<Integer> taking_slot = sgGeneral.add(new IntSetting.Builder()
+    private final Setting<Integer> slot = sgGeneral.add(new IntSetting.Builder()
         .name("taking-slot")
         .description("The slot and which is being taken.")
         .range(0, 2147483647)                                                     
@@ -55,7 +57,7 @@ public class AutoTaking extends Module
     ClientPlayerEntity ply;
 	ClientPlayerInteractionManager im;
 	PlayerInventory inv;
-    int cS;
+    int tS;
     
     public AutoTaking()
     {
@@ -86,7 +88,7 @@ public class AutoTaking extends Module
 		ply = mc.player;
 		im = mc.interactionManager;
 		inv = mc.player.getInventory();
-        tS = taking_slot.get();
+        tS = slot.get();
 
         switch(action.get())
 		{
