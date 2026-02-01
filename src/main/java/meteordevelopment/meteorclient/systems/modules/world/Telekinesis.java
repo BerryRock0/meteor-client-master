@@ -16,12 +16,15 @@ import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 
+import meteordevelopment.orbit.EventHandler;
+import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 
 public class Telekinesis extends Module {
-   private final SettingGroup sgGeneral = settings.getDefaultGroup();
-   private final SettingGroup sgBounds = settings.createGroup("Bounds");
-   private final SettingGroup sgFunctions = settings.createGroup("Functions");
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgBounds = settings.createGroup("Bounds");
+    private final SettingGroup sgControl = settings.createGroup("Control");
+    private final SettingGroup sgFunctions = settings.createGroup("Functions");
     
    public final Setting<Vector3d> velocity = sgGeneral.add(new Vector3dSetting.Builder()
         .name("velocity")
@@ -74,24 +77,23 @@ public class Telekinesis extends Module {
         .build()
     );
     
-    public final Setting<Boolean> list = sgBounds.add(new BoolSetting.Builder()
+    public final Setting<Boolean> entitylist = sgBounds.add(new BoolSetting.Builder()
         .name("entitylist-case-boolean")
         .description("Switches black/white list.")
         .defaultValue(false)
         .build()
     );
-    
-    public final Setting<Boolean> frames = sgBounds.add(new BoolSetting.Builder()
-        .name("frames-final-boolean")
-        .description("Switches true/false frames.")
+
+    public final Setting<Boolean> uuidlist = sgBounds.add(new BoolSetting.Builder()
+        .name("uuidlist-case-boolean")
+        .description("Switches black/white list.")
         .defaultValue(false)
         .build()
     );
 
-    public final Setting<Boolean> focus = sgBounds.add(new BoolSetting.Builder()
-        .name("focus-case-boolean")
-        .description("Switches black/white focus.")
-        .defaultValue(false)
+    private final Setting<List<String>> uuids = sgBounds.add(new StringListSetting.Builder()
+        .name("uuids")
+        .description("setting commands")
         .build()
     );
 
@@ -114,24 +116,20 @@ public class Telekinesis extends Module {
         super(Categories.World, "telekinesis", "Move entities in third axis.");
     }
 
+    
     public boolean task(Entity entity)
     {
-        return isActive() && inList(entity) && inFrames(entity);
+        return isActive() && inList(entity);
     }
 
     public boolean inList(Entity entity)
-    { 
+    {
+        if (uuids.get().contains(entity.getUuid().toString()))
+            return uuidlist.get();
+        
         if (entities.get().contains(entity.getType()))
-            return list.get();
+            return entitylist.get();
         
         return cases.get();
-    }
-    
-    public boolean inFrames(Entity entity)
-    {   
-        if (PlayerUtils.isWithin(entity, range.get()) && PlayerUtils.inFov(entity, fov.get()))
-            return focus.get();
-        
-        return frames.get();
     }
 }
