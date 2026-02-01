@@ -1,4 +1,3 @@
-
 package meteordevelopment.meteorclient.systems.modules.player;
 
 import net.minecraft.client.gui.screen.Screen;
