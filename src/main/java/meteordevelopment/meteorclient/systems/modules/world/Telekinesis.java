@@ -23,8 +23,6 @@ import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 public class Telekinesis extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgBounds = settings.createGroup("Bounds");
-    private final SettingGroup sgControl = settings.createGroup("Control");
-    private final SettingGroup sgFunctions = settings.createGroup("Functions");
     
    public final Setting<Vector3d> velocity = sgGeneral.add(new Vector3dSetting.Builder()
         .name("velocity")
@@ -51,19 +49,6 @@ public class Telekinesis extends Module {
         .build()
     );
 
-   private final Setting<Double> range = sgBounds.add(new DoubleSetting.Builder()
-        .name("range")
-        .description("Telekinesis range limit.")
-        .defaultValue(0)
-        .build()
-    );
-
-   public final Setting<Double> fov = sgBounds.add(new DoubleSetting.Builder()
-        .name("fov")
-        .description("Telekinesis fov limit.")
-        .defaultValue(0)
-        .build()
-    );
    public final Setting<Set<EntityType<?>>> entities = sgBounds.add(new EntityTypeListSetting.Builder()
         .name("entities")
         .description("Select specific entities.")
@@ -96,27 +81,12 @@ public class Telekinesis extends Module {
         .description("setting commands")
         .build()
     );
-
-    public final Setting<Boolean> kinesis = sgFunctions.add(new BoolSetting.Builder()
-        .name("kinesis")
-        .description("Disables/enables kinesis change.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> angle = sgFunctions.add(new BoolSetting.Builder()
-        .name("angle")
-        .description("Disables/enables angle change.")
-        .defaultValue(false)
-        .build()
-    );
     
     public Telekinesis()
     {
         super(Categories.World, "telekinesis", "Move entities in third axis.");
     }
 
-    
     public boolean task(Entity entity)
     {
         return isActive() && inList(entity);
