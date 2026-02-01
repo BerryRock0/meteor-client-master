@@ -236,7 +236,7 @@ public abstract class EntityMixin {
 		Entity thisObj = (Entity)(Object)this;
 		Telekinesis tk = Modules.get().get(Telekinesis.class);
         
-		if(tk.task(thisObj))
+		if(!tk.task(thisObj))
             return;
         
         thisObj.setVelocity(tk.velocity.get().x, tk.velocity.get().y, tk.velocity.get().z);
