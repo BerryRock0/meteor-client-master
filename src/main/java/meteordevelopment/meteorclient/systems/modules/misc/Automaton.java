@@ -31,8 +31,7 @@ public class Automaton extends Module
         .build()
     );
     
-    private final Setting<List<String>> commands = sgScripts.add(new StringListSetting
-        .Builder()
+    private final Setting<List<String>> commands = sgScripts.add(new StringListSetting.Builder()
         .name("commands")
         .description("setting commands")
         .build()
@@ -40,6 +39,10 @@ public class Automaton extends Module
 
     public int cmdindex;
     public int delay;
+    public String cmd;
+    public String[] parts;
+    public String command;
+    public String arg;
     
     public Automaton()
     {
@@ -65,10 +68,10 @@ public class Automaton extends Module
     {
         try
         {
-            String cmd = commands.get().get(cmdindex);
-            String[] parts = cmd.trim().split("\\s+");
-            String command = parts[0];
-            String arg = parts[1];
+            cmd = commands.get().get(cmdindex);
+            parts = cmd.trim().split("\\s+");
+            command = parts[0];
+            arg = parts[1];
 
             if (delay < Integer.parseInt(parts[2]))
             {
