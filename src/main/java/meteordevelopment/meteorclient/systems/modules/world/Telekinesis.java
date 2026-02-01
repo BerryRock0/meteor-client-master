@@ -1,4 +1,4 @@
-ypackage meteordevelopment.meteorclient.systems.modules.world;
+package meteordevelopment.meteorclient.systems.modules.world;
 
 import org.joml.Vector3d;
 import java.util.List;
