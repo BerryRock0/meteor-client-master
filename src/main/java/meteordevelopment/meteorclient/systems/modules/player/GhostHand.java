@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.settings.BlockListSetting;
