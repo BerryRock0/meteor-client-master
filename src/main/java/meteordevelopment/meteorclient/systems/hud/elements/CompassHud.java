@@ -152,9 +152,7 @@ public class CompassHud extends HudElement {
         N("Z-"),
         W("X-"),
         S("Z+"),
-        E("X+"), 
-        U("Y+"),
-        D("Y-");
+        E("X+");
 
         private final String axis;
 
