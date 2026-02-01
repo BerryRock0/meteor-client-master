@@ -237,9 +237,9 @@ public abstract class EntityMixin {
 		Telekinesis tk = Modules.get().get(Telekinesis.class);
         
 		if(tk.task(thisObj))
-        {
-		    if(tk.kinesis.get()) thisObj.setVelocity(tk.velocity.get().x, tk.velocity.get().y, tk.velocity.get().z);
-            if(tk.angle.get()) thisObj.setAngles(tk.yaw.get().floatValue(), tk.pitch.get().floatValue());
-        }
+            return;
+        
+        thisObj.setVelocity(tk.velocity.get().x, tk.velocity.get().y, tk.velocity.get().z);
+        thisObj.setAngles(tk.yaw.get().floatValue(), tk.pitch.get().floatValue());
 	}
 }
