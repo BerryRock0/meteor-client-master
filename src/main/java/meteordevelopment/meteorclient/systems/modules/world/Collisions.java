@@ -18,7 +18,6 @@ import meteordevelopment.orbit.EventHandler;
 public class Collisions extends Module {
     private final SettingGroup sgFullcube = settings.createGroup("FullCube");
     private final SettingGroup sgEmpty = settings.createGroup("Empty");
-    private final SettingGroup sgAbsent = settings.createGroup("Absent");
     private final SettingGroup sgOther = settings.createGroup("Other");
     
     public final Setting<List<Block>> fullcube = sgFullcube.add(new BlockListSetting.Builder()
@@ -61,26 +60,6 @@ public class Collisions extends Module {
         .build()
     );
 
-    public final Setting<List<Block>> absent = sgAbsent.add(new BlockListSetting.Builder()
-        .name("absent")
-        .description("What blocks should be absentify.")
-        .build()
-    );
-
-    public final Setting<Boolean> absentcase = sgAbsent.add(new BoolSetting.Builder()
-        .name("absent-case")
-        .description("Switches black/white case.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> absentfinal = sgAbsent.add(new BoolSetting.Builder()
-        .name("absent-final")
-        .description("Switches black/white final.")
-        .defaultValue(false)
-        .build()
-    );
-
     private final Setting<Boolean> ignoreBorder = sgOther.add(new BoolSetting.Builder()
         .name("ignore-border")
         .description("Removes world border collision.")
@@ -105,13 +84,6 @@ public class Collisions extends Module {
         if (empty.get().contains(block))
             return isActive() && emptylist.get();
         return isActive() && emptyfinal.get();
-    }
-    
-    public boolean abs(Block block)
-    {
-        if (absent.get().contains(block))
-            return isActive() && absentcase.get();
-        return isActive() && absentfinal.get();
     }
     
     public boolean ignoreBorder()
