@@ -72,11 +72,6 @@ public class GhostHand extends Module {
         super(Categories.Player, "ghost-hand", "Interact blocks through walls.");
     }
 
-    public boolean inBlockList(Block block)
-    {
-        return isActive() && inList(block);
-    }
-
     public boolean full(Block block)
     {
         if (fullcube.get().contains(block))
@@ -90,5 +85,4 @@ public class GhostHand extends Module {
             return isActive() && emptylist.get();
         return isActive() && emptyfinal.get();
     }
-    
 }
