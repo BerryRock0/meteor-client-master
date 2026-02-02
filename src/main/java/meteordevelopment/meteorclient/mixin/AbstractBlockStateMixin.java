@@ -43,8 +43,11 @@ public abstract class AbstractBlockStateMixin {
 	    if (Modules.get() == null) return;
         GhostHand gh = Modules.get().get(GhostHand.class);
 
-        if (gh.inBlockList(view.getBlockState(pos).getBlock()))
+        if (gh.emp(view.getBlockState(pos).getBlock()))
 	        cir.setReturnValue(VoxelShapes.empty());
+        
+        if (gh.full(view.getBlockState(pos).getBlock()))
+	        cir.setReturnValue(VoxelShapes.fullCube());
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/ShapeContext;)Lnet/minecraft/util/shape/VoxelShape;", cancellable = true)
@@ -52,11 +55,11 @@ public abstract class AbstractBlockStateMixin {
 	{
         if (Modules.get() == null) return;
         Collisions coll = Modules.get().get(Collisions.class);
+
+		if(coll.emp(world.getBlockState(pos).getBlock()))
+            cir.setReturnValue(VoxelShapes.empty());
         
 	    if(coll.full(world.getBlockState(pos).getBlock()))
             cir.setReturnValue(VoxelShapes.fullCube());
-        
-		if(coll.emp(world.getBlockState(pos).getBlock()))
-            cir.setReturnValue(VoxelShapes.empty());
 	}
 }
