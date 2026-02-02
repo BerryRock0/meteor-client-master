@@ -25,25 +25,45 @@ import net.minecraft.util.math.Vec3d;
 
 public class GhostHand extends Module {
 	
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgBounds = settings.createGroup("Bounds");
+    private final SettingGroup sgFullcube = settings.createGroup("FullCube");
+    private final SettingGroup sgEmpty = settings.createGroup("Empty");
     
-    public final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
-        .name("blocks")
-        .description("What blocks should be emptied.")
+    public final Setting<List<Block>> fullcube = sgFullcube.add(new BlockListSetting.Builder()
+        .name("full-cube")
+        .description("What blocks should be added collision box.")
         .build()
     );
-
-    public final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
-        .name("list-final-boolean")
-        .description("Switches black/white cases.")
+    
+    public final Setting<Boolean> fullcubelist = sgFullcube.add(new BoolSetting.Builder()
+        .name("fullcube-case")
+        .description("Switches black/white case.")
         .defaultValue(false)
         .build()
     );
     
-    public final Setting<Boolean> list = sgBounds.add(new BoolSetting.Builder()
-        .name("blocklist-case-boolean")
-        .description("Switches black/white list.")
+    public final Setting<Boolean> fullcubefinal = sgFullcube.add(new BoolSetting.Builder()
+        .name("fullcube-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<List<Block>> empty = sgEmpty.add(new BlockListSetting.Builder()
+        .name("empty")
+        .description("What blocks should be emptied.")
+        .build()
+    );
+
+    public final Setting<Boolean> emptycase = sgEmpty.add(new BoolSetting.Builder()
+        .name("empty-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> emptyfinal = sgEmpty.add(new BoolSetting.Builder()
+        .name("empty-final")
+        .description("Switches black/white final.")
         .defaultValue(false)
         .build()
     );
@@ -57,11 +77,18 @@ public class GhostHand extends Module {
         return isActive() && inList(block);
     }
 
-    public boolean inList(Block block)
-    { 
-        if (blocks.get().contains(block))
-            return list.get();
-        
-        return cases.get();
+    public boolean full(Block block)
+    {
+        if (fullcube.get().contains(block))
+            return isActive() && fullcubecase.get();
+        return isActive() && fullcubefinal.get();   
     }
+    
+    public boolean emp(Block block)
+    {
+        if (empty.get().contains(block))
+            return isActive() && emptylist.get();
+        return isActive() && emptyfinal.get();
+    }
+    
 }
