@@ -46,8 +46,8 @@ import java.util.Set;
 
 public class Nuker extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgWhitelist = settings.createGroup("Whitelist");
-    private final SettingGroup sgRender = settings.createGroup("Render");
+    private final SettingGroup sgBounds = settings.createGroup("Bounds");
+    private final SettingGroup sgVisual = settings.createGroup("Visual");
 
     // General
 
@@ -189,28 +189,28 @@ public class Nuker extends Module {
 
     // Whitelist and blacklist
 
-    private final Setting<ListMode> listMode = sgWhitelist.add(new EnumSetting.Builder<ListMode>()
+    private final Setting<ListMode> listMode = sgBounds.add(new EnumSetting.Builder<ListMode>()
         .name("list-mode")
         .description("Selection mode.")
         .defaultValue(ListMode.Blacklist)
         .build()
     );
 
-    private final Setting<List<Block>> blacklist = sgWhitelist.add(new BlockListSetting.Builder()
+    private final Setting<List<Block>> blacklist = sgBounds.add(new BlockListSetting.Builder()
         .name("blacklist")
         .description("The blocks you don't want to mine.")
         .visible(() -> listMode.get() == ListMode.Blacklist)
         .build()
     );
 
-    private final Setting<List<Block>> whitelist = sgWhitelist.add(new BlockListSetting.Builder()
+    private final Setting<List<Block>> whitelist = sgBounds.add(new BlockListSetting.Builder()
         .name("whitelist")
         .description("The blocks you want to mine.")
         .visible(() -> listMode.get() == ListMode.Whitelist)
         .build()
     );
 
-    private final Setting<Keybind> selectBlockBind = sgWhitelist.add(new KeybindSetting.Builder()
+    private final Setting<Keybind> selectBlockBind = sgBounds.add(new KeybindSetting.Builder()
         .name("select-block-bind")
         .description("Adds targeted block to list when this button is pressed.")
         .defaultValue(Keybind.none())
@@ -219,49 +219,49 @@ public class Nuker extends Module {
 
     // Rendering
 
-    private final Setting<Boolean> swing = sgRender.add(new BoolSetting.Builder()
+    private final Setting<Boolean> swing = sgVisual.add(new BoolSetting.Builder()
         .name("swing")
         .description("Whether to swing hand client-side.")
         .defaultValue(true)
         .build()
     );
 
-    private final Setting<Boolean> enableRenderBounding = sgRender.add(new BoolSetting.Builder()
+    private final Setting<Boolean> enableRenderBounding = sgVisual.add(new BoolSetting.Builder()
         .name("bounding-box")
         .description("Enable rendering bounding box for Cube and Uniform Cube.")
         .defaultValue(true)
         .build()
     );
 
-    private final Setting<ShapeMode> shapeModeBox = sgRender.add(new EnumSetting.Builder<ShapeMode>()
+    private final Setting<ShapeMode> shapeModeBox = sgVisual.add(new EnumSetting.Builder<ShapeMode>()
         .name("nuke-box-mode")
         .description("How the shape for the bounding box is rendered.")
         .defaultValue(ShapeMode.Both)
         .build()
     );
 
-    private final Setting<SettingColor> sideColorBox = sgRender.add(new ColorSetting.Builder()
+    private final Setting<SettingColor> sideColorBox = sgVisual.add(new ColorSetting.Builder()
         .name("side-color")
         .description("The side color of the bounding box.")
         .defaultValue(new SettingColor(16,106,144, 100))
         .build()
     );
 
-    private final Setting<SettingColor> lineColorBox = sgRender.add(new ColorSetting.Builder()
+    private final Setting<SettingColor> lineColorBox = sgVisual.add(new ColorSetting.Builder()
         .name("line-color")
         .description("The line color of the bounding box.")
         .defaultValue(new SettingColor(16,106,144, 255))
         .build()
     );
 
-    private final Setting<Boolean> enableRenderBreaking = sgRender.add(new BoolSetting.Builder()
+    private final Setting<Boolean> enableRenderBreaking = sgVisual.add(new BoolSetting.Builder()
         .name("broken-blocks")
         .description("Enable rendering bounding box for Cube and Uniform Cube.")
         .defaultValue(true)
         .build()
     );
 
-    private final Setting<ShapeMode> shapeModeBreak = sgRender.add(new EnumSetting.Builder<ShapeMode>()
+    private final Setting<ShapeMode> shapeModeBreak = sgVisual.add(new EnumSetting.Builder<ShapeMode>()
         .name("nuke-block-mode")
         .description("How the shapes for broken blocks are rendered.")
         .defaultValue(ShapeMode.Both)
@@ -269,7 +269,7 @@ public class Nuker extends Module {
         .build()
     );
 
-    private final Setting<SettingColor> sideColor = sgRender.add(new ColorSetting.Builder()
+    private final Setting<SettingColor> sideColor = sgVisual.add(new ColorSetting.Builder()
         .name("side-color")
         .description("The side color of the target block rendering.")
         .defaultValue(new SettingColor(255, 0, 0, 80))
@@ -277,7 +277,7 @@ public class Nuker extends Module {
         .build()
     );
 
-    private final Setting<SettingColor> lineColor = sgRender.add(new ColorSetting.Builder()
+    private final Setting<SettingColor> lineColor = sgVisual.add(new ColorSetting.Builder()
         .name("line-color")
         .description("The line color of the target block rendering.")
         .defaultValue(new SettingColor(255, 0, 0, 255))
