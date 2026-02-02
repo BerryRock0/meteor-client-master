@@ -180,10 +180,10 @@ public class Nuker extends Module {
         .build()
     );
 
-    private final Setting<Boolean> rotate = sgGeneral.add(new BoolSetting.Builder()
+    private final Setting<Rotate> rotate = sgGeneral.add(new EnumSetting<Rotate>.Builder()
         .name("rotate")
-        .description("Rotates server-side to the block being mined.")
-        .defaultValue(true)
+        .description("Switch rotates mode.")
+        .defaultValue(Rotate.None)
         .build()
     );
 
@@ -477,8 +477,12 @@ public class Nuker extends Module {
 
                 boolean canInstaMine = BlockUtils.canInstaBreak(block);
 
-                if (rotate.get()) Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block), () -> breakBlock(block));
-                else breakBlock(block);
+                switch(rotate.get())
+                {
+                    case None -> {breakBlock(block);}
+                    case Client -> {mc.player.setYaw(Rotations.getYaw(block)); mc.player.setPitch(Rotations.getPitch(block)); breakBlock(block));}
+                    case Packet-> {Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block), () -> breakBlock(block));}    
+                } 
 
                 if (enableRenderBreaking.get()) RenderUtils.renderTickingBlock(block, sideColor.get(), lineColor.get(), shapeModeBreak.get(), 0, 8, true, false);
                 lastBlockPos.set(block);
