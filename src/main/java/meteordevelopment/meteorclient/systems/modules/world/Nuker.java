@@ -554,6 +554,12 @@ public class Nuker extends Module {
         Blacklist
     }
 
+    public enum Rotate {
+        None,
+        Client,
+        Packet
+    }
+
     public enum Mode {
         All,
         Flatten,
