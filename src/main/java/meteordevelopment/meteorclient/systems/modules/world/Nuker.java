@@ -481,7 +481,7 @@ public class Nuker extends Module {
                 {
                     case None -> {breakBlock(block);}
                     case Client -> {mc.player.setYaw(Rotations.getYaw(block)); mc.player.setPitch(Rotations.getPitch(block)); breakBlock(block));}
-                    case Packet-> {Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block), () -> breakBlock(block));}    
+                    case Packet -> {Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block), () -> breakBlock(block));}    
                 } 
 
                 if (enableRenderBreaking.get()) RenderUtils.renderTickingBlock(block, sideColor.get(), lineColor.get(), shapeModeBreak.get(), 0, 8, true, false);
