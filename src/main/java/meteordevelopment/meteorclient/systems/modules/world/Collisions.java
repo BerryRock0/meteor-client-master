@@ -16,49 +16,72 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
 
 public class Collisions extends Module {
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgControl = settings.createGroup("Control");
+    private final SettingGroup sgFullcube = settings.createGroup("FullCube");
+    private final SettingGroup sgEmpty = settings.createGroup("Empty");
+    private final SettingGroup sgAbsent = settings.createGroup("Absent");
+    private final SettingGroup sgOther = settings.createGroup("Other");
     
-    public final Setting<List<Block>> fullcube = sgGeneral.add(new BlockListSetting.Builder()
+    public final Setting<List<Block>> fullcube = sgFullcube.add(new BlockListSetting.Builder()
         .name("full-cube")
         .description("What blocks should be added collision box.")
         .build()
     );
     
-    public final Setting<List<Block>> empty = sgGeneral.add(new BlockListSetting.Builder()
+    public final Setting<Boolean> fullcubelist = sgFullcube.add(new BoolSetting.Builder()
+        .name("fullcube-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> fullcubefinal = sgFullcube.add(new BoolSetting.Builder()
+        .name("fullcube-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<List<Block>> empty = sgEmpty.add(new BlockListSetting.Builder()
         .name("empty")
         .description("What blocks should be emptied.")
         .build()
     );
 
-    public final Setting<Boolean> alwayszero = sgControl.add(new BoolSetting.Builder()
-        .name("fullcube-final")
-        .description("Switches black/white cases.")
-        .defaultValue(false)
-        .build()
-    );
-    
-    public final Setting<Boolean> fullcubelist = sgControl.add(new BoolSetting.Builder()
-        .name("fullcube-case")
-        .description("Switches black/white list.")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> alwaysone = sgControl.add(new BoolSetting.Builder()
-        .name("empty-final")
-        .description("Switches black/white cases.")
-        .defaultValue(false)
-        .build()
-    );
-    
-    public final Setting<Boolean> emptylist = sgControl.add(new BoolSetting.Builder()
+    public final Setting<Boolean> emptycase = sgEmpty.add(new BoolSetting.Builder()
         .name("empty-case")
-        .description("Switches black/white list.")
+        .description("Switches black/white case.")
         .defaultValue(false)
         .build()
     );
 
-    private final Setting<Boolean> ignoreBorder = sgControl.add(new BoolSetting.Builder()
+    public final Setting<Boolean> emptyfinal = sgEmpty.add(new BoolSetting.Builder()
+        .name("empty-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<List<Block>> absent = sgAbsent.add(new BlockListSetting.Builder()
+        .name("absent")
+        .description("What blocks should be absentify.")
+        .build()
+    );
+
+    public final Setting<Boolean> absentcase = sgAbsent.add(new BoolSetting.Builder()
+        .name("absent-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> absentfinal = sgAbsent.add(new BoolSetting.Builder()
+        .name("absent-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> ignoreBorder = sgOther.add(new BoolSetting.Builder()
         .name("ignore-border")
         .description("Removes world border collision.")
         .defaultValue(false)
@@ -73,15 +96,22 @@ public class Collisions extends Module {
     public boolean full(Block block)
     {
         if (fullcube.get().contains(block))
-            return isActive() && fullcubelist.get();
-        return isActive() && alwayszero.get();   
+            return isActive() && fullcubecase.get();
+        return isActive() && fullcubefinal.get();   
     }
     
     public boolean emp(Block block)
     {
         if (empty.get().contains(block))
             return isActive() && emptylist.get();
-        return isActive() && alwaysone.get();
+        return isActive() && emptyfinal.get();
+    }
+    
+    public boolean abs(Block block)
+    {
+        if (absent.get().contains(block))
+            return isActive() && absentcase.get();
+        return isActive() && absentfinal.get();
     }
     
     public boolean ignoreBorder()
