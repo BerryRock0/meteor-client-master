@@ -26,7 +26,7 @@ public class Collisions extends Module {
         .build()
     );
     
-    public final Setting<Boolean> fullcubelist = sgFullcube.add(new BoolSetting.Builder()
+    public final Setting<Boolean> fullcubecase = sgFullcube.add(new BoolSetting.Builder()
         .name("fullcube-case")
         .description("Switches black/white case.")
         .defaultValue(false)
@@ -82,7 +82,7 @@ public class Collisions extends Module {
     public boolean emp(Block block)
     {
         if (empty.get().contains(block))
-            return isActive() && emptylist.get();
+            return isActive() && emptycase.get();
         return isActive() && emptyfinal.get();
     }
     
