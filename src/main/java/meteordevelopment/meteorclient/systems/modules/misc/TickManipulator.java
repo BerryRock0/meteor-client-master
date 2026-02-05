@@ -60,7 +60,7 @@ public class TickManipulator extends Module
             if ((Boolean)serverdecrement.get()) serverTimer++;
 			return (Boolean)serverqueue.get();
 		}
-		serverTimer = (Integer)beginserverdelay.get()
+		serverTimer = (Integer)beginserverdelay.get();
         return (Boolean)serveralways.get();
     }
     
