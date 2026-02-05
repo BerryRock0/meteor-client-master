@@ -16,6 +16,7 @@ import meteordevelopment.meteorclient.events.world.TickEvent;
 public class Automaton extends Module
 {
     private final SettingGroup sgControl = settings.createGroup("Control");
+    private final SettingGroup sgExecution = settings.createGroup("Execution");
     private final SettingGroup sgScripts = settings.createGroup("Scripts");
 
    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
@@ -30,7 +31,20 @@ public class Automaton extends Module
         .defaultValue(false)
         .build()
     );
-    
+
+       private final Setting<Boolean> increment = sgExecution.add(new BoolSetting.Builder()
+        .name("Increment")
+        .description("Execute script from beginning to end.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> decrement = sgExecution.add(new BoolSetting.Builder()
+        .name("Decrement")
+        .description("Execute script from beginning to end..")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<List<String>> commands = sgScripts.add(new StringListSetting.Builder()
         .name("commands")
         .description("setting commands")
@@ -81,7 +95,9 @@ public class Automaton extends Module
                 return;
             }
             delay = 0;
-            cmdindex++;  
+            
+            if (increment.get()) cmdindex++;
+            if (decrement.get()) cmdindex--;
         }
         catch(Exception e)
         {} 
