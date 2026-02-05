@@ -56,7 +56,7 @@ public class TickManipulator extends Module
         // wait for timer
 		if(serverTimer != (int)endserverdelay.get() && Boolean.TRUE.equals(serverbool.get()))
 		{
-			if ((Boolean)serverincrement.get())) serverTimer--;
+			if ((Boolean)serverincrement.get()) serverTimer--;
             if ((Boolean)serverdecrement.get()) serverTimer++;
 			return (Boolean)serverqueue.get();
 		}
