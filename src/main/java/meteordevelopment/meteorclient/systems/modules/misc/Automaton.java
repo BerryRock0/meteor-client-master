@@ -94,15 +94,16 @@ public class Automaton extends Module
         
         switch (command.toLowerCase())
         {
-            case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
-            case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;
             case "forward": mc.options.forwardKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "back": mc.options.backKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "left": mc.options.leftKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "right": mc.options.rightKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "jump": mc.options.jumpKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "sneak": mc.options.sneakKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "attack": mc.options.attackKey.setPressed(Boolean.parseBoolean(arg)); break;
             case "use": mc.options.useKey.setPressed(Boolean.parseBoolean(arg)); break;
+            case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
+            case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;    
             case "to": cmdindex = Integer.parseInt(arg); break;
             default: break;
         }
