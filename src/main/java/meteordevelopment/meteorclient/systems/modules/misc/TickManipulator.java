@@ -48,7 +48,7 @@ public class TickManipulator extends Module
 			return clientqueue.get().booleanValue();
 		}
 		clientTimer = beginclientdelay.get().intValue();
-        return clientalways.get(.booleanValue();
+        return clientalways.get().booleanValue();
     }
 
     public boolean serverTime()
