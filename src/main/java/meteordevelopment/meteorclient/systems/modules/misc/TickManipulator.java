@@ -41,27 +41,27 @@ public class TickManipulator extends Module
 	public boolean clientTime()
     {
         // wait for timer
-		if(clientTimer != endclientdelay.get().intValue() && Boolean.TRUE.equals(clientbool.get()))
+		if(clientTimer != (int)endclientdelay.get() && Boolean.TRUE.equals(clientbool.get()))
 		{
-			if (clientincrement.get().booleanValue()) clientTimer--;
-            if (clientdecrement.get().booleanValue()) clientTimer++;
-			return clientqueue.get().booleanValue();
+			if ((Boolean)clientincrement.get()) clientTimer--;
+            if ((Boolean)clientdecrement.get()) clientTimer++;
+			return (Boolean)clientqueue.get();
 		}
-		clientTimer = beginclientdelay.get().intValue();
-        return clientalways.get().booleanValue();
+		clientTimer = (Integer)beginclientdelay.get();
+        return (Boolean)clientalways.get();
     }
 
     public boolean serverTime()
     {
         // wait for timer
-		if(serverTimer != endserverdelay.get().intValue() && Boolean.TRUE.equals(serverbool.get()))
+		if(serverTimer != (int)endserverdelay.get() && Boolean.TRUE.equals(serverbool.get()))
 		{
-			if (serverincrement.get().booleanValue()) serverTimer--;
-            if (serverdecrement.get().booleanValue()) serverTimer++;
-			return serverqueue.get().booleanValue();
+			if ((Boolean)serverincrement.get())) serverTimer--;
+            if ((Boolean)serverdecrement.get()) serverTimer++;
+			return (Boolean)serverqueue.get();
 		}
-		serverTimer = beginserverdelay.get().intValue();
-        return serveralways.get().booleanValue();
+		serverTimer = (Integer)beginserverdelay.get()
+        return (Boolean)serveralways.get();
     }
     
 }
