@@ -40,7 +40,7 @@ public class Automaton extends Module
     );
     private final Setting<Boolean> decrement = sgExecution.add(new BoolSetting.Builder()
         .name("Decrement")
-        .description("Execute script from beginning to end..")
+        .description("Execute script from end to beginning.")
         .defaultValue(false)
         .build()
     );
