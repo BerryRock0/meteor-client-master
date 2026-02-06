@@ -23,7 +23,7 @@ public class MinerPlacer extends Module
     private final SettingGroup sgExecution = settings.createGroup("Execution");
 
 
-    private final Setting<BlockPos> zero = sgMiner.add(new BlockPosSetting.Builder()
+    private final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
         .description("Mining block position")
         .build()
