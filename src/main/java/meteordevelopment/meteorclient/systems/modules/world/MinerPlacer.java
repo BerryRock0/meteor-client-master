@@ -95,13 +95,13 @@ public class MinerPlacer extends Module
         
         WVerticalList list = theme.verticalList();
         WHorizontalList b = list.add(theme.horizontalList()).expandX().widget();
-
-        WButton ix = theme.button("x++"); ix.action = () -> x++;
-        WButton iy = theme.button("y++"); iy.action = () -> y++;
-        WButton iz = theme.button("z++"); iz.action = () -> z++;
-        WButton dx = theme.button("x--"); dx.action = () -> x--;
-        WButton dy = theme.button("y--"); dy.action = () -> y--;
-        WButton dz = theme.button("z--"); dz.action = () -> z--;
+        
+        WButton ix = b.add(theme.button("x++")).expandX().widget(); ix.action = () -> x++;
+        WButton iy = b.add(theme.button("y++")).expandX().widget(); iy.action = () -> y++;
+        WButton iz = b.add(theme.button("z++")).expandX().widget(); iz.action = () -> z++;
+        WButton dx = b.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
+        WButton dy = b.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
+        WButton dz = b.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
         WButton set = theme.button("Set"); set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ();};
         
         return list;
