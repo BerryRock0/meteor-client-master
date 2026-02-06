@@ -77,24 +77,26 @@ public class MinerPlacer extends Module
     private void onTickPre(TickEvent.Pre event)
     {
         if (pre.get())
-        { 
-            BlockPos minepos = new BlockPos(mine.get().getX(), mine.get().getY(), mine.get().getZ());
-            BlockPos interactpos = new BlockPos(interact.getX(),interact.get().getY(), interact.get().getZ());
-            if(mining.get()) BlockUtils.breakBlock(minepos, false);
-            if(using.get()) BlockUtils.interact(new BlockHitResult(interactpos.toCenterPos(), BlockUtils.getDirection(interactpos), interactpos, true), Hand.MAIN_HAND, false); 
-        }
+            main();
     }
         
     @EventHandler
     private void onTickPre(TickEvent.Post event) 
     {
         if (post.get())
-        {
-            BlockPos minepos = new BlockPos(mine.get().getX(), mine.get().getY(), mine.get().getZ());
-            BlockPos interactpos = new BlockPos(interact.getX(),interact.get().getY(), interact.get().getZ());
-            if(mining.get()) BlockUtils.breakBlock(minepos, false);
-            if(using.get()) BlockUtils.interact(new BlockHitResult(interactpos.toCenterPos(), BlockUtils.getDirection(interactpos), interactpos, true), Hand.MAIN_HAND, false); 
-        }
+            main();
+    }
+
+    public void main()
+    {
+        BlockPos minepos = new BlockPos(mine.get().getX(), mine.get().getY(), mine.get().getZ());
+        BlockPos interactpos = new BlockPos(interact.get().getX(),interact.get().getY(), interact.get().getZ());
+        
+        if(mining.get())
+            BlockUtils.breakBlock(minepos, false);
+        if(using.get())
+            BlockUtils.interact(new BlockHitResult(interactpos.toCenterPos(), BlockUtils.getDirection(interactpos), interactpos, true), Hand.MAIN_HAND, false); 
+        
     }
 
 }
