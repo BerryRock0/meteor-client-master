@@ -91,7 +91,7 @@ public class MinerPlacer extends Module
     public WWidget getWidget(GuiTheme theme)
     {
         WButton set = theme.button("Set");
-        set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ()};
+        set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ();};
         return set;
     }
     
