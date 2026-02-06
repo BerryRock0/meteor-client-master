@@ -66,6 +66,13 @@ public class CuboidMarker extends BaseMarker {
         .build()
     );
 
+    public int minX = Math.min(pos1.get().getX(), pos2.get().getX());
+    public int minY = Math.min(pos1.get().getY(), pos2.get().getY());
+    public int minZ = Math.min(pos1.get().getZ(), pos2.get().getZ());
+    public int maxX = Math.max(pos1.get().getX(), pos2.get().getX());
+    public int maxY = Math.max(pos1.get().getY(), pos2.get().getY());
+    public int maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ()); 
+
     public CuboidMarker() {
         super(type);
     }
@@ -77,13 +84,28 @@ public class CuboidMarker extends BaseMarker {
 
     @Override
     protected void render(Render3DEvent event) {
-        int minX = Math.min(pos1.get().getX(), pos2.get().getX());
+  /*      int minX = Math.min(pos1.get().getX(), pos2.get().getX());
         int minY = Math.min(pos1.get().getY(), pos2.get().getY());
         int minZ = Math.min(pos1.get().getZ(), pos2.get().getZ());
         int maxX = Math.max(pos1.get().getX(), pos2.get().getX());
         int maxY = Math.max(pos1.get().getY(), pos2.get().getY());
-        int maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ());
+        int maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ()); */
 
-        event.renderer.box(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
+        event.renderer.box(minX, minY, minZ, maxX, maxY, maxZ, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
+    }
+
+    private void mine()
+    {
+        for(int x = minX; x < maxX; x++)
+        for(int y = minY; y < maxY; y++)
+        for(int z = minZ; z < maxZ; z++)
+        BlockUtils.breakBlock(new BlockPos(x, y, z), swing.get());
+    }
+
+    public WWidget breakWidget(GuiTheme theme)
+    {
+        WButton mine = theme.button("Mine");
+        mine.action = () -> mine();
+        return mine;
     }
 }
