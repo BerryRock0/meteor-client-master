@@ -234,8 +234,8 @@ public class BlockUtils {
     /**
      * Needs to be used in {@link TickEvent.Pre}
      */
-    public static boolean breakBlock(BlockPos blockPos, boolean swing) {
-        if (!canBreak(blockPos, mc.world.getBlockState(blockPos))) return false;
+    public static boolean breakBlock(BlockPos blockPos, boolean swing)
+    {
 
         // Creating new instance of block pos because minecraft assigns the parameter to a field, and we don't want it to change when it has been stored in a field somewhere
         BlockPos pos = blockPos instanceof BlockPos.Mutable ? new BlockPos(blockPos) : blockPos;
@@ -248,10 +248,13 @@ public class BlockUtils {
 
         if (mc.interactionManager.isBreakingBlock())
             mc.interactionManager.updateBlockBreakingProgress(pos, getDirection(blockPos));
-        else mc.interactionManager.attackBlock(pos, getDirection(blockPos));
+        else
+            mc.interactionManager.attackBlock(pos, getDirection(blockPos));
 
-        if (swing) mc.player.swingHand(Hand.MAIN_HAND);
-        else mc.getNetworkHandler().sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
+        if (swing)
+            mc.player.swingHand(Hand.MAIN_HAND);
+        else
+            mc.getNetworkHandler().sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
 
         breaking = true;
         breakingThisTick = true;
