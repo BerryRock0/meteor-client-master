@@ -132,9 +132,6 @@ public class CuboidMarker extends BaseMarker {
         maxY = Math.max(pos1.get().getY(), pos2.get().getY());
         maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ());
 
-        if (mining.get()) mine();
-        if(using.get()) use
-
         event.renderer.box(minX, minY, minZ, maxX, maxY, maxZ, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
     @EventHandler
