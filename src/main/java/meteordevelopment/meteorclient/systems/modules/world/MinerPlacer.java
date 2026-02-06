@@ -3,6 +3,8 @@ package meteordevelopment.meteorclient.systems.modules.world;
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
+import meteordevelopment.meteorclient.gui.widgets.containers.WHorizontalList;
+import meteordevelopment.meteorclient.gui.widgets.containers.WVerticalList;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.settings.Setting;
@@ -90,50 +92,18 @@ public class MinerPlacer extends Module
 
     public WWidget getWidget(GuiTheme theme)
     {
-        WButton set = theme.button("Set");
-        set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ();};
-        return set;
-    }
-    
-    public WWidget getWidget0(GuiTheme theme)
-    {
-        WButton ix = theme.button("x++");
-        ix.action = () -> x++;
-        return ix;
-    }
+        
+        WVerticalList list = theme.verticalList();
+        WHorizontalList b = list.add(theme.horizontalList()).expandX().widget();
 
-    public WWidget getWidget1(GuiTheme theme)
-    {
-        WButton iy = theme.button("y++");
-        iy.action = () -> y++;
-        return iy;
-    }
-
-    public WWidget getWidget2(GuiTheme theme)
-    {
-        WButton iz = theme.button("z++");
-        iz.action = () -> z++;
-        return iz;
-    }
-
-    public WWidget getWidget3(GuiTheme theme)
-    {
-        WButton dx = theme.button("x--");
-        dx.action = () -> x--;
-        return dx;
-    }
-
-    public WWidget getWidget4(GuiTheme theme)
-    {
-        WButton dy = theme.button("y--");
-        dy.action = () -> y--;
-        return dy;
-    }
-
-    public WWidget getWidget5(GuiTheme theme)
-    {
-        WButton dz = theme.button("z--");
-        dz.action = () -> z--;
-        return dz;
+        WButton ix = theme.button("x++"); ix.action = () -> x++;
+        WButton iy = theme.button("y++"); iy.action = () -> y++;
+        WButton iz = theme.button("z++"); iz.action = () -> z++;
+        WButton dx = theme.button("x--"); dx.action = () -> x--;
+        WButton dy = theme.button("y--"); dy.action = () -> y--;
+        WButton dz = theme.button("z--"); dz.action = () -> z--;
+        WButton set = theme.button("Set"); set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ();};
+        
+        return list;
     }
 }
