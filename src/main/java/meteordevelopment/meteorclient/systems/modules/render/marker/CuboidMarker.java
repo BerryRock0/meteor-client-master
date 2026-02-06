@@ -5,7 +5,9 @@
 
 package meteordevelopment.meteorclient.systems.modules.render.marker;
 
+import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
+import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
@@ -32,6 +34,8 @@ public class CuboidMarker extends BaseMarker {
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgRender = settings.createGroup("Render");
+    private final SettingGroup sgControl = settings.createGroup("Control");
+    private final SettingGroup sgExecution = settings.createGroup("Execution");
 
     // General
 
@@ -77,12 +81,38 @@ public class CuboidMarker extends BaseMarker {
         .build()
     );
 
-    public int minX = Math.min(pos1.get().getX(), pos2.get().getX());
-    public int minY = Math.min(pos1.get().getY(), pos2.get().getY());
-    public int minZ = Math.min(pos1.get().getZ(), pos2.get().getZ());
-    public int maxX = Math.max(pos1.get().getX(), pos2.get().getX());
-    public int maxY = Math.max(pos1.get().getY(), pos2.get().getY());
-    public int maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ()); 
+    private final Setting<Boolean> mining = sgExecution.add(new BoolSetting.Builder()
+        .name("Mining")
+        .description("Break blocks in area")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> using = sgExecution.add(new BoolSetting.Builder()
+        .name("Using")
+        .description("Intreact blocks in area")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
+        .name("Pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
+        .name("Post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public int minX;
+    public int minY;
+    public int minZ;
+    public int maxX;
+    public int maxY;
+    public int maxZ;
 
     public CuboidMarker() {
         super(type);
@@ -95,15 +125,38 @@ public class CuboidMarker extends BaseMarker {
 
     @Override
     protected void render(Render3DEvent event) {
-  /*      int minX = Math.min(pos1.get().getX(), pos2.get().getX());
-        int minY = Math.min(pos1.get().getY(), pos2.get().getY());
-        int minZ = Math.min(pos1.get().getZ(), pos2.get().getZ());
-        int maxX = Math.max(pos1.get().getX(), pos2.get().getX());
-        int maxY = Math.max(pos1.get().getY(), pos2.get().getY());
-        int maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ()); */
+        minX = Math.min(pos1.get().getX(), pos2.get().getX());
+        minY = Math.min(pos1.get().getY(), pos2.get().getY());
+        minZ = Math.min(pos1.get().getZ(), pos2.get().getZ());
+        maxX = Math.max(pos1.get().getX(), pos2.get().getX());
+        maxY = Math.max(pos1.get().getY(), pos2.get().getY());
+        maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ());
+
+        if (mining.get()) mine();
+        if(using.get()) use
 
         event.renderer.box(minX, minY, minZ, maxX, maxY, maxZ, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
+    @EventHandler
+    private void onTickPre(TickEvent.Pre event)
+    {
+        if (pre.get())
+        {
+            if(mining.get()) mine();
+            if(using.get()) interact();      
+        }
+    }
+        
+    @EventHandler
+    private void onTickPre(TickEvent.Post event) 
+    {
+        if (post.get())
+        { 
+            if(mining.get()) mine();
+            if(using.get()) interact(); 
+        }
+    }
+    
 
     private void mine()
     {
@@ -122,19 +175,5 @@ public class CuboidMarker extends BaseMarker {
             BlockPos pos = new BlockPos(x,y,z);
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), BlockUtils.getDirection(pos), pos, true), Hand.MAIN_HAND, false); 
         }
-    }
-
-    public WWidget mineWidget(GuiTheme theme)
-    {
-        WButton mine = theme.button("Mine");
-        mine.action = () -> mine();
-        return mine;
-    }
-    
-    public WWidget interactWidget(GuiTheme theme)
-    {
-        WButton use = theme.button("Use");
-        use.action = () -> interact();
-        return use;
     }
 }
