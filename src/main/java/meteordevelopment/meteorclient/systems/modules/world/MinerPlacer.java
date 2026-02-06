@@ -1,6 +1,9 @@
 package meteordevelopment.meteorclient.systems.modules.world;
 
 import meteordevelopment.orbit.EventHandler;
+import meteordevelopment.meteorclient.gui.GuiTheme;
+import meteordevelopment.meteorclient.gui.widgets.WWidget;
+import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
@@ -15,26 +18,17 @@ import net.minecraft.util.math.BlockPos;
 
 public class MinerPlacer extends Module
 {
-    private final SettingGroup sgMiner = settings.createGroup("Miner");
-    private final SettingGroup sgPlacer = settings.createGroup("Placer");
-
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgControl = settings.createGroup("Control");
     private final SettingGroup sgExecution = settings.createGroup("Execution");
 
 
-    private final Setting<BlockPos> mine = sgMiner.add(new BlockPosSetting.Builder()
-        .name("mine-pos")
+    private final Setting<BlockPos> zero = sgMiner.add(new BlockPosSetting.Builder()
+        .name("zero-pos")
         .description("Mining block position")
         .build()
     );
-
-    private final Setting<BlockPos> interact = sgPlacer.add(new BlockPosSetting.Builder()
-        .name("interact-pos")
-        .description("Interact block position")
-        .build()
-    );
-
-
+    
     private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
         .name("Pre")
         .description("Load script before tick.")
@@ -60,7 +54,13 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
+    
+    public int x;
+    public int y;
+    public int z;
 
+    public BlockPos pos = new BlockPos(x,y,z);
+    
     public MinerPlacer()
     {
         super(Categories.World, "MinerPlacer", "Break or Place in specific coordinate.");
@@ -81,14 +81,59 @@ public class MinerPlacer extends Module
     }
 
     public void main()
-    {
-        BlockPos minepos = new BlockPos(mine.get().getX(), mine.get().getY(), mine.get().getZ());
-        BlockPos interactpos = new BlockPos(interact.get().getX(),interact.get().getY(), interact.get().getZ());
-        
+    {   
         if(mining.get())
-            BlockUtils.breakBlock(minepos, false);
+            BlockUtils.breakBlock(pos, false);
         if(using.get())
-            BlockUtils.interact(new BlockHitResult(interactpos.toCenterPos(), BlockUtils.getDirection(interactpos), interactpos, true), Hand.MAIN_HAND, false);   
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), BlockUtils.getDirection(pos), pos, true), Hand.MAIN_HAND, false);   
     }
 
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WButton set = theme.button("Set");
+        set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ()};
+        return set;
+    }
+    
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WButton ix = theme.button("x++");
+        ix.action = () -> x++;
+        return ix;
+    }
+
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WButton iy = theme.button("y++");
+        iy.action = () -> y++;
+        return iy;
+    }
+
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WButton iz = theme.button("z++");
+        iz.action = () -> z++;
+        return iz;
+    }
+
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WButton dx = theme.button("x--");
+        dx.action = () -> x--;
+        return dx;
+    }
+
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WButton dy = theme.button("y--");
+        dy.action = () -> y--;
+        return dy;
+    }
+
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WButton dz = theme.button("z--");
+        dz.action = () -> z--;
+        return dz;
+    }
 }
