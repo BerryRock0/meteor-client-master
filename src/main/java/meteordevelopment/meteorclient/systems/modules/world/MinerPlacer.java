@@ -1,15 +1,13 @@
 package meteordevelopment.meteorclient.systems.modules.world;
 
 import meteordevelopment.orbit.EventHandler;
-import meteordevelopment.meteorclient.events.render.Render3DEvent;
-import meteordevelopment.meteorclient.events.world.TickEvent;
-import meteordevelopment.meteorclient.renderer.ShapeMode;
 import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.utils.render.color.SettingColor;
-import meteordevelopment.meteorclient.utils.world.BlockUtils;
-import meteordevelopment.meteorclient.gui.GuiTheme;
-import meteordevelopment.meteorclient.gui.widgets.WWidget;
-import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
+import meteordevelopment.meteorclient.settings.Setting;
+import meteordevelopment.meteorclient.settings.SettingGroup;
+import meteordevelopment.meteorclient.systems.modules.Categories;
+import meteordevelopment.meteorclient.systems.modules.Module;
+import meteordevelopment.meteorclient.events.world.TickEvent;
+
 import net.minecraft.block.Block;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -95,8 +93,7 @@ public class MinerPlacer extends Module
         if(mining.get())
             BlockUtils.breakBlock(minepos, false);
         if(using.get())
-            BlockUtils.interact(new BlockHitResult(interactpos.toCenterPos(), BlockUtils.getDirection(interactpos), interactpos, true), Hand.MAIN_HAND, false); 
-        
+            BlockUtils.interact(new BlockHitResult(interactpos.toCenterPos(), BlockUtils.getDirection(interactpos), interactpos, true), Hand.MAIN_HAND, false);   
     }
 
 }
