@@ -51,7 +51,7 @@ public class Automaton extends Module
         .build()
     );
 
-    public long cmdindex;
+    public int cmdindex;
     public long delay;
     public String cmd;
     public String[] parts;
