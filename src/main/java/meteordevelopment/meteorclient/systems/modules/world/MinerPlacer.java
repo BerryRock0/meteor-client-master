@@ -61,8 +61,6 @@ public class MinerPlacer extends Module
     public int y;
     public int z;
 
-    public BlockPos pos = new BlockPos(x,y,z);
-    
     public MinerPlacer()
     {
         super(Categories.World, "MinerPlacer", "Break or Place in specific coordinate.");
@@ -84,6 +82,7 @@ public class MinerPlacer extends Module
 
     public void main()
     {   
+        BlockPos pos = new BlockPos(x,y,z);
         if(mining.get())
             BlockUtils.breakBlock(pos, false);
         if(using.get())
@@ -92,7 +91,6 @@ public class MinerPlacer extends Module
 
     public WWidget getWidget(GuiTheme theme)
     {
-        
         WVerticalList list = theme.verticalList();
         WHorizontalList b = list.add(theme.horizontalList()).expandX().widget();
         
@@ -102,7 +100,7 @@ public class MinerPlacer extends Module
         WButton dx = b.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
         WButton dy = b.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
         WButton dz = b.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
-        WButton set = theme.button("Set"); set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ();};
+        WButton set = list.add(theme.button("Set")).expandX().widget(); set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ();};
         
         return list;
     }
