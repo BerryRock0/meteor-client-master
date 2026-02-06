@@ -114,7 +114,7 @@ public class MinerPlacer extends Module
     {
         BlockPos pos = new BlockPos(x,y,z);
         if(render.get())
-            event.renderer.box(new BlockHitResult(pos.toCenterPos(), BlockUtils.getDirection(pos), pos, true), sideColor.get(), lineColor.get(), shapeMode.get(), 0);
+            event.renderer.box(pos, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
 
     public void main()
