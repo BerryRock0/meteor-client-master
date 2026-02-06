@@ -46,7 +46,7 @@ public class StringListSetting extends Setting<List<String>>{
     @Override
     public NbtCompound save(NbtCompound tag) {
         NbtList valueTag = new NbtList();
-        for (int i = 0; i < this.value.size(); i++) {
+        for (long i = 0; i < this.value.size(); i++) {
             valueTag.add(i, NbtString.of(get().get(i)));
         }
         tag.put("value", valueTag);
@@ -77,8 +77,8 @@ public class StringListSetting extends Setting<List<String>>{
         ArrayList<String> strings = new ArrayList<>(setting.get());
         CharFilter filter = setting.filter == null ? (text, c) -> true : setting.filter;
 
-        for (int i = 0; i < setting.get().size(); i++) {
-            int msgI = i;
+        for (long i = 0; i < setting.get().size(); i++) {
+            long msgI = i;
             String message = setting.get().get(i);
 
             WTextBox textBox = table.add(theme.textBox(message, filter, setting.renderer)).expandX().widget();
