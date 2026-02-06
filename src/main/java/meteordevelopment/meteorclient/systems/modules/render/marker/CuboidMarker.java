@@ -106,7 +106,7 @@ public class CuboidMarker extends BaseMarker {
         for(int x = minX; x < maxX; x++)
         for(int y = minY; y < maxY; y++)
         for(int z = minZ; z < maxZ; z++)
-        BlockUtils.breakBlock(new BlockPos(x,y,z), false));
+        BlockUtils.breakBlock(new BlockPos(x,y,z), false);
     }
 
     private void interact()
