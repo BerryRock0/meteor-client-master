@@ -51,8 +51,8 @@ public class Automaton extends Module
         .build()
     );
 
-    public int cmdindex;
-    public int delay;
+    public long cmdindex;
+    public long delay;
     public String cmd;
     public String[] parts;
     public String command;
@@ -87,7 +87,7 @@ public class Automaton extends Module
             command = parts[0];
             arg = parts[1];
 
-            if (delay < Integer.parseInt(parts[2]))
+            if (delay < Long.parseLong(parts[2]))
             {
                 delay++;
                 if(isActive())
