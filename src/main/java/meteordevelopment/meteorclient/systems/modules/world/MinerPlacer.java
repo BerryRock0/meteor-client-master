@@ -12,7 +12,10 @@ import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
+import meteordevelopment.meteorclient.utils.render.color.SettingColor;
+import meteordevelopment.meteorclient.renderer.ShapeMode;
 
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -23,8 +26,8 @@ public class MinerPlacer extends Module
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgControl = settings.createGroup("Control");
     private final SettingGroup sgExecution = settings.createGroup("Execution");
-
-
+    private final SettingGroup sgVisual = settings.createGroup("Visual");
+    
     private final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
         .description("Mining block position")
@@ -56,6 +59,32 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
+    private final Setting<Boolean> render = sgGeneral.add(new BoolSetting.Builder()
+        .name("render")
+        .description("Renders a block overlay where the obsidian will be placed.")
+        .defaultValue(true)
+        .build()
+    );
+    private final Setting<ShapeMode> shapeMode = sgVisual.add(new EnumSetting.Builder<ShapeMode>()
+        .name("shape-mode")
+        .description("How the shapes are rendered.")
+        .defaultValue(ShapeMode.Both)
+        .build()
+    );
+
+    private final Setting<SettingColor> sideColor = sgVisual.add(new ColorSetting.Builder()
+        .name("side-color")
+        .description("The color of the sides of the blocks being rendered.")
+        .defaultValue(new SettingColor(0, 0, 0, 0))
+        .build()
+    );
+
+    private final Setting<SettingColor> lineColor = sgVisual.add(new ColorSetting.Builder()
+        .name("line-color")
+        .description("The color of the lines of the blocks being rendered.")
+        .defaultValue(new SettingColor(0, 0, 0, 0))
+        .build()
+    );
     
     public int x;
     public int y;
@@ -78,6 +107,14 @@ public class MinerPlacer extends Module
     {
         if (post.get())
             main();
+    }
+
+    @EventHandler
+    private void onRender(Render3DEvent event)
+    {
+        BlockPos pos = new BlockPos(x,y,z);
+        if(render.get())
+            event.renderer.box(new BlockHitResult(pos.toCenterPos(), BlockUtils.getDirection(pos), pos, true), sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
 
     public void main()
