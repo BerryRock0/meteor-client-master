@@ -9,7 +9,14 @@ import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
+import net.minecraft.block.Block;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 // TODO: Add outline and more modes
 public class CuboidMarker extends BaseMarker {
@@ -99,13 +106,31 @@ public class CuboidMarker extends BaseMarker {
         for(int x = minX; x < maxX; x++)
         for(int y = minY; y < maxY; y++)
         for(int z = minZ; z < maxZ; z++)
-        BlockUtils.breakBlock(new BlockPos(x, y, z), swing.get());
+        BlockUtils.breakBlock(new BlockPos(x,y,z), false));
     }
 
-    public WWidget breakWidget(GuiTheme theme)
+    private void interact()
+    {
+        for(int x = minX; x < maxX; x++)
+        for(int y = minY; y < maxY; y++)
+        for(int z = minZ; z < maxZ; z++)
+        {
+            BlockPos pos = new BlockPos(x,y,z);
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), BlockUtils.getDirection(pos), pos, true), Hand.MAIN_HAND, false); 
+        }
+    }
+
+    public WWidget mineWidget(GuiTheme theme)
     {
         WButton mine = theme.button("Mine");
         mine.action = () -> mine();
         return mine;
+    }
+    
+    public WWidget interactWidget(GuiTheme theme)
+    {
+        WButton use = theme.button("Use");
+        use.action = () -> interact();
+        return use;
     }
 }
