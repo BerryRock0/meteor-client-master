@@ -121,6 +121,8 @@ public class Automaton extends Module
             case "yaw": mc.player.setYaw(Float.parseFloat(arg)); break;
             case "pitch": mc.player.setPitch(Float.parseFloat(arg)); break;    
             case "to": cmdindex = Integer.parseInt(arg); break;
+            case "command": mc.getConnection().sendCommand(arg);
+            case "chat": mc.getConnection().sendChat(arg);    
             default: break;
         }
     }
