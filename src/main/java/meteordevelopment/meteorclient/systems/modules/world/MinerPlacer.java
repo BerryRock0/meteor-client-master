@@ -95,42 +95,42 @@ public class MinerPlacer extends Module
         return set;
     }
     
-    public WWidget getWidget(GuiTheme theme)
+    public WWidget getWidget0(GuiTheme theme)
     {
         WButton ix = theme.button("x++");
         ix.action = () -> x++;
         return ix;
     }
 
-    public WWidget getWidget(GuiTheme theme)
+    public WWidget getWidget1(GuiTheme theme)
     {
         WButton iy = theme.button("y++");
         iy.action = () -> y++;
         return iy;
     }
 
-    public WWidget getWidget(GuiTheme theme)
+    public WWidget getWidget2(GuiTheme theme)
     {
         WButton iz = theme.button("z++");
         iz.action = () -> z++;
         return iz;
     }
 
-    public WWidget getWidget(GuiTheme theme)
+    public WWidget getWidget3(GuiTheme theme)
     {
         WButton dx = theme.button("x--");
         dx.action = () -> x--;
         return dx;
     }
 
-    public WWidget getWidget(GuiTheme theme)
+    public WWidget getWidget4(GuiTheme theme)
     {
         WButton dy = theme.button("y--");
         dy.action = () -> y--;
         return dy;
     }
 
-    public WWidget getWidget(GuiTheme theme)
+    public WWidget getWidget5(GuiTheme theme)
     {
         WButton dz = theme.button("z--");
         dz.action = () -> z--;
