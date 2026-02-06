@@ -25,14 +25,17 @@ public class MinerPlacer extends Module
     private final SettingGroup sgMiner = settings.createGroup("Miner");
     private final SettingGroup sgPlacer = settings.createGroup("Placer");
 
+    private final SettingGroup sgControl = settings.createGroup("Control");
+    private final SettingGroup sgExecution = settings.createGroup("Execution");
 
-    private final Setting<BlockPos> mine = sgGeneral.add(new BlockPosSetting.Builder()
+
+    private final Setting<BlockPos> mine = sgMiner.add(new BlockPosSetting.Builder()
         .name("mine-pos")
         .description("Mining block position")
         .build()
     );
 
-    private final Setting<BlockPos> interact = sgGeneral.add(new BlockPosSetting.Builder()
+    private final Setting<BlockPos> interact = sgPlacer.add(new BlockPosSetting.Builder()
         .name("interact-pos")
         .description("Interact block position")
         .build()
