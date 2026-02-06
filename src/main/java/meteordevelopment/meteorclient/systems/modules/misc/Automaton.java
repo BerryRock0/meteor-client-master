@@ -125,7 +125,7 @@ public class Automaton extends Module
         }
     }
 
-    public WWidget resetWidget(GuiTheme theme)
+    public WWidget getWidget(GuiTheme theme)
     {
         WButton reset = theme.button("Reset");
         reset.action = () -> cmdindex = 0;
