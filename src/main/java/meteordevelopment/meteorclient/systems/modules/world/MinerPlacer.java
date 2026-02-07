@@ -89,6 +89,7 @@ public class MinerPlacer extends Module
     public int x;
     public int y;
     public int z;
+    public BlockPos pos;
 
     public MinerPlacer()
     {
@@ -112,14 +113,14 @@ public class MinerPlacer extends Module
     @EventHandler
     private void onRender(Render3DEvent event)
     {
-        BlockPos pos = new BlockPos(x,y,z);
+        pos = new BlockPos(x,y,z);
         if(render.get())
             event.renderer.box(pos, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
 
     public void main()
     {   
-        BlockPos pos = new BlockPos(x,y,z);
+        pos = new BlockPos(x,y,z);
         if(mining.get())
             BlockUtils.breakBlock(pos, false);
         if(using.get())
