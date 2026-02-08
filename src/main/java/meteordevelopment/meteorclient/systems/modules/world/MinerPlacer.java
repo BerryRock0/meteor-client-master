@@ -18,8 +18,9 @@ import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
 
 import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.hit.BlockHitResult;
 
 public class MinerPlacer extends Module
 {
@@ -46,7 +47,12 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
-
+    private final Setting<CardinalDirections> cardinaldirection = sgExecution.add(new EnumSetting.Builder<CardinalDirections>()
+        .name("Place-Direction")
+        .description("Direction to use.")
+        .defaultValue(Mode.Vanilla)
+        .build()
+    );
     private final Setting<Boolean> mining = sgExecution.add(new BoolSetting.Builder()
         .name("Mining")
         .description("Break blocks in area")
@@ -122,7 +128,20 @@ public class MinerPlacer extends Module
         if(mining.get())
             BlockUtils.breakBlock(pos, false);
         if(using.get())
-            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), BlockUtils.getDirection(pos), pos, true), Hand.MAIN_HAND, false);   
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(), pos, true), Hand.MAIN_HAND, false);   
+    }
+
+    public Direction direction()
+    {
+        switch (cardinaldirection.get())
+        {
+            case up -> {return Direction.UP;}
+            case down -> {return Direction.DOWN;}
+            case north -> {return Direction.NORTH;}
+            case south -> {return Direction.SOUTH;}
+            case east -> {return Direction.EAST;}
+            case west -> {return Direction.WEST;}     
+        }
     }
 
     public WWidget getWidget(GuiTheme theme)
@@ -139,5 +158,15 @@ public class MinerPlacer extends Module
         WButton set = list.add(theme.button("Set")).expandX().widget(); set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ();};
         
         return list;
+    }
+
+    public enum CardinalDirections
+    {
+        up,
+        down,
+        north,
+        south,
+        east,
+        west
     }
 }
