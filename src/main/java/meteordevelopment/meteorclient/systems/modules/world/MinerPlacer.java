@@ -86,9 +86,7 @@ public class MinerPlacer extends Module
         .build()
     );
     
-    public int x;
-    public int y;
-    public int z;
+    public int x,y,z;
     public BlockPos pos;
 
     public MinerPlacer()
