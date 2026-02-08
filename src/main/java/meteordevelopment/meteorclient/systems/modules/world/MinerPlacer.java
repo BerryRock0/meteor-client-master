@@ -65,7 +65,7 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> render = sgGeneral.add(new BoolSetting.Builder()
+    private final Setting<Boolean> render = sgVisual.add(new BoolSetting.Builder()
         .name("render")
         .description("Renders a block overlay where the obsidian will be placed.")
         .defaultValue(true)
