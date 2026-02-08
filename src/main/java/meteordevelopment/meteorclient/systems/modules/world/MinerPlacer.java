@@ -50,7 +50,7 @@ public class MinerPlacer extends Module
     private final Setting<CardinalDirections> cardinaldirection = sgExecution.add(new EnumSetting.Builder<CardinalDirections>()
         .name("Place-Direction")
         .description("Direction to use.")
-        .defaultValue(Mode.Down)
+        .defaultValue(CardinalDirections.Down)
         .build()
     );
     private final Setting<Boolean> mining = sgExecution.add(new BoolSetting.Builder()
