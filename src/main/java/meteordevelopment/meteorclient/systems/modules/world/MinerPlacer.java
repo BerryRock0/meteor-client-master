@@ -142,6 +142,7 @@ public class MinerPlacer extends Module
             case East -> {return Direction.EAST;}
             case West -> {return Direction.WEST;}     
         }
+        return null;
     }
 
     public WWidget getWidget(GuiTheme theme)
