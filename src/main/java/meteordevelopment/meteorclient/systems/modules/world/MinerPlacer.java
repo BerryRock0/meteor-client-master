@@ -50,7 +50,7 @@ public class MinerPlacer extends Module
     private final Setting<CardinalDirections> cardinaldirection = sgExecution.add(new EnumSetting.Builder<CardinalDirections>()
         .name("Place-Direction")
         .description("Direction to use.")
-        .defaultValue(Mode.Vanilla)
+        .defaultValue(Mode.Down)
         .build()
     );
     private final Setting<Boolean> mining = sgExecution.add(new BoolSetting.Builder()
@@ -135,12 +135,12 @@ public class MinerPlacer extends Module
     {
         switch (cardinaldirection.get())
         {
-            case up -> {return Direction.UP;}
-            case down -> {return Direction.DOWN;}
-            case north -> {return Direction.NORTH;}
-            case south -> {return Direction.SOUTH;}
-            case east -> {return Direction.EAST;}
-            case west -> {return Direction.WEST;}     
+            case Up -> {return Direction.UP;}
+            case Down -> {return Direction.DOWN;}
+            case North -> {return Direction.NORTH;}
+            case South -> {return Direction.SOUTH;}
+            case East -> {return Direction.EAST;}
+            case West -> {return Direction.WEST;}     
         }
     }
 
@@ -162,11 +162,11 @@ public class MinerPlacer extends Module
 
     public enum CardinalDirections
     {
-        up,
-        down,
-        north,
-        south,
-        east,
-        west
+        Up,
+        Down,
+        North,
+        South,
+        East,
+        West
     }
 }
