@@ -115,8 +115,6 @@ public class MinerPlacer extends Module
     public BlockPos pos;
     public String cmd;
     public String[] parts;
-    public String command;
-    public String arg;
 
     public MinerPlacer()
     {
@@ -149,12 +147,10 @@ public class MinerPlacer extends Module
     {   
         pos = new BlockPos(x,y,z);
         cmd = commands.get().get(cmdindex);
-        parts = cmd.trim().split("\\s+");
-        command = parts[0];
-        arg = parts[1];
+        parts = cmd.trim().split("\\s+").nonNull();
 
         if (script.get())
-            execute(command, arg);
+            execute(parts[0], parts[1]);
         if(mining.get())
             BlockUtils.breakBlock(pos, false);
         if(using.get())
