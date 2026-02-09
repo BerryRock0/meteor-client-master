@@ -139,6 +139,7 @@ public class MinerPlacer extends Module
     public int x,y,z;
     public BlockPos pos;
     public int index;
+    public int repeats;
     public String input;
     public String[] parts;
     public String command;
@@ -206,6 +207,8 @@ public class MinerPlacer extends Module
             case "x--": x--; break;
             case "y--": y--; break;
             case "z--": z--; break;
+            case "rpt": if(repeats++ != Integer.parseInt(b)) index--; else index++; break;
+            case "droprpt": repeats = Integer.parseInt(b); break;
             case "sx": x = Integer.parseInt(b); break;
             case "sy": y = Integer.parseInt(b); break;
             case "sz": z = Integer.parseInt(b); break;
