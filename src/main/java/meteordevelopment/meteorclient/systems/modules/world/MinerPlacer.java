@@ -76,6 +76,19 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
+
+    private final Setting<Boolean> incrementIndex = sgExecution.add(new BoolSetting.Builder()
+        .name("Increment")
+        .description("Execute script from beginning to end.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> decrementIndex = sgExecution.add(new BoolSetting.Builder()
+        .name("Decrement")
+        .description("Execute script from end to beginning.")
+        .defaultValue(false)
+        .build()
+    );
     
     private final Setting<List<String>> commands = sgScript.add(new StringListSetting.Builder()
         .name("commands")
@@ -150,15 +163,16 @@ public class MinerPlacer extends Module
     {   
         pos = new BlockPos(x,y,z);
 
-        
         try
         {
             cmd = commands.get().get(index);
             parts = cmd.trim().split("\\s+");
             
             if(script.get())
-                execute(parts[0], parts[1]);
-            
+                parseAndExecute(parts[0], parts[1]);
+
+            if (increment.get()) cmdindex++;
+            if (decrement.get()) cmdindex--;   
         }
         catch(Exception e)
         {}
@@ -169,7 +183,7 @@ public class MinerPlacer extends Module
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, true), Hand.MAIN_HAND, false);   
     }
 
-    private void execute(String command, String arg)
+    private void parseAndExecute(String command, String arg)
     {   
         switch (command.toLowerCase())
         {
