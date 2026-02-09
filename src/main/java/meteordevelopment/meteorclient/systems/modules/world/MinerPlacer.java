@@ -77,13 +77,13 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    private final Setting<Boolean> incrementIndex = sgExecution.add(new BoolSetting.Builder()
+    private final Setting<Boolean> incrementIndex = sgScript.add(new BoolSetting.Builder()
         .name("Increment")
         .description("Execute script from beginning to end.")
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> decrementIndex = sgExecution.add(new BoolSetting.Builder()
+    private final Setting<Boolean> decrementIndex = sgScript.add(new BoolSetting.Builder()
         .name("Decrement")
         .description("Execute script from end to beginning.")
         .defaultValue(false)
@@ -171,8 +171,8 @@ public class MinerPlacer extends Module
             if(script.get())
                 parseAndExecute(parts[0], parts[1]);
 
-            if (increment.get()) cmdindex++;
-            if (decrement.get()) cmdindex--;   
+            if (incrementIndex.get()) cmdindex++;
+            if (decrementIndex.get()) cmdindex--;   
         }
         catch(Exception e)
         {}
