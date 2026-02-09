@@ -76,9 +76,9 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    private final Setting<Boolean> script = sgScript.add(new BoolSetting.Builder()
-        .name("script")
-        .description("Break blocks with script.")
+    private final Setting<Boolean> run = sgScript.add(new BoolSetting.Builder()
+        .name("run")
+        .description("Fire script execution.")
         .defaultValue(false)
         .build()
     );
@@ -96,8 +96,8 @@ public class MinerPlacer extends Module
         .build()
     );
     
-    private final Setting<List<String>> commands = sgScript.add(new StringListSetting.Builder()
-        .name("commands")
+    private final Setting<List<String>> script = sgScript.add(new StringListSetting.Builder()
+        .name("script")
         .description("Minerplacer action commands.")
         .build()
     );
@@ -139,7 +139,9 @@ public class MinerPlacer extends Module
     public int x,y,z;
     public BlockPos pos;
     public int index;
-    public String cmd;
+    public String input;
+    public String command;
+    public String argument;
     public String[] parts;
 
     public MinerPlacer()
@@ -175,11 +177,12 @@ public class MinerPlacer extends Module
 
         try
         {
-            cmd = commands.get().get(index);
-            parts = cmd.trim().split("\\s+");
-            
-            if(script.get())
-                parseAndExecute(parts[0], parts[1]);
+            input = script.get().get(index);
+            parts = input.trim().split("\\s+");
+            command = parts[0];
+            argument = parts[1];
+            if(run.get())
+                parseAndExecute(command, argument);
 
             if (incrementIndex.get()) index++;
             if (decrementIndex.get()) index--;   
@@ -193,9 +196,9 @@ public class MinerPlacer extends Module
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
     }
 
-    private void parseAndExecute(String command, String arg)
+    private void parseAndExecute(String a, String b)
     {   
-        switch (command.toLowerCase())
+        switch (a.toLowerCase())
         {
             case "x++": x++; break;
             case "y++": y++; break;
@@ -203,10 +206,10 @@ public class MinerPlacer extends Module
             case "x--": x--; break;
             case "y--": y--; break;
             case "z--": z--; break;
-            case "sx": x = Integer.parseInt(arg); break;
-            case "sy": y = Integer.parseInt(arg); break;
-            case "sz": z = Integer.parseInt(arg); break;
-            case "to": index = Integer.parseInt(arg); break;
+            case "sx": x = Integer.parseInt(b); break;
+            case "sy": y = Integer.parseInt(b); break;
+            case "sz": z = Integer.parseInt(b); break;
+            case "to": index = Integer.parseInt(b); break;
             default: break;
         }
     }
@@ -250,6 +253,7 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
+        WButton reset = set.add(theme.button("Return")).expandX().widget(); sz.action = () -> {index = 0;};
         
         return main;
     }
