@@ -26,10 +26,23 @@ import net.minecraft.util.hit.BlockHitResult;
 
 public class MinerPlacer extends Module
 {
-    private final SettingGroup sgControl = settings.createGroup("Control");
+    private final SettingGroup sgPanel = settings.getDefaultGroup("Control");
     private final SettingGroup sgSettings = settings.createGroup("Settings");
     private final SettingGroup sgScript = settings.createGroup("Script");
-    private final SettingGroup sgVisual = settings.createGroup("Visual");
+    private final SettingGroup sgRender = settings.createGroup("Render");
+
+    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
+        .name("Pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
+        .name("Post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
     
     private final Setting<BlockPos> zero = sgSettings.add(new BlockPosSetting.Builder()
         .name("zero-pos")
@@ -45,71 +58,61 @@ public class MinerPlacer extends Module
     );
 
     //Control    
-    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
-        .name("Pre")
-        .description("Load script before tick.")
-        .defaultValue(false)
-        .build()
-    );
-    private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
-        .name("Post")
-        .description("Load script after tick.")
-        .defaultValue(false)
-        .build()
-    );
 
-    private final Setting<Boolean> script = sgControl.add(new BoolSetting.Builder()
+
+    private final Setting<Boolean> script = sgScript.add(new BoolSetting.Builder()
         .name("Script")
-        .description("Break blocks with script")
+        .description("Break blocks with script.")
         .defaultValue(false)
         .build()
     );
     
+    private final Setting<List<String>> commands = sgScript.add(new StringListSetting.Builder()
+        .name("commands")
+        .description("Minerplacer action commands.")
+        .build()
+    );
     private final Setting<Boolean> mining = sgControl.add(new BoolSetting.Builder()
         .name("Mining")
-        .description("Break blocks in area")
+        .description("Break blocks in area.")
         .defaultValue(false)
         .build()
     );
     private final Setting<Boolean> using = sgControl.add(new BoolSetting.Builder()
         .name("Using")
-        .description("Intreact blocks in area")
+        .description("Intreact blocks in area.")
         .defaultValue(false)
         .build()
     );
     
-    private final Setting<Boolean> render = sgVisual.add(new BoolSetting.Builder()
+    private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
         .description("Renders a block overlay where the obsidian will be placed.")
         .defaultValue(true)
         .build()
     );
-    private final Setting<ShapeMode> shapeMode = sgVisual.add(new EnumSetting.Builder<ShapeMode>()
+    private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>()
         .name("shape-mode")
         .description("How the shapes are rendered.")
         .defaultValue(ShapeMode.Both)
         .build()
     );
 
-    private final Setting<SettingColor> sideColor = sgVisual.add(new ColorSetting.Builder()
+    private final Setting<SettingColor> sideColor = sgRender.add(new ColorSetting.Builder()
         .name("side-color")
         .description("The color of the sides of the blocks being rendered.")
         .defaultValue(new SettingColor(0, 0, 0, 0))
         .build()
     );
 
-    private final Setting<SettingColor> lineColor = sgVisual.add(new ColorSetting.Builder()
+    private final Setting<SettingColor> lineColor = sgRender.add(new ColorSetting.Builder()
         .name("line-color")
         .description("The color of the lines of the blocks being rendered.")
         .defaultValue(new SettingColor(0, 0, 0, 0))
         .build()
     );
 
-    private final Setting<List<String>> commands = sgScript.add(new StringListSetting.Builder()
-        .name("commands")
-        .description("setting commands")
-        .build()
-    );
+
     
     public int x,y,z;
     public BlockPos pos;
@@ -147,13 +150,16 @@ public class MinerPlacer extends Module
     public void main()
     {   
         pos = new BlockPos(x,y,z);
-        cmd = commands.get().get(index);
-        parts = cmd.trim().split("\\s+");
+
         
         try
         {
+            cmd = commands.get().get(index);
+            parts = cmd.trim().split("\\s+");
+            
             if(script.get())
                 execute(parts[0], parts[1]);
+            
         }
         catch(Exception e)
         {}
@@ -177,6 +183,7 @@ public class MinerPlacer extends Module
             case "sx": x=Integer.parseInt(arg); break;
             case "sy": y=Integer.parseInt(arg); break;
             case "sz": z=Integer.parseInt(arg); break;
+            case "to": index = Integer.parseInt(arg); break;
             default: break;
         }
     }
@@ -199,20 +206,25 @@ public class MinerPlacer extends Module
 
     public WWidget getWidget(GuiTheme theme)
     {
-        WVerticalList list = theme.verticalList();
-        WHorizontalList a = list.add(theme.horizontalList()).expandX().widget();
+        WVerticalList pm = theme.verticalList();
+        WVerticalList nm = theme.verticalList();
+        WVerticalList set = theme.verticalList();
+        
+        WHorizontalList a = pm.add(theme.horizontalList()).expandX().widget();
+        WHorizontalList b = nm.add(theme.horizontalList()).expandX().widget();
+        WHorizontalList c = set.add(theme.horizontalList()).expandX().widget();
         
         WButton ix = a.add(theme.button("x++")).expandX().widget(); ix.action = () -> x++;
         WButton iy = a.add(theme.button("y++")).expandX().widget(); iy.action = () -> y++;
         WButton iz = a.add(theme.button("z++")).expandX().widget(); iz.action = () -> z++;
-        WButton dx = a.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
-        WButton dy = a.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
-        WButton dz = a.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
-        WButton sx = list.add(theme.button("X->")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
-        WButton sy = list.add(theme.button("Y->")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
-        WButton sz = list.add(theme.button("Z->")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
+        WButton dx = b.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
+        WButton dy = b.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
+        WButton dz = b.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
+        WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
+        WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
+        WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
         
-        return list;
+        return pm+nm;
     }
 
     public enum CardinalDirections
