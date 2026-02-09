@@ -181,8 +181,8 @@ public class MinerPlacer extends Module
             if(script.get())
                 parseAndExecute(parts[0], parts[1]);
 
-            if (incrementIndex.get()) cmdindex++;
-            if (decrementIndex.get()) cmdindex--;   
+            if (incrementIndex.get()) index++;
+            if (decrementIndex.get()) index--;   
         }
         catch(Exception e)
         {}
