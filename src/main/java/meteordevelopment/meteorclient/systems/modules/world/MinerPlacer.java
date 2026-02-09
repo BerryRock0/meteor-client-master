@@ -144,7 +144,6 @@ public class MinerPlacer extends Module
     public String command;
     public String argument;
 
-
     public MinerPlacer()
     {
         super(Categories.World, "MinerPlacer", "Break or Place in specific coordinate.");
