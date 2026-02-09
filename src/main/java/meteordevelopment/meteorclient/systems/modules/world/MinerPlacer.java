@@ -140,9 +140,10 @@ public class MinerPlacer extends Module
     public BlockPos pos;
     public int index;
     public String input;
+    public String[] parts;
     public String command;
     public String argument;
-    public String[] parts;
+
 
     public MinerPlacer()
     {
