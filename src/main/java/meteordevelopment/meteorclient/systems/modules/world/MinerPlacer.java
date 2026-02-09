@@ -1,5 +1,7 @@
 package meteordevelopment.meteorclient.systems.modules.world;
 
+import java.util.List;
+
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
@@ -24,17 +26,25 @@ import net.minecraft.util.hit.BlockHitResult;
 
 public class MinerPlacer extends Module
 {
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgControl = settings.createGroup("Control");
-    private final SettingGroup sgExecution = settings.createGroup("Execution");
+    private final SettingGroup sgSettings = settings.createGroup("Settings");
+    private final SettingGroup sgScript = setting.createGroup("Script");
     private final SettingGroup sgVisual = settings.createGroup("Visual");
     
-    private final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
+    private final Setting<BlockPos> zero = sgSettings.add(new BlockPosSetting.Builder()
         .name("zero-pos")
         .description("Mining block position")
         .build()
     );
     
+    private final Setting<CardinalDirections> cardinaldirection = sgSettings.add(new EnumSetting.Builder<CardinalDirections>()
+        .name("Place-Direction")
+        .description("Direction to use.")
+        .defaultValue(CardinalDirections.Down)
+        .build()
+    );
+
+    //Control    
     private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
         .name("Pre")
         .description("Load script before tick.")
@@ -47,24 +57,27 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
-    private final Setting<CardinalDirections> cardinaldirection = sgExecution.add(new EnumSetting.Builder<CardinalDirections>()
-        .name("Place-Direction")
-        .description("Direction to use.")
-        .defaultValue(CardinalDirections.Down)
+
+    private final Setting<Boolean> script = sgControl.add(new BoolSetting.Builder()
+        .name("Script")
+        .description("Break blocks with script")
+        .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> mining = sgExecution.add(new BoolSetting.Builder()
+    
+    private final Setting<Boolean> mining = sgControl.add(new BoolSetting.Builder()
         .name("Mining")
         .description("Break blocks in area")
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> using = sgExecution.add(new BoolSetting.Builder()
+    private final Setting<Boolean> using = sgControl.add(new BoolSetting.Builder()
         .name("Using")
         .description("Intreact blocks in area")
         .defaultValue(false)
         .build()
     );
+    
     private final Setting<Boolean> render = sgVisual.add(new BoolSetting.Builder()
         .name("render")
         .description("Renders a block overlay where the obsidian will be placed.")
@@ -91,9 +104,19 @@ public class MinerPlacer extends Module
         .defaultValue(new SettingColor(0, 0, 0, 0))
         .build()
     );
+
+    private final Setting<List<String>> commands = sgScript.add(new StringListSetting.Builder()
+        .name("commands")
+        .description("setting commands")
+        .build()
+    );
     
     public int x,y,z;
     public BlockPos pos;
+    public String cmd;
+    public String[] parts;
+    public String command;
+    public String arg;
 
     public MinerPlacer()
     {
@@ -125,16 +148,42 @@ public class MinerPlacer extends Module
     public void main()
     {   
         pos = new BlockPos(x,y,z);
+        cmd = commands.get().get(cmdindex);
+        parts = cmd.trim().split("\\s+");
+        command = parts[0];
+        arg = parts[1];
+
+        if (script.get())
+            execute(command, arg);
         if(mining.get())
             BlockUtils.breakBlock(pos, false);
         if(using.get())
-            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(), pos, true), Hand.MAIN_HAND, false);   
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, true), Hand.MAIN_HAND, false);   
     }
 
-    public Direction direction()
+    private void execute(String command, String arg)
+    {   
+        switch (command.toLowerCase())
+        {
+            case "mpx": x+Integer.parseInt(arg); break;
+            case "mpy": y+Integer.parseInt(arg); break;
+            case "mpz": z+Integer.parseInt(arg); break;
+            case "mnx": x-Integer.parseInt(arg); break;
+            case "mny": y-Integer.parseInt(arg); break;
+            case "mnz": z-Integer.parseInt(arg); break;
+            case "sx": x=Integer.parseInt(arg); break;
+            case "sy": y=Integer.parseInt(arg); break;
+            case "sz": z=Integer.parseInt(arg); break;
+            default: break;
+        }
+    }
+    
+    
+    public Direction direction(BlockPos pos)
     {
         switch (cardinaldirection.get())
         {
+            case Auto ->{return BlockUtils.getDirection(pos);}
             case Up -> {return Direction.UP;}
             case Down -> {return Direction.DOWN;}
             case North -> {return Direction.NORTH;}
@@ -148,21 +197,24 @@ public class MinerPlacer extends Module
     public WWidget getWidget(GuiTheme theme)
     {
         WVerticalList list = theme.verticalList();
-        WHorizontalList b = list.add(theme.horizontalList()).expandX().widget();
+        WHorizontalList a = list.add(theme.horizontalList()).expandX().widget();
         
-        WButton ix = b.add(theme.button("x++")).expandX().widget(); ix.action = () -> x++;
-        WButton iy = b.add(theme.button("y++")).expandX().widget(); iy.action = () -> y++;
-        WButton iz = b.add(theme.button("z++")).expandX().widget(); iz.action = () -> z++;
-        WButton dx = b.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
-        WButton dy = b.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
-        WButton dz = b.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
-        WButton set = list.add(theme.button("Set")).expandX().widget(); set.action = () -> {x=zero.get().getX(); y=zero.get().getY(); z=zero.get().getZ();};
+        WButton ix = a.add(theme.button("x++")).expandX().widget(); ix.action = () -> x++;
+        WButton iy = a.add(theme.button("y++")).expandX().widget(); iy.action = () -> y++;
+        WButton iz = a.add(theme.button("z++")).expandX().widget(); iz.action = () -> z++;
+        WButton dx = a.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
+        WButton dy = a.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
+        WButton dz = a.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
+        WButton sx = list.add(theme.button("X->Start")).expandX().widget(); set.action = () -> {x=zero.get().getX();};
+        WButton sy = list.add(theme.button("Y->Start")).expandX().widget(); set.action = () -> {z=zero.get().getZ();};
+        WButton sz = list.add(theme.button("Z->Start")).expandX().widget(); set.action = () -> {z=zero.get().getZ();};
         
         return list;
     }
 
     public enum CardinalDirections
     {
+        Auto,
         Up,
         Down,
         North,
