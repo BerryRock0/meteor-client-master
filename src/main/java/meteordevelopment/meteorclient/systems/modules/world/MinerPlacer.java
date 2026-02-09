@@ -210,9 +210,9 @@ public class MinerPlacer extends Module
         WVerticalList nm = theme.verticalList();
         WVerticalList set = theme.verticalList();
 
-        main.add(pm);
-        main.add(nm);
-        main.add(set);
+        main.add(pm).expandX().widget();
+        main.add(nm).expandX().widget();
+        main.add(set).expandX().widget();
         
         WHorizontalList a = pm.add(theme.horizontalList()).expandX().widget();
         WHorizontalList b = nm.add(theme.horizontalList()).expandX().widget();
