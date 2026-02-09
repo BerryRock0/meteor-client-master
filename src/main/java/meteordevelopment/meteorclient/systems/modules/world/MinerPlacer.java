@@ -28,7 +28,7 @@ public class MinerPlacer extends Module
 {
     private final SettingGroup sgControl = settings.createGroup("Control");
     private final SettingGroup sgSettings = settings.createGroup("Settings");
-    private final SettingGroup sgScript = setting.createGroup("Script");
+    private final SettingGroup sgScript = settings.createGroup("Script");
     private final SettingGroup sgVisual = settings.createGroup("Visual");
     
     private final Setting<BlockPos> zero = sgSettings.add(new BlockPosSetting.Builder()
@@ -113,6 +113,7 @@ public class MinerPlacer extends Module
     
     public int x,y,z;
     public BlockPos pos;
+    public int index;
     public String cmd;
     public String[] parts;
 
@@ -146,11 +147,17 @@ public class MinerPlacer extends Module
     public void main()
     {   
         pos = new BlockPos(x,y,z);
-        cmd = commands.get().get(cmdindex);
-        parts = cmd.trim().split("\\s+").nonNull();
+        cmd = commands.get().get(index);
+        parts = cmd.trim().split("\\s+");
+        
+        try
+        {
+            if(script.get())
+                execute(parts[0], parts[1]);
+        }
+        catch(Exception e)
+        {}
 
-        if (script.get())
-            execute(parts[0], parts[1]);
         if(mining.get())
             BlockUtils.breakBlock(pos, false);
         if(using.get())
@@ -164,9 +171,9 @@ public class MinerPlacer extends Module
             case "x++": x++; break;
             case "y++": y++; break;
             case "z++": z++; break;
-            case "x++": x--; break;
-            case "y++": y--; break;
-            case "z++": z--; break;
+            case "x--": x--; break;
+            case "y--": y--; break;
+            case "z--": z--; break;
             case "sx": x=Integer.parseInt(arg); break;
             case "sy": y=Integer.parseInt(arg); break;
             case "sz": z=Integer.parseInt(arg); break;
@@ -201,9 +208,9 @@ public class MinerPlacer extends Module
         WButton dx = a.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
         WButton dy = a.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
         WButton dz = a.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
-        WButton sx = list.add(theme.button("X->Start")).expandX().widget(); set.action = () -> {x=zero.get().getX();};
-        WButton sy = list.add(theme.button("Y->Start")).expandX().widget(); set.action = () -> {z=zero.get().getZ();};
-        WButton sz = list.add(theme.button("Z->Start")).expandX().widget(); set.action = () -> {z=zero.get().getZ();};
+        WButton sx = list.add(theme.button("X->")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
+        WButton sy = list.add(theme.button("Y->")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
+        WButton sz = list.add(theme.button("Z->")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
         
         return list;
     }
