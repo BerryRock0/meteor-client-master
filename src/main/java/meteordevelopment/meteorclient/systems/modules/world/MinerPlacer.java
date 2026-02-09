@@ -165,12 +165,12 @@ public class MinerPlacer extends Module
     {   
         switch (command.toLowerCase())
         {
-            case "mpx": x+Integer.parseInt(arg); break;
-            case "mpy": y+Integer.parseInt(arg); break;
-            case "mpz": z+Integer.parseInt(arg); break;
-            case "mnx": x-Integer.parseInt(arg); break;
-            case "mny": y-Integer.parseInt(arg); break;
-            case "mnz": z-Integer.parseInt(arg); break;
+            case "x++": x++; break;
+            case "y++": y++; break;
+            case "z++": z++; break;
+            case "x++": x--; break;
+            case "y++": y--; break;
+            case "z++": z--; break;
             case "sx": x=Integer.parseInt(arg); break;
             case "sy": y=Integer.parseInt(arg); break;
             case "sz": z=Integer.parseInt(arg); break;
