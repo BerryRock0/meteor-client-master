@@ -31,60 +31,66 @@ public class MinerPlacer extends Module
     private final SettingGroup sgScript = settings.createGroup("Script");
     private final SettingGroup sgRender = settings.createGroup("Render");
 
-
     private final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
         .description("Mining block position")
         .build()
     );
     private final Setting<Boolean> mining = sgGeneral.add(new BoolSetting.Builder()
-        .name("Mining")
+        .name("breaking")
         .description("Break blocks in area.")
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> using = sgGeneral.add(new BoolSetting.Builder()
-        .name("Using")
+    private final Setting<Boolean> interacting = sgGeneral.add(new BoolSetting.Builder()
+        .name("interacting")
         .description("Intreact blocks in area.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<CardinalDirections> cardinaldirection = sgSettings.add(new EnumSetting.Builder<CardinalDirections>()
-        .name("Place-Direction")
+        .name("place-pirection")
         .description("Direction to use.")
         .defaultValue(CardinalDirections.Down)
         .build()
     );
     
+    private final Setting<Boolean> insideBlock = sgSettings.add(new BoolSetting.Builder()
+        .name("inside-block")
+        .description("Inside block value.")
+        .defaultValue(false)
+        .build()
+    );
+    
     private final Setting<Boolean> pre = sgSettings.add(new BoolSetting.Builder()
-        .name("Pre")
+        .name("pre")
         .description("Load script before tick.")
         .defaultValue(false)
         .build()
     );
     private final Setting<Boolean> post = sgSettings.add(new BoolSetting.Builder()
-        .name("Post")
+        .name("post")
         .description("Load script after tick.")
         .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> script = sgScript.add(new BoolSetting.Builder()
-        .name("Script")
+        .name("script")
         .description("Break blocks with script.")
         .defaultValue(false)
         .build()
     );
-
+    
     private final Setting<Boolean> incrementIndex = sgScript.add(new BoolSetting.Builder()
-        .name("Increment")
+        .name("increment")
         .description("Execute script from beginning to end.")
         .defaultValue(false)
         .build()
     );
     private final Setting<Boolean> decrementIndex = sgScript.add(new BoolSetting.Builder()
-        .name("Decrement")
+        .name("decrement")
         .description("Execute script from end to beginning.")
         .defaultValue(false)
         .build()
@@ -96,10 +102,16 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    
     private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
         .description("Renders a block overlay where the obsidian will be placed.")
+        .defaultValue(true)
+        .build()
+    );
+
+    private final Setting<Boolean> placingswing = sgRender.add(new BoolSetting.Builder()
+        .name("placing-swing")
+        .description("Doing placing swing.")
         .defaultValue(true)
         .build()
     );
@@ -124,8 +136,6 @@ public class MinerPlacer extends Module
         .build()
     );
 
-
-    
     public int x,y,z;
     public BlockPos pos;
     public int index;
@@ -179,8 +189,8 @@ public class MinerPlacer extends Module
 
         if(mining.get())
             BlockUtils.breakBlock(pos, false);
-        if(using.get())
-            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, true), Hand.MAIN_HAND, false);   
+        if(interacting.get())
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
     }
 
     private void parseAndExecute(String command, String arg)
@@ -193,14 +203,13 @@ public class MinerPlacer extends Module
             case "x--": x--; break;
             case "y--": y--; break;
             case "z--": z--; break;
-            case "sx": x=Integer.parseInt(arg); break;
-            case "sy": y=Integer.parseInt(arg); break;
-            case "sz": z=Integer.parseInt(arg); break;
+            case "sx": x = Integer.parseInt(arg); break;
+            case "sy": y = Integer.parseInt(arg); break;
+            case "sz": z = Integer.parseInt(arg); break;
             case "to": index = Integer.parseInt(arg); break;
             default: break;
         }
     }
-    
     
     public Direction direction(BlockPos pos)
     {
