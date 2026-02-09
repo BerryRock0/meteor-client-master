@@ -26,39 +26,49 @@ import net.minecraft.util.hit.BlockHitResult;
 
 public class MinerPlacer extends Module
 {
-    private final SettingGroup sgPanel = settings.getDefaultGroup("Control");
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgSettings = settings.createGroup("Settings");
     private final SettingGroup sgScript = settings.createGroup("Script");
     private final SettingGroup sgRender = settings.createGroup("Render");
 
-    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
-        .name("Pre")
-        .description("Load script before tick.")
-        .defaultValue(false)
-        .build()
-    );
-    private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
-        .name("Post")
-        .description("Load script after tick.")
-        .defaultValue(false)
-        .build()
-    );
-    
-    private final Setting<BlockPos> zero = sgSettings.add(new BlockPosSetting.Builder()
+
+    private final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
         .description("Mining block position")
         .build()
     );
-    
+    private final Setting<Boolean> mining = sgGeneral.add(new BoolSetting.Builder()
+        .name("Mining")
+        .description("Break blocks in area.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> using = sgGeneral.add(new BoolSetting.Builder()
+        .name("Using")
+        .description("Intreact blocks in area.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<CardinalDirections> cardinaldirection = sgSettings.add(new EnumSetting.Builder<CardinalDirections>()
         .name("Place-Direction")
         .description("Direction to use.")
         .defaultValue(CardinalDirections.Down)
         .build()
     );
-
-    //Control    
-
+    
+    private final Setting<Boolean> pre = sgSettings.add(new BoolSetting.Builder()
+        .name("Pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> post = sgSettings.add(new BoolSetting.Builder()
+        .name("Post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
 
     private final Setting<Boolean> script = sgScript.add(new BoolSetting.Builder()
         .name("Script")
@@ -72,18 +82,7 @@ public class MinerPlacer extends Module
         .description("Minerplacer action commands.")
         .build()
     );
-    private final Setting<Boolean> mining = sgControl.add(new BoolSetting.Builder()
-        .name("Mining")
-        .description("Break blocks in area.")
-        .defaultValue(false)
-        .build()
-    );
-    private final Setting<Boolean> using = sgControl.add(new BoolSetting.Builder()
-        .name("Using")
-        .description("Intreact blocks in area.")
-        .defaultValue(false)
-        .build()
-    );
+
     
     private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
@@ -206,9 +205,14 @@ public class MinerPlacer extends Module
 
     public WWidget getWidget(GuiTheme theme)
     {
+        WVerticalList main = theme.verticalList();
         WVerticalList pm = theme.verticalList();
         WVerticalList nm = theme.verticalList();
         WVerticalList set = theme.verticalList();
+
+        main.add(pm);
+        main.add(nm);
+        main.add(set);
         
         WHorizontalList a = pm.add(theme.horizontalList()).expandX().widget();
         WHorizontalList b = nm.add(theme.horizontalList()).expandX().widget();
@@ -224,7 +228,7 @@ public class MinerPlacer extends Module
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
         
-        return pm+nm;
+        return main;
     }
 
     public enum CardinalDirections
