@@ -136,11 +136,10 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int c,l,x,y,z;
+    public int c,i,l,x,y,z;
     public BlockPos pos;
     public String input,command;
     public String[][] matrix;
-
 
     public MinerPlacer()
     {
@@ -169,35 +168,6 @@ public class MinerPlacer extends Module
             event.renderer.box(pos, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
 
-    public WWidget getWidget(GuiTheme theme)
-    {
-        WVerticalList main = theme.verticalList();
-        WVerticalList pm = theme.verticalList();
-        WVerticalList nm = theme.verticalList();
-        WVerticalList set = theme.verticalList();
-
-        main.add(pm).expandX().widget();
-        main.add(nm).expandX().widget();
-        main.add(set).expandX().widget();
-        
-        WHorizontalList a = pm.add(theme.horizontalList()).expandX().widget();
-        WHorizontalList b = nm.add(theme.horizontalList()).expandX().widget();
-        WHorizontalList c = set.add(theme.horizontalList()).expandX().widget();
-        
-        WButton ix = a.add(theme.button("x++")).expandX().widget(); ix.action = () -> x++;
-        WButton iy = a.add(theme.button("y++")).expandX().widget(); iy.action = () -> y++;
-        WButton iz = a.add(theme.button("z++")).expandX().widget(); iz.action = () -> z++;
-        WButton dx = b.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
-        WButton dy = b.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
-        WButton dz = b.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
-        WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
-        WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
-        WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> {c=0; l=0;};
-        
-        return main;
-    }
-
     public void main()
     {   
         pos = new BlockPos(x,y,z);
@@ -206,6 +176,7 @@ public class MinerPlacer extends Module
         {
             input = script.get().get(c);
             matrix = new String[script.get().size()][];
+            if (i < script.get().size()) i++; else i = 0;
             matrix[i] = input.trim().split("\\s+");
             command = matrix[c][l];
             if(run.get())
@@ -286,7 +257,36 @@ public class MinerPlacer extends Module
             } 
         } 
     }
+    
+    public WWidget getWidget(GuiTheme theme)
+    {
+        WVerticalList main = theme.verticalList();
+        WVerticalList pm = theme.verticalList();
+        WVerticalList nm = theme.verticalList();
+        WVerticalList set = theme.verticalList();
 
+        main.add(pm).expandX().widget();
+        main.add(nm).expandX().widget();
+        main.add(set).expandX().widget();
+        
+        WHorizontalList a = pm.add(theme.horizontalList()).expandX().widget();
+        WHorizontalList b = nm.add(theme.horizontalList()).expandX().widget();
+        WHorizontalList c = set.add(theme.horizontalList()).expandX().widget();
+        
+        WButton ix = a.add(theme.button("x++")).expandX().widget(); ix.action = () -> x++;
+        WButton iy = a.add(theme.button("y++")).expandX().widget(); iy.action = () -> y++;
+        WButton iz = a.add(theme.button("z++")).expandX().widget(); iz.action = () -> z++;
+        WButton dx = b.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
+        WButton dy = b.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
+        WButton dz = b.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
+        WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
+        WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
+        WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
+        WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> {c=0; l=0;};
+        
+        return main;
+    }
+    
     public enum CardinalDirections
     {
         Auto,
