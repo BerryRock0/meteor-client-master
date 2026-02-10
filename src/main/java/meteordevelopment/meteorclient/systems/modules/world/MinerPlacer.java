@@ -15,6 +15,7 @@ import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
+import meteordevelopment.meteorclient.utils.player.Rotations;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
@@ -49,7 +50,14 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
-
+    
+    private final Setting<Rotate> rotate = sgSettings.add(new EnumSetting.Builder<Rotate>()
+        .name("rotate")
+        .description("Switch rotates mode.")
+        .defaultValue(Rotate.None)
+        .build()
+    );
+    
     private final Setting<CardinalDirections> cardinaldirection = sgSettings.add(new EnumSetting.Builder<CardinalDirections>()
         .name("place-pirection")
         .description("Direction to use.")
@@ -116,6 +124,12 @@ public class MinerPlacer extends Module
         .defaultValue(true)
         .build()
     );
+    private final Setting<Boolean> breakingswing = sgRender.add(new BoolSetting.Builder()
+        .name("breaking-swing")
+        .description("Doing breaking swing.")
+        .defaultValue(true)
+        .build()
+    );
     private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>()
         .name("shape-mode")
         .description("How the shapes are rendered.")
@@ -175,6 +189,39 @@ public class MinerPlacer extends Module
     {   
         pos = new BlockPos(x,y,z);
 
+        switch(rotate.get())
+        {
+            case None -> 
+            {
+                if(mining.get())
+                    BlockUtils.breakBlock(pos, breakingswing.get());
+                if(interacting.get())
+                    BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());
+            }
+                
+            case Client ->
+            {
+                mc.player.setYaw((float)Rotations.getYaw(pos)); 
+                mc.player.setPitch((float)Rotations.getPitch(pos));
+                if(mining.get())
+                    BlockUtils.breakBlock(pos, breakingswing.get());
+                if(interacting.get())
+                    BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());
+            }
+                
+            case Packet ->
+            {
+                Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), () -> 
+                {
+                    if(mining.get())
+                        BlockUtils.breakBlock(pos, breakingswing.get());
+                    
+                    if(interacting.get())
+                        BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());
+                });
+            }    
+        }
+
         try
         {
             input = script.get().get(i);
@@ -185,11 +232,6 @@ public class MinerPlacer extends Module
         }
         catch(Exception e)
         {}
-
-        if(mining.get())
-            BlockUtils.breakBlock(pos, false);
-        if(interacting.get())
-            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
     }
     
     private void parseAndExecute(char a)
@@ -260,6 +302,13 @@ public class MinerPlacer extends Module
         WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> {reset();};
         
         return main;
+    }
+
+    public enum Rotate
+    {
+        None,
+        Client,
+        Packet
     }
     
     public enum CardinalDirections
