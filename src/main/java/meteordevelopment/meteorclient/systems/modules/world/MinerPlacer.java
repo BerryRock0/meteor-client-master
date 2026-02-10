@@ -36,16 +36,7 @@ public class MinerPlacer extends Module
         .description("Mining block position")
         .build()
     );
-    private final Setting<Integer> lineint = sgGeneral.add(new IntSetting.Builder()
-        .name("Line value")
-        .description("Matrix line value.")
-        .build()
-    );
-    private final Setting<Integer> columnint = sgGeneral.add(new IntSetting.Builder()
-        .name("Column value")
-        .description("Matrix column value.")
-        .build()
-    );
+    
     private final Setting<Boolean> mining = sgGeneral.add(new BoolSetting.Builder()
         .name("breaking")
         .description("Break blocks in area.")
