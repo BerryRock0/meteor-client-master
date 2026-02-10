@@ -146,7 +146,7 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int i,x,y,z;
+    public int a,b,i,x,y,z;
     public BlockPos pos;
     public String input;
 
@@ -183,21 +183,14 @@ public class MinerPlacer extends Module
 
         try
         {
-            input = script.get().get(i); 
-            String[] conveyor = input.trim().split("\\|"); 
+            input = script.get().get(i);
+            if(run.get())
+                parseAndExecute(iterate(input));
+            
+            if (incrementIndex.get()) i++;
+            if (decrementIndex.get()) i--;
 
-            // Loop through each group in conveyor
-            for (String queue : conveyor)
-            {
-                String[] parts = queue.trim().split("\\s+");
-                for (String part : parts)
-                {
-                    if(run.get())
-                        parseAndExecute(part);
-                    if (incrementIndex.get()) i++;
-                    if (decrementIndex.get()) i--; 
-                }
-            }
+            
         }
         catch(Exception e)
         {}
@@ -206,6 +199,31 @@ public class MinerPlacer extends Module
             BlockUtils.breakBlock(pos, false);
         if(interacting.get())
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
+    }
+
+    public String iterate(String input)
+    {
+        String[] conveyor = input.trim().split("\\s+"); 
+        String queue = conveyor[a];
+        String[] parts = queue.trim().split("\\|");
+        String part = parts[b];
+
+        if (a < conveyor.length - 1)
+            b++;
+        
+        if(parts[b].length >= b)
+        {
+            a++;
+            b = 0;
+        }  
+
+        if(a >= conveyor[a].length - 1 && b >= parts[b].length - 1)
+        {
+            a = 0;
+            b = 0;   
+        }
+
+        return part;
     }
     
     private void parseAndExecute(String a)
