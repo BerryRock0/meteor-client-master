@@ -241,19 +241,32 @@ public class MinerPlacer extends Module
 
     public void matrixIncrement()
     {
-        l++;
+/*      l++;
         if (l >= matrix[c].length)
         {
             c++; l = 0;
         }
         
         if (c >= matrix.length)
-            c = matrix.length - 1;
+            c = matrix.length - 1; */
+        
+        c++
+        if (c >= matrix[c].length - 1)
+        {
+            l++;
+            c = 0;
+        }
+
+        if (c >= matrix[c].length - 1 && c >= matrix[c].length - 1)
+        {
+            c = 0;
+            l = 0;
+        }
     }
     
     public void matrixDecrement()
     {
-        l--;
+     /*   l--;
         if(l < 0)
         {
             c--;
@@ -266,7 +279,20 @@ public class MinerPlacer extends Module
                 c = 0;
                 l = 0;
             } 
-        } 
+        } */
+        c--;
+        if (c >= matrix[c].length - 1)
+        {
+            l--;
+            c = matrix[c].length - 1;   
+        }
+
+        
+        if (c <= 0 && l <= 0)
+        {
+            c = matrix[c].length - 1;
+            l = matrix[l].length - 1;
+        }
     }
 
     public void reset()
