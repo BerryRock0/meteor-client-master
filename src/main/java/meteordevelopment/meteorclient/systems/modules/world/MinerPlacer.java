@@ -194,11 +194,10 @@ public class MinerPlacer extends Module
                 {
                     if(run.get())
                         parseAndExecute(part);
+                    if (incrementIndex.get()) i++;
+                    if (decrementIndex.get()) i--; 
                 }
             }
-            
-            if (incrementIndex.get()) i++;
-            if (decrementIndex.get()) i--; 
         }
         catch(Exception e)
         {}
