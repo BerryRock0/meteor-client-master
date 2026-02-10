@@ -136,14 +136,11 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int x,y,z;
+    public int c,l,x,y,z;
     public BlockPos pos;
-    public int index;
-    public int repeats;
-    public String input;
-    public String[] parts;
-    public String command;
-    public String argument;
+    public String input,command;
+    public String[][] matrix;
+
 
     public MinerPlacer()
     {
@@ -172,66 +169,6 @@ public class MinerPlacer extends Module
             event.renderer.box(pos, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
 
-    public void main()
-    {   
-        pos = new BlockPos(x,y,z);
-
-        try
-        {
-            input = script.get().get(index);
-            parts = input.trim().split("\\s+");
-            command = parts[0];
-            argument = parts[1];
-            if(run.get())
-                parseAndExecute(command, argument);
-
-            if (incrementIndex.get()) index++;
-            if (decrementIndex.get()) index--;   
-        }
-        catch(Exception e)
-        {}
-
-        if(mining.get())
-            BlockUtils.breakBlock(pos, false);
-        if(interacting.get())
-            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
-    }
-
-    private void parseAndExecute(String a, String b)
-    {   
-        switch (a.toLowerCase())
-        {
-            case "x++": x++; break;
-            case "y++": y++; break;
-            case "z++": z++; break;
-            case "x--": x--; break;
-            case "y--": y--; break;
-            case "z--": z--; break;
-            case "rpt": if(repeats++ != Integer.parseInt(b)) index--; else index++; break;
-            case "droprpt": repeats = Integer.parseInt(b); break;
-            case "sx": x = Integer.parseInt(b); break;
-            case "sy": y = Integer.parseInt(b); break;
-            case "sz": z = Integer.parseInt(b); break;
-            case "to": index = Integer.parseInt(b); break;
-            default: break;
-        }
-    }
-    
-    public Direction direction(BlockPos pos)
-    {
-        switch (cardinaldirection.get())
-        {
-            case Auto ->{return BlockUtils.getDirection(pos);}
-            case Up -> {return Direction.UP;}
-            case Down -> {return Direction.DOWN;}
-            case North -> {return Direction.NORTH;}
-            case South -> {return Direction.SOUTH;}
-            case East -> {return Direction.EAST;}
-            case West -> {return Direction.WEST;}     
-        }
-        return null;
-    }
-
     public WWidget getWidget(GuiTheme theme)
     {
         WVerticalList main = theme.verticalList();
@@ -256,9 +193,98 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton reset = set.add(theme.button("Return")).expandX().widget(); reset.action = () -> {index = 0;};
+        WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> {c=0; l=0;};
         
         return main;
+    }
+
+    public void main()
+    {   
+        pos = new BlockPos(x,y,z);
+
+        try
+        {
+            input = script.get().get(c);
+            matrix = new String[script.get().size()][];
+            matrix[i] = input.trim().split("\\s+");
+            command = matrix[c][l];
+            if(run.get())
+                parseAndExecute(command);
+            
+            if (incrementIndex.get()) matrixIncrement();
+            if (decrementIndex.get()) matrixDecrement();   
+        }
+        catch(Exception e)
+        {}
+
+        if(mining.get())
+            BlockUtils.breakBlock(pos, false);
+        if(interacting.get())
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
+    }
+
+    private void parseAndExecute(String a)
+    {   
+        switch (a.toLowerCase())
+        {
+            case "l++"; l++; break;
+            case "l--"; l--; break;
+            case "c++"; c++; break;
+            case "c--"; c--; break;
+            case "x++": x++; break;
+            case "y++": y++; break;
+            case "z++": z++; break;
+            case "x--": x--; break;
+            case "y--": y--; break;
+            case "z--": z--; break;
+            case "c->0": c=0; break;
+            case "l->0": l=0; break;
+            default: break;
+        }
+    }
+
+    public Direction direction(BlockPos pos)
+    {
+        switch (cardinaldirection.get())
+        {
+            case Auto ->{return BlockUtils.getDirection(pos);}
+            case Up -> {return Direction.UP;}
+            case Down -> {return Direction.DOWN;}
+            case North -> {return Direction.NORTH;}
+            case South -> {return Direction.SOUTH;}
+            case East -> {return Direction.EAST;}
+            case West -> {return Direction.WEST;}     
+        }
+        return null;
+    }
+
+    public void matrixIncrement()
+    {
+        l++;
+        if (l >= matrix[c].length)
+        {
+            c++; l = 0;
+        }
+        if (c >= matrix.length)
+            c = matrix.length - 1;
+    }
+    
+    public void matrixDecrement()
+    {
+        l--;
+        if(l < 0)
+        {
+            c--;
+            if (c >= 0)
+            {
+                l = matrix[c].length - 1;
+            }
+            else 
+            {
+                c = 0;
+                l = 0;
+            } 
+        } 
     }
 
     public enum CardinalDirections
