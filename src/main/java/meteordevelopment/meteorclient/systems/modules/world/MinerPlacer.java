@@ -146,10 +146,10 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int c,i,l,x,y,z;
+    public int i,x,y,z;
     public BlockPos pos;
     public String input,command;
-    public String[][] matrix;
+    public String[] matrix;
 
     public MinerPlacer()
     {
@@ -185,15 +185,16 @@ public class MinerPlacer extends Module
         try
         {
             input = script.get().get(c);
-            matrix = new String[script.get().size()][];
-            if (i < script.get().size()) i++; else i = 0;
-            matrix[i] = input.trim().split("\\s+");
-            command = matrix[c][l];
+            //matrix = input.trim().split("\\s+");
+            matrix = input.trim().split("\\|");
+            //command = matrix[c];
+            
+            for(String a: matrix) 
             if(run.get())
                 parseAndExecute(command);
             
-            if (incrementIndex.get()) matrixIncrement();
-            if (decrementIndex.get()) matrixDecrement();   
+            //if (incrementIndex.get()) i++;
+            //if (decrementIndex.get()) i--;   
         }
         catch(Exception e)
         {}
@@ -203,23 +204,21 @@ public class MinerPlacer extends Module
         if(interacting.get())
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
     }
-
+    
     private void parseAndExecute(String a)
     {   
         switch (a.toLowerCase())
         {
-            case "l++": l++; break;
-            case "l--": l--; break;
-            case "c++": c++; break;
-            case "c--": c--; break;
-            case "x++": x++; break;
-            case "y++": y++; break;
-            case "z++": z++; break;
-            case "x--": x--; break;
-            case "y--": y--; break;
-            case "z--": z--; break;
-            case "c->0": c=0; break;
-            case "l->0": l=0; break;
+            case "x+": x++; break;
+            case "y+": y++; break;
+            case "z+": z++; break;
+            case "x-": x--; break;
+            case "y-": y--; break;
+            case "z-": z--; break;
+            case "i+": i++; break;
+            case "i-": i--; break;   
+            case "is": i=0; break;
+            case "ie": i = matrix.length - 1; break;
             default: break;
         }
     }
@@ -237,68 +236,6 @@ public class MinerPlacer extends Module
             case West -> {return Direction.WEST;}     
         }
         return null;
-    }
-
-    public void matrixIncrement()
-    {
-/*      l++;
-        if (l >= matrix[c].length)
-        {
-            c++; l = 0;
-        }
-        
-        if (c >= matrix.length)
-            c = matrix.length - 1; */
-        
-        c++
-        if (c >= matrix[c].length - 1)
-        {
-            l++;
-            c = 0;
-        }
-
-        if (c >= matrix[c].length - 1 && c >= matrix[c].length - 1)
-        {
-            c = 0;
-            l = 0;
-        }
-    }
-    
-    public void matrixDecrement()
-    {
-     /*   l--;
-        if(l < 0)
-        {
-            c--;
-            if (c >= 0)
-            {
-                l = matrix[c].length - 1;
-            }
-            else 
-            {
-                c = 0;
-                l = 0;
-            } 
-        } */
-        c--;
-        if (c >= matrix[c].length - 1)
-        {
-            l--;
-            c = matrix[c].length - 1;   
-        }
-
-        
-        if (c <= 0 && l <= 0)
-        {
-            c = matrix[c].length - 1;
-            l = matrix[l].length - 1;
-        }
-    }
-
-    public void reset()
-    {
-        c = columnint.get();
-        l = lineint.get();
     }
     
     public WWidget getWidget(GuiTheme theme)
@@ -325,7 +262,7 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> reset();
+        //WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> ;
         
         return main;
     }
