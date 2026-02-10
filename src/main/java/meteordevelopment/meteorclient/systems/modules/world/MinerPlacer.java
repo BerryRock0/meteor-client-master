@@ -148,7 +148,7 @@ public class MinerPlacer extends Module
 
     public int i,x,y,z;
     public BlockPos pos;
-    public String input,command;
+    public String input;
     public String[] matrix;
 
     public MinerPlacer()
@@ -189,7 +189,7 @@ public class MinerPlacer extends Module
             matrix = input.trim().split("\\|");
             //command = matrix[c];
             
-            for(String a: matrix) 
+            for(String command: matrix) 
             if(run.get())
                 parseAndExecute(command);
             
