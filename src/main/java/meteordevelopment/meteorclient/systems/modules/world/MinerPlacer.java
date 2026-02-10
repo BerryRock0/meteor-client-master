@@ -149,8 +149,6 @@ public class MinerPlacer extends Module
     public int i,s,x,y,z;
     public BlockPos pos;
     public String input;
-    public String[] conveyor;
-    public String[] parts;
 
     public MinerPlacer()
     {
@@ -186,12 +184,12 @@ public class MinerPlacer extends Module
         try
         {
             input = script.get().get(i); 
-            conveyor[] = input.trim().equals("\\|"); 
+            String[] conveyor = input.trim().equals("\\|"); 
 
             // Loop through each group in conveyor
             for (String queue : conveyor)
             {
-                parts[] = queue.trim().split("\\s+");
+                String[] parts[] = queue.trim().split("\\s+");
                 for (String part : parts)
                 {
                     if(run.get())
