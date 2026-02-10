@@ -146,14 +146,13 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int a = 0;
-    public int i = 0;
+    public int a;
+    public int i;
     public int x,y,z;
     public BlockPos pos;
+    public char ch;
+    public char[] chars;
     public String input;
-    public String[] matrix;
-    public char[] ch;
-    
 
     public MinerPlacer()
     {
@@ -189,7 +188,11 @@ public class MinerPlacer extends Module
         try
         {
             input = script.get().get(i);
-            iterate(input);
+            chars = input.toCharArray();
+            ch = chars[a];
+            if(run.get())
+                parseAndExecute(ch);
+            a++;
         }
         catch(Exception e)
         {}
@@ -198,15 +201,6 @@ public class MinerPlacer extends Module
             BlockUtils.breakBlock(pos, false);
         if(interacting.get())
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
-    }
-
-    public void iterate(String input)
-    {
-        ch = input.toCharArray();
-
-        if(run.get())
-            parseAndExecute(ch[a]);
-        a++;
     }
     
     private void parseAndExecute(char a)
@@ -221,8 +215,11 @@ public class MinerPlacer extends Module
             case 'z': z--; break;
             case 'I': i++; break;
             case 'i': i--; break;   
+            case 'a': a--; break;
+            case 'A': a++; break;
             case '^': reset(); break;
             case '-': go(); break;
+            case ' ': break;
             default: break;
         }
     }
