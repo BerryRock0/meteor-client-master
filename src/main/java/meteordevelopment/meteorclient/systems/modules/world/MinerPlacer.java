@@ -152,6 +152,8 @@ public class MinerPlacer extends Module
     public BlockPos pos;
     public String input;
     public String[] matrix;
+    public char[] ch;
+    
 
     public MinerPlacer()
     {
@@ -200,10 +202,10 @@ public class MinerPlacer extends Module
 
     public void iterate(String input)
     {
-        matrix = input.toCharArray();
+        ch = input.toCharArray();
 
         if(run.get())
-            parseAndExecute(matrix[a]);
+            parseAndExecute(ch[a]);
         a++;
         
         if (a >= matrix.length() - 1)
@@ -214,9 +216,9 @@ public class MinerPlacer extends Module
         }
     }
     
-    private void parseAndExecute(String a)
+    private void parseAndExecute(char a)
     {   
-        switch (a.toLowerCase())
+        switch (a)
         {
             case "X": x++; break;
             case "Y": y++; break;
@@ -226,7 +228,7 @@ public class MinerPlacer extends Module
             case "z": z--; break;
             case "I": i++; break;
             case "i": i--; break;   
-            case "is": i=0; break;
+            case "^": i=0; break;
             default: break;
         }
     }
