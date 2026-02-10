@@ -208,16 +208,16 @@ public class MinerPlacer extends Module
         String[] parts = queue.trim().split("\\|");
         String part = parts[b];
 
-        if (a < conveyor.length - 1)
+        if (a < conveyor.length() - 1)
             b++;
         
-        if(parts[b].length >= b)
+        if(parts[b].length() >= b)
         {
             a++;
             b = 0;
         }  
 
-        if(a >= conveyor[a].length - 1 && b >= parts[b].length - 1)
+        if(a >= conveyor[a].length() - 1 && b >= parts[b].length() - 1)
         {
             a = 0;
             b = 0;   
