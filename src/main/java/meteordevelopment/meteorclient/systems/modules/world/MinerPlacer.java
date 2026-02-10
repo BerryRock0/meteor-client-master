@@ -207,13 +207,6 @@ public class MinerPlacer extends Module
         if(run.get())
             parseAndExecute(ch[a]);
         a++;
-        
-        if (a >= ch.length() - 1)
-        {
-            if (incrementIndex.get()) i++;
-            if (decrementIndex.get()) i--;
-            a = 0;
-        }
     }
     
     private void parseAndExecute(char a)
@@ -228,7 +221,8 @@ public class MinerPlacer extends Module
             case 'z': z--; break;
             case 'I': i++; break;
             case 'i': i--; break;   
-            case '^': i=0; break;
+            case '^': a=0; i=0; break;
+            case '-': i++; a=0; break;
             default: break;
         }
     }
@@ -247,7 +241,12 @@ public class MinerPlacer extends Module
         }
         return null;
     }
-    
+
+    public void reset()
+    {
+        a=0;
+        i=0;
+    }
     public WWidget getWidget(GuiTheme theme)
     {
         WVerticalList main = theme.verticalList();
@@ -272,7 +271,7 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> {i=0;};
+        WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> {reset();};
         
         return main;
     }
