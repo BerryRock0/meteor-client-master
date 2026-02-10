@@ -146,9 +146,12 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int a,b,i,x,y,z;
+    public int a = 0;
+    public int i = 0;
+    public int x,y,z;
     public BlockPos pos;
     public String input;
+    public String[] matrix;
 
     public MinerPlacer()
     {
@@ -184,13 +187,7 @@ public class MinerPlacer extends Module
         try
         {
             input = script.get().get(i);
-            if(run.get())
-                parseAndExecute(iterate(input));
-            
-            if (incrementIndex.get()) i++;
-            if (decrementIndex.get()) i--;
-
-            
+            iterate(input);            
         }
         catch(Exception e)
         {}
@@ -201,43 +198,34 @@ public class MinerPlacer extends Module
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());   
     }
 
-    public String iterate(String input)
+    public void iterate(String input)
     {
-        String[] conveyor = input.trim().split("\\s+"); 
-        String queue = conveyor[a];
-        String[] parts = queue.trim().split("\\|");
-        String part = parts[b];
+        matrix = input.toCharArray();
 
-        if (a < conveyor.length() - 1)
-            b++;
+        if(run.get())
+            parseAndExecute(matrix[a]);
+        a++;
         
-        if(parts[b].length() >= b)
+        if (a >= matrix.length() - 1)
         {
-            a++;
-            b = 0;
-        }  
-
-        if(a >= conveyor[a].length() - 1 && b >= parts[b].length() - 1)
-        {
+            if (incrementIndex.get()) i++;
+            if (decrementIndex.get()) i--;
             a = 0;
-            b = 0;   
         }
-
-        return part;
     }
     
     private void parseAndExecute(String a)
     {   
         switch (a.toLowerCase())
         {
-            case "x+": x++; break;
-            case "y+": y++; break;
-            case "z+": z++; break;
-            case "x-": x--; break;
-            case "y-": y--; break;
-            case "z-": z--; break;
-            case "i+": i++; break;
-            case "i-": i--; break;   
+            case "X": x++; break;
+            case "Y": y++; break;
+            case "Z": z++; break;
+            case "x": x--; break;
+            case "y": y--; break;
+            case "z": z--; break;
+            case "I": i++; break;
+            case "i": i--; break;   
             case "is": i=0; break;
             default: break;
         }
