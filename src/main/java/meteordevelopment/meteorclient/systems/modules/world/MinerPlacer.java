@@ -36,6 +36,16 @@ public class MinerPlacer extends Module
         .description("Mining block position")
         .build()
     );
+    private final Setting<Integer> lineint = sgGeneral.add(new IntSetting.Builder()
+        .name("Line value")
+        .description("Matrix line value.")
+        .build()
+    );
+    private final Setting<Integer> columnint = sgGeneral.add(new IntSetting.Builder()
+        .name("Column value")
+        .description("Matrix column value.")
+        .build()
+    );
     private final Setting<Boolean> mining = sgGeneral.add(new BoolSetting.Builder()
         .name("breaking")
         .description("Break blocks in area.")
@@ -236,6 +246,7 @@ public class MinerPlacer extends Module
         {
             c++; l = 0;
         }
+        
         if (c >= matrix.length)
             c = matrix.length - 1;
     }
@@ -282,8 +293,8 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton resetcolumn = set.add(theme.button("Reset Column")).expandX().widget(); resetcolumn.action = () -> {c=0;};
-        WButton resetline = set.add(theme.button("Reset Line")).expandX().widget(); resetline.action = () -> {l=0;};
+        WButton resetcolumn = set.add(theme.button("Reset Column")).expandX().widget(); resetcolumn.action = () -> {c=columnint;};
+        WButton resetline = set.add(theme.button("Reset Line")).expandX().widget(); resetline.action = () -> {l=lineint;};
         
         return main;
     }
