@@ -146,10 +146,11 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int i,x,y,z;
+    public int i,s,x,y,z;
     public BlockPos pos;
     public String input;
-    public String[] matrix;
+    public String[] conveyor;
+    public String[] parts;
 
     public MinerPlacer()
     {
@@ -184,17 +185,22 @@ public class MinerPlacer extends Module
 
         try
         {
-            input = script.get().get(i);
-            //matrix = input.trim().split("\\s+");
-            matrix = input.trim().split("\\|");
-            //command = matrix[c];
+            input = script.get().get(i); 
+            conveyor[] = input.trim().equals("\\|"); 
+
+            // Loop through each group in conveyor
+            for (String queue : conveyor)
+            {
+                parts[] = queue.trim().split("\\s+");
+                for (String part : parts)
+                {
+                    if(run.get())
+                        parseAndExecute(part);
+                }
+            }
             
-            for(String command: matrix) 
-            if(run.get())
-                parseAndExecute(command);
-            
-            //if (incrementIndex.get()) i++;
-            //if (decrementIndex.get()) i--;   
+            if (incrementIndex.get()) i++;
+            if (decrementIndex.get()) i--; 
         }
         catch(Exception e)
         {}
