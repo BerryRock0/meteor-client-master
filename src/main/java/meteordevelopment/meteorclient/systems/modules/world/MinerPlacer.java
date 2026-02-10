@@ -208,7 +208,7 @@ public class MinerPlacer extends Module
             parseAndExecute(ch[a]);
         a++;
         
-        if (a >= matrix.length() - 1)
+        if (a >= ch.length() - 1)
         {
             if (incrementIndex.get()) i++;
             if (decrementIndex.get()) i--;
@@ -220,15 +220,15 @@ public class MinerPlacer extends Module
     {   
         switch (a)
         {
-            case "X": x++; break;
-            case "Y": y++; break;
-            case "Z": z++; break;
-            case "x": x--; break;
-            case "y": y--; break;
-            case "z": z--; break;
-            case "I": i++; break;
-            case "i": i--; break;   
-            case "^": i=0; break;
+            case 'X': x++; break;
+            case 'Y': y++; break;
+            case 'Z': z++; break;
+            case 'x': x--; break;
+            case 'y': y--; break;
+            case 'z': z--; break;
+            case 'I': i++; break;
+            case 'i': i--; break;   
+            case '^': i=0; break;
             default: break;
         }
     }
