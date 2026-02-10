@@ -227,10 +227,10 @@ public class MinerPlacer extends Module
     {   
         switch (a.toLowerCase())
         {
-            case "l++"; l++; break;
-            case "l--"; l--; break;
-            case "c++"; c++; break;
-            case "c--"; c--; break;
+            case "l++": l++; break;
+            case "l--": l--; break;
+            case "c++": c++; break;
+            case "c--": c--; break;
             case "x++": x++; break;
             case "y++": y++; break;
             case "z++": z++; break;
