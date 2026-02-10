@@ -190,7 +190,6 @@ public class MinerPlacer extends Module
         {
             input = script.get().get(i);
             iterate(input);
-            if repeat
         }
         catch(Exception e)
         {}
