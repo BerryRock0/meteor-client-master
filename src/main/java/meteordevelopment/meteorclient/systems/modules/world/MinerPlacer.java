@@ -189,7 +189,7 @@ public class MinerPlacer extends Module
             // Loop through each group in conveyor
             for (String queue : conveyor)
             {
-                String[] parts[] = queue.trim().split("\\s+");
+                String[] parts = queue.trim().split("\\s+");
                 for (String part : parts)
                 {
                     if(run.get())
@@ -222,7 +222,6 @@ public class MinerPlacer extends Module
             case "i+": i++; break;
             case "i-": i--; break;   
             case "is": i=0; break;
-            case "ie": i = matrix.length - 1; break;
             default: break;
         }
     }
