@@ -184,7 +184,7 @@ public class MinerPlacer extends Module
         try
         {
             input = script.get().get(i); 
-            String[] conveyor = input.trim().equals("\\|"); 
+            String[] conveyor = input.trim().split("\\|"); 
 
             // Loop through each group in conveyor
             for (String queue : conveyor)
