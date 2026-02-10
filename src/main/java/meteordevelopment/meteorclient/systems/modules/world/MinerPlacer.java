@@ -184,7 +184,7 @@ public class MinerPlacer extends Module
 
         try
         {
-            input = script.get().get(c);
+            input = script.get().get(i);
             //matrix = input.trim().split("\\s+");
             matrix = input.trim().split("\\|");
             //command = matrix[c];
