@@ -189,7 +189,8 @@ public class MinerPlacer extends Module
         try
         {
             input = script.get().get(i);
-            iterate(input);            
+            iterate(input);
+            if repeat
         }
         catch(Exception e)
         {}
@@ -221,8 +222,8 @@ public class MinerPlacer extends Module
             case 'z': z--; break;
             case 'I': i++; break;
             case 'i': i--; break;   
-            case '^': a=0; i=0; break;
-            case '-': i++; a=0; break;
+            case '^': reset(); break;
+            case '-': go(); break;
             default: break;
         }
     }
@@ -244,9 +245,13 @@ public class MinerPlacer extends Module
 
     public void reset()
     {
-        a=0;
-        i=0;
+        a=0; i=0;
     }
+    public void go()
+    {
+        i++; a=0;
+    }
+
     public WWidget getWidget(GuiTheme theme)
     {
         WVerticalList main = theme.verticalList();
