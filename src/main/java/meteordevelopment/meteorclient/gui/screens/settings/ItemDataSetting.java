@@ -1,5 +1,9 @@
 package meteordevelopment.meteorclient.gui.screens.settings;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.renderer.GuiRenderer;
 import meteordevelopment.meteorclient.gui.screens.settings.base.CollectionMapSettingScreen;
