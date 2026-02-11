@@ -32,10 +32,15 @@ public class SettingColor extends Color {
 
     public SettingColor(int r, int g, int b, int a) {
         super(r, g, b, a);
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
     }
 
     public SettingColor(float r, float g, float b, float a) {
         super(r, g, b, a);
+
     }
 
     public SettingColor(int r, int g, int b, int a, boolean rainbow) {
