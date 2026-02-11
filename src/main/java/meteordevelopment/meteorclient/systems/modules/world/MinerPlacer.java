@@ -152,7 +152,6 @@ public class MinerPlacer extends Module
     );
 
     public int a,b,x,y,z;
-    public char[] chars;
     public String input;
     public BlockPos pos;
 
@@ -222,10 +221,9 @@ public class MinerPlacer extends Module
 
         try
         {
-            input = script.get().get(a);
-            chars = input.toCharArray();
+            //input = script.get().get(a);
             if(run.get())
-                execute(chars[b]);
+                execute(script.get().get(a).charAt(b));
             b++;
         }
         catch(Exception e)
