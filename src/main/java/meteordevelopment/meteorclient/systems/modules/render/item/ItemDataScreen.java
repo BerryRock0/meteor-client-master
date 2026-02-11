@@ -2,7 +2,6 @@ package meteordevelopment.meteorclient.systems.modules.render.blockesp;
 
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.WindowScreen;
-import meteordevelopment.meteorclient.renderer.ShapeMode;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import net.minecraft.item.Item;
@@ -26,7 +25,7 @@ public class ItemDataScreen extends WindowScreen
     }
 
 
-    private ESPBlockDataScreen(GuiTheme theme, ItemData itemData, Setting<?> setting, @Nullable Runnable firstChangeConsumer)
+    private ItemDataScreen(GuiTheme theme, ItemData itemData, Setting<?> setting, @Nullable Runnable firstChangeConsumer)
     {
         super(theme, "Configure Item");
 
