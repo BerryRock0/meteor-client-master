@@ -227,7 +227,9 @@ public class MinerPlacer extends Module
             b++;
         }
         catch(Exception e)
-        {}
+        {
+            e.printStackTrace();
+        }
     }
     
     private void execute(char b)
