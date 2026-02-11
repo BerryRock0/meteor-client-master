@@ -19,7 +19,7 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
 
     public ItemData (SettingColor color)
     {
-        this.color = color;  
+        this.itemColor = itemColor;  
     }
 
     @Override
