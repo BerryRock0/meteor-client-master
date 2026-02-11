@@ -50,7 +50,7 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
 
     @Override
     public ItemData copy() {
-        return new ESPBlockData(shapeMode, new SettingColor(lineColor), new SettingColor(sideColor), tracer, new SettingColor(tracerColor));
+        return new ItemData(new SettingColor(itemColor));
     }
 
     @Override
