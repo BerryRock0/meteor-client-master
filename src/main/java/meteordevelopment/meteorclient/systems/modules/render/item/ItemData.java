@@ -21,13 +21,18 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
     public ItemData(SettingColor color)
     {
         this.itemColor = itemColor;
-        this.item = item;
     }
 
     @Override
     public WidgetScreen createScreen(GuiTheme theme, Item Item, ItemDataSetting<ItemData> setting)
     {
         return new ItemDataScreen(theme, this, item, setting);
+    }
+
+    
+    @Override
+    public WidgetScreen createScreen(GuiTheme theme, GenericSetting<ItemData> setting) {
+        return new ItemDataScreen(theme, this, setting);
     }
 
     @Override
