@@ -15,6 +15,7 @@ import net.minecraft.nbt.NbtCompound;
 public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<ItemData>
 {
     public SettingColor itemColor;
+    public Item item;
     private boolean changed;
 
     public ItemData (SettingColor color)
