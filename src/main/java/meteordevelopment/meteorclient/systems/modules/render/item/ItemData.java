@@ -42,7 +42,7 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
     @Override
     public ItemData set(ItemData value)
     {
-        itemColor.set(value.item;
+        itemColor.set(value.item);
         changed = value.changed;
 
         return this;
