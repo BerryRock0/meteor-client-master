@@ -4,9 +4,7 @@ import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.WidgetScreen;
 import meteordevelopment.meteorclient.gui.screens.settings.ItemDataSetting;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
-import meteordevelopment.meteorclient.settings.GenericSetting;
-import meteordevelopment.meteorclient.settings.IItemData;
-import meteordevelopment.meteorclient.settings.IGeneric;
+import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.utils.misc.IChangeable;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import net.minecraft.item.Item;
@@ -14,7 +12,7 @@ import net.minecraft.nbt.NbtCompound;
 
 public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<ItemData>
 {
-    public SettingColor itemColor;
+    public ColorSetting itemColor;
     public Item item;
     private boolean changed;
 
