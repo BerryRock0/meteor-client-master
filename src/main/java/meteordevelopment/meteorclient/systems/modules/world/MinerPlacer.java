@@ -243,8 +243,8 @@ public class MinerPlacer extends Module
             case 'y': y--; break;
             case 'z': z--; break;
             case ';': reset();
+            case '_': return;  
             case '&': go();
-            case "_": return;
             default: break;
         }
     }
