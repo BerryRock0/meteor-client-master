@@ -23,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registries;
 import org.jetbrains.annotations.Nullable;
 
