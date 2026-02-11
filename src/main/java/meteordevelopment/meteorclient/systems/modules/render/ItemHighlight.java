@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+
+import java.awt.Color
 import meteordevelopment.meteorclient.settings.ItemListSetting;
 import meteordevelopment.meteorclient.gui.screens.settings.ItemDataSetting;
 import meteordevelopment.meteorclient.settings.*;
@@ -48,9 +50,8 @@ public class ItemHighlight extends Module {
 
     public int getColor(ItemStack stack)
     {
-        ItemData data = itemConfigs.get().get(stack.getItem());
-        ColorSetting color = (ColorSetting)data.itemColor;
-            
+        ItemData data = itemConfigs.get().get(stack.getItem()); //data.itemColor;
+        Color color = data.itemColor;
         if (data != null)
         if (stack != null && items.get().contains(stack.getItem()) && isActive())
             return color.get().getPacked();
