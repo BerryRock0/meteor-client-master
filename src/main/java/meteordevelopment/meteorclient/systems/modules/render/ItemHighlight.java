@@ -52,7 +52,7 @@ public class ItemHighlight extends Module {
         Color color = data.itemColor;
         if (data != null)
         if (stack != null && items.get().contains(stack.getItem()) && isActive())
-            return color.get().getPacked();
+            return color.fromRGBA();
         return -1;
     }
 }
