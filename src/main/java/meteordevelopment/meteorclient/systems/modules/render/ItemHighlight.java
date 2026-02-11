@@ -29,11 +29,7 @@ public class ItemHighlight extends Module {
     private final Setting<ItemData> defaultItemConfig = sgGeneral.add(new GenericSetting.Builder<ItemData>()
         .name("default-item-config")
         .description("Default item config.")
-        .defaultValue(
-            new ESPBlockData(
-                new SettingColor(0, 0, 0, 0),
-            )
-        )
+        .defaultValue(new ItemData(new SettingColor(0, 0, 0, 0)))
         .build()
     );
 
