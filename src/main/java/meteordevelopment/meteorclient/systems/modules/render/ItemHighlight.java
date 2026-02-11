@@ -5,8 +5,6 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
-
-import java.awt.Color
 import meteordevelopment.meteorclient.settings.ItemListSetting;
 import meteordevelopment.meteorclient.gui.screens.settings.ItemDataSetting;
 import meteordevelopment.meteorclient.settings.*;
