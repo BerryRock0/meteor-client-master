@@ -49,7 +49,8 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
     }
 
     @Override
-    public ItemData copy() {
+    public ItemData copy()
+    {
         return new ItemData(new SettingColor(itemColor));
     }
 
