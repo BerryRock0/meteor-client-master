@@ -18,9 +18,10 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
     public Item item;
     private boolean changed;
 
-    public ItemData (SettingColor color)
+    public ItemData(SettingColor color)
     {
-        this.itemColor = itemColor;  
+        this.itemColor = itemColor;
+        this.item = item;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
     @Override
     public ItemData set(ItemData value)
     {
-        itemColor.set(value.item);
+        itemColor.set(value.itemColor);
         changed = value.changed;
 
         return this;
