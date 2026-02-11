@@ -16,7 +16,7 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
     public Item item;
     private boolean changed;
 
-    public ItemData(SettingColor color)
+    public ItemData(ColorSetting color)
     {
         this.itemColor = itemColor;
     }
