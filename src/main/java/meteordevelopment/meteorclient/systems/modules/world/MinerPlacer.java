@@ -151,12 +151,10 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int a;
-    public int i;
-    public int x,y,z;
-    public BlockPos pos;
+    public int a,b,x,y,z;
     public char[] chars;
     public String input;
+    public BlockPos pos;
 
     public MinerPlacer()
     {
@@ -224,19 +222,19 @@ public class MinerPlacer extends Module
 
         try
         {
-            input = script.get().get(i);
+            input = script.get().get(a);
             chars = input.toCharArray();
             if(run.get())
-                parseAndExecute(chars[a]);
-            a++;
+                execute(chars[b]);
+            b++;
         }
         catch(Exception e)
         {}
     }
     
-    private void parseAndExecute(char a)
-    {   
-        switch (a)
+    private void execute(char b)
+    { 
+        switch (b)
         {
             case 'X': x++; break;
             case 'Y': y++; break;
@@ -244,9 +242,8 @@ public class MinerPlacer extends Module
             case 'x': x--; break;
             case 'y': y--; break;
             case 'z': z--; break;
-            case ';': reset(); break;
-            case '&': go(); break;
-            case '.': return;
+            case ';': reset();
+            case '&': go();    
             default: break;
         }
     }
@@ -268,11 +265,11 @@ public class MinerPlacer extends Module
 
     public void reset()
     {
-        a^=a; i^=i; //reset value by XOR
+        a^=a; b^=b; //reset value by XOR
     }
     public void go()
     {
-        i++; a^=a;
+        a++; b^=b;
     }
 
     public WWidget getWidget(GuiTheme theme)
