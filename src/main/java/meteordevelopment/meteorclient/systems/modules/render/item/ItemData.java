@@ -23,7 +23,7 @@ public class ItemData implements IGeneric<ItemData>, IChangeable, IItemData<Item
     }
 
     @Override
-    public WidgetScreen createScreen(GuiTheme theme, Block block, BlockDataSetting<ItemData> setting)
+    public WidgetScreen createScreen(GuiTheme theme, Item Item, ItemDataSetting<ItemData> setting)
     {
         return new ItemDataScreen(theme, this, item, setting);
     }
