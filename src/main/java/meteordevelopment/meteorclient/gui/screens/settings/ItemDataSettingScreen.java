@@ -2,10 +2,10 @@ package meteordevelopment.meteorclient.gui.screens.settings;
 
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.renderer.GuiRenderer;
+import meteordevelopment.meteorclient.gui.screens.settings.ItemDataSetting;
 import meteordevelopment.meteorclient.gui.screens.settings.base.CollectionMapSettingScreen;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
-import meteordevelopment.meteorclient.settings.ItemDataSetting;
 import meteordevelopment.meteorclient.settings.IItemData;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.IVisible;
@@ -32,13 +32,13 @@ public class ItemDataSettingScreen<T extends ICopyable<T> & ISerializable<T> & I
     }
 
     @Override
-    protected boolean includeValue(Block value) {
+    protected boolean includeValue(Item value) {
         return value != null;
     }
 
     @Override
     protected WWidget getValueWidget(Item item) {
-        return theme.itemWithLabel(block.asItem().getDefaultStack(), Names.get(item));
+        return theme.itemWithLabel(item.getDefaultStack(), Names.get(item));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ItemDataSettingScreen<T extends ICopyable<T> & ISerializable<T> & I
     }
 
     @Override
-    protected String[] getValueNames(Block block) {
+    protected String[] getValueNames(Item item) {
         return new String[]{
             Names.get(item),
             Registries.ITEM.getId(item).toString()
