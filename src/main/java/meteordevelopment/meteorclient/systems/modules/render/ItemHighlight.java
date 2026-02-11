@@ -50,9 +50,14 @@ public class ItemHighlight extends Module {
 
     public int getColor(ItemStack stack)
     {
-        ItemData data = itemConfigs.get().get(stack.getItem());
         if (stack != null && items.get().contains(stack.getItem()) && isActive())
-            return color.fromRGBA(data.itemColor.r,data.itemColor.g,data.itemColor.b,data.itemColor.a);
+            return getBlockData(stack.getItem()).itemColor.fromRGBA(data.itemColor.r,data.itemColor.g,data.itemColor.b,data.itemColor.a);
         return -1;
+    }
+
+    ItemData getItemData(Item item)
+    {
+        ItemData blockData = itemConfigs.get().get(item);
+        return itemData == null ? defaultItemConfig.get() : itemData;
     }
 }
