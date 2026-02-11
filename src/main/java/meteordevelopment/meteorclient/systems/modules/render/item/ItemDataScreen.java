@@ -4,7 +4,7 @@ import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.WindowScreen;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
-//import meteordevelopment.meteorclient.systems.modules.render.item.ItemData;
+import meteordevelopment.meteorclient.gui.screens.settings.ItemDataSetting;
 import net.minecraft.item.Item;
 import org.jetbrains.annotations.Nullable;
 
