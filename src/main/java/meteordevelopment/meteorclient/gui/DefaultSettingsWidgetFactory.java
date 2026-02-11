@@ -52,6 +52,7 @@ public class DefaultSettingsWidgetFactory extends SettingsWidgetFactory {
         factories.put(KeybindSetting.class, (table, setting) -> keybindW(table, (KeybindSetting) setting));
         factories.put(BlockSetting.class, (table, setting) -> blockW(table, (BlockSetting) setting));
         factories.put(BlockListSetting.class, (table, setting) -> blockListW(table, (BlockListSetting) setting));
+        factories.put(ItemDataSetting.class, (table, setting) -> itemDataW(table, (ItemDataSetting<?>) setting));
         factories.put(ItemSetting.class, (table, setting) -> itemW(table, (ItemSetting) setting));
         factories.put(ItemListSetting.class, (table, setting) -> itemListW(table, (ItemListSetting) setting));
         factories.put(EntityTypeListSetting.class, (table, setting) -> entityTypeListW(table, (EntityTypeListSetting) setting));
@@ -343,6 +344,14 @@ public class DefaultSettingsWidgetFactory extends SettingsWidgetFactory {
         reset(table, setting, null);
     }
 
+    private void itemDataW(WTable table, ItemDataSetting<?> setting)
+    {
+        WButton button = table.add(theme.button(GuiRenderer.EDIT)).expandCellX().widget();  
+        button.action = () -> mc.setScreen(new ItemDataSettingScreen<>(theme, setting));
+
+        reset(table, setting, null);
+    }
+    
     private void potionW(WTable table, PotionSetting setting) {
         WHorizontalList list = table.add(theme.horizontalList()).expandX().widget();
         WItemWithLabel item = list.add(theme.itemWithLabel(setting.get().potion, I18n.translate(setting.get().potion.getItem().getTranslationKey()))).widget();
