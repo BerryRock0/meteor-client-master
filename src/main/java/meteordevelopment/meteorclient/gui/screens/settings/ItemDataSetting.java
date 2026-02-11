@@ -25,7 +25,7 @@ public class ItemDataSetting<T extends ICopyable<T> & ISerializable<T> & IChange
 {
     public final IGetter<T> defaultData;
 
-    public ItemDataSetting(String name, description Map<Item, T> defaultValue, Consumer<Map<Item, T>> onChanged, Consumer<Setting<Map<Item, T>>> onModuleActivated, IGetter<T> defaultData, IVisible visible)
+    public ItemDataSetting(String name, String description, Map<Item, T> defaultValue, Consumer<Map<Item, T>> onChanged, Consumer<Setting<Map<Item, T>>> onModuleActivated, IGetter<T> defaultData, IVisible visible)
     {
         super(name, description, defaultValue, onChanged, onModuleActivated, visible);
         this.defaultData = defaultData;
@@ -81,11 +81,13 @@ public class ItemDataSetting<T extends ICopyable<T> & ISerializable<T> & IChange
     {
         private IGetter<T> defaultData;
 
-        public Builder() {
+        public Builder()
+        {
             super(new HashMap<>(0));
         }
 
-        public Builder<T> defaultData(IGetter<T> defaultData) {
+        public Builder<T> defaultData(IGetter<T> defaultData)
+        {
             this.defaultData = defaultData;
             return this;
         }
