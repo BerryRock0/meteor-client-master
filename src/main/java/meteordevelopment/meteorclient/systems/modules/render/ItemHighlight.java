@@ -49,7 +49,7 @@ public class ItemHighlight extends Module {
     public int getColor(ItemStack stack)
     {
         ItemData data = itemConfigs.get().get(stack.getItem());
-        ColorSetting color = data.itemColor;
+        ColorSetting color = (ColorSetting)data.itemColor;
             
         if (data != null)
         if (stack != null && items.get().contains(stack.getItem()) && isActive())
