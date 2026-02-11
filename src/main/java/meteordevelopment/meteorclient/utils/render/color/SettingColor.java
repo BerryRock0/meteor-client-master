@@ -12,7 +12,8 @@ import net.minecraft.util.Formatting;
 
 public class SettingColor extends Color {
     public boolean rainbow;
-
+    public int r,g,b,a;
+    
     public SettingColor() {
         super();
     }
@@ -40,6 +41,10 @@ public class SettingColor extends Color {
     public SettingColor(int r, int g, int b, int a, boolean rainbow) {
         super(r, g, b, a);
         this.rainbow = rainbow;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
     }
 
     public SettingColor(SettingColor color) {
