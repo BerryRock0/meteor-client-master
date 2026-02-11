@@ -39,7 +39,7 @@ public class ItemHighlight extends Module {
     private final Setting<Map<Item, ItemData>> itemConfigs = sgGeneral.add(new ItemDataSetting.Builder<ItemData>()
         .name("item-configs")
         .description("Config for each block.")
-        .defaultData(defaultBlockConfig)
+        .defaultData(defaultItemConfig)
         .build()
     );
     
@@ -50,10 +50,11 @@ public class ItemHighlight extends Module {
     public int getColor(ItemStack stack)
     {
         ItemData data = itemConfigs.get().get(stack.getItem());
-        
+        SettingColor color = data.itemColor;
+            
         if (data != null)
         if (stack != null && items.get().contains(stack.getItem()) && isActive())
-            return data.itemColor.get().getPacked();
+            return color.get().getPacked();
         return -1;
     }
 }
