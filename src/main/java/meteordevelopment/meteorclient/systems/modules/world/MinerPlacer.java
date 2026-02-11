@@ -244,9 +244,9 @@ public class MinerPlacer extends Module
             case 'x': x--; break;
             case 'y': y--; break;
             case 'z': z--; break;
-            case '^': reset(); break;
-            case '-': go(); break;
-            case '?': return;
+            case ';': reset(); break;
+            case '&': go(); break;
+            case '.': return;
             default: break;
         }
     }
@@ -268,11 +268,11 @@ public class MinerPlacer extends Module
 
     public void reset()
     {
-        a=0; i=0;
+        a^=a; i^=i; //reset value by XOR
     }
     public void go()
     {
-        i++; a=0;
+        i++; a^=a;
     }
 
     public WWidget getWidget(GuiTheme theme)
