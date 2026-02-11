@@ -41,6 +41,8 @@ public class ItemHighlight extends Module {
         .defaultData(defaultItemConfig)
         .build()
     );
+
+    Color color;
     
     public ItemHighlight() {
         super(Categories.Render, "item-highlight", "Highlights selected items when in guis");
@@ -49,10 +51,10 @@ public class ItemHighlight extends Module {
     public int getColor(ItemStack stack)
     {
         ItemData data = itemConfigs.get().get(stack.getItem()); //data.itemColor;
-        Color color = data.itemColor;
+
         if (data != null)
         if (stack != null && items.get().contains(stack.getItem()) && isActive())
-            return color.fromRGBA();
+            return color.fromRGBA(data.itemColor);
         return -1;
     }
 }
