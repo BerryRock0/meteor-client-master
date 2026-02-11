@@ -61,7 +61,7 @@ public class ItemDataSetting<T extends ICopyable<T> & ISerializable<T> & IChange
         NbtCompound valueTag = new NbtCompound();
         for (Item item : get().keySet())
         {
-            valueTag.put(Registries.ITEM.getRawId(item).toString(), get().get(item).toTag());
+            valueTag.put(Registries.ITEM.getId(item).toString(), get().get(item).toTag());
         }
         tag.put("value", valueTag);
 
