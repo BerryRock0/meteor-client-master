@@ -26,19 +26,43 @@ public class ItemHighlight extends Module {
         .build()
     );
 
-    private final Setting<SettingColor> color = sgGeneral.add(new ColorSetting.Builder()
-        .name("color")
-        .description("The color to highlight the items with.")
-        .defaultValue(new SettingColor(225, 25, 255, 50))
+    private final Setting<ItemData> defaultItemConfig = sgGeneral.add(new GenericSetting.Builder<ItemData>()
+        .name("default-item-config")
+        .description("Default item config.")
+        .defaultValue(
+            new ESPBlockData(
+                new SettingColor(0, 0, 0, 0),
+            )
+        )
         .build()
     );
 
+    private final Setting<Map<Item, ItemData>> itemConfigs = sgGeneral.add(new ItemDataSetting.Builder<ItemData>()
+        .name("item-configs")
+        .description("Config for each block.")
+        .defaultData(defaultBlockConfig)
+        .build()
+    );
+
+    ItemData data;
+    Color color;
+    
     public ItemHighlight() {
         super(Categories.Render, "item-highlight", "Highlights selected items when in guis");
     }
 
     public int getColor(ItemStack stack) {
-        if (stack != null && items.get().contains(stack.getItem()) && isActive()) return color.get().getPacked();
+
+        data = getItemData(stack.getItem());
+        color = data.itemColor;
+        if (stack != null && items.get().contains(stack.getItem()) && isActive())
+            return color;
         return -1;
+    }
+    
+    ItemData getItemData(Item item)
+    {
+        ItemData itemData = itemConfigs.get().get(item);
+        return itemData == null ? defaultItemConfig.get() : itemData;
     }
 }
