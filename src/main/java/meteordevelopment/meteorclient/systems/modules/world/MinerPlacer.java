@@ -1,6 +1,7 @@
 package meteordevelopment.meteorclient.systems.modules.world;
 
 import java.util.List;
+import java.util.Iterator;
 
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.gui.GuiTheme;
@@ -221,10 +222,9 @@ public class MinerPlacer extends Module
 
         try
         {
-            //input = script.get().get(a);
+            input = script.get().get(a);
             if(run.get())
-                execute(script.get().get(a).charAt(b));
-            b++;
+                execute(input.charAt(b++));
         }
         catch(Exception e)
         {
@@ -243,7 +243,8 @@ public class MinerPlacer extends Module
             case 'y': y--; break;
             case 'z': z--; break;
             case ';': reset();
-            case '&': go();    
+            case '&': go();
+            case "_": return;
             default: break;
         }
     }
@@ -265,7 +266,7 @@ public class MinerPlacer extends Module
 
     public void reset()
     {
-        a-=a; b-=a; //reset value by XOR
+        a-=a; b-=b;
     }
     public void go()
     {
