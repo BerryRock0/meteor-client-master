@@ -265,11 +265,11 @@ public class MinerPlacer extends Module
 
     public void reset()
     {
-        a^=a; b^=b; //reset value by XOR
+        a-=a; b-=a; //reset value by XOR
     }
     public void go()
     {
-        a++; b^=b;
+        a++; b-=b;
     }
 
     public WWidget getWidget(GuiTheme theme)
