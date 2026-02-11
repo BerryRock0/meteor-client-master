@@ -11,6 +11,8 @@ import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
+import meteordevelopment.meteorclient.systems.modules.render.item.*;
+import meteordevelopment.meteorclient.utils.render.color.Color;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,26 +41,18 @@ public class ItemHighlight extends Module {
         .defaultData(defaultBlockConfig)
         .build()
     );
-
-    ItemData data;
-    Color color;
     
     public ItemHighlight() {
         super(Categories.Render, "item-highlight", "Highlights selected items when in guis");
     }
 
-    public int getColor(ItemStack stack) {
-
-        data = getItemData(stack.getItem());
-        color = data.itemColor;
-        if (stack != null && items.get().contains(stack.getItem()) && isActive())
-            return color;
-        return -1;
-    }
-    
-    ItemData getItemData(Item item)
+    public int getColor(ItemStack stack)
     {
-        ItemData itemData = itemConfigs.get().get(item);
-        return itemData == null ? defaultItemConfig.get() : itemData;
+        ItemData data = itemConfigs.get().get(stack.getItem());
+        if (data == null)
+            return;
+        if (stack != null && items.get().contains(stack.getItem()) && isActive())
+            return data.itemColor;
+        return -1;
     }
 }
