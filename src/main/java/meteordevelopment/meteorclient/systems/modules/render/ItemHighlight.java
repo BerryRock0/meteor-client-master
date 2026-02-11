@@ -7,6 +7,7 @@ package meteordevelopment.meteorclient.systems.modules.render;
 
 import meteordevelopment.meteorclient.settings.ColorSetting;
 import meteordevelopment.meteorclient.settings.ItemListSetting;
+import meteordevelopment.meteorclient.gui.screens.settings.ItemDataSetting;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Categories;
@@ -18,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
+import java.util.Map;
 
 public class ItemHighlight extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -52,7 +54,7 @@ public class ItemHighlight extends Module {
         
         if (data != null)
         if (stack != null && items.get().contains(stack.getItem()) && isActive())
-            return data.itemColor;
+            return data.itemColor.get().getPacked();
         return -1;
     }
 }
