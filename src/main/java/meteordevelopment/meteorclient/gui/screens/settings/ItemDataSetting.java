@@ -7,6 +7,7 @@ import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
 import meteordevelopment.meteorclient.settings.ItemDataSetting;
 import meteordevelopment.meteorclient.settings.IItemData;
+import meteordevelopment.meteorclient.utils.misc.IGetter;
 import meteordevelopment.meteorclient.utils.misc.IChangeable;
 import meteordevelopment.meteorclient.utils.misc.ICopyable;
 import meteordevelopment.meteorclient.utils.misc.ISerializable;
@@ -16,7 +17,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.registry.Registries;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemDataSetting extends ICopyable<T> & ISerializable<T> & IChangeable & IItemData<T>> extends Setting<Map<Item, T>> 
+public class ItemDataSetting<T extends ICopyable<T> & ISerializable<T> & IChangeable & IItemData<T>> extends Setting<Map<Item, T>> 
 {
     public final IGetter<T> defaultData;
 
@@ -72,7 +73,8 @@ public class ItemDataSetting extends ICopyable<T> & ISerializable<T> & IChangeab
     }
 
 
-    public static class Builder<T extends ICopyable<T> & ISerializable<T> & IChangeable & IItemData<T>> extends SettingBuilder<Builder<T>, Map<Item, T>, ItemDataSetting<T>> {
+    public static class Builder<T extends ICopyable<T> & ISerializable<T> & IChangeable & IItemData<T>> extends SettingBuilder<Builder<T>, Map<Item, T>, ItemDataSetting<T>>
+    {
         private IGetter<T> defaultData;
 
         public Builder() {
