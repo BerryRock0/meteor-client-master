@@ -218,11 +218,24 @@ public class Nuker extends Module {
     );
 
     // Rendering
-
     private final Setting<Boolean> swing = sgVisual.add(new BoolSetting.Builder()
         .name("swing")
         .description("Whether to swing hand client-side.")
         .defaultValue(true)
+        .build()
+    );
+
+    private final Setting<UseHand> breakHand = sgVisual.add(new EnumSetting.Builder<UseHand>()
+        .name("break-hand")
+        .description("Hand to break.")
+        .defaultValue(UseHand.Main)
+        .build()
+    );
+    
+    private final Setting<UseHand> interactHand = sgVisual.add(new EnumSetting.Builder<UseHand>()
+        .name("interact-hand")
+        .description("Hand to interact.")
+        .defaultValue(UseHand.Main)
         .build()
     );
 
@@ -589,5 +602,21 @@ public class Nuker extends Module {
         int dY = Math.abs(y2 - y1);
         int dZ = Math.abs(z2 - z1);
         return Math.max(Math.max(dX, dY), dZ);
+    }
+
+    public Hand usedHand()
+    {
+        switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+    
+    public enum UseHand
+    {
+        Main,
+        Off
     }
 }
