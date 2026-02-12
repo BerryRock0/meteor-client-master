@@ -57,7 +57,7 @@ public class ItemHighlight extends Module {
 
     ItemData getItemData(Item item)
     {
-        ItemData blockData = itemConfigs.get().get(item);
+        ItemData itemData = itemConfigs.get().get(item);
         return itemData == null ? defaultItemConfig.get() : itemData;
     }
 }
