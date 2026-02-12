@@ -143,10 +143,6 @@ public class MinerPlacer extends Module
     public String input;
     public BlockPos pos;
 
-    public WVerticalList main,pm,nm,set;
-    public WHorizontalList a,b,c;
-    public Wbutton ix,iy,iz,dx,dy,dz,sx,sy,sz,rs,go;
-
     public MinerPlacer()
     {
         super(Categories.World, "MinerPlacer", "Break or Place in specific coordinate.");
@@ -292,6 +288,10 @@ public class MinerPlacer extends Module
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
         WButton rs = set.add(theme.button("Reset")).expandX().widget(); rs.action = () -> {reset();};
         WButton go = set.add(theme.button("Go")).expandX().widget(); go.action = () -> {go();}; */
+
+        WVerticalList main,pm,nm,set;
+        WHorizontalList a,b,c;
+        Wbutton ix,iy,iz,dx,dy,dz,sx,sy,sz,rs,go;
         
         main = theme.verticalList();
         pm = theme.verticalList();
