@@ -69,6 +69,20 @@ public class EChestFarmer extends Module {
         .defaultValue(true)
         .build()
     );
+    
+    private final Setting<UseHand> breakHand = sgGeneral.add(new EnumSetting.Builder<UseHand>()
+        .name("break-hand")
+        .description("Hand to break.")
+        .defaultValue(UseHand.Main)
+        .build()
+    );
+    
+    private final Setting<UseHand> interactHand = sgGeneral.add(new EnumSetting.Builder<UseHand>()
+        .name("interact-hand")
+        .description("Hand to interact.")
+        .defaultValue(UseHand.Main)
+        .build()
+    );
 
     private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
@@ -189,5 +203,21 @@ public class EChestFarmer extends Module {
 
         Box box = SHAPE.getBoundingBoxes().getFirst();
         event.renderer.box(target.getX() + box.minX, target.getY() + box.minY, target.getZ() + box.minZ, target.getX() + box.maxX, target.getY() + box.maxY, target.getZ() + box.maxZ, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
+    }
+
+    public Hand usedHand()
+    {
+        switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+    
+    public enum UseHand
+    {
+        Main,
+        Off
     }
 }
