@@ -243,7 +243,7 @@ public class VeinMiner extends Module {
         }
 
         private void updateBlockBreakingProgress() {
-            BlockUtils.breakBlock(blockPos, swingHand.get());
+            BlockUtils.breakBlock(blockPos, usedBreakHand(), swingHand.get());
         }
 
         public void render(Render3DEvent event) {
@@ -295,7 +295,17 @@ public class VeinMiner extends Module {
         Blacklist
     }
     
-    public Hand usedHand()
+    public Hand usedInteractHand()
+    {
+        switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+    
+    public Hand usedBreakHand()
     {
         switch(interactHand.get())
         {
