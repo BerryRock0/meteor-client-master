@@ -65,7 +65,14 @@ public class MinerPlacer extends Module
         .defaultValue(CardinalDirections.Down)
         .build()
     );
-    
+
+    private final Setting<UseHand> interactHand = sgSettings.add(new EnumSetting.Builder<UseHand>()
+        .name("interact-hand")
+        .description("Hand to interact.")
+        .defaultValue(UseHand.MAIN_HAND)
+        .build()
+    );
+
     private final Setting<Boolean> insideBlock = sgSettings.add(new BoolSetting.Builder()
         .name("inside-block")
         .description("Inside block value.")
@@ -199,7 +206,16 @@ public class MinerPlacer extends Module
             BlockUtils.breakBlock(pos, breakingswing.get());
                     
         if(interacting.get())
-            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedHand(), placingswing.get());
+    }
+
+    public Hand usedHand()
+    {
+        switch(interactHand.get())
+        {
+            case MAIN_HAND -> return Hand.MAIN_HAND; break;
+            case OFF_HAND -> return Hand.OFF_HAND; break;
+        }
     }
 
     private void clientAngle()
@@ -284,6 +300,12 @@ public class MinerPlacer extends Module
         None,
         Client,
         Packet
+    }
+    
+    public enum UseHand
+    {
+        MAIN_HAND,
+        OFF_HAND
     }
     
     public enum CardinalDirections
