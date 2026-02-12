@@ -175,35 +175,9 @@ public class MinerPlacer extends Module
 
         switch(rotate.get())
         {
-            case None -> 
-            {
-                if(mining.get())
-                    BlockUtils.breakBlock(pos, breakingswing.get());
-                if(interacting.get())
-                    BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());
-            }
-                
-            case Client ->
-            {
-                mc.player.setYaw((float)Rotations.getYaw(pos)); 
-                mc.player.setPitch((float)Rotations.getPitch(pos));
-                if(mining.get())
-                    BlockUtils.breakBlock(pos, breakingswing.get());
-                if(interacting.get())
-                    BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());
-            }
-                
-            case Packet ->
-            {
-                Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), () -> 
-                {
-                    if(mining.get())
-                        BlockUtils.breakBlock(pos, breakingswing.get());
-                    
-                    if(interacting.get())
-                        BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());
-                });
-            }    
+            case None -> {work();}
+            case Client -> {clientAngle(); work();}
+            case Packet -> {Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), () -> {work();});}    
         }
 
         try
@@ -217,6 +191,21 @@ public class MinerPlacer extends Module
         {
             e.printStackTrace();
         }
+    }
+
+    private void work()
+    {
+        if(mining.get())
+            BlockUtils.breakBlock(pos, breakingswing.get());
+                    
+        if(interacting.get())
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), Hand.MAIN_HAND, placingswing.get());
+    }
+
+    private void clientAngle()
+    {
+        mc.player.setYaw((float)Rotations.getYaw(pos)); 
+        mc.player.setPitch((float)Rotations.getPitch(pos));
     }
     
     private void execute(char b)
