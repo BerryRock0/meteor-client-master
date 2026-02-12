@@ -33,8 +33,7 @@ public class ItemHighlight extends Module {
         .build()
     );
 
-    public int a;  
-    public Color color;
+    public int a;
 
     public ItemHighlight() {
         super(Categories.Render, "item-highlight", "Highlights selected items when in guis");
@@ -43,20 +42,12 @@ public class ItemHighlight extends Module {
     public int getColor(ItemStack stack)
     {
         if(colors.get().get().length() != null && items.get().get().length() != null)
-        if (a != colors.get().get().length()-1)
-        {
-            color = colors.get().get(a);
-            a++;
-        }
-        else
-        {
-            a = 0;
-        }
+        if (a != colors.get().get().length()-1) a++; else a = 0;
         
         if(colors.get().get().length() == items.get().get().length())
         if (isActive() && stack != null && color != null)
         if(items.get().contains(stack.getItem()))
-            return color.get().getPacked();
+            return colors.get().get(a).getPacked();
         return -1;
     }
 }
