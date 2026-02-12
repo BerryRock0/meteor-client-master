@@ -5,19 +5,17 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+import meteordevelopment.meteorclient.settings.ColorListSetting;
 import meteordevelopment.meteorclient.settings.ItemListSetting;
-import meteordevelopment.meteorclient.gui.screens.settings.ItemDataSetting;
-import meteordevelopment.meteorclient.settings.*;
+import meteordevelopment.meteorclient.settings.Setting;
+import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.systems.modules.render.item.*;
-import meteordevelopment.meteorclient.utils.render.color.Color;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
-import java.util.Map;
 
 public class ItemHighlight extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -28,38 +26,37 @@ public class ItemHighlight extends Module {
         .build()
     );
 
-    private final Setting<ItemData> defaultItemConfig = sgGeneral.add(new GenericSetting.Builder<ItemData>()
-        .name("default-item-config")
-        .description("Default item config.")
-        .defaultValue(new ItemData(new SettingColor(0, 0, 0, 0)))
+    public final Setting<List<SettingColor>> colors = sgGeneral.add(new ColorListSetting.Builder()
+        .name("colors")
+        .description("Colors used for the Text element.")
+        .defaultValue(List.of(new SettingColor(0,0,0,0)))
         .build()
     );
 
-    private final Setting<Map<Item, ItemData>> itemConfigs = sgGeneral.add(new ItemDataSetting.Builder<ItemData>()
-        .name("item-configs")
-        .description("Config for each block.")
-        .defaultData(defaultItemConfig)
-        .build()
-    );
-
+    public int a;  
     public Color color;
-    public ItemData data;
-    
+
     public ItemHighlight() {
         super(Categories.Render, "item-highlight", "Highlights selected items when in guis");
     }
 
     public int getColor(ItemStack stack)
     {
-        data = getItemData(stack.getItem());
-        if (stack != null && items.get().contains(stack.getItem()) && isActive())
-            return data.itemColor.fromRGBA(data.itemColor.r,data.itemColor.g,data.itemColor.b,data.itemColor.a);
+        if(colors.get().length() != null && items.get().length() != null)
+        if (a != colors.get().length()-1)
+        {
+            color = colors.get().get(a);
+            a++;
+        }
+        else
+        {
+            a = 0;
+        }
+        
+        if(colors.get().length() == items.get().length())
+        if (isActive() && stack != null && color != null)
+        if(items.get().contains(stack.getItem()))
+            return color.get().getPacked();
         return -1;
-    }
-
-    ItemData getItemData(Item item)
-    {
-        ItemData itemData = itemConfigs.get().get(item);
-        return itemData == null ? defaultItemConfig.get() : itemData;
     }
 }
