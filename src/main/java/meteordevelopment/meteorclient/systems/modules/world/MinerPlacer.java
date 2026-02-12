@@ -69,7 +69,7 @@ public class MinerPlacer extends Module
     private final Setting<UseHand> interactHand = sgSettings.add(new EnumSetting.Builder<UseHand>()
         .name("interact-hand")
         .description("Hand to interact.")
-        .defaultValue(UseHand.MAIN_HAND)
+        .defaultValue(UseHand.Main)
         .build()
     );
 
