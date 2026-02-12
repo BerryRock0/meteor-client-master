@@ -22,7 +22,7 @@ public class Timer extends Module {
         .build()
     );
     
-    private final Setting<Rotating> mode = sgGeneral.add(new EnumSetting.Builder<Rotating>()
+    private final Setting<Tick> mode = sgGeneral.add(new EnumSetting.Builder<Tick>()
         .name("Mode")
         .description("Timer ticks mode.")
         .defaultValue(Tick.Multiplication)
