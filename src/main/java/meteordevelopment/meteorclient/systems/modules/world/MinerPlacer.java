@@ -216,6 +216,7 @@ public class MinerPlacer extends Module
             case Main -> {return Hand.MAIN_HAND;}
             case Off -> {return Hand.OFF_HAND;}
         }
+        return null;
     }
 
     private void clientAngle()
