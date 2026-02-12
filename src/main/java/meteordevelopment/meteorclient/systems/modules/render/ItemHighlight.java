@@ -42,7 +42,7 @@ public class ItemHighlight extends Module {
 
     public int getColor(ItemStack stack)
     {
-        if(colors.get().length() != null && items.get().length() != null)
+        if(colors.get().get().length() != null && items.get().get().length() != null)
         if (a != colors.get().length()-1)
         {
             color = colors.get().get(a);
@@ -53,7 +53,7 @@ public class ItemHighlight extends Module {
             a = 0;
         }
         
-        if(colors.get().length() == items.get().length())
+        if(colors.get().get().length() == items.get().get().length())
         if (isActive() && stack != null && color != null)
         if(items.get().contains(stack.getItem()))
             return color.get().getPacked();
