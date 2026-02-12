@@ -213,8 +213,8 @@ public class MinerPlacer extends Module
     {
         switch(interactHand.get())
         {
-            case MAIN_HAND -> return Hand.MAIN_HAND; break;
-            case OFF_HAND -> return Hand.OFF_HAND; break;
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
         }
     }
 
@@ -304,8 +304,8 @@ public class MinerPlacer extends Module
     
     public enum UseHand
     {
-        MAIN_HAND,
-        OFF_HAND
+        Main,
+        Off
     }
     
     public enum CardinalDirections
