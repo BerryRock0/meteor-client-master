@@ -25,6 +25,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -180,11 +181,12 @@ public class EChestFarmer extends Module {
             if (bestSlot == -1) return;
 
             InvUtils.swap(bestSlot, true);
-            BlockUtils.breakBlock(target, swingHand.get());
+            BlockUtils.breakBlock(target, usedBreakHand(), swingHand.get());
         }
 
         // Place echest if the target pos is empty
-        if (mc.world.getBlockState(target).isReplaceable()) {
+        if (mc.world.getBlockState(target).isReplaceable())
+        {
             FindItemResult echest = InvUtils.findInHotbar(Items.ENDER_CHEST);
 
             if (!echest.found()) {
@@ -205,9 +207,19 @@ public class EChestFarmer extends Module {
         event.renderer.box(target.getX() + box.minX, target.getY() + box.minY, target.getZ() + box.minZ, target.getX() + box.maxX, target.getY() + box.maxY, target.getZ() + box.maxZ, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
 
-    public Hand usedHand()
+    public Hand usedInteractHand()
     {
         switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+
+    public Hand usedBreakHand()
+    {
+        switch(breakHand.get())
         {
             case Main -> {return Hand.MAIN_HAND;}
             case Off -> {return Hand.OFF_HAND;}
