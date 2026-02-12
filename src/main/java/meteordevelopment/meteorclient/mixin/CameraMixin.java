@@ -84,11 +84,7 @@ public abstract class CameraMixin implements ICamera {
             args.set(0, (float) freecam.getYaw(tickDelta));
             args.set(1, (float) freecam.getPitch(tickDelta));
         }
-        else if (Modules.get().isActive(HighwayBuilder.class)) {
-            args.set(0, yaw);
-            args.set(1, pitch);
-        }
-        else if (freeLook.isActive()) {
+        if (freeLook.isActive()) {
             args.set(0, freeLook.cameraYaw);
             args.set(1, freeLook.cameraPitch);
         }
