@@ -41,7 +41,7 @@ public class ItemHighlight extends Module {
 
     public int getColor(ItemStack stack)
     {
-        if(colors.get().size() != null && items.get().size() != null)
+        if(colors.get().size() != 0 && items.get().size() != 0)
         if (a != colors.get().size()-1) a++; else a = 0;
 
         if (isActive() && stack != null)
