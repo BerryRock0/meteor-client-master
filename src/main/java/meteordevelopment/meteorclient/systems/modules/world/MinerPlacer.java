@@ -66,6 +66,13 @@ public class MinerPlacer extends Module
         .build()
     );
 
+    private final Setting<UseHand> breakHand = sgSettings.add(new EnumSetting.Builder<UseHand>()
+        .name("break-hand")
+        .description("Hand to break.")
+        .defaultValue(UseHand.Main)
+        .build()
+    );
+    
     private final Setting<UseHand> interactHand = sgSettings.add(new EnumSetting.Builder<UseHand>()
         .name("interact-hand")
         .description("Hand to interact.")
@@ -203,7 +210,7 @@ public class MinerPlacer extends Module
     private void work()
     {
         if(mining.get())
-            BlockUtils.breakBlock(pos, breakingswing.get());
+            BlockUtils.breakBlock(pos, usedHand(), breakingswing.get());
                     
         if(interacting.get())
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedHand(), placingswing.get());
