@@ -36,7 +36,7 @@ public class Timer extends Module {
         super(Categories.World, "timer", "Changes the speed of everything in your game.");
     }
     
-    public int setTick(int a)
+    public float setTick(float a)
     {
         if(isActive()) 
         switch (mode.get())
@@ -49,7 +49,7 @@ public class Timer extends Module {
         }
         else OFF;
 
-        return (int) a;      
+        return a;      
     }
 
     public void setOverride(double override) {
