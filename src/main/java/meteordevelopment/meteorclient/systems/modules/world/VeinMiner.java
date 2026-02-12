@@ -100,6 +100,20 @@ public class VeinMiner extends Module {
         .build()
     );
 
+    private final Setting<UseHand> breakHand = sgRender.add(new EnumSetting.Builder<UseHand>()
+        .name("break-hand")
+        .description("Hand to break.")
+        .defaultValue(UseHand.Main)
+        .build()
+    );
+    
+    private final Setting<UseHand> interactHand = sgRender.add(new EnumSetting.Builder<UseHand>()
+        .name("interact-hand")
+        .description("Hand to interact.")
+        .defaultValue(UseHand.Main)
+        .build()
+    );
+
     private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
         .description("Whether or not to render the block being mined.")
@@ -280,4 +294,21 @@ public class VeinMiner extends Module {
         Whitelist,
         Blacklist
     }
+    
+    public Hand usedHand()
+    {
+        switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+    
+    public enum UseHand
+    {
+        Main,
+        Off
+    }
+    
 }
