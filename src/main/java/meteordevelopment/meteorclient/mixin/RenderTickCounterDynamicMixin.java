@@ -25,6 +25,6 @@ public abstract class RenderTickCounterDynamicMixin {
     {
         Timer timer = Modules.get().get(Timer.class);
         if(timer.isActive())
-            dynamicDeltaTicks = timer.setTick(dynamicDeltaTicks);
+            dynamicDeltaTicks = (float)timer.setTick((float)dynamicDeltaTicks);
     }
 }
