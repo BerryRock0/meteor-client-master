@@ -140,7 +140,6 @@ public class MinerPlacer extends Module
     );
 
     public int a,b,x,y,z;
-    public String input;
     public BlockPos pos;
 
     public MinerPlacer()
@@ -209,10 +208,9 @@ public class MinerPlacer extends Module
 
         try
         {
-            input = script.get().get(a);
             if(run.get())
-                execute(input.charAt(b));
-            if(b != input.length()-1)
+                execute(script.get().get(a).charAt(b));
+            if(b != script.get().get(a).length()-1)
                 b++;
         }
         catch(Exception e)
