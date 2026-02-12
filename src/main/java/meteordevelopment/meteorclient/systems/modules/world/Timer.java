@@ -37,8 +37,7 @@ public class Timer extends Module {
     }
     
     public float setTick(float a)
-    {
-        if(isActive()) 
+    { 
         switch (mode.get())
         {
             case Addition -> {a+= doubleValue.get();}
@@ -47,7 +46,6 @@ public class Timer extends Module {
             case Division -> {a/= doubleValue.get();}
             case Exponentiation -> {a=Math.pow(a, doubleValue.get());}
         }
-        else OFF;
 
         return a;      
     }
