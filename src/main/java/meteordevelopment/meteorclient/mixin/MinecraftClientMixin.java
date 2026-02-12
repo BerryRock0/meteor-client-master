@@ -223,10 +223,8 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     }
 
     @Unique
-    private boolean HB$stopUsingItem() {
-        HighwayBuilder b = Modules.get().get(HighwayBuilder.class);
-        return !b.isActive() || !b.drawingBow;
-    }
+    private boolean HB$stopUsingItem()
+    {}
 
     @Inject(method = "onResolutionChanged", at = @At("TAIL"))
     private void onResolutionChanged(CallbackInfo info) {
