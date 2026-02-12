@@ -112,9 +112,9 @@ public class Utils {
         Timer timer = Modules.get().get(Timer.class);
         if (timer.isActive())
         {
-            tX = (double)timer.setTick(tX);
-            tY = (double)timer.setTick(tY);
-            tZ = (double)timer.setTick(tZ);
+            tX = timer.setTick((double)tX);
+            tY = timer.setTick((double)tY);
+            tZ = timer.setTick((double)tZ);
         }
 
         return new Vec3d(tX, tY, tZ);
