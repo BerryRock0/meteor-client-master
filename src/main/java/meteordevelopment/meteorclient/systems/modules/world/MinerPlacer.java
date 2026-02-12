@@ -93,19 +93,6 @@ public class MinerPlacer extends Module
         .build()
     );
     
-    private final Setting<Boolean> incrementIndex = sgScript.add(new BoolSetting.Builder()
-        .name("increment")
-        .description("Execute script from beginning to end.")
-        .defaultValue(false)
-        .build()
-    );
-    private final Setting<Boolean> decrementIndex = sgScript.add(new BoolSetting.Builder()
-        .name("decrement")
-        .description("Execute script from end to beginning.")
-        .defaultValue(false)
-        .build()
-    );
-    
     private final Setting<List<String>> script = sgScript.add(new StringListSetting.Builder()
         .name("script")
         .description("Minerplacer action commands.")
@@ -223,8 +210,10 @@ public class MinerPlacer extends Module
         try
         {
             input = script.get().get(a);
+            if (b == null) return;
             if(run.get())
-                execute(input.charAt(b++));
+                execute(input.charAt());
+            b++;
         }
         catch(Exception e)
         {
@@ -266,16 +255,16 @@ public class MinerPlacer extends Module
 
     public void reset()
     {
-        a-=a; b-=b;
+        a^=a; b^=b;
     }
     public void go()
     {
-        a++; b-=b;
+        a++; b^=b;
     }
 
     public WWidget getWidget(GuiTheme theme)
     {
-        WVerticalList main = theme.verticalList();
+ /*       WVerticalList main = theme.verticalList();
         WVerticalList pm = theme.verticalList();
         WVerticalList nm = theme.verticalList();
         WVerticalList set = theme.verticalList();
@@ -297,8 +286,33 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton reset = set.add(theme.button("Reset")).expandX().widget(); reset.action = () -> {reset();};
+        WButton rs = set.add(theme.button("Reset")).expandX().widget(); rs.action = () -> {reset();};
+        WButton go = set.add(theme.button("Go")).expandX().widget(); go.action = () -> {go();}; */
         
+        WVerticalList main,pm,nm,set;
+        WHorizontalList a,b,c;
+        Wbutton ix,iy,iz,dx,dy,dz,sx,sy,sz,rs,go;
+
+        main.add(pm).expandX().widget();
+        main.add(nm).expandX().widget();
+        main.add(set).expandX().widget();
+        
+        a = pm.add(theme.horizontalList()).expandX().widget();
+        b = nm.add(theme.horizontalList()).expandX().widget();
+        c = set.add(theme.horizontalList()).expandX().widget();
+
+        ix = a.add(theme.button("x++")).expandX().widget(); ix.action = () -> x++;
+        iy = a.add(theme.button("y++")).expandX().widget(); iy.action = () -> y++;
+        iz = a.add(theme.button("z++")).expandX().widget(); iz.action = () -> z++;
+        dx = b.add(theme.button("x--")).expandX().widget(); dx.action = () -> x--;
+        dy = b.add(theme.button("y--")).expandX().widget(); dy.action = () -> y--;
+        dz = b.add(theme.button("z--")).expandX().widget(); dz.action = () -> z--;
+        sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
+        sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
+        sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
+        rs = set.add(theme.button("Reset")).expandX().widget(); rs.action = () -> {reset();};
+        go = set.add(theme.button("Go")).expandX().widget(); go.action = () -> {go();};
+
         return main;
     }
 
