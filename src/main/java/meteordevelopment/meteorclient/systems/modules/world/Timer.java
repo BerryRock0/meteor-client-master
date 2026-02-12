@@ -35,17 +35,10 @@ public class Timer extends Module {
     public Timer() {
         super(Categories.World, "timer", "Changes the speed of everything in your game.");
     }
-
-    public double getMultiplier() {
-        return override != OFF ? override : (isActive() ? multiplier.get() : OFF);
-    }
-
-    public void setOverride(double override) {
-        this.override = override;
-    }
-
+    
     public int setTick(int a)
     {
+        if(isActive()) 
         switch (mode.get())
         {
             case Addition -> {a+= doubleValue.get();}
@@ -54,8 +47,13 @@ public class Timer extends Module {
             case Division -> {a/= doubleValue.get();}
             case Exponentiation -> {a=Math.pow(a, doubleValue.get());}
         }
+        else OFF;
 
         return (int) a;      
+    }
+
+    public void setOverride(double override) {
+        this.override = override;
     }
 
     public enum Tick
