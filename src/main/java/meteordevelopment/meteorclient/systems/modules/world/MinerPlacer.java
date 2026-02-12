@@ -210,10 +210,10 @@ public class MinerPlacer extends Module
         try
         {
             input = script.get().get(a);
-            if (input == null) return;
             if(run.get())
                 execute(input.charAt(b));
-            b++;
+            if(b < input.length()-1)
+                b++;
         }
         catch(Exception e)
         {
