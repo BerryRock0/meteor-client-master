@@ -223,7 +223,9 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
 
     @Unique
     private boolean HB$stopUsingItem()
-    {}
+    {
+        return false; 
+    }
 
     @Inject(method = "onResolutionChanged", at = @At("TAIL"))
     private void onResolutionChanged(CallbackInfo info) {
