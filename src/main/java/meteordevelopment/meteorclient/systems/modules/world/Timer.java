@@ -47,11 +47,14 @@ public class Timer extends Module {
     public int setTick(int a)
     {
         switch (mode.get())
-            case Addition -> {a+= doubleValue.get();}
-            case Subtraction -> {a-= doubleValue.get();}
-            case Multiplication -> {a*= doubleValue.get();}
-            case Division -> {a/= doubleValue.get();}
-            case Exponentiation -> a=Math.pow(a, doubleValue.get();)
+        {
+            case Addition -> {a+= doubleValue.get();} break;
+            case Subtraction -> {a-= doubleValue.get();} break;
+            case Multiplication -> {a*= doubleValue.get();} break;
+            case Division -> {a/= doubleValue.get();} break;
+            case Exponentiation -> {a=Math.pow(a, doubleValue.get());} break;
+        }
+
         return (int) a;      
     }
 
