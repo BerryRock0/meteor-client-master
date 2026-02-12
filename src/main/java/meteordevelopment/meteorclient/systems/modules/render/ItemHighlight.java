@@ -44,7 +44,7 @@ public class ItemHighlight extends Module {
        if (isActive() && stack != null && colors.get().size() == items.get().size())
        {
             a = items.get().indexOf(stack.getItem());
-            if (index != -1)
+            if (a != -1)
                 return colors.get().get(a).getPacked();
        }
         return -1;
