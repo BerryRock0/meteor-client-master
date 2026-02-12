@@ -27,8 +27,8 @@ public class TickManipulator extends Module
 	public final Setting serverbool = sgServer.add(new BoolSetting.Builder().name("server-bool").description("update server boolean.").defaultValue(false).build());
     public final Setting serverincrement = sgServer.add(new BoolSetting.Builder().name("server-increment").description("increment server time value.").defaultValue(false).build());
     public final Setting serverdecrement = sgServer.add(new BoolSetting.Builder().name("server-decrement").description("decrement server time value.").defaultValue(false).build());
-    public final Setting serverqueue = sgClient.add(new BoolSetting.Builder().name("server-queue").description("queue returning boolean value.").defaultValue(false).build());
-    public final Setting serveralways = sgClient.add(new BoolSetting.Builder().name("server-always").description("always returning boolean value.").defaultValue(false).build());
+    public final Setting serverqueue = sgServer.add(new BoolSetting.Builder().name("server-queue").description("queue returning boolean value.").defaultValue(false).build());
+    public final Setting serveralways = sgServer.add(new BoolSetting.Builder().name("server-always").description("always returning boolean value.").defaultValue(false).build());
     
 	public int clientTimer;
     public int serverTimer;
