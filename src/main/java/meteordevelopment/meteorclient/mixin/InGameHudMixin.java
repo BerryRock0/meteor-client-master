@@ -17,6 +17,8 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.util.profiler.Profilers;
 import org.spongepowered.asm.mixin.Mixin;
