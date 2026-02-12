@@ -210,13 +210,23 @@ public class MinerPlacer extends Module
     private void work()
     {
         if(mining.get())
-            BlockUtils.breakBlock(pos, usedHand(), breakingswing.get());
+            BlockUtils.breakBlock(pos, usedBreakHand(), breakingswing.get());
                     
         if(interacting.get())
-            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedHand(), placingswing.get());
+            BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedInteractHand(), placingswing.get());
     }
 
-    public Hand usedHand()
+    public Hand usedInteractHand()
+    {
+        switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+
+    public Hand usedBreakHand()
     {
         switch(interactHand.get())
         {
