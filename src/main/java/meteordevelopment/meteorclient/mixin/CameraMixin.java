@@ -12,7 +12,6 @@ import meteordevelopment.meteorclient.systems.modules.render.CameraTweaks;
 import meteordevelopment.meteorclient.systems.modules.render.FreeLook;
 import meteordevelopment.meteorclient.systems.modules.render.Freecam;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
-import meteordevelopment.meteorclient.systems.modules.world.HighwayBuilder;
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
