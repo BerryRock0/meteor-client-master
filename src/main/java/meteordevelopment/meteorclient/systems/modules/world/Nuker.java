@@ -526,7 +526,7 @@ public class Nuker extends Module {
             mc.interactionManager.sendSequencedPacket(mc.world, (sequence) -> new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK, blockPos, BlockUtils.getDirection(blockPos), sequence));
         } else {
             // Legit mine mode
-            BlockUtils.breakBlock(blockPos, swing.get());
+            BlockUtils.breakBlock(blockPos, usedBreakHand(), swing.get());
         }
     }
 
@@ -607,6 +607,16 @@ public class Nuker extends Module {
     public Hand usedHand()
     {
         switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+
+    public Hand usedBreakHand()
+    {
+        switch(breakHand.get())
         {
             case Main -> {return Hand.MAIN_HAND;}
             case Off -> {return Hand.OFF_HAND;}
