@@ -292,7 +292,8 @@ public class MinerPlacer extends Module
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
         WButton rs = set.add(theme.button("Reset")).expandX().widget(); rs.action = () -> {reset();};
         WButton go = set.add(theme.button("Go")).expandX().widget(); go.action = () -> {go();}; */
- /*     main = theme.verticalList();
+        
+        main = theme.verticalList();
         pm = theme.verticalList();
         nm = theme.verticalList();
         set = theme.verticalList();
