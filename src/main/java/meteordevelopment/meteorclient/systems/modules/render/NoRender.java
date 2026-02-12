@@ -123,64 +123,123 @@ public class NoRender extends Module {
     );
 
     // HUD
-
-    private final Setting<Boolean> noBossBar = sgHUD.add(new BoolSetting.Builder()
+    private final Setting<Boolean> noAirBubbles = sgHUD.add(new BoolSetting.Builder()
+        .name("air-bubbles")
+        .description("Disable rendering of air bubbles.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noAutoSaveIndicator = sgHUD.add(new BoolSetting.Builder()
+        .name("auto-save-indicator")
+        .description("Disable rendering of auto save indicator.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noBossBar = sgHUD.add(new BoolSetting.Builder()
         .name("boss-bar")
         .description("Disable rendering of boss bars.")
         .defaultValue(false)
         .build()
     );
-
-    private final Setting<Boolean> noScoreboard = sgHUD.add(new BoolSetting.Builder()
-        .name("scoreboard")
-        .description("Disable rendering of the scoreboard.")
+        private final Setting<Boolean> noChat = sgHUD.add(new BoolSetting.Builder()
+        .name("chat")
+        .description("Disable rendering of chat.")
         .defaultValue(false)
         .build()
     );
-
-    private final Setting<Boolean> noCrosshair = sgHUD.add(new BoolSetting.Builder()
+        private final Setting<Boolean> noCrosshair = sgHUD.add(new BoolSetting.Builder()
         .name("crosshair")
         .description("Disables rendering of the crosshair.")
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> noTitle = sgHUD.add(new BoolSetting.Builder()
+        private final Setting<Boolean> noDebugHud = sgHUD.add(new BoolSetting.Builder()
+        .name("debug-hud")
+        .description("Disable rendering of debug hud.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noDemoTimer = sgHUD.add(new BoolSetting.Builder()
+        .name("demo-timer")
+        .description("Disable rendering of demo timer.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noFood = sgHUD.add(new BoolSetting.Builder()
+        .name("food")
+        .description("Disable rendering of food.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noHealthBar = sgHUD.add(new BoolSetting.Builder()
+        .name("health-bar")
+        .description("Disable rendering of health bar.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noHeldItemName = sgHUD.add(new BoolSetting.Builder()
+        .name("held-item-name")
+        .description("Disables rendering of the held item name.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noHotbar = sgHUD.add(new BoolSetting.Builder()
+        .name("hotbar")
+        .description("Disable rendering of hotbar.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noHotbarItem = sgHUD.add(new BoolSetting.Builder()
+        .name("hotbar-item")
+        .description("Disable rendering of hotbar item.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noMountHealth = sgHUD.add(new BoolSetting.Builder()
+        .name("mount-health")
+        .description("Disable rendering of mount health.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noMessageSignatureIndicator = sgHUD.add(new BoolSetting.Builder()
+        .name("message-signature-indicator")
+        .description("Disables chat message signature indicator on the left of the message.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noPotionIcons = sgHUD.add(new BoolSetting.Builder()
+        .name("potion-icons")
+        .description("Disables rendering of status effect icons.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noObfuscation = sgHUD.add(new BoolSetting.Builder()
+        .name("obfuscation")
+        .description("Disables obfuscation styling of characters.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noScoreboard = sgHUD.add(new BoolSetting.Builder()
+        .name("scoreboard")
+        .description("Disable rendering of the scoreboard.")
+        .defaultValue(false)
+        .build()
+    );
+        private final Setting<Boolean> noSubtitlesHud = sgHUD.add(new BoolSetting.Builder()
+        .name("subtitles")
+        .description("Disable rendering of .")
+        .defaultValue(false)
+        .build()
+    );
+		private final Setting<Boolean> noTitle = sgHUD.add(new BoolSetting.Builder()
         .name("title")
         .description("Disables rendering of the title.")
         .defaultValue(false)
         .build()
     );
 
-    private final Setting<Boolean> noHeldItemName = sgHUD.add(new BoolSetting.Builder()
-        .name("held-item-name")
-        .description("Disables rendering of the held item name.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> noObfuscation = sgHUD.add(new BoolSetting.Builder()
-        .name("obfuscation")
-        .description("Disables obfuscation styling of characters.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> noPotionIcons = sgHUD.add(new BoolSetting.Builder()
-        .name("potion-icons")
-        .description("Disables rendering of status effect icons.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> noMessageSignatureIndicator = sgHUD.add(new BoolSetting.Builder()
-        .name("message-signature-indicator")
-        .description("Disables chat message signature indicator on the left of the message.")
-        .defaultValue(false)
-        .build()
-    );
-
+    
     // World
-
     private final Setting<Boolean> noWeather = sgWorld.add(new BoolSetting.Builder()
         .name("weather")
         .description("Disables rendering of weather.")
@@ -448,6 +507,46 @@ public class NoRender extends Module {
     }
 
     // HUD
+	public boolean noAirBubbles()
+    {
+        return isActive() && noAirBubbles.get();
+    }
+	public boolean noChat()
+    {
+        return isActive() && noChat.get();
+    }
+	public boolean noDebugHud()
+    {
+        return isActive() && noDebugHud.get();
+    }
+	public boolean noDemoTimer()
+    {
+        return isActive() && noDemoTimer.get();
+    }
+	public boolean noFood()
+    {
+        return isActive() && noFood.get();
+    }
+	public boolean noHealthBar()
+    {
+        return isActive() && noHealthBar.get();
+    }
+	public boolean noHotbar()
+    {
+        return isActive() && noHotbar.get();
+    }
+	public boolean noHotbarItem()
+    {
+        return isActive() && noHotbarItem.get();
+    }
+	public boolean noMountHealth()
+    {
+        return isActive() && noMountHealth.get();
+    }
+	public boolean noSubtitlesHud()
+    {
+        return isActive() && noSubtitlesHud.get();
+    }
 
     public boolean noBossBar() {
         return isActive() && noBossBar.get();
