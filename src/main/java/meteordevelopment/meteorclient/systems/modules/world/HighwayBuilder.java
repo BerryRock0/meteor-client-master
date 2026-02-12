@@ -1341,8 +1341,8 @@ public class HighwayBuilder extends Module {
                         );
                     }
                     else {
-                        if (b.rotation.get().mine) Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () -> BlockUtils.breakBlock(bp, true));
-                        else BlockUtils.breakBlock(bp, true);
+                        if (b.rotation.get().mine) Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () -> BlockUtils.breakBlock(bp, usedBreakHand(), true));
+                        else BlockUtils.breakBlock(bp, usedBreakHand(), true);
                     }
                 }
                 else {
@@ -1679,15 +1679,15 @@ public class HighwayBuilder extends Module {
                     int toolSlot = findAndMoveBestToolToHotbar(b, state, false);
                     InvUtils.swap(toolSlot, false);
 
-                    if (b.rotation.get().mine) Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () -> BlockUtils.breakBlock(bp, true));
-                    else BlockUtils.breakBlock(bp, true);
+                    if (b.rotation.get().mine) Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () -> BlockUtils.breakBlock(bp, usedBreakHand(), true));
+                    else BlockUtils.breakBlock(bp, usedBreakHand(), true);
                 } else {
                     if (b.rotation.get().place) {
                         Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () ->
-                            b.mc.interactionManager.interactBlock(b.mc.player, Hand.MAIN_HAND, new BlockHitResult(Vec3d.ofCenter(bp), Direction.UP, bp, false))
+                            b.mc.interactionManager.interactBlock(b.mc.player, usedInteractHand(), new BlockHitResult(Vec3d.ofCenter(bp), Direction.UP, bp, false))
                         );
                     }
-                    else b.mc.interactionManager.interactBlock(b.mc.player, Hand.MAIN_HAND, new BlockHitResult(Vec3d.ofCenter(bp), Direction.UP, bp, false));
+                    else b.mc.interactionManager.interactBlock(b.mc.player, usedInteractHand(), new BlockHitResult(Vec3d.ofCenter(bp), Direction.UP, bp, false));
 
                     delayTimer = b.inventoryDelay.get();
                 }
@@ -1930,8 +1930,8 @@ public class HighwayBuilder extends Module {
                 BlockPos mcPos = pos.getBlockPos();
                 boolean multiBreak = b.blocksPerTick.get() > 1 && BlockUtils.canInstaBreak(mcPos) && !b.rotation.get().mine;
                 if (BlockUtils.canBreak(mcPos)) {
-                    if (b.rotation.get().mine) Rotations.rotate(Rotations.getYaw(mcPos), Rotations.getPitch(mcPos), () -> BlockUtils.breakBlock(mcPos, true));
-                    else BlockUtils.breakBlock(mcPos, true);
+                    if (b.rotation.get().mine) Rotations.rotate(Rotations.getYaw(mcPos), Rotations.getPitch(mcPos), () -> BlockUtils.breakBlock(mcPos, usedBreakHand(), true));
+                    else BlockUtils.breakBlock(mcPos, usedBreakHand(), true);
                     breaking = true;
 
                     b.breakTimer = b.breakDelay.get();
@@ -2921,9 +2921,19 @@ public class HighwayBuilder extends Module {
         }
     }
 
-    public Hand usedHand()
+    public Hand usedInteractHand()
     {
         switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+    
+    public Hand usedBreakHand()
+    {
+        switch(breakHand.get())
         {
             case Main -> {return Hand.MAIN_HAND;}
             case Off -> {return Hand.OFF_HAND;}
