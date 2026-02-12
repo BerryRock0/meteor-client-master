@@ -172,6 +172,20 @@ public class HighwayBuilder extends Module {
         .build()
     );
 
+        private final Setting<UseHand> breakHand = sgGeneral.add(new EnumSetting.Builder<UseHand>()
+        .name("break-hand")
+        .description("Hand to break.")
+        .defaultValue(UseHand.Main)
+        .build()
+    );
+    
+    private final Setting<UseHand> interactHand = sgGeneral.add(new EnumSetting.Builder<UseHand>()
+        .name("interact-hand")
+        .description("Hand to interact.")
+        .defaultValue(UseHand.Main)
+        .build()
+    );
+
     private final Setting<Boolean> disconnectOnToggle = sgGeneral.add(new BoolSetting.Builder()
         .name("disconnect-on-toggle")
         .description("Automatically disconnects when the module is turned off, for example for not having enough blocks.")
@@ -2914,5 +2928,21 @@ public class HighwayBuilder extends Module {
             if (food) return "food";
             return "unknown";
         }
+    }
+
+    public Hand usedHand()
+    {
+        switch(interactHand.get())
+        {
+            case Main -> {return Hand.MAIN_HAND;}
+            case Off -> {return Hand.OFF_HAND;}
+        }
+        return null;
+    }
+    
+    public enum UseHand
+    {
+        Main,
+        Off
     }
 }
