@@ -199,7 +199,8 @@ public class MinerPlacer extends Module
         {
             if (run.get())
                 execute(script.get().get(a).charAt(b));
-            b++;
+            if (b == script.get().get(a).length())
+                b-1;
         }
         catch(Exception e)
         {}
