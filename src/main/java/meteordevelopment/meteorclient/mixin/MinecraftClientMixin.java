@@ -98,8 +98,8 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     @Inject(at = @At("HEAD"), method = "tick", cancellable = true)
     private void work(CallbackInfo ci)
     {
-        if(Modules.get().get(TickManipulator.class).clientTime())
-        ci.cancel();
+        if(Modules.get().get(TickManipulator.class).clientTime)
+            ci.cancel();
     }
 
     @Inject(at = @At("HEAD"), method = "tick")
