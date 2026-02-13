@@ -194,11 +194,13 @@ public class MinerPlacer extends Module
             case Packet -> {Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), () -> {work();});}    
         }
 
-        if(run.get()) execute(script.get().get(a).charAt(b));
-        if(b != script.get().get(a).length()-1) b++; else go();
-        if (a == script.get().get(a).length()-1 && b == script.get().get(a).charAt(b)) reset();
+        if(run.get())
+            execute(script.get().get(a).charAt(b));
+        
+        if(b != script.get().get(a).length()-1)
+            b++;
 
-/*        try
+/*      try
         {
 
         }
@@ -255,8 +257,8 @@ public class MinerPlacer extends Module
             case 'x': x--; break;
             case 'y': y--; break;
             case 'z': z--; break;
+            case '_': zeroing();
             case ';': reset();
-            case '_': return;  
             case '&': go();
             default: break;
         }
@@ -276,14 +278,14 @@ public class MinerPlacer extends Module
         }
         return null;
     }
-
-    public void reset()
-    {
-        a^=a; b^=b;
-    }
+    
     public void go()
     {
         a++; b^=b;
+    }
+    public void restart()
+    {
+        a^=a; b^=b;
     }
     public void zeroing()
     {
@@ -316,7 +318,7 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton rs = set.add(theme.button("Reset")).expandX().widget(); rs.action = () -> {reset();};
+        WButton rs = set.add(theme.button("Restart")).expandX().widget(); rs.action = () -> {reset();};
         WButton go = set.add(theme.button("Go")).expandX().widget(); go.action = () -> {go();};
 
         return main;
