@@ -194,22 +194,12 @@ public class MinerPlacer extends Module
             case Packet -> {Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), () -> {work();});}    
         }
 
-        if(run.get())
+        if (run.get() && a >= 0 && a < script.get().size())
+        if (b >= 0 && b < script.get().get(a).length())
             execute(script.get().get(a).charAt(b));
-        
-        if(b != script.get().get(a).length()-1)
+
+        if(a >= 0 && a < script.get().size() && b != script.get().get(a).length()-1)
             b++;
-
-/*      try
-        {
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        } */
-
-
     }
 
     private void work()
