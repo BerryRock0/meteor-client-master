@@ -3,11 +3,13 @@ package meteordevelopment.meteorclient.systems.modules.misc;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 
+import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
+import meteordevelopment.meteorclient.events.world.TickEvent;
 
 public class TickManipulator extends Module
 {
@@ -65,27 +67,26 @@ public class TickManipulator extends Module
 	public void clientTime()
     {
         // wait for timer
-		if(clientTimer != (int)endclientdelay.get() && Boolean.TRUE.equals(clientbool.get()))
+		if(clientLoop != (int)endclientdelay.get() && Boolean.TRUE.equals(clientbool.get()))
 		{
 			if ((Boolean)clientincrement.get()) clientLoop--;
             if ((Boolean)clientdecrement.get()) clientLoop++;
 			clientTime = (Boolean)clientqueue.get();
 		}
-		clientLoop = (Integer)beginclientdelay.get();
+		clientLoop = (Integer)beginclientdelay.get().intValue();
         clientTime = (Boolean)clientalways.get();
     }
 
     public void serverTime()
     {
         // wait for timer
-		if(serverTimer != (int)endserverdelay.get() && Boolean.TRUE.equals(serverbool.get()))
+		if(serverLoop != (int)endserverdelay.get() && Boolean.TRUE.equals(serverbool.get()))
 		{
 			if ((Boolean)serverincrement.get()) serverLoop--;
             if ((Boolean)serverdecrement.get()) serverLoop++;
-			serverLoop = (Boolean)serverqueue.get();
+			serverTime = (Boolean)serverqueue.get();
 		}
 		serverLoop = (Integer)beginserverdelay.get();
         serverTime = (Boolean)serveralways.get();
     }
-    
 }
