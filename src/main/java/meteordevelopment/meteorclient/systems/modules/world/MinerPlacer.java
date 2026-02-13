@@ -198,7 +198,8 @@ public class MinerPlacer extends Module
         try
         {
             if (run.get())
-                execute(script.get().get(a).charAt(b)); 
+                execute(script.get().get(a).charAt(b));
+            b++;
         }
         catch(Exception e)
         {}
@@ -254,7 +255,6 @@ public class MinerPlacer extends Module
             case '&': go();
             default: break;
         }
-        b++;
     }
 
     public Direction direction(BlockPos pos)
