@@ -155,6 +155,7 @@ public class MinerPlacer extends Module
 
     public int a,b,x,y,z;
     public BlockPos pos;
+    public boolean c;
 
     public MinerPlacer()
     {
@@ -196,10 +197,11 @@ public class MinerPlacer extends Module
 
         if (run.get() && a >= 0 && a < script.get().size())
         if (b >= 0 && b < script.get().get(a).length())
+        {
             execute(script.get().get(a).charAt(b));
-
-        if(a >= 0 && a < script.get().size() && b != script.get().get(a).length()-1)
-            b++;
+            if (b != script.get().get(a).length()-1)
+            b++;    
+        }   
     }
 
     private void work()
