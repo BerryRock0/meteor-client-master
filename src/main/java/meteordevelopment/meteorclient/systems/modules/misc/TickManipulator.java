@@ -32,6 +32,19 @@ public class TickManipulator extends Module
     public final Setting serverdecrement = sgServer.add(new BoolSetting.Builder().name("server-decrement").description("decrement server time value.").defaultValue(false).build());
     public final Setting serverqueue = sgServer.add(new BoolSetting.Builder().name("server-queue").description("queue returning boolean value.").defaultValue(false).build());
     public final Setting serveralways = sgServer.add(new BoolSetting.Builder().name("server-always").description("always returning boolean value.").defaultValue(false).build());
+
+    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
+        .name("Pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
+        .name("Post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
     
 	public int clientLoop;
     public int serverLoop;
@@ -73,7 +86,7 @@ public class TickManipulator extends Module
             if ((Boolean)clientdecrement.get()) clientLoop++;
 			clientTime = (Boolean)clientqueue.get();
 		}
-		clientLoop = (Integer)beginclientdelay.get().intValue();
+		clientLoop = (Integer)beginclientdelay.get();
         clientTime = (Boolean)clientalways.get();
     }
 
