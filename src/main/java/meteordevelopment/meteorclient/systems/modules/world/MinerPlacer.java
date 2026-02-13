@@ -197,8 +197,8 @@ public class MinerPlacer extends Module
 
         try
         {
+            if (b == script.get().get(a).length()-1) a++; b=0;
             if (run.get()) execute(script.get().get(a).charAt(b));
-            if (b == script.get().get(a).length()) b--;
             b++;
         }
         catch(Exception e)
@@ -272,13 +272,9 @@ public class MinerPlacer extends Module
         return null;
     }
     
-    public void go()
-    {
-        a++; b^=b;
-    }
     public void restart()
     {
-        a^=a; b^=b;
+        a=0; b=0;
     }
     public void zeroing()
     {
@@ -312,7 +308,6 @@ public class MinerPlacer extends Module
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
         WButton rs = set.add(theme.button("Restart")).expandX().widget(); rs.action = () -> {restart();};
-        WButton go = set.add(theme.button("Go")).expandX().widget(); go.action = () -> {go();};
 
         return main;
     }
