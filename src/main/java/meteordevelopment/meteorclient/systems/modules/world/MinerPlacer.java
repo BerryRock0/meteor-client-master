@@ -197,6 +197,7 @@ public class MinerPlacer extends Module
 
         try
         {
+            if (a == script.get().size()-1) a=0;
             if (b == script.get().get(a).length()-1) a++; b=0;
             if (run.get()) execute(script.get().get(a).charAt(b));
             b++;
@@ -252,7 +253,6 @@ public class MinerPlacer extends Module
             case 'z': z--; break;
             case '_': zeroing();
             case ';': restart();
-            case '&': go();
             default: break;
         }
     }
