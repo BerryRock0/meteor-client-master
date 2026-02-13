@@ -27,14 +27,7 @@ public class SpeedMine extends Module {
     private final SettingGroup sgControl = settings.createGroup("Control");
 
 
-    private final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
-        .name("blocks")
-        .description("Selected blocks.")
-        .filter(block -> block.getHardness() > 0)
-        .visible(() -> mode.get() != Mode.Haste)
-        .build()
-    );
-    
+
     public final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
         .name("mode")
         .defaultValue(Mode.Damage)
@@ -49,16 +42,24 @@ public class SpeedMine extends Module {
         .build()
     );
 
+    private final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
+        .name("blocks")
+        .description("Selected blocks.")
+        .filter(block -> block.getHardness() > 0)
+        .visible(() -> mode.get() != Mode.Haste)
+        .build()
+    );
+
      public final Setting<Boolean> listCase = sgGeneral.add(new BoolSetting.Builder()
         .name("list-case")
         .description("Block list case value.")
-        .defaultValue(0)
+        .defaultValue(false)
         .build());
     
      public final Setting<Boolean> listFinal = sgGeneral.add(new BoolSetting.Builder()
         .name("list-final")
         .description("Block list final value.")
-        .defaultValue(0)
+        .defaultValue(false)
         .build());
     
 
