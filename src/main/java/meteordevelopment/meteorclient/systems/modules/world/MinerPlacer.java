@@ -155,8 +155,8 @@ public class MinerPlacer extends Module
 
     public int a,b,x,y,z;
     public BlockPos pos;
-    public boolean c;
-
+    public boolean column,line;
+    
     public MinerPlacer()
     {
         super(Categories.World, "MinerPlacer", "Break or Place in specific coordinate.");
@@ -195,11 +195,17 @@ public class MinerPlacer extends Module
             case Packet -> {Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), () -> {work();});}    
         }
 
-        if (run.get() && a >= 0 && a < script.get().size())
+        if (run.get())
         {
-            execute(script.get().get(a).charAt(b));
-            if (b < script.get().get(a).length()-1 && b != script.get().get(a).length()-1)
-            b++;    
+
+            line = (a >= 0 && a < script.get().size());
+            column = (b >= 0 && b < currentScript.length());
+            
+            if (column)
+                execute(script.get().get(a).charAt(b));
+            
+            if (line && b != script.get().get(a).length()-1)
+                b++;    
         }   
     }
 
