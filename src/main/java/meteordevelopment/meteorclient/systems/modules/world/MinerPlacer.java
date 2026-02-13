@@ -195,18 +195,13 @@ public class MinerPlacer extends Module
             case Packet -> {Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), () -> {work();});}    
         }
 
-        if (run.get())
+        try
         {
-
-            line = (a >= 0 && a < script.get().size());
-            column = (b >= 0 && b < script.get().get(a).length());
-            
-            if (column)
-                execute(script.get().get(a).charAt(b));
-            
-            if (line && b != script.get().get(a).length()-1)
-                b++;    
-        }   
+            if (run.get())
+                execute(script.get().get(a).charAt(b)); 
+        }
+        catch(Exception e)
+        {}
     }
 
     private void work()
@@ -259,6 +254,7 @@ public class MinerPlacer extends Module
             case '&': go();
             default: break;
         }
+        b++;
     }
 
     public Direction direction(BlockPos pos)
