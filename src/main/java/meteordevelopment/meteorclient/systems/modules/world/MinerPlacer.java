@@ -199,7 +199,7 @@ public class MinerPlacer extends Module
         {
 
             line = (a >= 0 && a < script.get().size());
-            column = (b >= 0 && b < currentScript.length());
+            column = (b >= 0 && b < script.get().get(a).length());
             
             if (column)
                 execute(script.get().get(a).charAt(b));
