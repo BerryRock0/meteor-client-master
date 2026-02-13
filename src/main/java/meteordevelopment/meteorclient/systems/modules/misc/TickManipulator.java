@@ -11,6 +11,7 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 
 public class TickManipulator extends Module
 {
+    private final SettingGroup sgControl = settings.createGroup("Control");
     private final SettingGroup sgClient = settings.createGroup("Client");
     private final SettingGroup sgServer = settings.createGroup("Server");
 
@@ -30,38 +31,61 @@ public class TickManipulator extends Module
     public final Setting serverqueue = sgServer.add(new BoolSetting.Builder().name("server-queue").description("queue returning boolean value.").defaultValue(false).build());
     public final Setting serveralways = sgServer.add(new BoolSetting.Builder().name("server-always").description("always returning boolean value.").defaultValue(false).build());
     
-	public int clientTimer;
-    public int serverTimer;
+	public int clientLoop;
+    public int serverLoop;
+    public boolean clientTime;
+    public boolean serverTime;
 
     public TickManipulator()
     {
         super(Categories.Misc, "tick-manipulator", "Manipulates world ticks");
     }
 
-	public boolean clientTime()
+    @EventHandler
+    private void onPreTick(TickEvent.Pre event)
+    {
+        if (pre.get())
+            main();
+    }
+
+    
+    @EventHandler
+    private void onPostTick(TickEvent.Post event)
+    {
+        if (post.get())
+            main();
+    }
+
+    public void main()
+    {
+        clientTime();
+        serverTime();
+    }
+    
+	public void clientTime()
     {
         // wait for timer
 		if(clientTimer != (int)endclientdelay.get() && Boolean.TRUE.equals(clientbool.get()))
 		{
-			if ((Boolean)clientincrement.get()) clientTimer--;
-            if ((Boolean)clientdecrement.get()) clientTimer++;
-			return (Boolean)clientqueue.get();
+			if ((Boolean)clientincrement.get()) clientLoop--;
+            if ((Boolean)clientdecrement.get()) clientLoop++;
+			clientTime = (Boolean)clientqueue.get();
 		}
-		clientTimer = (Integer)beginclientdelay.get();
-        return (Boolean)clientalways.get();
+		clientLoop = (Integer)beginclientdelay.get();
+        clientTime = (Boolean)clientalways.get();
     }
 
-    public boolean serverTime()
+    public void serverTime()
     {
         // wait for timer
 		if(serverTimer != (int)endserverdelay.get() && Boolean.TRUE.equals(serverbool.get()))
 		{
-			if ((Boolean)serverincrement.get()) serverTimer--;
-            if ((Boolean)serverdecrement.get()) serverTimer++;
-			return (Boolean)serverqueue.get();
+			if ((Boolean)serverincrement.get()) serverLoop--;
+            if ((Boolean)serverdecrement.get()) serverLoop++;
+			serverLoop = (Boolean)serverqueue.get();
 		}
-		serverTimer = (Integer)beginserverdelay.get();
-        return (Boolean)serveralways.get();
+		serverLoop = (Integer)beginserverdelay.get();
+        serverTime = (Boolean)serveralways.get();
     }
     
 }
