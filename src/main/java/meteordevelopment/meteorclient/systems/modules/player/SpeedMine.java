@@ -167,8 +167,8 @@ public class SpeedMine extends Module {
             BlockPos pos = im.meteor$getCurrentBreakingBlockPos();
 
             if (pos == null || progress <= 0) return;
-            if (progress >= (float)caseDouble.get())
-                im.meteor$setCurrentBreakingProgress((float)finalDouble);
+            if (progress >= caseDouble.get().floatValue())
+                im.meteor$setCurrentBreakingProgress(finalDouble.get().floatValue());
         }        
     }
 
