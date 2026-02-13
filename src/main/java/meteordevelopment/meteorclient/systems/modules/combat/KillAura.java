@@ -189,6 +189,13 @@ public class KillAura extends Module {
         .build()
     );
 
+    private final Setting<Boolean> ignoreCreative = sgTargeting.add(new BoolSetting.Builder()
+        .name("ignore-creative")
+        .description("Will avoid attacking players in creative mode.")
+        .defaultValue(false)
+        .build()
+    );
+
     // Timing
 
     private final Setting<Boolean> pauseOnLag = sgTiming.add(new BoolSetting.Builder()
@@ -397,7 +404,7 @@ public class KillAura extends Module {
 
         if (!entities.get().contains(entity.getType()))
             return false;
-        if (ignoreNamed.get() && entity.hasCustomName())
+        if (entity.hasCustomName() && ignoreNamed.get())
             return false;
         if (!PlayerUtils.canSeeEntity(entity) && !PlayerUtils.isWithin(entity, wallsRange.get()))
             return false;
@@ -422,7 +429,7 @@ public class KillAura extends Module {
         
         if(entity instanceof PlayerEntity player)
         {
-            if (player.isCreative())
+            if (player.isCreative() && !ignoreCreative.get())
                 return false;
             
             if (!Friends.get().shouldAttack(player))
