@@ -194,17 +194,20 @@ public class MinerPlacer extends Module
             case Packet -> {Rotations.rotate(Rotations.getYaw(pos), Rotations.getPitch(pos), () -> {work();});}    
         }
 
-        try
+        if(run.get()) execute(script.get().get(a).charAt(b));
+        if(b != script.get().get(a).length()-1) b++; else go();
+        if (a == script.get().get(a).length()-1 && b == script.get().get(a).charAt(b)) reset();
+
+/*        try
         {
-            if(run.get())
-                execute(script.get().get(a).charAt(b));
-            if(b != script.get().get(a).length()-1)
-                b++;
+
         }
         catch(Exception e)
         {
             e.printStackTrace();
-        }
+        } */
+
+
     }
 
     private void work()
@@ -281,6 +284,12 @@ public class MinerPlacer extends Module
     public void go()
     {
         a++; b^=b;
+    }
+    public void zeroing()
+    {
+        x=zero.get().getX();
+        y=zero.get().getY();
+        z=zero.get().getZ();
     }
 
     public WWidget getWidget(GuiTheme theme)
