@@ -24,13 +24,8 @@ import static net.minecraft.entity.effect.StatusEffects.HASTE;
 
 public class SpeedMine extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgControl = settings.createGroup("Control");
 
-    public final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
-        .name("mode")
-        .defaultValue(Mode.Damage)
-        .onChanged(mode -> removeHaste())
-        .build()
-    );
 
     private final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
         .name("blocks")
@@ -39,7 +34,13 @@ public class SpeedMine extends Module {
         .visible(() -> mode.get() != Mode.Haste)
         .build()
     );
-
+    
+    public final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
+        .name("mode")
+        .defaultValue(Mode.Damage)
+        .onChanged(mode -> removeHaste())
+        .build()
+    );
     private final Setting<ListMode> blocksFilter = sgGeneral.add(new EnumSetting.Builder<ListMode>()
         .name("blocks-filter")
         .description("How to use the blocks setting.")
@@ -47,6 +48,19 @@ public class SpeedMine extends Module {
         .visible(() -> mode.get() != Mode.Haste)
         .build()
     );
+
+     public final Setting<Boolean> listCase = sgGeneral.add(new BoolSetting.Builder()
+        .name("list-case")
+        .description("Block list case value.")
+        .defaultValue(0)
+        .build());
+    
+     public final Setting<Boolean> listFinal = sgGeneral.add(new BoolSetting.Builder()
+        .name("list-final")
+        .description("Block list final value.")
+        .defaultValue(0)
+        .build());
+    
 
     public final Setting<Double> modifier = sgGeneral.add(new DoubleSetting.Builder()
         .name("modifier")
@@ -83,6 +97,33 @@ public class SpeedMine extends Module {
         .build()
     );
 
+    private final Setting<Double> caseDouble = sgGeneral.add(new DoubleSetting.Builder()
+        .name("progess-checkpoint")
+        .description("Break block after this value.")
+        .visible(() -> mode.get() == Mode.Damage)
+        .build()
+    );
+
+    private final Setting<Double> finalDouble = sgGeneral.add(new DoubleSetting.Builder()
+        .name("final-progress")
+        .description("Set breaking progress value.")
+        .visible(() -> mode.get() == Mode.Damage)
+        .build()
+    );
+
+    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
+        .name("Pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
+        .name("Post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
+
     public SpeedMine() {
         super(Categories.Player, "speed-mine", "Allows you to quickly mine blocks.");
     }
@@ -92,8 +133,24 @@ public class SpeedMine extends Module {
         removeHaste();
     }
 
+
     @EventHandler
-    private void onTick(TickEvent.Pre event) {
+    private void onPreTick(TickEvent.Pre event)
+    {
+        if (pre.get())
+            main();
+    }
+
+    
+    @EventHandler
+    private void onPostTick(TickEvent.Post event)
+    {
+        if (post.get())
+            main();
+    }
+
+    public void main()
+    {
         if (!Utils.canUpdate()) return;
 
         if (mode.get() == Mode.Haste) {
@@ -109,13 +166,14 @@ public class SpeedMine extends Module {
             BlockPos pos = im.meteor$getCurrentBreakingBlockPos();
 
             if (pos == null || progress <= 0) return;
-            if (progress + mc.world.getBlockState(pos).calcBlockBreakingDelta(mc.player, mc.world, pos) >= 0.7f)
-                im.meteor$setCurrentBreakingProgress(1f);
-        }
+            if (progress >= (float)caseDouble.get())
+                im.meteor$setCurrentBreakingProgress((float)finalDouble);
+        }        
     }
 
     @EventHandler
-    private void onPacket(PacketEvent.Send event) {
+    private void onPacket(PacketEvent.Send event)
+    {
         if (!(mode.get() == Mode.Damage) || !grimBypass.get()) return;
 
         // https://github.com/GrimAnticheat/Grim/issues/1296
@@ -131,16 +189,20 @@ public class SpeedMine extends Module {
         if (haste != null && !haste.shouldShowIcon()) mc.player.removeStatusEffect(HASTE);
     }
 
-    public boolean filter(Block block) {
-        if (blocksFilter.get() == ListMode.Blacklist && !blocks.get().contains(block)) return true;
-        return blocksFilter.get() == ListMode.Whitelist && blocks.get().contains(block);
+    public boolean filter(Block block)
+    {
+        if (blocks.get().contains(block))
+            return listCase.get();
+        
+        return listFinal.get();
     }
 
     public boolean instamine() {
         return isActive() && mode.get() == Mode.Damage && instamine.get();
     }
 
-    public enum Mode {
+    public enum Mode
+    {
         Normal,
         Haste,
         Damage
