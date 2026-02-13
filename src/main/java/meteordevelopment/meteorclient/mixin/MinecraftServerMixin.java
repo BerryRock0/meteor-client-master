@@ -60,7 +60,7 @@ public abstract class MinecraftServerMixin
     @Inject(at = @At("HEAD"), method = "tick", cancellable = true)
     private void work(CallbackInfo ci)
     {
-        if(Modules.get().get(TickManipulator.class).serverTime())
-        ci.cancel();
+        if(Modules.get().get(TickManipulator.class).serverLoop)
+            ci.cancel();
     }
 }
