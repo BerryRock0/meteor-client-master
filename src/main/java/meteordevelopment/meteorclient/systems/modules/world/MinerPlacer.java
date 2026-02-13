@@ -197,8 +197,6 @@ public class MinerPlacer extends Module
 
         try
         {
-            if (a == script.get().size()-1) a=0;
-            if (b == script.get().get(a).length()-1) a++; b=0;
             if (run.get()) execute(script.get().get(a).charAt(b));
             if (b != script.get().get(a).length()-1) b++;
         }
@@ -251,8 +249,10 @@ public class MinerPlacer extends Module
             case 'x': x--; break;
             case 'y': y--; break;
             case 'z': z--; break;
-            case '_': zeroing();
+            case '&': next();
+            case '%': zeroing();
             case ';': restart();
+            case '?': return;
             default: break;
         }
     }
@@ -271,7 +271,10 @@ public class MinerPlacer extends Module
         }
         return null;
     }
-    
+    public void next()
+    {
+        a++; b=0;   
+    }
     public void restart()
     {
         a=0; b=0;
