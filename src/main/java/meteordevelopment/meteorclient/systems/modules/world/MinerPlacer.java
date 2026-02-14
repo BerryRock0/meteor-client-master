@@ -127,20 +127,6 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    private final Setting<Boolean> arrayCursorPos = sgDebug.add(new BoolSetting.Builder()
-        .name("array-cursor-position")
-        .description("Renders a block overlay where the obsidian will be placed.")
-        .defaultValue(true)
-        .build()
-    );
-
-    private final Setting<Boolean> blockCursorPos = sgDebug.add(new BoolSetting.Builder()
-        .name("block-cursor-position")
-        .description("Renders a block overlay where the obsidian will be placed.")
-        .defaultValue(true)
-        .build()
-    );
-
     private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
         .description("Renders a block overlay where the obsidian will be placed.")
@@ -187,14 +173,6 @@ public class MinerPlacer extends Module
     public MinerPlacer()
     {
         super(Categories.World, "MinerPlacer", "Break or Place in specific coordinate.");
-    }
-    
-    @Override
-    public String getInfoString()
-    {
-        if(blockCursorPos.get()) Integer.toString(x)+ " "+ Integer.toString(y) +" "+ Integer.toString(z);
-        if(arrayCursorPos.get()) Integer.toString(l)+ " "+ Integer.toString(c);
-        return null;
     }
 
     @EventHandler
