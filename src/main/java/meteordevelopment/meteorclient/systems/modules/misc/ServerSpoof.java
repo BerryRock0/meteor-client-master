@@ -72,37 +72,7 @@ public class ServerSpoof extends Module {
         .build()
     );
 
-    //Session
-    public final Setting<String> accessTokenString = sgSession.add(new StringSetting.Builder()
-        .name("access-token")
-        .description("Specify the access_token that will be send to the server.")
-        .defaultValue("")
-        .build()
-    );
-
-
-    public final Setting<String> clientIdString = sgSession.add(new StringSetting.Builder()
-        .name("client-id")
-        .description("Specify the client_id that will be send to the server.")
-        .defaultValue("")
-        .build()
-    );
-
-
-    public final Setting<String> sessionIdString = sgSession.add(new StringSetting.Builder()
-        .name("session-id")
-        .description("Specify the session_id that will be send to the server.")
-        .defaultValue("")
-        .build()
-    );
-
-    public final Setting<String> usernameString = sgSession.add(new StringSetting.Builder()
-        .name("username")
-        .description("Specify the username that will be send to the server.")
-        .defaultValue("")
-        .build()
-    );
-
+//Session
     public final Setting<String> uuidString = sgSession.add(new StringSetting.Builder()
         .name("uuid")
         .description("Specify the uuid that will be send to the server.")
@@ -110,51 +80,9 @@ public class ServerSpoof extends Module {
         .build()
     );
 
-    public final Setting<String> xuidString = sgSession.add(new StringSetting.Builder()
-        .name("xuid")
-        .description("Specify the xuid that will be send to the server.")
-        .defaultValue("")
-        .build()
-    );
-
-    public final Setting<Boolean> spoofAccessToken = sgSession.add(new BoolSetting.Builder()
-        .name("spoof-access-token")
-        .description("Whether or not to spoof access_token.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> spoofClientId = sgSession.add(new BoolSetting.Builder()
-        .name("spoof-client-id")
-        .description("Whether or not to spoof client_id.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> spoofSessionId = sgSession.add(new BoolSetting.Builder()
-        .name("spoof-session-id")
-        .description("Whether or not to spoof session_id.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> spoofUsername = sgSession.add(new BoolSetting.Builder()
-        .name("spoof-username")
-        .description("Whether or not to spoof username.")
-        .defaultValue(false)
-        .build()
-    );
-
     public final Setting<Boolean> spoofUuid = sgSession.add(new BoolSetting.Builder()
         .name("spoof-uuid")
         .description("Whether or not to spoof uuid.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> spoofXuid = sgSession.add(new BoolSetting.Builder()
-        .name("spoof-xuid")
-        .description("Whether or not to spoof xuid.")
         .defaultValue(false)
         .build()
     );
