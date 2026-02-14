@@ -136,7 +136,7 @@ public class ServerSpoof extends Module {
         {
             event.cancel();
             System.out.println(LoginHelloC2SPacket.name() + " " + LoginHelloC2SPacket.uuid().toString());
-            event.connection.send(new LoginHelloC2SPacket(nameString, UUID.fromString(uuidString)));
+            event.connection.send(new LoginHelloC2SPacket(nameString.get(), UUID.fromString(uuidString.get())));
         }
 
         // we want to accept the pack silently to prevent the server detecting you bypassed it when logging in
