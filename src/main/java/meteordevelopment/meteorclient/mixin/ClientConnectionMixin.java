@@ -71,12 +71,10 @@ public abstract class ClientConnectionMixin
             // Пример: Ищем строку "550e8400-e29b-41d4-a716-446655440000" (UUID как строка)
             // Но помните: в пакетах UUID — это байты, не строка! Это не сработает для реальных пакетов.
             // Для демонстрации ищем как строку, но в реальности конвертируйте в байты.
-            String searchString = packetSpoofer;  // То, что ищем
-            String replaceString = packetSpoofer;  // На что заменяем
         
             // Конвертируем строки в байты (предполагаем UTF-8)
-            byte[] searchBytes = searchString.getBytes(StandardCharsets.UTF_8);
-            byte[] replaceBytes = replaceString.getBytes(StandardCharsets.UTF_8);
+            byte[] searchBytes = packetSpoofer.findSend().getBytes(StandardCharsets.UTF_8);
+            byte[] replaceBytes = packetSpoofer.replaceSend().getBytes(StandardCharsets.UTF_8);
 
             // Ищем и заменяем (простая замена первого вхождения)
             byte[] modifiedBytes = replaceBytesInArray(originalBytes, searchBytes, replaceBytes);
