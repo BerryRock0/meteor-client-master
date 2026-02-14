@@ -33,7 +33,7 @@ import java.util.List;
 
 public class PacketSpoofer extends Module {
     private final SettingGroup sgSend = settings.createGroup("Send");
-    private final SettingGroup sgSend = settings.createGroup("Receive");
+    private final SettingGroup sgReceive = settings.createGroup("Receive");
     private final SettingGroup sgControl = settings.createGroup("Control");
 
     private final Setting<Boolean> spoofSend = sgSend.add(new BoolSetting.Builder()
