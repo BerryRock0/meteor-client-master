@@ -1,7 +1,6 @@
 package meteordevelopment.meteorclient.systems.modules.world;
 
 import java.util.List;
-import java.util.Iterator;
 
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.gui.GuiTheme;
@@ -39,14 +38,14 @@ public class MinerPlacer extends Module
         .build()
     );
     
-    private final Setting<Boolean> mining = sgGeneral.add(new BoolSetting.Builder()
-        .name("breaking")
+    private final Setting<Boolean> miningBlock = sgGeneral.add(new BoolSetting.Builder()
+        .name("breaking-block")
         .description("Break blocks in area.")
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> interacting = sgGeneral.add(new BoolSetting.Builder()
-        .name("interacting")
+    private final Setting<Boolean> interactBlock = sgGeneral.add(new BoolSetting.Builder()
+        .name("interacting-block")
         .description("Intreact blocks in area.")
         .defaultValue(false)
         .build()
@@ -153,14 +152,22 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int a,b,x,y,z;
+    public int c,l,x,y,z;
     public BlockPos pos;
-    public boolean column,line;
+
+
     
     public MinerPlacer()
     {
         super(Categories.World, "MinerPlacer", "Break or Place in specific coordinate.");
     }
+    
+    @Override
+    public String getInfoString()
+    {
+        return Integer.toString(l)+"-"+ Integer.toString(c);
+    }
+    
 
     @EventHandler
     private void onTickPre(TickEvent.Pre event)
@@ -197,8 +204,8 @@ public class MinerPlacer extends Module
 
         try
         {
-            if (run.get()) execute(script.get().get(a).charAt(b));
-            if (b != script.get().get(a).length()-1) b++;
+            if (run.get()) execute(script.get().get(l).charAt(c));
+            if (c != script.get().get(l).length()-1) c++;
         }
         catch(Exception e)
         {}
@@ -243,17 +250,15 @@ public class MinerPlacer extends Module
     { 
         switch (b)
         {
+            case '?': return;
             case 'X': x++; break;
             case 'Y': y++; break;
             case 'Z': z++; break;
             case 'x': x--; break;
             case 'y': y--; break;
-            case 'z': z--; break;
-            case '&': next();
-            case '%': zeroing();
-            case ';': restart();
-            case '?': return;
-            default: break;
+            case 'z': z--; break; 
+            case '%': zeroing(); break;
+            default: c=0; break;
         }
     }
 
@@ -271,14 +276,7 @@ public class MinerPlacer extends Module
         }
         return null;
     }
-    public void next()
-    {
-        a++; b=0;   
-    }
-    public void restart()
-    {
-        a=0; b=0;
-    }
+    
     public void zeroing()
     {
         x=zero.get().getX();
@@ -310,8 +308,11 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton rs = set.add(theme.button("Restart")).expandX().widget(); rs.action = () -> {restart();};
-
+        WButton nl = set.add(theme.button("Line++")).expandX().widget(); nl.action = () -> {l++;};
+        WButton pl = set.add(theme.button("Line--")).expandX().widget(); pl.action = () -> {l--;};
+        WButton lr = set.add(theme.button("Line->0")).expandX().widget(); lr.action = () -> {l=0;};
+        WButton cr = set.add(theme.button("Column->0")).expandX().widget(); cr.action = () -> {c=0;};
+        
         return main;
     }
 
