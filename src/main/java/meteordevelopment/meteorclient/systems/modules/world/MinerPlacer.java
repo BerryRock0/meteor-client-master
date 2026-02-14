@@ -31,6 +31,7 @@ public class MinerPlacer extends Module
     private final SettingGroup sgSettings = settings.createGroup("Settings");
     private final SettingGroup sgScript = settings.createGroup("Script");
     private final SettingGroup sgRender = settings.createGroup("Render");
+    private final SettingGroup sgDebug = settings.createGroup("Debug");
 
     private final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
@@ -106,14 +107,14 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    private final Setting<Integer> line = sgGeneral.add(new IntSetting.Builder()
+    private final Setting<Integer> line = sgScript.add(new IntSetting.Builder()
         .name("line")
         .description("Reset line value.")
         .defaultValue(0)
         .build()
     );
 
-     private final Setting<Integer> column = sgGeneral.add(new IntSetting.Builder()
+     private final Setting<Integer> column = sgScript.add(new IntSetting.Builder()
         .name("column")
         .description("Reset column value.")
         .defaultValue(0)
@@ -126,23 +127,37 @@ public class MinerPlacer extends Module
         .build()
     );
 
+    private final Setting<Boolean> arrayCursorPos = sgRender.add(new BoolSetting.Builder()
+        .name("array-cursor-position")
+        .description("Renders a block overlay where the obsidian will be placed.")
+        .defaultValue(true)
+        .build()
+    );
+
+    private final Setting<Boolean> blockCursorPos = sgRender.add(new BoolSetting.Builder()
+        .name("block-cursor-position")
+        .description("Renders a block overlay where the obsidian will be placed.")
+        .defaultValue(true)
+        .build()
+    );
+
     private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
         .description("Renders a block overlay where the obsidian will be placed.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> placingswing = sgRender.add(new BoolSetting.Builder()
         .name("placing-swing")
         .description("Doing placing swing.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
     private final Setting<Boolean> breakingswing = sgRender.add(new BoolSetting.Builder()
         .name("breaking-swing")
         .description("Doing breaking swing.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
     private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>()
@@ -168,8 +183,6 @@ public class MinerPlacer extends Module
 
     public int c,l,x,y,z;
     public BlockPos pos;
-
-
     
     public MinerPlacer()
     {
@@ -179,9 +192,10 @@ public class MinerPlacer extends Module
     @Override
     public String getInfoString()
     {
-        return Integer.toString(l)+ "|"+ Integer.toString(c);
+        if(blockCursorPos.get()) Integer.toString(x)+ " "+ Integer.toString(y) +" "+ Integer.toString(z);
+        if(arrayCursorPos.get()) Integer.toString(l)+ " "+ Integer.toString(c);
+        return null;
     }
-    
 
     @EventHandler
     private void onTickPre(TickEvent.Pre event)
@@ -218,8 +232,12 @@ public class MinerPlacer extends Module
 
         try
         {
-            if (run.get()) execute(script.get().get(l).charAt(c));
-            if (c != script.get().get(l).length()-1) c++;
+            if (run.get())
+            {
+                execute(script.get().get(l).charAt(c));
+                if (c != script.get().get(l).length()-1)
+                    c++;
+            } 
         }
         catch(Exception e)
         {}
