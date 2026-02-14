@@ -62,7 +62,7 @@ public abstract class SessionMixin
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofUuid.get())
-      cir.setReturnValue((UUID)serverSpoof.uuidString.get());
+      cir.setReturnValue(UUID.fromString(serverSpoof.uuidString.get()));
     return uuid;
   }
   
