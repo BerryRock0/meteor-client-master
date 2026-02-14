@@ -53,42 +53,7 @@ import java.util.Iterator;
 
 @Mixin(ClientConnection.class)
 public abstract class ClientConnectionMixin
-{
-
-    @Inject(method = "send(Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
-    private void spoofSendPacket(Packet<?> packet, CallbackInfo ci)
-    {
-        PacketSpoofer packetSpoofer = Modules.get().get(PacketSpoofer.class);
-        if(packetSpoofer.isActive() && packetSpoofer.spoofSend.get())
-        {
-            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());  // Перехватываем пакет перед отправкой
-            packet.write(buf);  // Сериализуем пакет в буфер
-
-            // Получаем байты пакета
-            byte[] originalBytes = new byte[buf.readableBytes()];
-            buf.readBytes(originalBytes);
-
-            // Пример: Ищем строку "550e8400-e29b-41d4-a716-446655440000" (UUID как строка)
-            // Но помните: в пакетах UUID — это байты, не строка! Это не сработает для реальных пакетов.
-            // Для демонстрации ищем как строку, но в реальности конвертируйте в байты.
-        
-            // Конвертируем строки в байты (предполагаем UTF-8)
-            byte[] searchBytes = packetSpoofer.findSend().getBytes(StandardCharsets.UTF_8);
-            byte[] replaceBytes = packetSpoofer.replaceSend().getBytes(StandardCharsets.UTF_8);
-
-            // Ищем и заменяем (простая замена первого вхождения)
-            byte[] modifiedBytes = replaceBytesInArray(originalBytes, searchBytes, replaceBytes);
-
-            // Если байты изменились, создаём новый буфер и отправляем модифицированный пакет, отменяя оригинальный пакет
-            if (!Arrays.equals(originalBytes, modifiedBytes))
-            {
-                PacketByteBuf newBuf = PacketByteBufs.create();
-                newBuf.writeBytes(modifiedBytes);
-                ci.cancel();
-            }
-        }
-    }
-    
+{    
     // Вспомогательная функция для замены байтов в массиве
     private byte[] replaceBytesInArray(byte[] original, byte[] search, byte[] replace)
     {
