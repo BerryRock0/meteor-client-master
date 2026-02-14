@@ -22,7 +22,7 @@ import meteordevelopment.meteorclient.systems.modules.misc.ServerSpoof;
 @Mixin(Session.class)
 public abstract class SessionMixin
 {
-  @Inject(method = "getAccessToken()Ljava/lang/String;", at=@At("HEAD"))
+  @Inject(method = "getAccessToken()Ljava/lang/String;", at=@At("HEAD"), cancellable = true)
   public void spoofAccessToken(CallbackInfoReturnable<String> cir) 
   {
     if (Modules.get() == null) return;
@@ -31,7 +31,7 @@ public abstract class SessionMixin
       cir.setReturnValue(serverSpoof.accessTokenString.get());
   }
 
-  @Inject(method = "getClientId()Ljava/util/Optional;", at=@At("HEAD"))
+  @Inject(method = "getClientId()Ljava/util/Optional;", at=@At("HEAD"), cancellable = true)
   public void spoofClientId(CallbackInfoReturnable<String> cir)
   {
     if (Modules.get() == null) return;
@@ -40,7 +40,7 @@ public abstract class SessionMixin
       cir.setReturnValue(serverSpoof.clientIdString.get());
   }
   
-  @Inject(method = "getSessionId()Ljava/lang/String;", at=@At("HEAD"))
+  @Inject(method = "getSessionId()Ljava/lang/String;", at=@At("HEAD"), cancellable = true)
   public void spoofSessionId(CallbackInfoReturnable<String> cir)
   {
     if (Modules.get() == null) return;
@@ -49,7 +49,7 @@ public abstract class SessionMixin
       cir.setReturnValue(serverSpoof.sessionIdString.get());
   }
   
-  @Inject(method = "getUsername()Ljava/lang/String;", at=@At("HEAD"))
+  @Inject(method = "getUsername()Ljava/lang/String;", at=@At("HEAD"), cancellable = true)
   public void spoofUsername(CallbackInfoReturnable<String> cir)
   {
     if (Modules.get() == null) return;
@@ -58,7 +58,7 @@ public abstract class SessionMixin
       cir.setReturnValue(serverSpoof.usernameString.get());
   }
   
-  @Inject(method = "getUuidOrNull()Ljava/util/UUID;", at=@At("HEAD"))
+  @Inject(method = "getUuidOrNull()Ljava/util/UUID;", at=@At("HEAD"), cancellable = true)
   public void spoofUuidOrNull(CallbackInfoReturnable<UUID> cir)
   {
     if (Modules.get() == null) return;
@@ -67,7 +67,7 @@ public abstract class SessionMixin
       cir.setReturnValue(UUID.fromString(serverSpoof.uuidString.get()));
   }
   
-  @Inject(method = "getXuid()Ljava/util/Optional;", at=@At("HEAD"))
+  @Inject(method = "getXuid()Ljava/util/Optional;", at=@At("HEAD"), cancellable = true)
   public void spoofXuid(CallbackInfoReturnable<String> cir)
   {
     if (Modules.get() == null) return;
