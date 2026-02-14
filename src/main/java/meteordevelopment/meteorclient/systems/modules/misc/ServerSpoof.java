@@ -135,7 +135,6 @@ public class ServerSpoof extends Module {
         if (event.packet instanceof LoginHelloC2SPacket && spoofLoginHello.get())
         {
             event.cancel();
-            System.out.println(LoginHelloC2SPacket.name() + " " + LoginHelloC2SPacket.uuid().toString());
             event.connection.send(new LoginHelloC2SPacket(nameString.get(), UUID.fromString(uuidString.get())));
         }
 
