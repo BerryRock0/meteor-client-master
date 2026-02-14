@@ -81,7 +81,7 @@ public class PcketSpoofer extends Module {
   
   public String findSend()
   {
-    return findSendString.get()
+    return findSendString.get();
   }
 
   public String replaceSend()
