@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import net.minecraft.client.session.Session;
 
+import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.misc.ServerSpoof;
 
 @Mixin(Session.class)
