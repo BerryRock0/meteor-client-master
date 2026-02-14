@@ -25,6 +25,7 @@ public abstract class SessionMixin
   @Inject(method = "getAccessToken()Ljava/lang/String;", at=@At("HEAD"))
   public void spoofAccessToken(CallbackInfoReturnable<String> cir) 
   {
+    if (Modules.get() == null) return;
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofAccessToken.get())
       cir.setReturnValue(serverSpoof.accessTokenString.get());
@@ -33,6 +34,7 @@ public abstract class SessionMixin
   @Inject(method = "getClientId()Ljava/util/Optional;", at=@At("HEAD"))
   public void spoofClientId(CallbackInfoReturnable<String> cir)
   {
+    if (Modules.get() == null) return;
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofClientId.get())
       cir.setReturnValue(serverSpoof.clientIdString.get());
@@ -41,6 +43,7 @@ public abstract class SessionMixin
   @Inject(method = "getSessionId()Ljava/lang/String;", at=@At("HEAD"))
   public void spoofSessionId(CallbackInfoReturnable<String> cir)
   {
+    if (Modules.get() == null) return;
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofSessionId.get())
       cir.setReturnValue(serverSpoof.sessionIdString.get());
@@ -49,6 +52,7 @@ public abstract class SessionMixin
   @Inject(method = "getUsername()Ljava/lang/String;", at=@At("HEAD"))
   public void spoofUsername(CallbackInfoReturnable<String> cir)
   {
+    if (Modules.get() == null) return;
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofUsername.get())
       cir.setReturnValue(serverSpoof.usernameString.get());
@@ -57,6 +61,7 @@ public abstract class SessionMixin
   @Inject(method = "getUuidOrNull()Ljava/util/UUID;", at=@At("HEAD"))
   public void spoofUuidOrNull(CallbackInfoReturnable<UUID> cir)
   {
+    if (Modules.get() == null) return;
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofUuid.get())
       cir.setReturnValue(UUID.fromString(serverSpoof.uuidString.get()));
@@ -65,6 +70,7 @@ public abstract class SessionMixin
   @Inject(method = "getXuid()Ljava/util/Optional;", at=@At("HEAD"))
   public void spoofXuid(CallbackInfoReturnable<String> cir)
   {
+    if (Modules.get() == null) return;
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofXuid.get())
       cir.setReturnValue(serverSpoof.xuidString.get());
