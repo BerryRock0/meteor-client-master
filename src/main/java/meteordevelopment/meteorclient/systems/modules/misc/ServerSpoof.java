@@ -134,8 +134,18 @@ public class ServerSpoof extends Module {
 
         if (event.packet instanceof LoginHelloC2SPacket && spoofLoginHello.get())
         {
-            event.cancel();
-            event.connection.send(new LoginHelloC2SPacket(nameString.get(), UUID.fromString(uuidString.get())));
+            try
+            {
+                if (uuidString.get() != null && !uuidString.get().isEmpty())
+                {
+                    event.cancel();
+                    event.connection.send(new LoginHelloC2SPacket(nameString.get(), UUID.fromString(uuidString.get())));
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         // we want to accept the pack silently to prevent the server detecting you bypassed it when logging in
