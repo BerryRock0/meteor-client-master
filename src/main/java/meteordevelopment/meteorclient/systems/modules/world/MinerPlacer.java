@@ -127,14 +127,14 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    private final Setting<Boolean> arrayCursorPos = sgRender.add(new BoolSetting.Builder()
+    private final Setting<Boolean> arrayCursorPos = sgDebug.add(new BoolSetting.Builder()
         .name("array-cursor-position")
         .description("Renders a block overlay where the obsidian will be placed.")
         .defaultValue(true)
         .build()
     );
 
-    private final Setting<Boolean> blockCursorPos = sgRender.add(new BoolSetting.Builder()
+    private final Setting<Boolean> blockCursorPos = sgDebug.add(new BoolSetting.Builder()
         .name("block-cursor-position")
         .description("Renders a block overlay where the obsidian will be placed.")
         .defaultValue(true)
