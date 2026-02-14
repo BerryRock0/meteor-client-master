@@ -267,7 +267,7 @@ public class MinerPlacer extends Module
             case 'x': x--; break;
             case 'y': y--; break;
             case 'z': z--; break;
-            case '\': x=zero.get().getX(); break;
+            case '\\': x=zero.get().getX(); break;
             case '|': y=zero.get().getY(); break;
             case '/': z=zero.get().getZ(); break;
             default: c=0; break;
