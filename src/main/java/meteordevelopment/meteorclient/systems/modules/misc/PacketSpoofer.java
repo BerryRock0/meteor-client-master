@@ -31,7 +31,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
-public class PcketSpoofer extends Module {
+public class PacketSpoofer extends Module {
     private final SettingGroup sgSend = settings.createGroup("Send");
     private final SettingGroup sgSend = settings.createGroup("Receive");
     private final SettingGroup sgControl = settings.createGroup("Control");
