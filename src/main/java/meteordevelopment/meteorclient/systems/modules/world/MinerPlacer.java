@@ -38,7 +38,7 @@ public class MinerPlacer extends Module
         .build()
     );
     
-    private final Setting<Boolean> miningBlock = sgGeneral.add(new BoolSetting.Builder()
+    private final Setting<Boolean> breakBlock = sgGeneral.add(new BoolSetting.Builder()
         .name("breaking-block")
         .description("Break blocks in area.")
         .defaultValue(false)
@@ -105,6 +105,20 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
+
+    private final Setting<Integer> line = sgGeneral.add(new IntSetting.Builder()
+        .name("line")
+        .description("Reset line value.")
+        .defaultValue(0)
+        .build()
+    );
+
+     private final Setting<Integer> column = sgGeneral.add(new IntSetting.Builder()
+        .name("column")
+        .description("Reset column value.")
+        .defaultValue(0)
+        .build()
+    );
     
     private final Setting<List<String>> script = sgScript.add(new StringListSetting.Builder()
         .name("script")
@@ -165,7 +179,7 @@ public class MinerPlacer extends Module
     @Override
     public String getInfoString()
     {
-        return Integer.toString(l)+"-"+ Integer.toString(c);
+        return Integer.toString(l)+ "|"+ Integer.toString(c);
     }
     
 
@@ -213,10 +227,10 @@ public class MinerPlacer extends Module
 
     private void work()
     {
-        if(mining.get())
+        if(breakBlock.get())
             BlockUtils.breakBlock(pos, usedBreakHand(), breakingswing.get());
                     
-        if(interacting.get())
+        if(interactBlock.get())
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedInteractHand(), placingswing.get());
     }
 
@@ -256,7 +270,9 @@ public class MinerPlacer extends Module
             case 'Z': z++; break;
             case 'x': x--; break;
             case 'y': y--; break;
-            case 'z': z--; break; 
+            case 'z': z--; break;
+            case 'L': l++; break;
+            case 'l': l--; break;
             case '%': zeroing(); break;
             default: c=0; break;
         }
@@ -284,6 +300,12 @@ public class MinerPlacer extends Module
         z=zero.get().getZ();
     }
 
+    public void setCursor(int line, int column)
+    {
+        l = line;
+        c = column;
+    }
+
     public WWidget getWidget(GuiTheme theme)
     {
         WVerticalList main = theme.verticalList();
@@ -308,10 +330,7 @@ public class MinerPlacer extends Module
         WButton sx = c.add(theme.button("Set_X")).expandX().widget(); sx.action = () -> {x=zero.get().getX();};
         WButton sy = c.add(theme.button("Set_Y")).expandX().widget(); sy.action = () -> {y=zero.get().getY();};
         WButton sz = c.add(theme.button("Set_Z")).expandX().widget(); sz.action = () -> {z=zero.get().getZ();};
-        WButton nl = set.add(theme.button("Line++")).expandX().widget(); nl.action = () -> {l++;};
-        WButton pl = set.add(theme.button("Line--")).expandX().widget(); pl.action = () -> {l--;};
-        WButton lr = set.add(theme.button("Line->0")).expandX().widget(); lr.action = () -> {l=0;};
-        WButton cr = set.add(theme.button("Column->0")).expandX().widget(); cr.action = () -> {c=0;};
+        WButton sc = set.add(theme.button("Set_Cursor")).expandX().widget(); sc.action = () -> {setCursor(line.get(), column.get());};
         
         return main;
     }
