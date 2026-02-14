@@ -24,7 +24,7 @@ public abstract class SessionMixin
   public String spoofAccessToken(String string, CallbackInfoReturnable cir) 
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
-    if(serverSpoof.isActive() && serverSpoof.spoofAccessToken.get()())
+    if(serverSpoof.isActive() && serverSpoof.spoofAccessToken.get())
       cir.setReturnValue(serverSpoof);
     return string;
   }
