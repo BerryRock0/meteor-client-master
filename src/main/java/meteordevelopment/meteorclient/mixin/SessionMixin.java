@@ -35,7 +35,7 @@ public abstract class SessionMixin
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofClientId.get())
-      cir.setReturnValue(Optional.of(serverSpoof.clientIdString.get()));
+      cir.setReturnValue(serverSpoof.clientIdString.get());
   }
   
   @Inject(method = "getSessionId()Ljava/lang/String;", at=@At("HEAD"))
@@ -67,6 +67,6 @@ public abstract class SessionMixin
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofXuid.get())
-      cir.setReturnValue(Optional.of(serverSpoof.xuidString.get()));
+      cir.setReturnValue(serverSpoof.xuidString.get());
   }  
 }
