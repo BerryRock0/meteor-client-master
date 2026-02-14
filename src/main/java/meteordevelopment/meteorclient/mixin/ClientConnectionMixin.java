@@ -8,6 +8,7 @@ package meteordevelopment.meteorclient.mixin;
 import java.util.Arrays;
 import java.nio.charset.StandardCharsets;
 
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,13 +17,12 @@ import io.netty.handler.proxy.Socks4ProxyHandler;
 import io.netty.handler.proxy.Socks5ProxyHandler;
 import io.netty.handler.timeout.TimeoutException;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.ServerConnectEndEvent;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.misc.AntiPacketKick;
+import meteordevelopment.meteorclient.systems.modules.misc.PacketSpoofer;
 import meteordevelopment.meteorclient.systems.proxies.Proxies;
 import meteordevelopment.meteorclient.systems.proxies.Proxy;
 
@@ -58,37 +58,42 @@ public abstract class ClientConnectionMixin
     @Inject(method = "send(Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
     private void spoofSendPacket(Packet<?> packet, CallbackInfo ci)
     {
-        PacketByteBuf buf = PacketByteBufs.create(); // Перехватываем пакет перед отправкой
-        packet.write(buf);  // Сериализуем пакет в буфер
-
-        // Получаем байты пакета
-        byte[] originalBytes = new byte[buf.readableBytes()];
-        buf.readBytes(originalBytes);
-
-        // Пример: Ищем строку "550e8400-e29b-41d4-a716-446655440000" (UUID как строка)
-        // Но помните: в пакетах UUID — это байты, не строка! Это не сработает для реальных пакетов.
-        // Для демонстрации ищем как строку, но в реальности конвертируйте в байты.
-        String searchString = "aa25368a-036e-4eb7-ab83-dc073c0e7a73";  // То, что ищем
-        String replaceString = "ab25368a-036e-4eb7-ab83-dc073c0e7a73";  // На что заменяем
-        
-        // Конвертируем строки в байты (предполагаем UTF-8)
-        byte[] searchBytes = searchString.getBytes(StandardCharsets.UTF_8);
-        byte[] replaceBytes = replaceString.getBytes(StandardCharsets.UTF_8);
-
-        // Ищем и заменяем (простая замена первого вхождения)
-        byte[] modifiedBytes = replaceBytesInArray(originalBytes, searchBytes, replaceBytes);
-
-        // Если байты изменились, создаём новый буфер и отправляем модифицированный пакет, отменяя оригинальный пакет
-        if (!Arrays.equals(originalBytes, modifiedBytes))
+        PacketSpoofer packetSpoofer = Modules.get().get(PacketSpoofer.class);
+        if(packetSpoofer.isActive() && packetSpoofer.spoofSend.get())
         {
-            PacketByteBuf newBuf = PacketByteBufs.create();
-            newBuf.writeBytes(modifiedBytes);
-            ci.cancel();
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());  // Перехватываем пакет перед отправкой
+            packet.write(buf);  // Сериализуем пакет в буфер
+
+            // Получаем байты пакета
+            byte[] originalBytes = new byte[buf.readableBytes()];
+            buf.readBytes(originalBytes);
+
+            // Пример: Ищем строку "550e8400-e29b-41d4-a716-446655440000" (UUID как строка)
+            // Но помните: в пакетах UUID — это байты, не строка! Это не сработает для реальных пакетов.
+            // Для демонстрации ищем как строку, но в реальности конвертируйте в байты.
+            String searchString = packetSpoofer;  // То, что ищем
+            String replaceString = packetSpoofer;  // На что заменяем
+        
+            // Конвертируем строки в байты (предполагаем UTF-8)
+            byte[] searchBytes = searchString.getBytes(StandardCharsets.UTF_8);
+            byte[] replaceBytes = replaceString.getBytes(StandardCharsets.UTF_8);
+
+            // Ищем и заменяем (простая замена первого вхождения)
+            byte[] modifiedBytes = replaceBytesInArray(originalBytes, searchBytes, replaceBytes);
+
+            // Если байты изменились, создаём новый буфер и отправляем модифицированный пакет, отменяя оригинальный пакет
+            if (!Arrays.equals(originalBytes, modifiedBytes))
+            {
+                PacketByteBuf newBuf = PacketByteBufs.create();
+                newBuf.writeBytes(modifiedBytes);
+                ci.cancel();
+            }
         }
     }
     
     // Вспомогательная функция для замены байтов в массиве
-    private byte[] replaceBytesInArray(byte[] original, byte[] search, byte[] replace) {
+    private byte[] replaceBytesInArray(byte[] original, byte[] search, byte[] replace)
+    {
         int index = indexOf(original, search);
         if (index == -1) return original;  // Не найдено
 
@@ -100,9 +105,12 @@ public abstract class ClientConnectionMixin
     }
 
     // Вспомогательная функция для поиска индекса подмассива
-    private int indexOf(byte[] array, byte[] subArray) {
-        for (int i = 0; i <= array.length - subArray.length; i++) {
-            if (Arrays.equals(Arrays.copyOfRange(array, i, i + subArray.length), subArray)) {
+    private int indexOf(byte[] array, byte[] subArray)
+    {
+        for (int i = 0; i <= array.length - subArray.length; i++)
+        {
+            if (Arrays.equals(Arrays.copyOfRange(array, i, i + subArray.length), subArray))
+            {
                 return i;
             }
         }
