@@ -267,9 +267,9 @@ public class MinerPlacer extends Module
             case 'x': x--; break;
             case 'y': y--; break;
             case 'z': z--; break;
-            case 'L': l++; break;
-            case 'l': l--; break;
-            case '%': zeroing(); break;
+            case '\': x=zero.get().getX(); break;
+            case '|': y=zero.get().getY(); break;
+            case '/': z=zero.get().getZ(); break;
             default: c=0; break;
         }
     }
@@ -287,13 +287,6 @@ public class MinerPlacer extends Module
             case West -> {return Direction.WEST;}     
         }
         return null;
-    }
-    
-    public void zeroing()
-    {
-        x=zero.get().getX();
-        y=zero.get().getY();
-        z=zero.get().getZ();
     }
 
     public void setCursor(int line, int column)
