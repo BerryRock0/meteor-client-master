@@ -138,7 +138,7 @@ public class ServerSpoof extends Module {
             {
                 if (uuidString.get() != null && !uuidString.get().isEmpty())
                 {
-                    event.connection.send(new LoginHelloC2SPacket(nameString.get(), UUID.fromString(uuidString.get())));
+                    event.connection.send(new LoginHelloC2SPacket(nameString.get(), UUID.randomUUID()));
                 }
             }
             catch(Exception e)
