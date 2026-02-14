@@ -76,7 +76,7 @@ public class PcketSpoofer extends Module {
 
   public PacketSpoofer()
   {
-    super(Categories.Misc, "server-spoof", "Spoof client brand, resource pack and channels.");
+    super(Categories.Misc, "packet-spoofer", "Spoof packet bytes.");
   }
   
   public String findSend()
