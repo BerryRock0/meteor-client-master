@@ -15,7 +15,7 @@ import meteordevelopment.meteorclient.utils.misc.text.RunnableClickEvent;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.packet.BrandCustomPayload;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.c2s.common.LoginHelloC2SPacket;
+import net.minecraft.network.packet.c2s.login.LoginHelloC2SPacket;
 import net.minecraft.network.packet.c2s.common.ResourcePackStatusC2SPacket;
 import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
 import net.minecraft.text.ClickEvent;
