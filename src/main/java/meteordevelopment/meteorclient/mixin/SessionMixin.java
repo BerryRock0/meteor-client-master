@@ -23,7 +23,7 @@ import meteordevelopment.meteorclient.systems.modules.misc.ServerSpoof;
 public abstract class SessionMixin
 {
   @Inject(method = "getAccessToken()Ljava/lang/String;", at=@At("HEAD"))
-  public void spoofAccessToken(String string, CallbackInfoReturnable<String> cir) 
+  public void spoofAccessToken(CallbackInfoReturnable<String> cir) 
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofAccessToken.get())
@@ -31,7 +31,7 @@ public abstract class SessionMixin
   }
 
   @Inject(method = "getClientId()Ljava/util/Optional;", at=@At("HEAD"))
-  public void spoofClientId(String string, CallbackInfoReturnable<String> cir)
+  public void spoofClientId(CallbackInfoReturnable<String> cir)
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofClientId.get())
@@ -39,7 +39,7 @@ public abstract class SessionMixin
   }
   
   @Inject(method = "getSessionId()Ljava/lang/String;", at=@At("HEAD"))
-  public void spoofSessionId(String string, CallbackInfoReturnable<String> cir)
+  public void spoofSessionId(CallbackInfoReturnable<String> cir)
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofSessionId.get())
@@ -47,7 +47,7 @@ public abstract class SessionMixin
   }
   
   @Inject(method = "getUsername()Ljava/lang/String;", at=@At("HEAD"))
-  public void spoofUsername(String string, CallbackInfoReturnable<String> cir)
+  public void spoofUsername(CallbackInfoReturnable<String> cir)
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofUsername.get())
@@ -55,7 +55,7 @@ public abstract class SessionMixin
   }
   
   @Inject(method = "getUuidOrNull()Ljava/util/UUID;", at=@At("HEAD"))
-  public void spoofUuidOrNull(UUID uuid, CallbackInfoReturnable<UUID> cir)
+  public void spoofUuidOrNull(CallbackInfoReturnable<UUID> cir)
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofUuid.get())
@@ -63,7 +63,7 @@ public abstract class SessionMixin
   }
   
   @Inject(method = "getXuid()Ljava/util/Optional;", at=@At("HEAD"))
-  public void spoofXuid(String string, CallbackInfoReturnable<String> cir)
+  public void spoofXuid(CallbackInfoReturnable<String> cir)
   {
     ServerSpoof serverSpoof = Modules.get().get(ServerSpoof.class);
     if(serverSpoof.isActive() && serverSpoof.spoofXuid.get())
