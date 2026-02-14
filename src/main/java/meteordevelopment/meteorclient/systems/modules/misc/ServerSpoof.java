@@ -15,6 +15,7 @@ import meteordevelopment.meteorclient.utils.misc.text.RunnableClickEvent;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.packet.BrandCustomPayload;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.c2s.common.LoginHelloC2SPacket;
 import net.minecraft.network.packet.c2s.common.ResourcePackStatusC2SPacket;
 import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
 import net.minecraft.text.ClickEvent;
@@ -30,10 +31,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.UUID;
 
 public class ServerSpoof extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgSession = settings.createGroup("Session");
+    private final SettingGroup sgLoginHello = settings.createGroup("LoginHello");
 
     private final Setting<Boolean> spoofBrand = sgGeneral.add(new BoolSetting.Builder()
         .name("spoof-brand")
@@ -71,21 +74,30 @@ public class ServerSpoof extends Module {
         .visible(blockChannels::get)
         .build()
     );
+    
+    //LoginHello
+    private final Setting<Boolean> spoofLoginHello = sgGeneral.add(new BoolSetting.Builder()
+        .name("spoof-login_hello")
+        .description("Whether or not to spoof the brand.")
+        .defaultValue(true)
+        .build()
+    );
+    private final Setting<String> nameString = sgLoginHello.add(new StringSetting.Builder()
+        .name("name")
+        .description("Specify the nickname that will be send to the server.")
+        .defaultValue("vanilla")
+        .visible(spoofLoginHello::get)
+        .build()
+    );
 
-//Session
-    public final Setting<String> uuidString = sgSession.add(new StringSetting.Builder()
+    private final Setting<String> uuidString = sgLoginHello.add(new StringSetting.Builder()
         .name("uuid")
         .description("Specify the uuid that will be send to the server.")
-        .defaultValue("")
+        .defaultValue("vanilla")
+        .visible(spoofLoginHello::get)
         .build()
     );
 
-    public final Setting<Boolean> spoofUuid = sgSession.add(new BoolSetting.Builder()
-        .name("spoof-uuid")
-        .description("Whether or not to spoof uuid.")
-        .defaultValue(false)
-        .build()
-    );
 
     private MutableText msg;
     public boolean silentAcceptResourcePack = false;
@@ -112,13 +124,18 @@ public class ServerSpoof extends Module {
                 }
             }
 
-            if (spoofBrand.get() && id.equals(BrandCustomPayload.ID.id())) {
+            if (spoofBrand.get() && id.equals(BrandCustomPayload.ID.id()))
+            {
                 CustomPayloadC2SPacket spoofedPacket = new CustomPayloadC2SPacket(new BrandCustomPayload(brand.get()));
-
-                // PacketEvent.Send doesn't trigger if we send the packet like this
                 event.connection.send(spoofedPacket, null, true);
                 event.cancel();
             }
+        }
+
+        if (event.packet instanceof LoginHelloC2SPacket && spoofLoginHello.get())
+        {
+            event.cancel();
+            event.connection.send(new LoginHelloC2SPacket(nameString, UUID.fromString(uuidString)));
         }
 
         // we want to accept the pack silently to prevent the server detecting you bypassed it when logging in
