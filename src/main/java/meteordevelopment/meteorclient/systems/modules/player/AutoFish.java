@@ -19,26 +19,14 @@ import meteordevelopment.orbit.EventHandler;
 public class AutoFish extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<Bite> biteMode = sgGeneral.add(new EnumSetting.Builder<Bite>()
-        .name("Bite mode")
-        .description("Chose bite detection mode")
-        .defaultValue(Bite.Sound)
+
+    private final Setting<Double> range = sgGeneral.add(new DoubleSetting.Builder()
+        .name("range")
+        .description("The maximum range of fishing bobber detecting sound.")
+        .defaultValue(0)
         .build()
     );
     
-    private final Setting<Boolean> pre = sgGeneral.add(new BoolSetting.Builder()
-        .name("Pre")
-        .description("Load script before tick.")
-        .defaultValue(false)
-        .build()
-    );
-    private final Setting<Boolean> post = sgGeneral.add(new BoolSetting.Builder()
-        .name("Post")
-        .description("Load script after tick.")
-        .defaultValue(false)
-        .build()
-    );
-
     private final Setting<Integer> castValue = sgGeneral.add(new IntSetting.Builder()
         .name("cast-delay")
         .description("How long to wait between recasts if the bobber fails to land in water.")
@@ -53,34 +41,31 @@ public class AutoFish extends Module {
         .build()
     );
 
+    public double x,y,z;
     public boolean inUse;
     public int catchDelay;
-    public int recastDelay;
+    public int castDelay;
 
     public AutoFish()
     {
         super(Categories.Player, "auto-fish", "Automatically fishes for you.");
     }
-
-    @EventHandler
-    private void onPreTick(TickEvent.Pre event)
-    {
-        if (pre.get())
-            main();
-    }
-
     
-    @EventHandler
-    private void onPostTick(TickEvent.Post event)
+    @EventHandler()
+    private void onReceivePacket(PacketEvent.Receive event)
     {
-        if (post.get())
-            main();
-    }
-    public void main()
-    {   
-        if (biteDetected())
-            tryCatch();
+        if (mc.player.fishHook == null)
+            return;
         
+        if (event.packet instanceof PlaySoundS2CPacket packet)
+        if(packet.getSound().value().id().toString().equalsIgnoreCase("minecraft:entity.fishing_bobber.splash") || packet.getSound().value().id().toString().equalsIgnoreCase("entity.fishing_bobber.splash"))
+            x = packet.getX(); y = packet.getY(); z = packet.getZ();
+        
+        if(mc.player.fishHook.state == FishingBobberEntity.State.BOBBING)    
+        if (minecraft.player.fishHook.squaredDistanceTo(x, y, z) < range.get() || mc.player.fishHook.getHookedEntity() != null) 
+            tryCatch();
+
+            
         if (!inUse)
             tryCast();
     }
@@ -106,20 +91,5 @@ public class AutoFish extends Module {
         castDelay = castValue.get();
         Utils.rightClick();
         inUse = true;   
-    }
-
-    private boolean biteDetected()
-    {
-        switch (biteMode.get())
-        {
-            case Sound -> {return SoundEvent.id().equals(SoundEvents.ENTITY_FISHING_BOBBER_SPLASH);}
-            case Entity -> {return mc.player.fishHook.getHookedEntity() != null;}
-        }
-        return false;
-    }	
-
-    public enum Bite
-    {
-        Sound, Entity   
     }
 }
