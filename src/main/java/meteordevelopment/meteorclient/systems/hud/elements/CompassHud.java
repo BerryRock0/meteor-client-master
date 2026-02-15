@@ -46,7 +46,6 @@ public class CompassHud extends HudElement {
     );
 
     // Scale
-
     private final Setting<Boolean> customScale = sgScale.add(new BoolSetting.Builder()
         .name("custom-scale")
         .description("Apply custom scales to this hud element.")
@@ -72,8 +71,34 @@ public class CompassHud extends HudElement {
         .build()
     );
 
-    // Background
+    private final Setting<Double> compassWidth = sgScale.add(new DoubleSetting.Builder()
+        .name("compass-width")
+        .description("Window width scale of the whole HUD element.")
+        .visible(customScale::get)
+        .defaultValue(100)
+        .onChanged(aDouble -> calculateSize())
+        .build()
+    );
 
+    private final Setting<Double> compassHeight = sgScale.add(new DoubleSetting.Builder()
+        .name("compass-height")
+        .description("Window height scale of the whole HUD element.")
+        .visible(customScale::get)     
+        .defaultValue(100)
+        .onChanged(aDouble -> calculateSize())
+        .build()
+    );
+
+    private final Setting<Double> compassShift = sgScale.add(new DoubleSetting.Builder()
+        .name("compass-shift")
+        .description("SHift scale of the whole HUD element.")
+        .visible(customScale::get)
+        .defaultValue(40)
+        .onChanged(aDouble -> calculateSize())
+        .build()
+    );
+
+    // Background
     private final Setting<Boolean> background = sgBackground.add(new BoolSetting.Builder()
         .name("background")
         .description("Displays background.")
@@ -96,7 +121,7 @@ public class CompassHud extends HudElement {
     }
 
     private void calculateSize() {
-        setSize(getCompassScale()*100, getCompassScale()*100);
+        setSize(getCompassScale()*compassWidth.get(), getCompassScale()*compassHeight.get());
     }
 
     @Override
@@ -129,11 +154,11 @@ public class CompassHud extends HudElement {
     }
 
     private double getX(Direction direction, double yaw) {
-        return Math.sin(getPos(direction, yaw)) * getCompassScale() * 40;
+        return Math.sin(getPos(direction, yaw)) * getCompassScale() * compassShift.get();
     }
 
     private double getY(Direction direction, double yaw, double pitch) {
-        return Math.cos(getPos(direction, yaw)) * Math.sin(pitch) * getCompassScale() * 40;
+        return Math.cos(getPos(direction, yaw)) * Math.sin(pitch) * getCompassScale() * compassShift.get();
     }
 
     private double getPos(Direction direction, double yaw) {
