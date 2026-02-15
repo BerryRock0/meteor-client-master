@@ -279,6 +279,11 @@ public class KillAura extends Module {
         stopAttacking();
     }
 
+
+
+    public void main(){}
+    
+
     @EventHandler
     private void onTick(TickEvent.Pre event)
     {
