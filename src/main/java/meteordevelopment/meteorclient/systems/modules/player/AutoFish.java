@@ -7,9 +7,11 @@ package meteordevelopment.meteorclient.systems.modules.player;
 
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.entity.projectile.FishingBobberEntity;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 
 import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.Utils;
@@ -57,12 +59,14 @@ public class AutoFish extends Module {
         if (mc.player.fishHook == null)
             return;
         
-        if (event.packet instanceof PlaySoundS2CPacket packet)
-        if(packet.getSound().value().id().toString().equalsIgnoreCase("minecraft:entity.fishing_bobber.splash") || packet.getSound().value().id().toString().equalsIgnoreCase("entity.fishing_bobber.splash"))
-            x = packet.getX(); y = packet.getY(); z = packet.getZ();
+        if (event.packet instanceof PlaySoundS2CPacket soundPacket)
+        {
+            if(soundPacket.getSound().value().id().toString().equalsIgnoreCase("minecraft:entity.fishing_bobber.splash") || soundPacket.getSound().value().id().toString().equalsIgnoreCase("entity.fishing_bobber.splash"))
+                x = soundPacket.getX(); y = soundPacket.getY(); z = soundPacket.getZ();
+        }
         
         if(mc.player.fishHook.state == FishingBobberEntity.State.BOBBING)    
-        if (minecraft.player.fishHook.squaredDistanceTo(x, y, z) < range.get() || mc.player.fishHook.getHookedEntity() != null) 
+        if (mc.player.fishHook.squaredDistanceTo(x, y, z) < range.get() || mc.player.fishHook.getHookedEntity() != null) 
             tryCatch();
 
             
