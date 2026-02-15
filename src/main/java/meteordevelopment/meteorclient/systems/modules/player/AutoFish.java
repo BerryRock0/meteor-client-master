@@ -93,7 +93,7 @@ public class AutoFish extends Module {
 
 	private boolean processSoundUpdate(PacketEvent.Receive event)
 	{	
-		if(event.getPacket() instanceof ClientboundSoundPacket sound)
+		if(event.packet instanceof ClientboundSoundPacket sound)
 		if(SoundEvents.FISHING_BOBBER_SPLASH.equals(sound.getSound().value()))
             return true;
         
