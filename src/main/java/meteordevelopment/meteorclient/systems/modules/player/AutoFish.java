@@ -44,7 +44,6 @@ public class AutoFish extends Module {
     );
 
     public double x,y,z;
-    public boolean inUse;
     public int catchDelay;
     public int castDelay;
 
@@ -66,12 +65,11 @@ public class AutoFish extends Module {
         }
         
         if(mc.player.fishHook.state == FishingBobberEntity.State.BOBBING)    
-        if (mc.player.fishHook.squaredDistanceTo(x, y, z) < range.get() || mc.player.fishHook.getHookedEntity() != null) 
+        if (mc.player.fishHook.squaredDistanceTo(x, y, z) < range.get() || mc.player.fishHook.getHookedEntity() != null)
+        {
             tryCatch();
-
-            
-        if (!inUse)
             tryCast();
+        }
     }
 
     public void tryCatch()
@@ -82,7 +80,7 @@ public class AutoFish extends Module {
             return;   
         }
         catchDelay = catchValue.get();
-        Utils.rightClick(); inUse = false;
+        Utils.rightClick();
     }
 
     public void tryCast()
@@ -93,7 +91,6 @@ public class AutoFish extends Module {
             return;   
         }
         castDelay = castValue.get();
-        Utils.rightClick();
-        inUse = true;   
+        Utils.rightClick();  
     }
 }
