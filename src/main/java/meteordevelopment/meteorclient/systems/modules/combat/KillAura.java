@@ -51,7 +51,20 @@ public class KillAura extends Module {
     private final SettingGroup sgTiming = settings.createGroup("Timing");
 
     // General
-
+   private final Setting<Boolean> pre = sgGeneral.add(new BoolSetting.Builder()
+        .name("Pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    private final Setting<Boolean> post = sgGeneral.add(new BoolSetting.Builder()
+        .name("Post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
+    
     private final Setting<AttackItems> attackWhenHolding = sgGeneral.add(new EnumSetting.Builder<AttackItems>()
         .name("attack-when-holding")
         .description("Only attacks an entity when a specified item is in your hand.")
@@ -279,13 +292,22 @@ public class KillAura extends Module {
         stopAttacking();
     }
 
-
-
-    public void main(){}
-    
-
     @EventHandler
-    private void onTick(TickEvent.Pre event)
+    private void onPreTick(TickEvent.Pre event)
+    {
+        if (pre.get())
+            main();
+    }
+
+    
+    @EventHandler
+    private void onPostTick(TickEvent.Post event)
+    {
+        if (post.get())
+            main();
+    }
+
+    public void main()
     {
         if (!mc.player.isAlive() || PlayerUtils.getGameMode() == GameMode.SPECTATOR)
         {
