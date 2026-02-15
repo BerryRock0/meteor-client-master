@@ -115,8 +115,6 @@ public class AutoFish extends Module
             catchDelayLeft -= TickRate.INSTANCE.getTickRate() / 20.0;
             return;
         }
-
-        useRod();
     }
 
     private double randomizeDelay(int delay, int variance)
