@@ -113,7 +113,7 @@ public class AutoFish extends Module
         {
             Utils.rightClick();
             catchDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
-            catched = false;
+            isRodInUse = false;
         }
     }
 
