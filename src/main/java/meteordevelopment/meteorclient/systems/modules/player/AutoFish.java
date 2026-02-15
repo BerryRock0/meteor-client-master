@@ -6,12 +6,12 @@
 package meteordevelopment.meteorclient.systems.modules.player;
 
 import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.events.world.TickEvent;
+import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.orbit.EventHandler;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.world.entity.projectile.FishingHook;
@@ -94,7 +94,7 @@ public class AutoFish extends Module {
 	private boolean processSoundUpdate(PacketEvent.Receive event)
 	{	
 		if(event.packet instanceof ClientboundSoundPacket sound)
-		if(SoundEvents.FISHING_BOBBER_SPLASH.equals(sound.getSound().value()))
+		if(SoundEvents.ENTITY_FISHING_BOBBER_SPLASH.equals(sound.getSound().value()))
             return true;
         
 		return false;
