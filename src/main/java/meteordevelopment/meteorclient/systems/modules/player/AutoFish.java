@@ -52,7 +52,7 @@ public class AutoFish extends Module {
         super(Categories.Player, "auto-fish", "Automatically fishes for you.");
     }
     
-    @EventHandler()
+    @EventHandler
     private void onReceivePacket(PacketEvent.Receive event)
     {        
         if (event.packet instanceof PlaySoundS2CPacket soundPacket)
