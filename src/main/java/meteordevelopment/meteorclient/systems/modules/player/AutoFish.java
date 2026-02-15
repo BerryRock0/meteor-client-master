@@ -54,7 +54,10 @@ public class AutoFish extends Module {
     
     @EventHandler
     private void onReceivePacket(PacketEvent.Receive event)
-    {        
+    {
+        if (mc.player.fishHook == null)
+            return;
+        
         if (event.packet instanceof PlaySoundS2CPacket soundPacket)
         {
             if(soundPacket.getSound().value().id().toString().equalsIgnoreCase("minecraft:entity.fishing_bobber.splash") || soundPacket.getSound().value().id().toString().equalsIgnoreCase("entity.fishing_bobber.splash"))
