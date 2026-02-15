@@ -58,7 +58,7 @@ public class AutoFish extends Module
     );
 
     public double x,y,z;
-    public boolean cat
+    public boolean isRodInUse;
     private double castDelayLeft = 0.0;
     private double catchDelayLeft = 0.0;
     
@@ -77,36 +77,43 @@ public class AutoFish extends Module
             
         }
 
-        tryCast();
-        tryCatch();
+        tryCast(isRodInUse);
+        tryCatch(!isRodInUse);
     }
 
     private void tryCast(boolean a)
     {
-        if (!a)
+        if (a)
             return;
+        
         if (castDelayLeft > 0)
         {
             castDelayLeft -= TickRate.INSTANCE.getTickRate() / 20.0;
             return;
         }
-
-        useRod();
+    
+        Utils.rightClick();
+        castDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
+        isRodInUse = true;
     }
 
 
-    private void tryCatch()
+    private void tryCatch(boolean a)
     {
-        if (mc.player.fishHook == null)
+        if (mc.player == null || mc.player.fishHook == null || a)
             return;
         
-        if(mc.player.fishHook.squaredDistanceTo(x, y, z) <= range.get() || mc.player.fishHook.getHookedEntity() != null)
-            useRod();
-
         if (catchDelayLeft > 0)
         {
             catchDelayLeft -= TickRate.INSTANCE.getTickRate() / 20.0;
             return;
+        }
+
+        if(mc.player.fishHook.squaredDistanceTo(x, y, z) <= range.get() || mc.player.fishHook.getHookedEntity() != null)
+        {
+            Utils.rightClick();
+            catchDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
+            catched = false;
         }
     }
 
@@ -125,12 +132,5 @@ public class AutoFish extends Module
 
         delay += Math.round((float)(norm * variance));
         return Math.max(1, delay);
-    }
-
-    public void useRod()
-    {
-        Utils.rightClick();
-        castDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
-        catched = true;
     }
 }
