@@ -58,7 +58,6 @@ public class AutoFish extends Module
     );
 
     public double x,y,z;
-    public boolean hooked;
     private double castDelayLeft = 0.0;
     private double catchDelayLeft = 0.0;
     
@@ -99,16 +98,6 @@ public class AutoFish extends Module
     {
         if(mc.player.fishHook.squaredDistanceTo(x, y, z) <= range.get() || mc.player.fishHook.getHookedEntity() != null)
             useRod();
-        
-        if (!hooked)
-        {
-            if (((FishingBobberEntityAccessor) mc.player.fishHook).meteor$hasCaughtFish()) 
-            {
-                catchDelayLeft = randomizeDelay(catchDelay.get(), catchDelayVariance.get());
-                hooked = true;
-            }
-            return;
-        }
 
         if (catchDelayLeft > 0)
         {
@@ -137,7 +126,6 @@ public class AutoFish extends Module
     public void useRod()
     {
         Utils.rightClick();
-        hooked = false;
         castDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
     }
 }
