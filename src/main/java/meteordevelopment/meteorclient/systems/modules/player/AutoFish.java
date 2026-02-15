@@ -5,9 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.entity.projectile.FishingHook;
 
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
@@ -113,7 +112,7 @@ public class AutoFish extends Module {
     {
         switch (biteMode.get())
         {
-            case Sound -> {return SoundInstance.getSound().equals(SoundEvents.ENTITY_FISHING_BOBBER_SPLASH);}
+            case Sound -> {return SoundEvent.id().equals(SoundEvents.ENTITY_FISHING_BOBBER_SPLASH);}
             case Entity -> {return mc.player.fishHook.getHookedEntity() != null;}
         }
         return false;
