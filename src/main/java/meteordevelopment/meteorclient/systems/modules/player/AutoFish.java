@@ -43,6 +43,13 @@ public class AutoFish extends Module
         .build()
     );
 
+    private final Setting<Integer> catchDelay = sgGeneral.add(new IntSetting.Builder()
+        .name("catch-delay")
+        .description("How long to wait after hooking a fish to reel it in.")
+        .defaultValue(0)
+        .build()
+    );
+
     private final Setting<Integer> catchDelayVariance = sgGeneral.add(new IntSetting.Builder()
         .name("catch-delay-variance")
         .description("Maximum amount of randomness added to catch delay.")
