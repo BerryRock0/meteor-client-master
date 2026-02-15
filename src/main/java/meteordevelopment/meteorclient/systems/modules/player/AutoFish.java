@@ -65,7 +65,7 @@ public class AutoFish extends Module {
         }
         
         if(mc.player.fishHook.state == FishingBobberEntity.State.BOBBING)    
-        if (mc.player.fishHook.squaredDistanceTo(x, y, z) < range.get() || mc.player.fishHook.getHookedEntity() != null)
+        if (mc.player.fishHook.squaredDistanceTo(x, y, z) <= range.get() || mc.player.fishHook.getHookedEntity() != null)
         {
             tryCatch();
             tryCast();
