@@ -34,13 +34,6 @@ public class SpeedMine extends Module {
         .onChanged(mode -> removeHaste())
         .build()
     );
-    private final Setting<ListMode> blocksFilter = sgGeneral.add(new EnumSetting.Builder<ListMode>()
-        .name("blocks-filter")
-        .description("How to use the blocks setting.")
-        .defaultValue(ListMode.Blacklist)
-        .visible(() -> mode.get() != Mode.Haste)
-        .build()
-    );
 
     private final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
         .name("blocks")
@@ -207,10 +200,5 @@ public class SpeedMine extends Module {
         Normal,
         Haste,
         Damage
-    }
-
-    public enum ListMode {
-        Whitelist,
-        Blacklist
     }
 }
