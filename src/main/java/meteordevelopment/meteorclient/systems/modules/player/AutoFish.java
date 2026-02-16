@@ -77,45 +77,38 @@ public class AutoFish extends Module
             
         }
 
-        tryCast(isRodInUse);
-        tryCatch(!isRodInUse);
-    }
-
-    private void tryCast(boolean a)
-    {
-        if (a)
-            return;
-        
-        if (castDelayLeft > 0)
+        if (!isRodInUse)
         {
-            castDelayLeft -= TickRate.INSTANCE.getTickRate() / 20.0;
-            return;
-        }
+            if (castDelayLeft > 0)
+            {
+                castDelayLeft -= TickRate.INSTANCE.getTickRate() / 20.0;
+                return;
+                }
     
-        Utils.rightClick();
-        castDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
-        isRodInUse = true;
-    }
-
-
-    private void tryCatch(boolean a)
-    {
-        if (mc.player == null || mc.player.fishHook == null || a)
-            return;
-        
-        if (catchDelayLeft > 0)
-        {
-            catchDelayLeft -= TickRate.INSTANCE.getTickRate() / 20.0;
-            return;
-        }
-
-        if(mc.player.fishHook.squaredDistanceTo(x, y, z) <= range.get() || mc.player.fishHook.getHookedEntity() != null)
-        {
             Utils.rightClick();
-            catchDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
-            isRodInUse = false;
+            castDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
+            isRodInUse = true;
+        }
+        else
+        {
+            if (mc.player == null || mc.player.fishHook == null)
+                return;
+        
+            if (catchDelayLeft > 0)
+            {
+                catchDelayLeft -= TickRate.INSTANCE.getTickRate() / 20.0;
+                return;
+            }
+
+            if(mc.player.fishHook.squaredDistanceTo(x, y, z) <= range.get() || ((FishingBobberEntityAccessor) mc.player.fishHook).meteor$hasCaughtFish() || mc.player.fishHook.getHookedEntity() != null)
+            {
+                Utils.rightClick();
+                catchDelayLeft = randomizeDelay(castDelay.get(), castDelayVariance.get());
+                isRodInUse = false;
+            }
         }
     }
+
 
     private double randomizeDelay(int delay, int variance)
     {
