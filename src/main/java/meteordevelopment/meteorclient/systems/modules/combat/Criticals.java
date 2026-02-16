@@ -36,7 +36,7 @@ public class Criticals extends Module {
         .build()
     );
 
-    private final Setting<Boolean> constant = sgGeneral.add(new BoolSetting.Builder()
+    public final Setting<Boolean> constant = sgGeneral.add(new BoolSetting.Builder()
         .name("constant")
         .description("Constant critical hit using mixin.")
         .defaultValue(false)
