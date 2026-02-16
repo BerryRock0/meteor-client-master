@@ -82,8 +82,8 @@ public class TickManipulator extends Module
         // wait for timer
 		if(clientLoop != (int)endclientdelay.get() && Boolean.TRUE.equals(clientbool.get()))
 		{
-			if ((Boolean)clientincrement.get()) clientLoop--;
-            if ((Boolean)clientdecrement.get()) clientLoop++;
+			if ((Boolean)clientincrement.get()) clientLoop++;
+            if ((Boolean)clientdecrement.get()) clientLoop--;
 			clientTime = (Boolean)clientqueue.get();
 		}
 		clientLoop = (Integer)beginclientdelay.get();
@@ -95,8 +95,8 @@ public class TickManipulator extends Module
         // wait for timer
 		if(serverLoop != (int)endserverdelay.get() && Boolean.TRUE.equals(serverbool.get()))
 		{
-			if ((Boolean)serverincrement.get()) serverLoop--;
-            if ((Boolean)serverdecrement.get()) serverLoop++;
+			if ((Boolean)serverincrement.get()) serverLoop++;
+            if ((Boolean)serverdecrement.get()) serverLoop--;
 			serverTime = (Boolean)serverqueue.get();
 		}
 		serverLoop = (Integer)beginserverdelay.get();
