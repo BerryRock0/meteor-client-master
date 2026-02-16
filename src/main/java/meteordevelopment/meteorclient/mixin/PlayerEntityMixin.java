@@ -16,6 +16,7 @@ import meteordevelopment.meteorclient.systems.modules.movement.NoSlow;
 import meteordevelopment.meteorclient.systems.modules.movement.Sprint;
 import meteordevelopment.meteorclient.systems.modules.player.Reach;
 import meteordevelopment.meteorclient.systems.modules.player.SpeedMine;
+import meteordevelopment.meteorclient.systems.modules.combat.Criticals;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -125,5 +126,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         if (Modules.get().get(Reach.class).isActive())
            return original + Modules.get().get(Reach.class).entityReach.get();
         return original;
+    }
+
+    @Inject(method = "isCriticalHit", at = @At("HEAD"), cancellable = true)
+    private void alwaysCriticalHit(Entity entity, CallbackInfoReturnable<Boolean> cir)
+    {
+        Criticals criticals = Modules.get().get(Criticals.class);
+        if (criticals.isActive() && criticals.constant.get())
+            cir.setReturnValue(true);
     }
 }
