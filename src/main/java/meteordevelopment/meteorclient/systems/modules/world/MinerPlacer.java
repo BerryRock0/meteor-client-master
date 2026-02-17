@@ -100,6 +100,19 @@ public class MinerPlacer extends Module
         .build()
     );
 
+    private final Setting<Boolean> increment = sgSettings.add(new BoolSetting.Builder()
+        .name("increment")
+        .description("Execute script from beginning to end.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> decrement = sgSettings.add(new BoolSetting.Builder()
+        .name("decrement")
+        .description("Execute script from end to beginning.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<Boolean> run = sgScript.add(new BoolSetting.Builder()
         .name("run")
         .description("Fire script execution.")
@@ -211,11 +224,8 @@ public class MinerPlacer extends Module
         try
         {
             if (run.get())
-            {
-                execute(script.get().get(l).charAt(c));
-                if (c != script.get().get(l).length()-1)
-                    c++;
-            } 
+                execute(script.get().get(l).charAt(c), );
+            if (c == script.get().get(l).length()-1) return;
         }
         catch(Exception e)
         {}
@@ -224,10 +234,23 @@ public class MinerPlacer extends Module
     private void work()
     {
         if(breakBlock.get())
+        {
             BlockUtils.breakBlock(pos, usedBreakHand(), breakingswing.get());
-                    
+            if (mc.interactionManager.meteor$getBreakingProgress() >= 1F)
+                step();      
+        }
+
         if(interactBlock.get())
+        {
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedInteractHand(), placingswing.get());
+            step();
+        }  
+    }
+
+    public void step()
+    {
+        if (increment.get()) c++;
+        if (decrement.get()) c--;
     }
 
     public Hand usedInteractHand()
@@ -256,11 +279,10 @@ public class MinerPlacer extends Module
         mc.player.setPitch((float)Rotations.getPitch(pos));
     }
     
-    private void execute(char b)
-    { 
-        switch (b)
+    private void execute(char c)
+    {   
+        switch (c)
         {
-            case '?': return;
             case 'X': x++; break;
             case 'Y': y++; break;
             case 'Z': z++; break;
@@ -269,8 +291,9 @@ public class MinerPlacer extends Module
             case 'z': z--; break;
             case '\\': x=zero.get().getX(); break;
             case '|': y=zero.get().getY(); break;
-            case '/': z=zero.get().getZ(); break;
-            default: c=0; break;
+            case '/': z=zero.get().getZ(); break;  
+            case ';': c=0; break;
+            default: break;
         }
     }
 
