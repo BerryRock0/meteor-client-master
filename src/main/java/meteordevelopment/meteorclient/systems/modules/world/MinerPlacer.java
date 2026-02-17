@@ -101,13 +101,13 @@ public class MinerPlacer extends Module
     );
 
     private final Setting<Boolean> increment = sgSettings.add(new BoolSetting.Builder()
-        .name("increment")
+        .name("always-increment")
         .description("Execute script from beginning to end.")
         .defaultValue(false)
         .build()
     );
     private final Setting<Boolean> decrement = sgSettings.add(new BoolSetting.Builder()
-        .name("decrement")
+        .name("always-decrement")
         .description("Execute script from end to beginning.")
         .defaultValue(false)
         .build()
@@ -225,7 +225,9 @@ public class MinerPlacer extends Module
         {
             if (run.get())
                 execute(script.get().get(l).charAt(c));
-            if (c == script.get().get(l).length()-1) return;
+            if (c == script.get().get(l).length()-1) 
+                
+                return;
         }
         catch(Exception e)
         {}
@@ -234,23 +236,18 @@ public class MinerPlacer extends Module
     private void work()
     {
         if(breakBlock.get())
-        {
             BlockUtils.breakBlock(pos, usedBreakHand(), breakingswing.get());
-            if (mc.interactionManager.meteor$getBreakingProgress() >= 1F)
-                step();      
-        }
 
         if(interactBlock.get())
-        {
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedInteractHand(), placingswing.get());
-            step();
-        }  
+            
+        step();
     }
 
     public void step()
     {
-        if (increment.get()) c++;
-        if (decrement.get()) c--;
+        if (increment.get() || mc.interactionManager.meteor$getBreakingProgress() >= 1F) c++;
+        if (decrement.get() || mc.interactionManager.meteor$getBreakingProgress() >= 1F) c--;
     }
 
     public Hand usedInteractHand()
