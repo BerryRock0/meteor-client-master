@@ -144,7 +144,6 @@ public class Flight extends Module {
         {
             case None -> {}    
             case Normal -> {mc.player.getAbilities().flying = false; mc.player.getAbilities().allowFlying = false;}
-            case Packet -> {(ClientPlayerEntityAccessor) mc.player).meteor$setTicksSinceLastPositionPacketSent(ticksSinceLastPos.get());}
         }
 
         switch (mode.get())
@@ -190,8 +189,7 @@ public class Flight extends Module {
 
     public enum AntiKickMode
     {
-        Normal,
-        Packet,
-        None
+        None,
+        Normal
     }
 }
