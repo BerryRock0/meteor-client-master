@@ -23,6 +23,7 @@ import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 public class Telekinesis extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgBounds = settings.createGroup("Bounds");
+    private final SettingGroup sgFunctions = settings.createGroup("Functions");
     
    public final Setting<Vector3d> velocity = sgGeneral.add(new Vector3dSetting.Builder()
         .name("velocity")
@@ -79,6 +80,19 @@ public class Telekinesis extends Module {
     private final Setting<List<String>> uuids = sgBounds.add(new StringListSetting.Builder()
         .name("uuids")
         .description("setting commands")
+        .build()
+    );
+
+    public final Setting<Boolean> axis = sgFunctions.add(new BoolSetting.Builder()
+        .name("axis-move")
+        .description("Manipulate entity speeds.")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> angle = sgFunctions.add(new BoolSetting.Builder()
+        .name("angle-move")
+        .description("Change entity angles.")
+        .defaultValue(false)
         .build()
     );
     
