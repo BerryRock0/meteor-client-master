@@ -11,7 +11,6 @@ import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.entity.DropItemsEvent;
 import meteordevelopment.meteorclient.events.entity.player.ClipAtLedgeEvent;
 import meteordevelopment.meteorclient.systems.modules.Modules;
-import meteordevelopment.meteorclient.systems.modules.movement.Flight;
 import meteordevelopment.meteorclient.systems.modules.movement.NoSlow;
 import meteordevelopment.meteorclient.systems.modules.movement.Sprint;
 import meteordevelopment.meteorclient.systems.modules.player.Reach;
