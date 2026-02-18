@@ -97,14 +97,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         return original;
     }
 
-    @Inject(method = "getOffGroundSpeed", at = @At("HEAD"), cancellable = true)
-    private void onGetOffGroundSpeed(CallbackInfoReturnable<Float> info) {
-        if (!getEntityWorld().isClient()) return;
-
-        float speed = Modules.get().get(Flight.class).getOffGroundSpeed();
-        if (speed != -1) info.setReturnValue(speed);
-    }
-
     @WrapWithCondition(method = "knockbackTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;setVelocity(Lnet/minecraft/util/math/Vec3d;)V"))
     private boolean keepSprint$setVelocity(PlayerEntity instance, Vec3d vec3d) {
         return Modules.get().get(Sprint.class).stopSprinting();
