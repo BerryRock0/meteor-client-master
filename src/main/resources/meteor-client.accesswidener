@@ -36,7 +36,7 @@ accessible   class   net/minecraft/entity/projectile/FishingBobberEntity$State
 accessible   field   net/minecraft/entity/projectile/FishingBobberEntity state Lnet/minecraft/entity/projectile/FishingBobberEntity$State;
 
 accessible   method  net/minecraft/client/network/ClientPlayerInteractionManager sendSequencedPacket (Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/client/network/SequencedPacketCreator;)V
-
+accessible   field   net/minecraft/client/network/ClientPlayerInteractionManager currentBreakingProgress F
 accessible   class   net/minecraft/client/gui/DrawContext$ScissorStack
 accessible   field   net/minecraft/client/render/RenderSetup outputTarget Lnet/minecraft/client/render/OutputTarget;
 
