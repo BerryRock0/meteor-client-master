@@ -63,7 +63,6 @@ public abstract class EntityMixin {
     private void isTouchingWater(CallbackInfoReturnable<Boolean> info) {
         if ((Object) this != mc.player) return;
 
-        if (Modules.get().get(Flight.class).isActive()) info.setReturnValue(false);
         if (Modules.get().get(NoSlow.class).fluidDrag()) info.setReturnValue(false);
     }
 
@@ -71,7 +70,6 @@ public abstract class EntityMixin {
     private void isInLava(CallbackInfoReturnable<Boolean> info) {
         if ((Object) this != mc.player) return;
 
-        if (Modules.get().get(Flight.class).isActive()) info.setReturnValue(false);
         if (Modules.get().get(NoSlow.class).fluidDrag()) info.setReturnValue(false);
     }
 
@@ -100,7 +98,6 @@ public abstract class EntityMixin {
         if ((Object) this != mc.player) return submerged;
 
         if (Modules.get().get(NoSlow.class).fluidDrag()) return false;
-        if (Modules.get().get(Flight.class).isActive()) return false;
         return submerged;
     }
 
