@@ -300,8 +300,6 @@ public class Jesus extends Module {
             if (vehicle instanceof AbstractBoatEntity) return false;
         }
 
-        if (Modules.get().get(Flight.class).isActive()) return false;
-
         if (dipIfBurning.get() && mc.player.isOnFire()) return false;
 
         if (dipOnSneakWater.get() && mc.options.sneakKey.isPressed()) return false;
