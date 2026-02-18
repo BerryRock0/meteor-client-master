@@ -32,15 +32,22 @@ public class Flight extends Module {
         .build()
     );
 
+
+    private final Setting<Double> speed = sgGeneral.add(new DoubleSetting.Builder()
+        .name("speed")
+        .description("Your speed when flying.")
+        .build()
+    );
+    
     private final Setting<Double> horizontalSpeed = sgGeneral.add(new DoubleSetting.Builder()
         .name("hoirozontal-speed")
-        .description("Your speed when flying.")
+        .description("Your horizontal speed when flying.")
         .build()
     );
 
     private final Setting<Double> verticalSpeed = sgGeneral.add(new DoubleSetting.Builder()
         .name("vertical-speed")
-        .description("Your speed when flying.")
+        .description("Your vertical speed when flying.")
         .build()
     );
 
@@ -162,7 +169,7 @@ public class Flight extends Module {
                      return;
                 mc.player.getAbilities().flying = true; 
                 mc.player.getAbilities().allowFlying = true;
-                mc.player.getAbilities().setFlySpeed(speed.get().floatValue());
+                mc.player.getAbilities().setFlySpeed(horizontalSpeed.get().floatValue());
             }
             case Velocity ->
             {
@@ -179,7 +186,7 @@ public class Flight extends Module {
 
     public boolean antiKickTimer()
     {
-        if (akDelay != (int)endakdelay.get() && akEnable.get().booleanValue())
+        if (akDelay != (int)endakdelay.get() && (Boolean)akEnable.get())
         {
             if ((Boolean)akincrement.get()) akDelay++;
             if ((Boolean)akdecrement.get()) akDelay--;
