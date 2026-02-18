@@ -120,14 +120,9 @@ public class NoFall extends Module {
             || mode.get() != Mode.Packet
             || ((IPlayerMoveC2SPacket) event.packet).meteor$getTag() == 1337) return;
 
-
-        if (!Modules.get().isActive(Flight.class)) {
             if (mc.player.isGliding()) return;
             if (mc.player.getVelocity().y > -0.5) return;
             ((PlayerMoveC2SPacketAccessor) event.packet).meteor$setOnGround(true);
-        } else {
-            ((PlayerMoveC2SPacketAccessor) event.packet).meteor$setOnGround(true);
-        }
     }
 
     @EventHandler
