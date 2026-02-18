@@ -32,7 +32,7 @@ public class Flight extends Module {
         .build()
     );
 
-    private final Setting<Double> speed = sgGeneral.add(new DoubleSetting.Builder()
+    private final Setting<Double> horizontalSpeed = sgGeneral.add(new DoubleSetting.Builder()
         .name("hoirozontal-speed")
         .description("Your speed when flying.")
         .build()
@@ -41,6 +41,14 @@ public class Flight extends Module {
     private final Setting<Double> verticalSpeed = sgGeneral.add(new DoubleSetting.Builder()
         .name("vertical-speed")
         .description("Your speed when flying.")
+        .build()
+    );
+
+    private final Setting<Boolean> noSneak = sgGeneral.add(new BoolSetting.Builder()
+        .name("no-sneak")
+        .description("Prevents you from sneaking while flying.")
+        .defaultValue(false)
+        .visible(() -> mode.get() == Mode.Velocity)
         .build()
     );
 
@@ -179,6 +187,18 @@ public class Flight extends Module {
         }
         akDelay = (Integer)beginakdelay.get();
         return (Boolean)akalways.get();
+    }
+
+    public float getOffGroundSpeed()
+    {
+        if (!isActive() || mode.get() != Mode.Velocity)
+            return -1;
+        return speed.get().floatValue();
+    }
+
+    public boolean noSneak()
+    {
+        return isActive() && mode.get() == Mode.Velocity && noSneak.get();
     }
 
     public enum Mode
