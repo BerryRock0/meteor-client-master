@@ -460,7 +460,6 @@ public class Modules extends System<Modules> {
     private void initMovement() {
         add(new AirJump());
         add(new Anchor());
-        add(new AntiVoid());
         add(new AutoJump());
         add(new AutoWalk());
         add(new AutoWasp());
