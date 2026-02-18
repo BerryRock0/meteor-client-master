@@ -31,7 +31,7 @@ public class MinerPlacer extends Module
     private final SettingGroup sgSettings = settings.createGroup("Settings");
     private final SettingGroup sgScript = settings.createGroup("Script");
     private final SettingGroup sgRender = settings.createGroup("Render");
-    private final SettingGroup sgDebug = settings.createGroup("Debug");
+    private final SettingGroup sgTimer = settings.createGroup("Timer");
 
     private final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
@@ -100,22 +100,25 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    private final Setting<Boolean> increment = sgSettings.add(new BoolSetting.Builder()
+
+    
+    //Script
+    private final Setting<Boolean> run = sgScript.add(new BoolSetting.Builder()
+        .name("run")
+        .description("Fire script execution.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> scriptincrement = sgScript.add(new BoolSetting.Builder()
         .name("always-increment")
         .description("Execute script from beginning to end.")
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> decrement = sgSettings.add(new BoolSetting.Builder()
+    private final Setting<Boolean> scriptdecrement = sgScript.add(new BoolSetting.Builder()
         .name("always-decrement")
         .description("Execute script from end to beginning.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> run = sgScript.add(new BoolSetting.Builder()
-        .name("run")
-        .description("Fire script execution.")
         .defaultValue(false)
         .build()
     );
@@ -140,6 +143,34 @@ public class MinerPlacer extends Module
         .build()
     );
 
+    //Timer
+    private final Setting<Integer> begindelay = sgScript.add(new IntSetting.Builder()
+        .name("begin-delay")
+        .description("Script timer begin value")
+        .defaultValue(0)
+        .build()
+    );
+    private final Setting<Integer> begindelay = sgScript.add(new IntSetting.Builder()
+        .name("end-delay")
+        .description("Script timer end value")
+        .defaultValue(0)
+        .build()
+    );
+
+    private final Setting<Boolean> timerincrement = sgScript.add(new BoolSetting.Builder()
+        .name("timer-increment")
+        .description("Execute script from beginning to end.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> timerdecrement = sgScript.add(new BoolSetting.Builder()
+        .name("timer-decrement")
+        .description("Execute script from end to beginning.")
+        .defaultValue(false)
+        .build()
+    );
+
+    //Render
     private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
         .description("Renders a block overlay where the obsidian will be placed.")
@@ -180,7 +211,7 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int c,l,x,y,z;
+    public int c,l,t,x,y,z;
     public BlockPos pos;
     
     public MinerPlacer()
@@ -225,9 +256,8 @@ public class MinerPlacer extends Module
         {
             if (run.get())
                 execute(script.get().get(l).charAt(c));
-            if (c == script.get().get(l).length()-1) 
-                
-                return;
+            if (c != script.get().get(l).length()-1) 
+                step();
         }
         catch(Exception e)
         {}
@@ -240,14 +270,20 @@ public class MinerPlacer extends Module
 
         if(interactBlock.get())
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedInteractHand(), placingswing.get());
-            
-        step();
     }
 
     public void step()
     {
-        if (increment.get() || mc.interactionManager.currentBreakingProgress >= 1F) c++;
-        if (decrement.get() || mc.interactionManager.currentBreakingProgress >= 1F) c--;
+        if (t != (int)enddelay.get())
+        {
+            if(timerincrement.get()) t++;
+            if(timerdecrement.get()) t--;
+            return;
+        }
+        t = (int)begindelay.get();    
+
+        if (scriptincrement.get()) c++;
+        if (scriptdecrement.get()) c--;
     }
 
     public Hand usedInteractHand()
