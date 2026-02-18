@@ -150,7 +150,7 @@ public class MinerPlacer extends Module
         .defaultValue(0)
         .build()
     );
-    private final Setting<Integer> begindelay = sgScript.add(new IntSetting.Builder()
+    private final Setting<Integer> enddelay = sgScript.add(new IntSetting.Builder()
         .name("end-delay")
         .description("Script timer end value")
         .defaultValue(0)
