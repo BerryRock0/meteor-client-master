@@ -246,8 +246,8 @@ public class MinerPlacer extends Module
 
     public void step()
     {
-        if (increment.get() || mc.interactionManager.meteor$getBreakingProgress() >= 1F) c++;
-        if (decrement.get() || mc.interactionManager.meteor$getBreakingProgress() >= 1F) c--;
+        if (increment.get() || mc.interactionManager.currentBreakingProgress >= 1F) c++;
+        if (decrement.get() || mc.interactionManager.currentBreakingProgress >= 1F) c--;
     }
 
     public Hand usedInteractHand()
