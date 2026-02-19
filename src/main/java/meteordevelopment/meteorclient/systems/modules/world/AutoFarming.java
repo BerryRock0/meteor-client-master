@@ -1,12 +1,5 @@
-/*
- * This code partially adapted from Meteor Rejects
- * Original source: https://github.com/AntiCope/meteor-rejects/
- * Credit: Meteor Rejects contributors
- * Heavily modified with additional features by Nora Tweaks
- */
-package me.noramibu.tweaks.modules;
+package meteordevelopment.meteorclient.systems.modules.world;
 
-import me.noramibu.tweaks.NoraTweaks;
 import meteordevelopment.meteorclient.events.entity.player.BreakBlockEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
@@ -16,6 +9,9 @@ import meteordevelopment.meteorclient.utils.player.FindItemResult;
 import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.meteorclient.utils.player.Rotations;
 import meteordevelopment.meteorclient.utils.world.BlockIterator;
+import meteordevelopment.meteorclient.systems.modules.Categories;
+import meteordevelopment.meteorclient.systems.modules.Module;
+
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.*;
 import net.minecraft.item.HoeItem;
@@ -43,18 +39,14 @@ public class AutoFarming extends Module {
     private final Setting<Integer> range = sgGeneral.add(new IntSetting.Builder()
         .name("range")
         .description("Auto farm range.")
-        .defaultValue(4)
-        .min(1)
-        .sliderMax(6)
+        .defaultValue(0)
         .build()
     );
 
     private final Setting<Integer> bpt = sgGeneral.add(new IntSetting.Builder()
         .name("blocks-per-tick")
         .description("Amount of operations that can be applied in one tick.")
-        .min(1)
-        .defaultValue(1)
-        .sliderMax(10)
+        .defaultValue(0)
         .build()
     );
 
@@ -122,9 +114,7 @@ public class AutoFarming extends Module {
     private final Setting<Integer> tallCropMinHeight = sgTallCrops.add(new IntSetting.Builder()
         .name("min-height")
         .description("Minimum total height before harvesting. With min height 2, breaks when at least 2 blocks tall (keeps bottom 1).")
-        .defaultValue(2)
-        .min(2)
-        .sliderRange(2, 10)
+        .defaultValue(0)
         .visible(harvestTallCrops::get)
         .build()
     );
@@ -187,7 +177,7 @@ public class AutoFarming extends Module {
     private static final double REPLANT_MAX_DISTANCE = 32.0;
 
     public AutoFarming() {
-        super(NoraTweaks.CATEGORY, "auto-farming", "All-in-one farm utility.");
+        super(Categories.World, "auto-farming", "All-in-one farm utility.");
     }
 
     @Override
