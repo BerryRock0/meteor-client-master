@@ -254,6 +254,14 @@ public class MinerPlacer extends Module
 
         try
         {
+            if (t != (int)enddelay.get())
+            {
+                if(timerincrement.get()) t++;
+                if(timerdecrement.get()) t--;
+                return;
+            }
+            t = (int)begindelay.get(); 
+            
             if (run.get())
                 execute(script.get().get(l).charAt(c));
             if (c != script.get().get(l).length()-1) 
@@ -274,14 +282,6 @@ public class MinerPlacer extends Module
 
     public void step()
     {
-        if (t != (int)enddelay.get())
-        {
-            if(timerincrement.get()) t++;
-            if(timerdecrement.get()) t--;
-            return;
-        }
-        t = (int)begindelay.get();    
-
         if (scriptincrement.get()) c++;
         if (scriptdecrement.get()) c--;
     }
