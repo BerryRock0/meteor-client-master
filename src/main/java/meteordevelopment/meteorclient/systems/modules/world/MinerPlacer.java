@@ -144,26 +144,26 @@ public class MinerPlacer extends Module
     );
 
     //Timer
-    private final Setting<Integer> begindelay = sgScript.add(new IntSetting.Builder()
+    private final Setting<Integer> begindelay = sgTimer.add(new IntSetting.Builder()
         .name("begin-delay")
         .description("Script timer begin value")
         .defaultValue(0)
         .build()
     );
-    private final Setting<Integer> enddelay = sgScript.add(new IntSetting.Builder()
+    private final Setting<Integer> enddelay = sgTimer.add(new IntSetting.Builder()
         .name("end-delay")
         .description("Script timer end value")
         .defaultValue(0)
         .build()
     );
 
-    private final Setting<Boolean> timerincrement = sgScript.add(new BoolSetting.Builder()
+    private final Setting<Boolean> timerincrement = sgTimer.add(new BoolSetting.Builder()
         .name("timer-increment")
         .description("Execute script from beginning to end.")
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> timerdecrement = sgScript.add(new BoolSetting.Builder()
+    private final Setting<Boolean> timerdecrement = sgTimer.add(new BoolSetting.Builder()
         .name("timer-decrement")
         .description("Execute script from end to beginning.")
         .defaultValue(false)
