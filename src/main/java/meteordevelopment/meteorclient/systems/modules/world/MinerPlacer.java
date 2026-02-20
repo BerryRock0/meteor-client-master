@@ -228,8 +228,8 @@ public class MinerPlacer extends Module
         {            
             if (run.get())
                 execute(script.get().get(l).charAt(c));
-            if (c != script.get().get(l).length()-1) 
-                step();
+            if (c == script.get().get(l).length()-1 || l == script.get().size()-1) 
+                return;
         }
         catch(Exception e)
         {}
@@ -242,12 +242,6 @@ public class MinerPlacer extends Module
 
         if(interactBlock.get())
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedInteractHand(), placingswing.get());
-    }
-
-    public void step()
-    {
-        if (scriptincrement.get()) c++;
-        if (scriptdecrement.get()) c--;
     }
 
     public Hand usedInteractHand()
@@ -288,10 +282,14 @@ public class MinerPlacer extends Module
             case 'z': z--; break;
             case '\\': x=zero.get().getX(); break;
             case '|': y=zero.get().getY(); break;
-            case '/': z=zero.get().getZ(); break;  
-            case ';': c=0; break;
+            case '/': z=zero.get().getZ(); break;
+            case ';': setCursor(line.get(), column.get()); break;
             default: break;
         }
+        if (scriptincrement.get())
+            c++;
+        if (scriptdecrement.get())
+            c--;
     }
 
     public Direction direction(BlockPos pos)
