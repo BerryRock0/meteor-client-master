@@ -242,6 +242,8 @@ public class MinerPlacer extends Module
 
         if(interactBlock.get())
             BlockUtils.interact(new BlockHitResult(pos.toCenterPos(), direction(pos), pos, insideBlock.get()), usedInteractHand(), placingswing.get());
+
+        stepCursor();        
     }
 
     public Hand usedInteractHand()
@@ -286,10 +288,6 @@ public class MinerPlacer extends Module
             case ';': setCursor(line.get(), column.get()); break;
             default: break;
         }
-        if (scriptincrement.get())
-            c++;
-        if (scriptdecrement.get())
-            c--;
     }
 
     public Direction direction(BlockPos pos)
@@ -311,6 +309,14 @@ public class MinerPlacer extends Module
     {
         l = line;
         c = column;
+    }
+
+    public void stepCursor()
+    {
+        if (scriptincrement.get())
+            c++;
+        if (scriptdecrement.get())
+            c--;   
     }
 
     public WWidget getWidget(GuiTheme theme)
