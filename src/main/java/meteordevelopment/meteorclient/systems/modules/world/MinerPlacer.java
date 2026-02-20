@@ -31,7 +31,6 @@ public class MinerPlacer extends Module
     private final SettingGroup sgSettings = settings.createGroup("Settings");
     private final SettingGroup sgScript = settings.createGroup("Script");
     private final SettingGroup sgRender = settings.createGroup("Render");
-    private final SettingGroup sgTimer = settings.createGroup("Timer");
 
     private final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
@@ -143,33 +142,6 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    //Timer
-    private final Setting<Integer> begindelay = sgTimer.add(new IntSetting.Builder()
-        .name("begin-delay")
-        .description("Script timer begin value")
-        .defaultValue(0)
-        .build()
-    );
-    private final Setting<Integer> enddelay = sgTimer.add(new IntSetting.Builder()
-        .name("end-delay")
-        .description("Script timer end value")
-        .defaultValue(0)
-        .build()
-    );
-
-    private final Setting<Boolean> timerincrement = sgTimer.add(new BoolSetting.Builder()
-        .name("timer-increment")
-        .description("Execute script from beginning to end.")
-        .defaultValue(false)
-        .build()
-    );
-    private final Setting<Boolean> timerdecrement = sgTimer.add(new BoolSetting.Builder()
-        .name("timer-decrement")
-        .description("Execute script from end to beginning.")
-        .defaultValue(false)
-        .build()
-    );
-
     //Render
     private final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
@@ -211,7 +183,7 @@ public class MinerPlacer extends Module
         .build()
     );
 
-    public int c,l,t,x,y,z;
+    public int c,l,x,y,z;
     public BlockPos pos;
     
     public MinerPlacer()
@@ -253,15 +225,7 @@ public class MinerPlacer extends Module
         }
 
         try
-        {
-            if (t != (int)enddelay.get())
-            {
-                if(timerincrement.get()) t++;
-                if(timerdecrement.get()) t--;
-                return;
-            }
-            t = (int)begindelay.get(); 
-            
+        {            
             if (run.get())
                 execute(script.get().get(l).charAt(c));
             if (c != script.get().get(l).length()-1) 
