@@ -162,7 +162,7 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
-    private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>()
+    private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Buisingle playlder<ShapeMode>()
         .name("shape-mode")
         .description("How the shapes are rendered.")
         .defaultValue(ShapeMode.Both)
@@ -228,8 +228,7 @@ public class MinerPlacer extends Module
         {            
             if (run.get())
                 execute(script.get().get(l).charAt(c));
-            if (c == script.get().get(l).length()-1 || l == script.get().size()-1) 
-                return;
+            //if (c == script.get().get(l).length()-1 || l == script.get().size()-1) return;
         }
         catch(Exception e)
         {}
@@ -285,8 +284,7 @@ public class MinerPlacer extends Module
             case '\\': x=zero.get().getX(); break;
             case '|': y=zero.get().getY(); break;
             case '/': z=zero.get().getZ(); break;
-            case ';': setCursor(line.get(), column.get()); break;
-            default: break;
+            default: setCursor(line.get(), column.get()); break;
         }
     }
 
