@@ -100,7 +100,6 @@ public class MinerPlacer extends Module
     );
 
 
-    
     //Script
     private final Setting<Boolean> run = sgScript.add(new BoolSetting.Builder()
         .name("run")
@@ -156,12 +155,14 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
+    
     private final Setting<Boolean> breakingswing = sgRender.add(new BoolSetting.Builder()
         .name("breaking-swing")
         .description("Doing breaking swing.")
         .defaultValue(false)
         .build()
     );
+    
     private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>()
         .name("shape-mode")
         .description("How the shapes are rendered.")
@@ -228,7 +229,6 @@ public class MinerPlacer extends Module
         {            
             if (run.get())
                 execute(script.get().get(l).charAt(c));
-            //if (c == script.get().get(l).length()-1 || l == script.get().size()-1) return;
         }
         catch(Exception e)
         {}
@@ -284,7 +284,8 @@ public class MinerPlacer extends Module
             case '\\': x=zero.get().getX(); break;
             case '|': y=zero.get().getY(); break;
             case '/': z=zero.get().getZ(); break;
-            default: setCursor(line.get(), column.get()); break;
+            case ';': setCursor(line.get(), column.get()); break;
+            default: break;
         }
     }
 
