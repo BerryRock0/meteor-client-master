@@ -162,7 +162,7 @@ public class MinerPlacer extends Module
         .defaultValue(false)
         .build()
     );
-    private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Buisingle playlder<ShapeMode>()
+    private final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>()
         .name("shape-mode")
         .description("How the shapes are rendered.")
         .defaultValue(ShapeMode.Both)
