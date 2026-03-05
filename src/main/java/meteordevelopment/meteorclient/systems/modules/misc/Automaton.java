@@ -53,7 +53,6 @@ public class Automaton extends Module
     );
 
     public int cmdindex;
-    public long delay;
     public String cmd;
     public String[] parts;
     public String command;
