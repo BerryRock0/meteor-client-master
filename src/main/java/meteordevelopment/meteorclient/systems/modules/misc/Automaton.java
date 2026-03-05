@@ -1,5 +1,6 @@
 package meteordevelopment.meteorclient.systems.modules.misc;
 
+import java.lang.Thread;
 import java.util.List;
 
 import meteordevelopment.orbit.EventHandler;
@@ -87,14 +88,8 @@ public class Automaton extends Module
             command = parts[0];
             arg = parts[1];
 
-            if (delay < Long.parseLong(parts[2]))
-            {
-                delay++;
-                if(isActive())
-                    execute(command, arg);
-                return;
-            }
-            delay = 0;
+            execute(command, arg);
+            Thread.sleep(Long.parseLong(parts[2]));
             
             if (increment.get()) cmdindex++;
             if (decrement.get()) cmdindex--;
