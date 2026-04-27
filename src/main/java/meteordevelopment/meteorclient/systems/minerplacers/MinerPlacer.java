@@ -15,7 +15,7 @@ import meteordevelopment.meteorclient.utils.misc.ISerializable;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.UUIDUtil;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.core.BlockPos;
