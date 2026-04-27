@@ -33,7 +33,6 @@ import meteordevelopment.meteorclient.systems.modules.player.FastUse;
 import meteordevelopment.meteorclient.systems.modules.player.Multitask;
 import meteordevelopment.meteorclient.systems.modules.render.ESP;
 import meteordevelopment.meteorclient.systems.modules.render.Freecam;
-import meteordevelopment.meteorclient.systems.modules.world.HighwayBuilder;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.misc.CPSUtils;
 import meteordevelopment.meteorclient.utils.misc.MeteorStarscript;
@@ -355,9 +354,8 @@ public abstract class MinecraftMixin implements IMinecraft {
     @Inject(method = "pick", at = @At("HEAD"), cancellable = true)
     private void updateTargetedEntityInvoke(float partialTicks, CallbackInfo ci) {
         Freecam freecam = Modules.get().get(Freecam.class);
-        boolean highwayBuilder = Modules.get().isActive(HighwayBuilder.class);
 
-        if ((freecam.isActive() || highwayBuilder) && this.getCameraEntity() != null && !freecamSet) {
+        if ((freecam.isActive()) && this.getCameraEntity() != null && !freecamSet) {
             ci.cancel();
             Entity cameraE = this.getCameraEntity();
 
@@ -372,19 +370,14 @@ public abstract class MinecraftMixin implements IMinecraft {
             float lastYaw = cameraE.yRotO;
             float lastPitch = cameraE.xRotO;
 
-            if (highwayBuilder) {
-                cameraE.setYRot(this.gameRenderer.getMainCamera().yRot());
-                cameraE.setXRot(this.gameRenderer.getMainCamera().xRot());
-            } else {
-                ((IVec3) cameraE.position()).meteor$set(freecam.pos.x, freecam.pos.y - cameraE.getEyeHeight(cameraE.getPose()), freecam.pos.z);
-                cameraE.xo = freecam.prevPos.x;
-                cameraE.yo = freecam.prevPos.y - cameraE.getEyeHeight(cameraE.getPose());
-                cameraE.zo = freecam.prevPos.z;
-                cameraE.setYRot(freecam.yaw);
-                cameraE.setXRot(freecam.pitch);
-                cameraE.yRotO = freecam.lastYaw;
-                cameraE.xRotO = freecam.lastPitch;
-            }
+            ((IVec3) cameraE.position()).meteor$set(freecam.pos.x, freecam.pos.y - cameraE.getEyeHeight(cameraE.getPose()), freecam.pos.z);
+            cameraE.xo = freecam.prevPos.x;
+            cameraE.yo = freecam.prevPos.y - cameraE.getEyeHeight(cameraE.getPose());
+            cameraE.zo = freecam.prevPos.z;
+            cameraE.setYRot(freecam.yaw);
+            cameraE.setXRot(freecam.pitch);
+            cameraE.yRotO = freecam.lastYaw;
+            cameraE.xRotO = freecam.lastPitch;
 
             freecamSet = true;
             pick(partialTicks);
