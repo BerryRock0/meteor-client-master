@@ -134,7 +134,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         uuid = UUID.randomUUID();
     }
     
-    public MinerPlacer(NbtElement tag)
+    public MinerPlacer(Tag tag)
     {
 	    CompoundTag nbt = (CompoundTag) tag;
         uuid = nbt.get("uuid", UUIDutils.CODEC).orElse(UUID.randomUUID());
