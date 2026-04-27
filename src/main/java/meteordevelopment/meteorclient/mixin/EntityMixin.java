@@ -136,7 +136,7 @@ public abstract class EntityMixin {
     private void onGetPickRadius(CallbackInfoReturnable<Float> cir) {
         double v = Modules.get().get(Hitboxes.class).getEntityValue((Entity) (Object) this);
         if (Modules.get().get(Hitboxes.class).mode.get() == Modules.get().get(Hitboxes.class).mode.get().Margin && v != 0) 
-            info.setReturnValue((float) v);
+            cir.setReturnValue((float) v);
     }
 
     @Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/Entity;getBoundingBox", cancellable = true)
