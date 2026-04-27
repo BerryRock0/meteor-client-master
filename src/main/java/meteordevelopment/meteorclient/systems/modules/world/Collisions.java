@@ -115,9 +115,9 @@ public class Collisions extends Module {
     
     public boolean fullBlock(Block block)
     {
-        if (fullcube.get().contains(block))
-            return isActive() && fullblockcase.get();
-        return isActive() && fullblockfinal.get();   
+        if (fullBlock.get().contains(block))
+            return isActive() && fullBlockCase.get();
+        return isActive() && fullBlockFinal.get();   
     }
     
     public boolean emptyBlock(Block block)
