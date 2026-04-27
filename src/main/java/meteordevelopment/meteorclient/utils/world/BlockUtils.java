@@ -237,10 +237,8 @@ public class BlockUtils {
      * Needs to be used in {@link TickEvent.Pre}
      */
     public static boolean breakBlock(BlockPos blockPos, boolean swing) {
-        if (!canBreak(blockPos, mc.level.getBlockState(blockPos))) return false;
-
         // Creating new instance of block pos because minecraft assigns the parameter to a field, and we don't want it to change when it has been stored in a field somewhere
-        BlockPos pos = blockPos instanceof BlockPos.MutableBlockPos ? new BlockPos(blockPos) : blockPos;
+        BlockPos pos = blockPos instanceof BlockPos.Mutable ? new BlockPos(blockPos) : blockPos;
 
         InstantRebreak ir = Modules.get().get(InstantRebreak.class);
         if (ir != null && ir.isActive() && ir.blockPos.equals(pos) && ir.shouldMine()) {
@@ -248,12 +246,13 @@ public class BlockUtils {
             return true;
         }
 
-        if (mc.gameMode.isDestroying())
-            mc.gameMode.continueDestroyBlock(pos, getDirection(blockPos));
-        else mc.gameMode.startDestroyBlock(pos, getDirection(blockPos));
+        if (mc.interactionManager.isBreakingBlock())
+            mc.interactionManager.updateBlockBreakingProgress(pos, direction);
+        else
+            mc.interactionManager.attackBlock(pos, direction);
 
-        if (swing) mc.player.swing(InteractionHand.MAIN_HAND);
-        else mc.getConnection().send(new ServerboundSwingPacket(InteractionHand.MAIN_HAND));
+        if (swing)
+            mc.player.swingHand(hand);
 
         breaking = true;
         breakingThisTick = true;
