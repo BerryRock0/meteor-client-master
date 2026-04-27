@@ -21,20 +21,20 @@ public class Collisions extends Module {
     private final SettingGroup sgBlock = settings.createGroup("Block");
     private final SettingGroup sgOther = settings.createGroup("Other");
     
-    public final Setting<List<Block>> fullblock = sgBlock.add(new BlockListSetting.Builder()
+    public final Setting<List<Block>> fullBlock = sgBlock.add(new BlockListSetting.Builder()
         .name("full-block")
         .description("What blocks should be added collision box.")
         .build()
     );
     
-    public final Setting<Boolean> fullblockcase = sgBlock.add(new BoolSetting.Builder()
+    public final Setting<Boolean> fullBlockCase = sgBlock.add(new BoolSetting.Builder()
         .name("fullblock-case")
         .description("Switches black/white case.")
         .defaultValue(false)
         .build()
     );
     
-    public final Setting<Boolean> fullblockfinal = sgBlock.add(new BoolSetting.Builder()
+    public final Setting<Boolean> fullBlockFinal = sgBlock.add(new BoolSetting.Builder()
         .name("fullblock-final")
         .description("Switches black/white final.")
         .defaultValue(false)
