@@ -20,6 +20,8 @@ import meteordevelopment.meteorclient.systems.modules.render.ESP;
 import meteordevelopment.meteorclient.systems.modules.render.FreeLook;
 import meteordevelopment.meteorclient.systems.modules.render.Freecam;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
+import meteordevelopment.meteorclient.systems.modules.world.Telekinesis;
+import meteordevelopment.meteorclient.systems.modules.world.Damages;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
 import net.minecraft.client.Camera;
@@ -182,4 +184,17 @@ public abstract class EntityMixin {
             ci.cancel();
         }
     }
+
+    @Inject(at = @At("INVOKE"), method = "Lnet/minecraft/entity/Entity;tick()V", cancellable = true)
+    private void inEntityTick(CallbackInfo ci)
+    {
+		Entity thisObj = (Entity)(Object)this;
+		Telekinesis tk = Modules.get().get(Telekinesis.class);
+        
+		if(!tk.task(thisObj))
+            return;
+        
+        if(tk.axis.get()) thisObj.setVelocity(tk.velocity.get().x, tk.velocity.get().y, tk.velocity.get().z);
+        if(tk.angle.get()) thisObj.setAngles(tk.yaw.get().floatValue(), tk.pitch.get().floatValue());
+	}
 }
