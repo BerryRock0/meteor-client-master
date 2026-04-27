@@ -236,7 +236,7 @@ public class BlockUtils {
     /**
      * Needs to be used in {@link TickEvent.Pre}
      */
-    public static boolean breakBlock(BlockPos blockPos, boolean swing) {
+    public static boolean breakBlock(BlockPos blockPos, Direction direction, InteractionHand hand, boolean swing) {
         // Creating new instance of block pos because minecraft assigns the parameter to a field, and we don't want it to change when it has been stored in a field somewhere
         BlockPos pos = blockPos instanceof BlockPos.Mutable ? new BlockPos(blockPos) : blockPos;
 
