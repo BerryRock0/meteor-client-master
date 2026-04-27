@@ -26,7 +26,7 @@ import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockHitResult;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
