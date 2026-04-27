@@ -252,8 +252,7 @@ public abstract class MinecraftMixin implements IMinecraft {
 
     @Unique
     private boolean HB$stopUsingItem() {
-        HighwayBuilder b = Modules.get().get(HighwayBuilder.class);
-        return !b.isActive() || !b.drawingBow;
+        return false;
     }
 
     @Inject(method = "resizeGui", at = @At("TAIL"))
