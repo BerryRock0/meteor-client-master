@@ -119,7 +119,7 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
     @Override
     public NbtCompound toTag()
     {
-        CompoundTag tag tag = new CompoundTag tag();
+        CompoundTag tag = new CompoundTag();
         tag.put("minerplacers", NbtUtils.listToTag(minerPlacers));
         return tag;
     }
