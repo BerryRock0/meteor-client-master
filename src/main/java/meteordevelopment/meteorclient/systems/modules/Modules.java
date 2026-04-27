@@ -542,6 +542,7 @@ public class Modules extends System<Modules> {
         add(new AutoSmelter());
         add(new BuildHeight());
         add(new Collisions());
+        add(new Damages());
         add(new EndermanLook());
         add(new Flamethrower());
         add(new LiquidFiller());
