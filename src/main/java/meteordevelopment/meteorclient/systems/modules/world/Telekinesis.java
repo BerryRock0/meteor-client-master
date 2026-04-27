@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 
