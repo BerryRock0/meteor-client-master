@@ -18,6 +18,7 @@ import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.phys.AABB;
 
+import org.joml.Vector3d;
 import java.util.Set;
 
 public class Hitboxes extends Module {
@@ -68,9 +69,9 @@ public class Hitboxes extends Module {
     public AABB getEntityBox(Entity entity)
     {
 		if (isActive())
-			return new AABB(entity.boundingBox.minX - box.get().x, entity.boundingBox.minY - box.get().y, entity.boundingBox.minZ - box.get().z, entity.boundingBox.maxX + box.get().x, entity.boundingBox.maxY + box.get().y, entity.boundingBox.maxZ + box.get().z);
+			return new AABB(entity.bb.minX - box.get().x, entity.bb.minY - box.get().y, entity.bb.minZ - box.get().z, entity.bb.maxX + box.get().x, entity.bb.maxY + box.get().y, entity.bb.maxZ + box.get().z);
 			
-		return entity.boundingBox;		
+		return entity.bb;		
 	}
     
     public enum Mode
