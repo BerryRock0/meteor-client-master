@@ -31,6 +31,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -134,8 +135,20 @@ public abstract class EntityMixin {
     @Inject(method = "getPickRadius", at = @At("HEAD"), cancellable = true)
     private void onGetPickRadius(CallbackInfoReturnable<Float> cir) {
         double v = Modules.get().get(Hitboxes.class).getEntityValue((Entity) (Object) this);
-        if (v != 0) cir.setReturnValue((float) v);
+        if (Modules.get().get(Hitboxes.class).mode.get() == Modules.get().get(Hitboxes.class).mode.get().Margin && v != 0) 
+            info.setReturnValue((float) v);
     }
+
+    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/Entity;getBoundingBox", cancellable = true)
+	public final void onGetBoundingBox(CallbackInfoReturnable<Box> cir)
+	{
+        Entity thisObj = (Entity)(Object)this;
+        Box boundingBox = thisObj.boundingBox;
+
+        if(boundingBox.equals(null)) return;
+		if(Modules.get().get(Hitboxes.class).mode.get() == Modules.get().get(Hitboxes.class).mode.get().Box)
+            cir.setReturnValue(Modules.get().get(Hitboxes.class).getEntityBox(thisObj));
+	}
 
     @Inject(method = "isInvisibleTo", at = @At("HEAD"), cancellable = true)
     private void onIsInvisibleTo(Player player, CallbackInfoReturnable<Boolean> cir) {
