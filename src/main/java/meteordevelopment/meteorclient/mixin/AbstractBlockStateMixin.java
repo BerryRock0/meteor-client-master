@@ -10,8 +10,9 @@ import meteordevelopment.meteorclient.systems.modules.render.NoRender;
 import meteordevelopment.meteorclient.systems.modules.world.Collisions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.VoxelShapes;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,10 +40,10 @@ public abstract class AbstractBlockStateMixin
         Collisions coll = Modules.get().get(Collisions.class);
 
 		if(coll.emptyBlock(view.getBlockState(pos).getBlock()))
-            cir.setReturnValue(VoxelShapes.empty());
+            cir.setReturnValue(Shapes.empty());
         
 	    if(coll.fullBlock(view.getBlockState(pos).getBlock()))
-            cir.setReturnValue(VoxelShapes.fullCube());
+            cir.setReturnValue(Shapes.fullCube());
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/ShapeContext;)Lnet/minecraft/util/shape/VoxelShape;", cancellable = true)
@@ -52,9 +53,9 @@ public abstract class AbstractBlockStateMixin
         Collisions coll = Modules.get().get(Collisions.class);
 
 		if(coll.emptyPlayer(view.getBlockState(pos).getBlock()))
-            cir.setReturnValue(VoxelShapes.empty());
+            cir.setReturnValue(Shapes.empty());
         
 	    if(coll.fullPlayer(view.getBlockState(pos).getBlock()))
-            cir.setReturnValue(VoxelShapes.fullCube());
+            cir.setReturnValue(Shapes.fullCube());
 	}
 }
