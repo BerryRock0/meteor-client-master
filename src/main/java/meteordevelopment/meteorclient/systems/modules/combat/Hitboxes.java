@@ -16,6 +16,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.phys.AABB;
 
 import java.util.Set;
 
@@ -68,10 +69,10 @@ public class Hitboxes extends Module {
         return 0;
     }
     
-    public Box getEntityBox(Entity entity)
+    public AABB getEntityBox(Entity entity)
     {
 		if (isActive())
-			return new Box(entity.boundingBox.minX - box.get().x, entity.boundingBox.minY - box.get().y, entity.boundingBox.minZ - box.get().z, entity.boundingBox.maxX + box.get().x, entity.boundingBox.maxY + box.get().y, entity.boundingBox.maxZ + box.get().z);
+			return new AABB(entity.boundingBox.minX - box.get().x, entity.boundingBox.minY - box.get().y, entity.boundingBox.minZ - box.get().z, entity.boundingBox.maxX + box.get().x, entity.boundingBox.maxY + box.get().y, entity.boundingBox.maxZ + box.get().z);
 			
 		return entity.boundingBox;		
 	}
