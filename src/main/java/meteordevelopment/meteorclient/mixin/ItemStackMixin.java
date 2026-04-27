@@ -22,9 +22,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
 import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -61,8 +63,8 @@ public abstract class ItemStackMixin {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "damage(ILnet/minecraft/server/world/ServerWorld;Lnet/minecraft/server/network/ServerPlayerEntity;Ljava/util/function/Consumer;)V", cancellable = true)
-    private void isDamage(int amount, ServerWorld world, @Nullable ServerPlayerEntity player, Consumer<Item> breakCallback, CallbackInfo ci)
+    @Inject(at = @At("HEAD"), method = "applyDamage(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V", cancellable = true)
+    private void isApplyDamage(int amount, ServerLevel level, @Nullable ServerPlayer player, Consumer<Item> breakCallback, CallbackInfo ci)
     {
         ItemStack itemStack = (ItemStack)(Object)this;
         Item thisObj = itemStack.getItem();
