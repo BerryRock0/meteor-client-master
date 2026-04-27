@@ -18,8 +18,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockHitResult;
 
 public class MinerPlacer implements ISerializable<MinerPlacer>
 {
