@@ -137,7 +137,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     public MinerPlacer(Tag tag)
     {
 	    CompoundTag nbt = (CompoundTag) tag;
-        uuid = nbt.get("uuid", UUIDUtil.CODEC).orElse(UUID.randomUUID());
+        uuid = nbt.read("uuid", UUIDUtil.CODEC).orElse(UUID.randomUUID());
         fromTag(nbt);	
 	}
 
@@ -183,7 +183,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     {
         CompoundTag tag = new CompoundTag();
 
-        tag.put("uuid", UUIDUtil.CODEC, uuid);
+        tag.store("uuid", UUIDUtil.CODEC, uuid);
         tag.put("settings", settings.toTag());
 
         return tag;
