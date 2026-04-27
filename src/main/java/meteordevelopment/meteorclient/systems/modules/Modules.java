@@ -549,7 +549,9 @@ public class Modules extends System<Modules> {
         add(new NoGhostBlocks());
         add(new Nuker());
         add(new PacketMine());
+        add(new Quantities());
         add(new StashFinder());
+        add(new Telekinesis());
         add(new SpawnProofer());
         add(new Timer());
         add(new VeinMiner());
