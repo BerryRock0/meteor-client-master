@@ -22,10 +22,6 @@ import java.util.Set;
 
 public class Hitboxes extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgWeapon = settings.createGroup("Weapon Options");
-
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();
-    private final SettingGroup sgWeapon = settings.createGroup("Weapon Options");
 
     private final Setting<Set<EntityType<?>>> entities = sgGeneral.add(new EntityTypeListSetting.Builder()
         .name("entities")
