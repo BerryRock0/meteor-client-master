@@ -31,7 +31,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.util.math.Box;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -140,10 +140,10 @@ public abstract class EntityMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/Entity;getBoundingBox", cancellable = true)
-	public final void onGetBoundingBox(CallbackInfoReturnable<Box> cir)
+	public final void onGetBoundingBox(CallbackInfoReturnable<AABB> cir)
 	{
         Entity thisObj = (Entity)(Object)this;
-        Box boundingBox = thisObj.boundingBox;
+        AABB boundingBox = thisObj.boundingBox;
 
         if(boundingBox.equals(null)) return;
 		if(Modules.get().get(Hitboxes.class).mode.get() == Modules.get().get(Hitboxes.class).mode.get().Box)
