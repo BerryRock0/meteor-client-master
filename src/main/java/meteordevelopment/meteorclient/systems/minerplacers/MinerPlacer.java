@@ -14,10 +14,10 @@ import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.meteorclient.utils.misc.ISerializable;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Uuids;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.UUIDUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.hit.BlockHitResult;
 
@@ -181,16 +181,16 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     @Override
     public NbtCompound toTag()
     {
-        NbtCompound tag = new NbtCompound();
+        CompoundTag tag = new CompoundTag();
 
-        tag.put("uuid", Uuids.INT_STREAM_CODEC, uuid);
+        tag.put("uuid", UUIDUtil.CODEC, uuid);
         tag.put("settings", settings.toTag());
 
         return tag;
     }
 
     @Override
-    public MinerPlacer fromTag(NbtCompound tag)
+    public MinerPlacer fromTag(CompoundTag tag)
     {
         if (tag.contains("settings"))
             settings.fromTag(tag.getCompoundOrEmpty("settings"));
