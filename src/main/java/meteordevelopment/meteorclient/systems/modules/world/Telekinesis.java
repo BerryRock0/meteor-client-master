@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.settings.Setting;
