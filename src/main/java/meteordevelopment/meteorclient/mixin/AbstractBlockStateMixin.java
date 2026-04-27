@@ -7,6 +7,7 @@ package meteordevelopment.meteorclient.mixin;
 
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
+import meteordevelopment.meteorclient.systems.modules.world.Collisions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.VoxelShapes;
@@ -37,23 +38,23 @@ public abstract class AbstractBlockStateMixin
 	    if (Modules.get() == null) return;
         Collisions coll = Modules.get().get(Collisions.class);
 
-		if(coll.emptyBlock(world.getBlockState(pos).getBlock()))
+		if(coll.emptyBlock(view.getBlockState(pos).getBlock()))
             cir.setReturnValue(VoxelShapes.empty());
         
-	    if(coll.fullBlock(world.getBlockState(pos).getBlock()))
+	    if(coll.fullBlock(view.getBlockState(pos).getBlock()))
             cir.setReturnValue(VoxelShapes.fullCube());
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/ShapeContext;)Lnet/minecraft/util/shape/VoxelShape;", cancellable = true)
-	private void onGetCollisionShape(BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir)
+	private void onGetCollisionShape(BlockView view, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
         if (Modules.get() == null) return;
         Collisions coll = Modules.get().get(Collisions.class);
 
-		if(coll.emptyPlayer(world.getBlockState(pos).getBlock()))
+		if(coll.emptyPlayer(view.getBlockState(pos).getBlock()))
             cir.setReturnValue(VoxelShapes.empty());
         
-	    if(coll.fullPlayer(world.getBlockState(pos).getBlock()))
+	    if(coll.fullPlayer(view.getBlockState(pos).getBlock()))
             cir.setReturnValue(VoxelShapes.fullCube());
 	}
 }
