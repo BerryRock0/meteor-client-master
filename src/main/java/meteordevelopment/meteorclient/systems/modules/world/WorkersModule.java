@@ -25,11 +25,11 @@ import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacers;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.Hand;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockHitResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 
 public class WorkersModule extends Module
 {
@@ -238,22 +238,22 @@ public class WorkersModule extends Module
         }
     }
 
-	public Hand usedInteractHand()
+	public InteractionHand usedInteractHand()
     {
         switch(interactHand.get())
         {
-            case Main -> {return Hand.MAIN_HAND;}
-            case Off -> {return Hand.OFF_HAND;}
+            case Main -> {return InteractionHand.MAIN_HAND;}
+            case Off -> {return InteractionHand.OFF_HAND;}
         }
         return null;
     }
 
-    public Hand usedBreakHand()
+    public InteractionHand usedBreakHand()
     {
         switch(breakHand.get())
         {
-            case Main -> {return Hand.MAIN_HAND;}
-            case Off -> {return Hand.OFF_HAND;}
+            case Main -> {return InteractionHand.MAIN_HAND;}
+            case Off -> {return InteractionHand.OFF_HAND;}
         }
         return null;
     }
