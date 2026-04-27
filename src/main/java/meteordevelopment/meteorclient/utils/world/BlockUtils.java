@@ -246,10 +246,10 @@ public class BlockUtils {
             return true;
         }
 
-        if (mc.interactionManager.isBreakingBlock())
-            mc.interactionManager.updateBlockBreakingProgress(pos, direction);
-        else
-            mc.interactionManager.attackBlock(pos, direction);
+        if (mc.gameMode.isDestroying())
+            mc.gameMode.continueDestroyBlock(pos, direction);
+        else 
+            mc.gameMode.startDestroyBlock(pos, direction);
 
         if (swing)
             mc.player.swingHand(hand);
