@@ -107,7 +107,7 @@ public class Telekinesis extends Module {
 
     public boolean inList(Entity entity)
     {
-        if (uuids.get().contains(entity.getUuid().toString()))
+        if (uuids.get().contains(entity.getUUID().toString()))
             return uuidlist.get();
         
         if (entities.get().contains(entity.getType()))
