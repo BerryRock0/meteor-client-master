@@ -179,7 +179,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     }
     
     @Override
-    public NbtCompound toTag()
+    public CompoundTag toTag()
     {
         CompoundTag tag = new CompoundTag();
 
