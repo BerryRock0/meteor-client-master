@@ -14,8 +14,8 @@ import meteordevelopment.meteorclient.utils.misc.NbtUtils;
 import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.orbit.EventPriority;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.CompoundTag;
 import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 
@@ -119,7 +119,7 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
     @Override
     public NbtCompound toTag()
     {
-        NbtCompound tag = new NbtCompound();
+        CompoundTag tag tag = new CompoundTag tag();
         tag.put("minerplacers", NbtUtils.listToTag(minerPlacers));
         return tag;
     }
@@ -129,7 +129,7 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
     {
         minerPlacers.clear();
 
-        for (NbtElement minerPlacerTag : tag.getListOrEmpty("minerplacers"))
+        for (Tag minerPlacerTag : tag.getListOrEmpty("minerplacers"))
         {
             minerPlacers.add(new MinerPlacer(minerPlacerTag));
         }
