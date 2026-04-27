@@ -514,7 +514,7 @@ public class Nuker extends Module {
             mc.gameMode.startPrediction(mc.level, sequence -> new ServerboundPlayerActionPacket(ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, blockPos, BlockUtils.getDirection(blockPos), sequence));
         } else {
             // Legit mine mode
-            BlockUtils.breakBlock(blockPos, swing.get());
+            BlockUtils.breakBlock(blockPos, BlockUtils.getDirection(blockPos), InteractionHand.MAIN_HAND, swing.get());
         }
     }
 
