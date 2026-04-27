@@ -8,7 +8,7 @@ package meteordevelopment.meteorclient.systems.modules.world;
 import java.util.Set;
 import java.util.List;
 
-import net.minecraft.world.block.*;
+import net.minecraft.world.level.block.Block;
 
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
