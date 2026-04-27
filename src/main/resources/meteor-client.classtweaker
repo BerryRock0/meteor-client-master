@@ -35,6 +35,9 @@ accessible   class   com/mojang/blaze3d/opengl/GlCommandEncoder
 # BoundingBox
 accessible   field   net/minecraft/world/entity/Entity bb Lnet/minecraft/world/phys/AABB;
 
+#Rotation
+accessible   method  net/minecraft/world/entity/Entity setRot (FF)V 
+
 # AutoFish#tryCatch
 accessible   class   net/minecraft/world/entity/projectile/FishingHook$FishHookState
 accessible   field   net/minecraft/world/entity/projectile/FishingHook currentState Lnet/minecraft/world/entity/projectile/FishingHook$FishHookState;
