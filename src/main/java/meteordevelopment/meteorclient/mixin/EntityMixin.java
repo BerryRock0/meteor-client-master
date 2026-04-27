@@ -207,7 +207,7 @@ public abstract class EntityMixin {
 		if(!tk.task(thisObj))
             return;
         
-        if(tk.axis.get()) thisObj.setVelocity(tk.velocity.get().x, tk.velocity.get().y, tk.velocity.get().z);
-        if(tk.angle.get()) thisObj.setAngles(tk.yaw.get().floatValue(), tk.pitch.get().floatValue());
+        if(tk.axis.get()) thisObj.setDeltaMovement(new Vec3(tk.velocity.get().x, tk.velocity.get().y, tk.velocity.get().z));
+        if(tk.angle.get()) thisObj.setRot(tk.yaw.get().floatValue(), tk.pitch.get().floatValue());
 	}
 }
