@@ -43,7 +43,7 @@ public abstract class AbstractBlockStateMixin
             cir.setReturnValue(Shapes.empty());
         
 	    if(coll.fullBlock(view.getBlockState(pos).getBlock()))
-            cir.setReturnValue(Shapes.fullCube());
+            cir.setReturnValue(Shapes.block());
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/ShapeContext;)Lnet/minecraft/util/shape/VoxelShape;", cancellable = true)
@@ -56,6 +56,6 @@ public abstract class AbstractBlockStateMixin
             cir.setReturnValue(Shapes.empty());
         
 	    if(coll.fullPlayer(view.getBlockState(pos).getBlock()))
-            cir.setReturnValue(Shapes.fullCube());
+            cir.setReturnValue(Shapes.block());
 	}
 }
