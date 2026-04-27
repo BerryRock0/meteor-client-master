@@ -143,7 +143,7 @@ public abstract class EntityMixin {
 	public final void onGetBoundingBox(CallbackInfoReturnable<AABB> cir)
 	{
         Entity thisObj = (Entity)(Object)this;
-        AABB boundingBox = thisObj.boundingBox;
+        AABB boundingBox = thisObj.bb;
 
         if(boundingBox.equals(null)) return;
 		if(Modules.get().get(Hitboxes.class).mode.get() == Modules.get().get(Hitboxes.class).mode.get().Box)
