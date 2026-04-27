@@ -16,45 +16,86 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
 
 public class Collisions extends Module {
-    private final SettingGroup sgFullcube = settings.createGroup("FullCube");
-    private final SettingGroup sgEmpty = settings.createGroup("Empty");
+
+    private final SettingGroup sgPlayer = settings.createGroup("Player");
+    private final SettingGroup sgBlock = settings.createGroup("Block");
     private final SettingGroup sgOther = settings.createGroup("Other");
     
-    public final Setting<List<Block>> fullcube = sgFullcube.add(new BlockListSetting.Builder()
-        .name("full-cube")
+    public final Setting<List<Block>> fullblock = sgBlock.add(new BlockListSetting.Builder()
+        .name("full-block")
         .description("What blocks should be added collision box.")
         .build()
     );
     
-    public final Setting<Boolean> fullcubecase = sgFullcube.add(new BoolSetting.Builder()
-        .name("fullcube-case")
+    public final Setting<Boolean> fullblockcase = sgBlock.add(new BoolSetting.Builder()
+        .name("fullblock-case")
         .description("Switches black/white case.")
         .defaultValue(false)
         .build()
     );
     
-    public final Setting<Boolean> fullcubefinal = sgFullcube.add(new BoolSetting.Builder()
-        .name("fullcube-final")
+    public final Setting<Boolean> fullblockfinal = sgBlock.add(new BoolSetting.Builder()
+        .name("fullblock-final")
         .description("Switches black/white final.")
         .defaultValue(false)
         .build()
     );
     
-    public final Setting<List<Block>> empty = sgEmpty.add(new BlockListSetting.Builder()
-        .name("empty")
+    public final Setting<List<Block>> emptyBlock = sgBlock.add(new BlockListSetting.Builder()
+        .name("emptyblock")
         .description("What blocks should be emptied.")
         .build()
     );
 
-    public final Setting<Boolean> emptycase = sgEmpty.add(new BoolSetting.Builder()
-        .name("empty-case")
+    public final Setting<Boolean> emptyBlockCase = sgBlock.add(new BoolSetting.Builder()
+        .name("emptyblock-case")
         .description("Switches black/white case.")
         .defaultValue(false)
         .build()
     );
 
-    public final Setting<Boolean> emptyfinal = sgEmpty.add(new BoolSetting.Builder()
-        .name("empty-final")
+    public final Setting<Boolean> emptyBlockFinal = sgBlock.add(new BoolSetting.Builder()
+        .name("emptyblock-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );    
+
+    public final Setting<List<Block>> fullPlayer = sgPlayer.add(new BlockListSetting.Builder()
+        .name("fullplayer-block")
+        .description("What blocks should be added collision box.")
+        .build()
+    );
+    
+    public final Setting<Boolean> fullPlayerCase = sgPlayer.add(new BoolSetting.Builder()
+        .name("fullplayer-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> fullPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
+        .name("fullplayer-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<List<Block>> emptyPlayer = sgPlayer.add(new BlockListSetting.Builder()
+        .name("emptyplayer")
+        .description("What blocks should be emptied.")
+        .build()
+    );
+
+    public final Setting<Boolean> emptyPlayerCase = sgPlayer.add(new BoolSetting.Builder()
+        .name("emptyplayer-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> emptyPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
+        .name("emptyplayer-final")
         .description("Switches black/white final.")
         .defaultValue(false)
         .build()
@@ -72,20 +113,34 @@ public class Collisions extends Module {
         super(Categories.World, "collisions", "Adds collision boxes to certain blocks/areas.");
     }
     
-    public boolean full(Block block)
+    public boolean fullBlock(Block block)
     {
         if (fullcube.get().contains(block))
-            return isActive() && fullcubecase.get();
-        return isActive() && fullcubefinal.get();   
+            return isActive() && fullblockcase.get();
+        return isActive() && fullblockfinal.get();   
     }
     
-    public boolean emp(Block block)
+    public boolean emptyBlock(Block block)
     {
-        if (empty.get().contains(block))
-            return isActive() && emptycase.get();
-        return isActive() && emptyfinal.get();
+        if (emptyBlock.get().contains(block))
+            return isActive() && emptyBlockCase.get();
+        return isActive() && emptyBlockFinal.get();
+    }
+
+    public boolean fullPlayer(Block block)
+    {
+        if (fullPlayer.get().contains(block))
+            return isActive() && fullPlayerCase.get();
+        return isActive() && fullPlayerFinal.get();   
     }
     
+    public boolean emptyPlayer(Block block)
+    {
+        if (emptyPlayer.get().contains(block))
+            return isActive() && emptyPlayerCase.get();
+        return isActive() && emptyPlayerFinal.get();
+    }
+
     public boolean ignoreBorder()
     {
         return isActive() && ignoreBorder.get();
