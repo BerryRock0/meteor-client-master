@@ -125,7 +125,7 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
     }
 
     @Override
-    public MinerPlacers fromTag(NbtCompound tag)
+    public MinerPlacers fromTag(CompoundTag tag)
     {
         minerPlacers.clear();
 
