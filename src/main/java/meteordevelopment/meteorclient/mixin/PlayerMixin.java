@@ -74,7 +74,7 @@ public abstract class PlayerMixin extends LivingEntity {
     public float onGetBlockBreakingSpeed(float breakSpeed, BlockState state)
     {
         SpeedMine speedMine = Modules.get().get(SpeedMine.class);
-        if (state.getBlock() != null && speedMine.isActive() && speedMine.mode.get() == SpeedMine.Mode.Normal && speedMine.filter(block.getBlock()))
+        if (state.getBlock() != null && speedMine.isActive() && speedMine.mode.get() == SpeedMine.Mode.Normal && speedMine.filter(state.getBlock()))
             return breakSpeed + speedMine.modifier.get().floatValue();
 
         return breakSpeed;
