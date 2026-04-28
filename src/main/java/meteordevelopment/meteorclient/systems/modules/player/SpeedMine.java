@@ -129,7 +129,7 @@ public class SpeedMine extends Module
 
             if (pos == null || progress <= 0) return;
             if (progress >= caseDouble.get().floatValue())
-                im.meteor$setCurrentBreakingProgress(finalDouble.get().floatValue());
+                im.meteor$setDestroyProgress(finalDouble.get().floatValue());
         }
     }
 
