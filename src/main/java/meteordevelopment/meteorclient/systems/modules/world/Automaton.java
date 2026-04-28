@@ -79,7 +79,7 @@ public class Automaton extends Module
     );
 
     //Script
-    private final Setting<String> script = sgScripts.add(new StringSetting.Builder()
+    private final Setting<String> script = sgScript.add(new StringSetting.Builder()
         .name("script")
         .description("Setting actions list.")
         .build()
@@ -138,7 +138,7 @@ public class Automaton extends Module
         try
         {
             actions(action.get());
-            execute(commands.get().charAt(c), handler.get());
+            execute(script.get().charAt(c), handler.get());
             step(c!=script.get().length(), c==script.get().length(), stepper.get());
         }
         catch(Exception e)
