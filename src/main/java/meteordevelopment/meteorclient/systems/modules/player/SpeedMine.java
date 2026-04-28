@@ -104,19 +104,6 @@ public class SpeedMine extends Module
         .build()
     );
 
-    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
-        .name("Pre")
-        .description("Load script before tick.")
-        .defaultValue(false)
-        .build()
-    );
-    private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
-        .name("Post")
-        .description("Load script after tick.")
-        .defaultValue(false)
-        .build()
-    );
-
     public SpeedMine() {
         super(Categories.Player, "speed-mine", "Allows you to quickly mine blocks.");
     }
@@ -124,22 +111,6 @@ public class SpeedMine extends Module
     @Override
     public void onDeactivate() {
         removeHaste();
-    }
-
-
-    @EventHandler
-    private void onPreTick(TickEvent.Pre event)
-    {
-        if (pre.get())
-            main();
-    }
-
-    
-    @EventHandler
-    private void onPostTick(TickEvent.Post event)
-    {
-        if (post.get())
-            main();
     }
 
     @EventHandler
@@ -158,8 +129,8 @@ public class SpeedMine extends Module
             BlockPos pos = im.meteor$getCurrentBreakingBlockPos();
 
             if (pos == null || progress <= 0) return;
-            if (progress + mc.level.getBlockState(pos).getDestroyProgress(mc.player, mc.level, pos) >= 0.7f)
-                im.meteor$setDestroyProgress(1f);
+            if (progress >= caseDouble.get().floatValue())
+                im.meteor$setCurrentBreakingProgress(finalDouble.get().floatValue());
         }
     }
 
@@ -180,9 +151,12 @@ public class SpeedMine extends Module
         if (haste != null && !haste.showIcon()) mc.player.removeEffect(HASTE);
     }
 
-    public boolean filter(Block block) {
-        if (blocksFilter.get() == ListMode.Blacklist && !blocks.get().contains(block)) return true;
-        return blocksFilter.get() == ListMode.Whitelist && blocks.get().contains(block);
+    public boolean filter(Block block)
+    {
+        if (blocks.get().contains(block))
+            return listCase.get();
+        
+        return listFinal.get();
     }
 
     public boolean instamine() {
@@ -193,10 +167,5 @@ public class SpeedMine extends Module
         Normal,
         Haste,
         Damage
-    }
-
-    public enum ListMode {
-        Whitelist,
-        Blacklist
     }
 }
