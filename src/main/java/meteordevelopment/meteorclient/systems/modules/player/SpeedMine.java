@@ -37,7 +37,6 @@ public class SpeedMine extends Module
     private final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
         .name("blocks")
         .description("Selected blocks.")
-        .filter(block -> block.getHardness() > 0)
         .visible(() -> mode.get() != Mode.Haste)
         .build()
     );
