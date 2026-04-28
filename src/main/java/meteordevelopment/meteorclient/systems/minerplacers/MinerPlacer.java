@@ -24,7 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class MinerPlacer implements ISerializable<MinerPlacer>
 {
 	public final Settings settings = new Settings();
-	
+
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgSettings = settings.createGroup("Settings");
     private final SettingGroup sgScript = settings.createGroup("Script");
@@ -35,13 +35,11 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .description("The name of the worker.")                                       
         .build()
     );
-    
     public final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
         .description("Mining block position")
         .build()
     );
-    
     public final Setting<Boolean> breakBlock = sgGeneral.add(new BoolSetting.Builder()
         .name("breaking-block")
         .description("Break blocks in area.")
@@ -54,14 +52,12 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .defaultValue(false)
         .build()
     );
-    
     public final Setting<CardinalDirections> cardinaldirection = sgSettings.add(new EnumSetting.Builder<CardinalDirections>()
         .name("place-pirection")
         .description("Direction to use.")
         .defaultValue(CardinalDirections.Auto)
         .build()
     );
-
     public final Setting<Boolean> insideBlock = sgSettings.add(new BoolSetting.Builder()
         .name("inside-block")
         .description("Inside block value.")
@@ -82,14 +78,12 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .defaultValue(0)
         .build()
     );
-
     public final Setting<Boolean> handler = sgScript.add(new BoolSetting.Builder()
         .name("handler")
         .description("String to char, char to command")
         .defaultValue(false)
         .build()
     );
-
     public final Setting<Boolean> stepper = sgScript.add(new BoolSetting.Builder()
         .name("stepper")
         .description("Steps on line.")
@@ -104,21 +98,18 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .defaultValue(false)
         .build()
     );
-    
     public final Setting<ShapeMode> shapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>()
         .name("shape-mode")
         .description("How the shapes are rendered.")
         .defaultValue(ShapeMode.Both)
         .build()
     );
-
     public final Setting<SettingColor> sideColor = sgRender.add(new ColorSetting.Builder()
         .name("side-color")
         .description("The color of the sides of the blocks being rendered.")
         .defaultValue(new SettingColor(0, 0, 0, 0))
         .build()
     );
-
     public final Setting<SettingColor> lineColor = sgRender.add(new ColorSetting.Builder()
         .name("line-color")
         .description("The color of the lines of the blocks being rendered.")
@@ -133,12 +124,12 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     {
         uuid = UUID.randomUUID();
     }
-    
+
     public MinerPlacer(Tag tag)
     {
 	    CompoundTag nbt = (CompoundTag) tag;
         uuid = nbt.read("uuid", UUIDUtil.CODEC).orElse(UUID.randomUUID());
-        fromTag(nbt);	
+        fromTag(nbt);
 	}
 
     public void setColumn(int column)
@@ -156,7 +147,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         East,
         West
     }
-    
+
 	public static class Builder
 	{
 		private String name = "";
@@ -170,14 +161,14 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         public MinerPlacer build()
         {
             MinerPlacer minerPlacer = new MinerPlacer();
-            
+
 			if (!name.equals(minerPlacer.name.getDefaultValue()))
 				minerPlacer.name.set(name);
 
             return minerPlacer;
         }
     }
-    
+
     @Override
     public CompoundTag toTag()
     {
@@ -203,10 +194,10 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     {
         if (this == o)
 			return true;
-			
+
         if (o == null || getClass() != o.getClass())
 			return false;
-			
+
         MinerPlacer minerPlacer = (MinerPlacer) o;
         return Objects.equals(uuid, minerPlacer.uuid);
     }
