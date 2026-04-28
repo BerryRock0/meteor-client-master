@@ -14,92 +14,105 @@ import meteordevelopment.meteorclient.events.world.TickEvent;
 public class Automaton extends Module
 {
     private final SettingGroup sgControl = settings.createGroup("Control");
-    private final SettingGroup sgExecution = settings.createGroup("Execution");
-    private final SettingGroup sgScripts = settings.createGroup("Scripts");
+    private final SettingGroup sgScript = settings.createGroup("Script");
 
    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
-        .name("Pre")
+        .name("pre")
         .description("Load script before tick.")
         .defaultValue(false)
         .build()
     );
     private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
-        .name("Post")
+        .name("post")
         .description("Load script after tick.")
         .defaultValue(false)
         .build()
     );
 
-
     public final Setting<Boolean> forward = sgControl.add(new BoolSetting.Builder()
-        .name("Forward")
+        .name("forward")
         .description("")
         .defaultValue(false)
         .build()
     );
     public final Setting<Boolean> back = sgControl.add(new BoolSetting.Builder()
-        .name("Back")
+        .name("back")
         .description("")
         .defaultValue(false)
         .build()
     );
     public final Setting<Boolean> left = sgControl.add(new BoolSetting.Builder()
-        .name("Left")
+        .name("left")
         .description("")
         .defaultValue(false)
         .build()
     );
     public final Setting<Boolean> right = sgControl.add(new BoolSetting.Builder()
-        .name("Right")
+        .name("right")
         .description("")
         .defaultValue(false)
         .build()
     );
     public final Setting<Boolean> jump = sgControl.add(new BoolSetting.Builder()
-        .name("Jump")
+        .name("jump")
         .description("")
         .defaultValue(false)
         .build()
     );
     public final Setting<Boolean> sneak = sgControl.add(new BoolSetting.Builder()
-        .name("Sneak")
+        .name("sneak")
         .description("")
         .defaultValue(false)
         .build()
     );
     public final Setting<Boolean> attack = sgControl.add(new BoolSetting.Builder()
-        .name("Attack")
+        .name("attack")
         .description("")
         .defaultValue(false)
         .build()
     );
     public final Setting<Boolean> use = sgControl.add(new BoolSetting.Builder()
-        .name("Use")
+        .name("use")
         .description("")
         .defaultValue(false)
         .build()
     );
 
-       private final Setting<Boolean> increment = sgExecution.add(new BoolSetting.Builder()
-        .name("Increment")
-        .description("Execute script from beginning to end.")
+    //Script
+    private final Setting<String> script = sgScripts.add(new StringSetting.Builder()
+        .name("script")
+        .description("Setting actions list.")
+        .build()
+    );
+
+    public final Setting<Integer> column = sgScript.add(new IntSetting.Builder()
+        .name("column")
+        .description("Reset column value.")
+        .defaultValue(0)
+        .build()
+    );
+    
+    private final Setting<Boolean> handler = sgScript.add(new BoolSetting.Builder()
+        .name("handler")
+        .description("String to char, char to command.")
         .defaultValue(false)
         .build()
     );
-    private final Setting<Boolean> decrement = sgExecution.add(new BoolSetting.Builder()
-        .name("Decrement")
-        .description("Execute script from end to beginning.")
+    private final Setting<Boolean> stepper = sgScript.add(new BoolSetting.Builder()
+        .name("stepper")
+        .description("Steps on line.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> action = sgScript.add(new BoolSetting.Builder()
+        .name("action")
+        .description("Doing action list.")
         .defaultValue(false)
         .build()
     );
 
-    private final Setting<String> commands = sgScripts.add(new StringSetting.Builder()
-        .name("command")
-        .description("Setting commands.")
-        .build()
-    );
-
-    public int c; 
+    public int c;
+    
     public Automaton()
     {
         super(Categories.Misc, "automaton", "Doing actions with instructions.");
@@ -124,15 +137,26 @@ public class Automaton extends Module
     {
         try
         {
-            cmd = ;
-
-            execute(commands.get().charAt(c));
-            step(false, false, false);
+            actions(action.get());
+            execute(commands.get().charAt(c), handler.get());
+            step(c!=script.get().length(), c==script.get().length(), stepper.get());
         }
         catch(Exception e)
         {} 
     }
 
+    public void actions()
+    {
+        mc.options.forwardKey.setPressed(forward.get()) break;
+        mc.options.backKey.setPressed(back.get()); break;
+        mc.options.leftKey.setPressed(left.get()); break;
+        mc.options.rightKey.setPressed(right.get()); break;
+        mc.options.jumpKey.setPressed(jump.get()); break;
+        mc.options.sneakKey.setPressed(sneak.get()); break;
+        mc.options.useKey.setPressed(use.get()); break;
+        mc.options.attackKey.setPressed(attack.get()); break;   
+    }
+    
     public void step(boolean i, boolean d, boolean s)
     {
         if(s)
@@ -142,27 +166,21 @@ public class Automaton extends Module
         }
     }
 
-
-    private void execute(char c)
-    {
-        if (mc.player == null)
-            return;
-        
+    private void execute( char c, boolean b)
+    {   
+        if (b)
         switch (c)
         {
-
-            case '_': return;
-            case ';': cmdindex  = break;
-            case 'F': mc.options.forwardKey.setPressed() break;
-            case 'B': mc.options.backKey.setPressed(); break;
-            case 'L': mc.options.leftKey.setPressed(); break;
-            case 'R': mc.options.rightKey.setPressed(); break;
-            case 'J': mc.options.jumpKey.setPressed(); break;
-            case 'S': mc.options.sneakKey.setPressed(); break;
-            case 'U': mc.options.useKey.setPressed(); break;
-            case 'A': mc.options.attackKey.setPressed(); break;
-            case 'Y': mc.player.setYRot();
-            case 'X': mc.player.setYRot();
+            case '0': return;
+            case '1': c = 0; break;          
+            case '2': forward.set(!forward.get()); break;
+            case '3': back.set(!back.get()); break;
+            case '4': left.set(!left.get()); break;
+            case '5': right.set(!right.get()); break;
+            case '6': jump.set(!jump.get()); break;
+            case '7': sneak.set(!sneak.get()); break;
+            case '8': use.set(!use.get()); break;
+            case '9': attack.set(!attack.get()); break;
             default: break;
         }
     }
@@ -170,7 +188,7 @@ public class Automaton extends Module
     public WWidget getWidget(GuiTheme theme)
     {
         WButton reset = theme.button("Reset");
-        reset.action = () -> cmdindex = 0;
+        reset.action = () -> c = 0;
         return reset;
     }
 }	
