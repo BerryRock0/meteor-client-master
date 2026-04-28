@@ -149,14 +149,14 @@ public class Automaton extends Module
     {
         if (b)
         {
-            mc.options.keyUp.setPressed(forward.get());
-            mc.options.keyDown.setPressed(back.get());
-            mc.options.keyLeft.setPressed(left.get());
-            mc.options.keyRight.setPressed(right.get());
-            mc.options.keyShift.setPressed(jump.get());
-            mc.options.keyJump.setPressed(sneak.get());
-            mc.options.keyAttack.setPressed(use.get());
-            mc.options.keyUse.setPressed(attack.get());
+            mc.options.keyUp.setDown(forward.get());
+            mc.options.keyDown.setDown(back.get());
+            mc.options.keyLeft.setDown(left.get());
+            mc.options.keyRight.setDown(right.get());
+            mc.options.keyShift.setDown(jump.get());
+            mc.options.keyJump.setDown(sneak.get());
+            mc.options.keyAttack.setDown(use.get());
+            mc.options.keyUse.setDown(attack.get());
         }
     }
     
