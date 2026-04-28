@@ -142,62 +142,61 @@ public class SpeedMine extends Module
             main();
     }
 
-    public void main()
-    {
+    @EventHandler
+    private void onTick(TickEvent.Pre event) {
         if (!Utils.canUpdate()) return;
 
         if (mode.get() == Mode.Haste) {
-            StatusEffectInstance haste = mc.player.getStatusEffect(HASTE);
+            MobEffectInstance haste = mc.player.getEffect(HASTE);
 
             if (haste == null || haste.getAmplifier() <= hasteAmplifier.get() - 1) {
-                mc.player.setStatusEffect(new StatusEffectInstance(HASTE, -1, hasteAmplifier.get() - 1, false, false, false), null);
+                mc.player.addEffect(new MobEffectInstance(HASTE, -1, hasteAmplifier.get() - 1, false, false, false), null);
             }
-        }
-        else if (mode.get() == Mode.Damage) {
-            ClientPlayerInteractionManagerAccessor im = (ClientPlayerInteractionManagerAccessor) mc.interactionManager;
+        } else if (mode.get() == Mode.Damage) {
+            MultiPlayerGameModeAccessor im = (MultiPlayerGameModeAccessor) mc.gameMode;
             float progress = im.meteor$getBreakingProgress();
             BlockPos pos = im.meteor$getCurrentBreakingBlockPos();
 
             if (pos == null || progress <= 0) return;
-            if (progress >= caseDouble.get().floatValue())
-                im.meteor$setCurrentBreakingProgress(finalDouble.get().floatValue());
-        }        
+            if (progress + mc.level.getBlockState(pos).getDestroyProgress(mc.player, mc.level, pos) >= 0.7f)
+                im.meteor$setDestroyProgress(1f);
+        }
     }
 
     @EventHandler
-    private void onPacket(PacketEvent.Send event)
-    {
-        if (!(mode.get() == Mode.Damage) || !grimBypass.get()) return;
+    private void onPacket(PacketEvent.Send event) {
+        if (mode.get() != Mode.Damage || !grimBypass.get()) return;
 
         // https://github.com/GrimAnticheat/Grim/issues/1296
-        if (event.packet instanceof PlayerActionC2SPacket packet && packet.getAction() == PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK) {
-            mc.getNetworkHandler().sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.ABORT_DESTROY_BLOCK, packet.getPos().up(), packet.getDirection()));
+        if (event.packet instanceof ServerboundPlayerActionPacket packet && packet.getAction() == ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK) {
+            mc.getConnection().send(new ServerboundPlayerActionPacket(ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK, packet.getPos().above(), packet.getDirection()));
         }
     }
 
     private void removeHaste() {
         if (!Utils.canUpdate()) return;
 
-        StatusEffectInstance haste = mc.player.getStatusEffect(HASTE);
-        if (haste != null && !haste.shouldShowIcon()) mc.player.removeStatusEffect(HASTE);
+        MobEffectInstance haste = mc.player.getEffect(HASTE);
+        if (haste != null && !haste.showIcon()) mc.player.removeEffect(HASTE);
     }
 
-    public boolean filter(Block block)
-    {
-        if (blocks.get().contains(block))
-            return listCase.get();
-        
-        return listFinal.get();
+    public boolean filter(Block block) {
+        if (blocksFilter.get() == ListMode.Blacklist && !blocks.get().contains(block)) return true;
+        return blocksFilter.get() == ListMode.Whitelist && blocks.get().contains(block);
     }
 
     public boolean instamine() {
         return isActive() && mode.get() == Mode.Damage && instamine.get();
     }
 
-    public enum Mode
-    {
+    public enum Mode {
         Normal,
         Haste,
         Damage
+    }
+
+    public enum ListMode {
+        Whitelist,
+        Blacklist
     }
 }
