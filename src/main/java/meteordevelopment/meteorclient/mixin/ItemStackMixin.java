@@ -61,7 +61,7 @@ public abstract class ItemStackMixin {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "applyDamage(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V", cancellable = true)
     private void isApplyDamage(int amount, ServerLevel level, @Nullable ServerPlayer player, Consumer<Item> breakCallback, CallbackInfo ci)
     {
         ItemStack itemStack = (ItemStack)(Object)this;
