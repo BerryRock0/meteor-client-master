@@ -22,31 +22,38 @@ import java.util.List;
 
 import static net.minecraft.world.effect.MobEffects.HASTE;
 
-public class SpeedMine extends Module {
+public class SpeedMine extends Module
+{
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgControl = settings.createGroup("Control");
 
     public final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
         .name("mode")
         .defaultValue(Mode.Damage)
-        .onChanged(_ -> removeHaste())
+        .onChanged(mode -> removeHaste())
         .build()
     );
 
     private final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
         .name("blocks")
         .description("Selected blocks.")
-        .filter(block -> block.defaultDestroyTime() > 0)
+        .filter(block -> block.getHardness() > 0)
         .visible(() -> mode.get() != Mode.Haste)
         .build()
     );
 
-    private final Setting<ListMode> blocksFilter = sgGeneral.add(new EnumSetting.Builder<ListMode>()
-        .name("blocks-filter")
-        .description("How to use the blocks setting.")
-        .defaultValue(ListMode.Blacklist)
-        .visible(() -> mode.get() != Mode.Haste)
-        .build()
-    );
+     public final Setting<Boolean> listCase = sgGeneral.add(new BoolSetting.Builder()
+        .name("list-case")
+        .description("Block list case value.")
+        .defaultValue(false)
+        .build());
+    
+     public final Setting<Boolean> listFinal = sgGeneral.add(new BoolSetting.Builder()
+        .name("list-final")
+        .description("Block list final value.")
+        .defaultValue(false)
+        .build());
+    
 
     public final Setting<Double> modifier = sgGeneral.add(new DoubleSetting.Builder()
         .name("modifier")
@@ -63,7 +70,7 @@ public class SpeedMine extends Module {
         .defaultValue(2)
         .min(1)
         .visible(() -> mode.get() == Mode.Haste)
-        .onChanged(_ -> removeHaste())
+        .onChanged(i -> removeHaste())
         .build()
     );
 
@@ -83,6 +90,33 @@ public class SpeedMine extends Module {
         .build()
     );
 
+    private final Setting<Double> caseDouble = sgGeneral.add(new DoubleSetting.Builder()
+        .name("progess-checkpoint")
+        .description("Break block after this value.")
+        .visible(() -> mode.get() == Mode.Damage)
+        .build()
+    );
+
+    private final Setting<Double> finalDouble = sgGeneral.add(new DoubleSetting.Builder()
+        .name("final-progress")
+        .description("Set breaking progress value.")
+        .visible(() -> mode.get() == Mode.Damage)
+        .build()
+    );
+
+    private final Setting<Boolean> pre = sgControl.add(new BoolSetting.Builder()
+        .name("Pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    private final Setting<Boolean> post = sgControl.add(new BoolSetting.Builder()
+        .name("Post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
+
     public SpeedMine() {
         super(Categories.Player, "speed-mine", "Allows you to quickly mine blocks.");
     }
@@ -92,61 +126,78 @@ public class SpeedMine extends Module {
         removeHaste();
     }
 
+
     @EventHandler
-    private void onTick(TickEvent.Pre event) {
+    private void onPreTick(TickEvent.Pre event)
+    {
+        if (pre.get())
+            main();
+    }
+
+    
+    @EventHandler
+    private void onPostTick(TickEvent.Post event)
+    {
+        if (post.get())
+            main();
+    }
+
+    public void main()
+    {
         if (!Utils.canUpdate()) return;
 
         if (mode.get() == Mode.Haste) {
-            MobEffectInstance haste = mc.player.getEffect(HASTE);
+            StatusEffectInstance haste = mc.player.getStatusEffect(HASTE);
 
             if (haste == null || haste.getAmplifier() <= hasteAmplifier.get() - 1) {
-                mc.player.addEffect(new MobEffectInstance(HASTE, -1, hasteAmplifier.get() - 1, false, false, false), null);
+                mc.player.setStatusEffect(new StatusEffectInstance(HASTE, -1, hasteAmplifier.get() - 1, false, false, false), null);
             }
-        } else if (mode.get() == Mode.Damage) {
-            MultiPlayerGameModeAccessor im = (MultiPlayerGameModeAccessor) mc.gameMode;
+        }
+        else if (mode.get() == Mode.Damage) {
+            ClientPlayerInteractionManagerAccessor im = (ClientPlayerInteractionManagerAccessor) mc.interactionManager;
             float progress = im.meteor$getBreakingProgress();
             BlockPos pos = im.meteor$getCurrentBreakingBlockPos();
 
             if (pos == null || progress <= 0) return;
-            if (progress + mc.level.getBlockState(pos).getDestroyProgress(mc.player, mc.level, pos) >= 0.7f)
-                im.meteor$setDestroyProgress(1f);
-        }
+            if (progress >= caseDouble.get().floatValue())
+                im.meteor$setCurrentBreakingProgress(finalDouble.get().floatValue());
+        }        
     }
 
     @EventHandler
-    private void onPacket(PacketEvent.Send event) {
-        if (mode.get() != Mode.Damage || !grimBypass.get()) return;
+    private void onPacket(PacketEvent.Send event)
+    {
+        if (!(mode.get() == Mode.Damage) || !grimBypass.get()) return;
 
         // https://github.com/GrimAnticheat/Grim/issues/1296
-        if (event.packet instanceof ServerboundPlayerActionPacket packet && packet.getAction() == ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK) {
-            mc.getConnection().send(new ServerboundPlayerActionPacket(ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK, packet.getPos().above(), packet.getDirection()));
+        if (event.packet instanceof PlayerActionC2SPacket packet && packet.getAction() == PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK) {
+            mc.getNetworkHandler().sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.ABORT_DESTROY_BLOCK, packet.getPos().up(), packet.getDirection()));
         }
     }
 
     private void removeHaste() {
         if (!Utils.canUpdate()) return;
 
-        MobEffectInstance haste = mc.player.getEffect(HASTE);
-        if (haste != null && !haste.showIcon()) mc.player.removeEffect(HASTE);
+        StatusEffectInstance haste = mc.player.getStatusEffect(HASTE);
+        if (haste != null && !haste.shouldShowIcon()) mc.player.removeStatusEffect(HASTE);
     }
 
-    public boolean filter(Block block) {
-        if (blocksFilter.get() == ListMode.Blacklist && !blocks.get().contains(block)) return true;
-        return blocksFilter.get() == ListMode.Whitelist && blocks.get().contains(block);
+    public boolean filter(Block block)
+    {
+        if (blocks.get().contains(block))
+            return listCase.get();
+        
+        return listFinal.get();
     }
 
     public boolean instamine() {
         return isActive() && mode.get() == Mode.Damage && instamine.get();
     }
 
-    public enum Mode {
+    public enum Mode
+    {
         Normal,
         Haste,
         Damage
-    }
-
-    public enum ListMode {
-        Whitelist,
-        Blacklist
     }
 }
