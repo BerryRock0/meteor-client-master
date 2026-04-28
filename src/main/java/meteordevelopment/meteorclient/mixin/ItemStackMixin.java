@@ -70,7 +70,7 @@ public abstract class ItemStackMixin {
         ci.cancel();
     }
 
-    @Inject(at = @At("HEAD"), method = "increment(I)V", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "grow(I)V", cancellable = true)
     private void incrementControl(int amount, CallbackInfo ci)
     {
         ItemStack itemStack = (ItemStack)(Object)this;
@@ -78,7 +78,7 @@ public abstract class ItemStackMixin {
         if (Modules.get().get(Quantities.class).incr(thisObj)) ci.cancel();
     }
 
-    @Inject(at = @At("HEAD"), method = "decrement(I)V", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "shrink(I)V", cancellable = true)
     private void decrementControl(int amount, CallbackInfo ci)
     {
         ItemStack itemStack = (ItemStack)(Object)this;
