@@ -145,16 +145,19 @@ public class Automaton extends Module
         {} 
     }
 
-    public void actions()
+    public void actions(boolean b)
     {
-        mc.options.forwardKey.setPressed(forward.get()); break;
-        mc.options.backKey.setPressed(back.get()); break;
-        mc.options.leftKey.setPressed(left.get()); break;
-        mc.options.rightKey.setPressed(right.get()); break;
-        mc.options.jumpKey.setPressed(jump.get()); break;
-        mc.options.sneakKey.setPressed(sneak.get()); break;
-        mc.options.useKey.setPressed(use.get()); break;
-        mc.options.attackKey.setPressed(attack.get()); break;   
+        if (b)
+        {
+            mc.options.forwardKey.setPressed(forward.get()); break;
+            mc.options.backKey.setPressed(back.get()); break;
+            mc.options.leftKey.setPressed(left.get()); break;
+            mc.options.rightKey.setPressed(right.get()); break;
+            mc.options.jumpKey.setPressed(jump.get()); break;
+            mc.options.sneakKey.setPressed(sneak.get()); break;
+            mc.options.useKey.setPressed(use.get()); break;
+            mc.options.attackKey.setPressed(attack.get()); break;
+        }
     }
     
     public void step(boolean i, boolean d, boolean s)
