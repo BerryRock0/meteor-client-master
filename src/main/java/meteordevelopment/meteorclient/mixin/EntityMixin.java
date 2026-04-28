@@ -198,7 +198,7 @@ public abstract class EntityMixin {
         }
     }
 
-    @Inject(at = @At("INVOKE"), method = "Lnet/minecraft/entity/Entity;tick()V", cancellable = true)
+    @Inject(at = @At("INVOKE"), method = "Lnet/minecraft/world/entity/Entity;tick()V", cancellable = true)
     private void inEntityTick(CallbackInfo ci)
     {
 		Entity thisObj = (Entity)(Object)this;
