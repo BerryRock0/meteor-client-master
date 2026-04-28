@@ -49,6 +49,7 @@ public class Systems {
         add(new Friends());
         add(new Accounts());
         add(new Waypoints());
+        add(new MinerPlacers());
         add(new Profiles());
         add(new Proxies());
         add(new Hud());
