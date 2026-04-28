@@ -139,7 +139,7 @@ public abstract class EntityMixin {
             cir.setReturnValue((float) v);
     }
 
-    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/Entity;getBoundingBox", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/world/entity/Entity;getBoundingBox", cancellable = true)
 	public final void onGetBoundingBox(CallbackInfoReturnable<AABB> cir)
 	{
         Entity thisObj = (Entity)(Object)this;
