@@ -130,7 +130,7 @@ public abstract class PlayerMixin extends LivingEntity {
     }
     
     @Inject(method = "isWithinEntityInteractionRange", at = @At("HEAD"), cancellable = true)
-    private void canReachEntityIn(AABB box, double additionalRange, CallbackInfoReturnable<Boolean> cir) {
+    private void canReachEntityIn(Entity entity, double additionalRange, CallbackInfoReturnable<Boolean> cir) {
         if (Modules.get().get(Reach.class).isActive()) cir.setReturnValue(true);
     }
     
