@@ -21,7 +21,10 @@ public abstract class RenderTickCounterDynamicMixin {
     private float deltaTicks;
 
     @Inject(method = "advanceGameTime(J)I", at = @At(value = "FIELD", target = "Lnet/minecraft/client/DeltaTracker$Timer;lastMs:J", opcode = Opcodes.PUTFIELD))
-    private void onBeingRenderTick(long currentMs, CallbackInfoReturnable<Integer> cir) {
-        deltaTicks *= (float) Modules.get().get(Timer.class).getMultiplier();
+    private void onBeingRenderTick(long currentMs, CallbackInfoReturnable<Integer> cir) 
+    {
+        Timer timer = Modules.get().get(Timer.class);
+        if(timer.isActive())
+            dynamicDeltaTicks = (float)timer.setTick((float)dynamicDeltaTicks);
     }
 }
