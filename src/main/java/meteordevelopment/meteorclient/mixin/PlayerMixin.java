@@ -129,11 +129,6 @@ public abstract class PlayerMixin extends LivingEntity {
         if (Modules.get().get(Reach.class).isActive()) cir.setReturnValue(true);
     }
     
-    @Inject(method = "isWithinEntityInteractionRange", at = @At("HEAD"), cancellable = true)
-    private void canReachEntityIn(Entity entity, double additionalRange, CallbackInfoReturnable<Boolean> cir) {
-        if (Modules.get().get(Reach.class).isActive()) cir.setReturnValue(true);
-    }
-    
     @Inject(method = "isWithinBlockInteractionRange", at = @At("HEAD"), cancellable = true)
     private void canReachBlock(BlockPos pos, double additionalRange, CallbackInfoReturnable<Boolean> cir) {
         if (Modules.get().get(Reach.class).isActive()) cir.setReturnValue(true);
