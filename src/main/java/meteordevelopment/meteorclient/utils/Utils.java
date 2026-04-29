@@ -106,17 +106,6 @@ public class Utils {
         double tY = mc.player.getY() - mc.player.yo;
         double tZ = mc.player.getZ() - mc.player.zo;
 
-        Timer timer = Modules.get().get(Timer.class);
-        if (timer.isActive()) {
-            tX *= timer.getMultiplier();
-            tY *= timer.getMultiplier();
-            tZ *= timer.getMultiplier();
-        }
-
-        tX *= 20;
-        tY *= 20;
-        tZ *= 20;
-
         return new Vec3(tX, tY, tZ);
     }
 
