@@ -167,7 +167,6 @@ public class Collisions extends Module {
         if(emptyEntity.get().contains(entity.getType()))
             return isActive() && emptyEntityCase.get();
         return isActive() && emptyEntityFinal.get();
-        
     }
 
     public boolean ignoreBorder()
