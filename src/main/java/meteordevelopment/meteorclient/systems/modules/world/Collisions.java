@@ -19,6 +19,7 @@ public class Collisions extends Module {
 
     private final SettingGroup sgPlayer = settings.createGroup("Player");
     private final SettingGroup sgBlock = settings.createGroup("Block");
+    private final SettingGroup sgEntity = settings.createGroup("Entity");
     private final SettingGroup sgOther = settings.createGroup("Other");
     
     public final Setting<List<Block>> fullBlock = sgBlock.add(new BlockListSetting.Builder()
@@ -101,6 +102,26 @@ public class Collisions extends Module {
         .build()
     );
 
+    public final Setting<List<Block>> emptyEntity = sgEntity.add(new BlockListSetting.Builder()
+        .name("emptyentity")
+        .description("What blocks should be emptied.")
+        .build()
+    );
+
+    public final Setting<Boolean> emptyEntityCase = sgEntity.add(new BoolSetting.Builder()
+        .name("emptyentity-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> emptyEntityFinal = sgEntity.add(new BoolSetting.Builder()
+        .name("emptyentity-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<Boolean> ignoreBorder = sgOther.add(new BoolSetting.Builder()
         .name("ignore-border")
         .description("Removes world border collision.")
@@ -139,6 +160,14 @@ public class Collisions extends Module {
         if (emptyPlayer.get().contains(block))
             return isActive() && emptyPlayerCase.get();
         return isActive() && emptyPlayerFinal.get();
+    }
+
+    public boolean emptyEntity(Entity entity)
+    {
+        if(emptyEntity.get().contains(entity.getType()))
+            return isActive() && emptyEntityCase.get();
+        return isActive() && emptyEntityFinal.get();
+        
     }
 
     public boolean ignoreBorder()
