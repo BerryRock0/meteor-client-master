@@ -252,7 +252,7 @@ public abstract class MinecraftMixin implements IMinecraft {
 
     @Unique
     private boolean HB$stopUsingItem() {
-        return false;
+        return true;
     }
 
     @Inject(method = "resizeGui", at = @At("TAIL"))
