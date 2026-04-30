@@ -18,6 +18,7 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.movement.*;
 import meteordevelopment.meteorclient.systems.modules.player.LiquidInteract;
 import meteordevelopment.meteorclient.systems.modules.player.NoMiningTrace;
+import meteordevelopment.meteorclient.systems.modules.world.Collisions;
 import meteordevelopment.meteorclient.systems.modules.player.Portals;
 import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
 import net.minecraft.client.gui.screens.Screen;
@@ -120,12 +121,12 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
 
     @ModifyReturnValue(method = "pick", at = @At("RETURN"))
     private static HitResult onUpdateTargetedEntity(HitResult original, @Local(name = "blockHitResult") HitResult blockHitResult) {
-        if (original instanceof EntityHitResult ehr) {
-            if (Modules.get().get(NoMiningTrace.class).canWork(ehr.getEntity()) && blockHitResult.getType() == HitResult.Type.BLOCK) {
+        if (original instanceof EntityHitResult ehr)
+        {
+            if (Modules.get().get(Collisions.class).emptyEntity(ehr.getEntity()))
+                return blockHitResult; 
+            else if (ehr.getEntity() instanceof FakePlayerEntity fakePlayer && fakePlayer.noHit)
                 return blockHitResult;
-            } else if (ehr.getEntity() instanceof FakePlayerEntity fakePlayer && fakePlayer.noHit) {
-                return blockHitResult;
-            }
         }
 
         return original;
