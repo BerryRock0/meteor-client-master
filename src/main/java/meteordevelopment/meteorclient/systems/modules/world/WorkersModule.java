@@ -183,7 +183,7 @@ public class WorkersModule extends Module
         table.clear();
         for (MinerPlacer unit : MinerPlacers.get())
         {
-            //WLabel name = table.add(theme.label(unit.name.get())).expandCellX().widget();
+            WLabel script = table.add(theme.label(unit.script.get())).widget();
             WCheckbox mine = table.add(theme.checkbox(unit.breakBlock.get())).widget(); mine.action = () -> {unit.breakBlock.set(mine.checked);};
             WCheckbox place = table.add(theme.checkbox(unit.interactBlock.get())).widget(); place.action = () -> {unit.interactBlock.set(place.checked);};
             WCheckbox handle = table.add(theme.checkbox(unit.handler.get())).widget(); handle.action = () -> {unit.handler.set(handle.checked);};
