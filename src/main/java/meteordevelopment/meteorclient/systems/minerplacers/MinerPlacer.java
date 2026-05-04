@@ -30,11 +30,11 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     private final SettingGroup sgScript = settings.createGroup("Script");
     private final SettingGroup sgRender = settings.createGroup("Render");
 
-    public Setting<String> name = sgGeneral.add(new StringSetting.Builder()
+ /*   public Setting<String> name = sgGeneral.add(new StringSetting.Builder()
         .name("name")
         .description("The name of the worker.")                                       
         .build()
-    );
+    ); */
     public final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
         .description("Mining block position")
@@ -150,20 +150,20 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
 
 	public static class Builder
 	{
-		private String name = "";
+/*		private String name = "";
 
         public Builder name(String name)
         {
             this.name = name;
             return this;
-        }
+        } */
 
         public MinerPlacer build()
         {
             MinerPlacer minerPlacer = new MinerPlacer();
 
-			if (!name.equals(minerPlacer.name.getDefaultValue()))
-				minerPlacer.name.set(name);
+		/*	if (!name.equals(minerPlacer.name.getDefaultValue()))
+				minerPlacer.name.set(name); */
 
             return minerPlacer;
         }
