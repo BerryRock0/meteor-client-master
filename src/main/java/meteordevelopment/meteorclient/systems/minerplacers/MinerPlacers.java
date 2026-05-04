@@ -77,7 +77,7 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
         if (removed) save();
     }
 
-    public MinerPlacer get(String name)
+ /* public MinerPlacer get(String name)
     {
         for (MinerPlacer minerPlacer : minerPlacers)
         {
@@ -86,7 +86,7 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
         }
 
         return null;
-    }
+    } */
     
     @EventHandler
     private void onGameJoined(GameJoinedEvent event)
