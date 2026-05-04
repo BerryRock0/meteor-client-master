@@ -208,9 +208,9 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         return Objects.hashCode(uuid);
     }
 
-    @Override
+ /*   @Override
     public String toString()
     {
         return name.get();
-    }
+    } */
 }
