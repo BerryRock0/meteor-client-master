@@ -183,11 +183,9 @@ public class WorkersModule extends Module
         table.clear();
         for (MinerPlacer unit : MinerPlacers.get())
         {
-            WLabel script = table.add(theme.label(unit.script.get())).widget();
+            WConfirmedMinus remove = table.add(theme.confirmedMinus()).widget(); remove.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
             WCheckbox mine = table.add(theme.checkbox(unit.breakBlock.get())).widget(); mine.action = () -> {unit.breakBlock.set(mine.checked);};
             WCheckbox place = table.add(theme.checkbox(unit.interactBlock.get())).widget(); place.action = () -> {unit.interactBlock.set(place.checked);};
-            WCheckbox handle = table.add(theme.checkbox(unit.handler.get())).widget(); handle.action = () -> {unit.handler.set(handle.checked);};
-            WCheckbox step = table.add(theme.checkbox(unit.stepper.get())).widget(); step.action = () -> {unit.stepper.set(step.checked);};
             WButton ix = table.add(theme.button("x++")).widget(); ix.action = () -> unit.x++;
             WButton iy = table.add(theme.button("y++")).widget(); iy.action = () -> unit.y++;
             WButton iz = table.add(theme.button("z++")).widget(); iz.action = () -> unit.z++;
@@ -198,12 +196,15 @@ public class WorkersModule extends Module
             WButton sy = table.add(theme.button("SY")).widget(); sy.action = () -> {unit.y=unit.zero.get().getY();};
             WButton sz = table.add(theme.button("SZ")).widget(); sz.action = () -> {unit.z=unit.zero.get().getZ();};
             WButton sc = table.add(theme.button("SC")).widget(); sc.action = () -> {unit.setColumn(unit.column.get());};
+            WCheckbox handle = table.add(theme.checkbox(unit.handler.get())).widget(); handle.action = () -> {unit.handler.set(handle.checked);};
+            WCheckbox step = table.add(theme.checkbox(unit.stepper.get())).widget(); step.action = () -> {unit.stepper.set(step.checked);};
+            
             WButton edit = table.add(theme.button(GuiRenderer.EDIT)).widget(); edit.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
-            WConfirmedMinus remove = table.add(theme.confirmedMinus()).widget(); remove.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
+            
             table.row();
         }
 
-        table.add(theme.horizontalSeparator()).expandX();
+        table.add(theme.horizontalSeparator());
         table.row();
 
         WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
