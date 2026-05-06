@@ -183,7 +183,7 @@ public class WorkersModule extends Module
         table.clear();
         for (MinerPlacer unit : MinerPlacers.get())
         {
-            WConfirmedMinus remove = table.add(theme.confirmedMinus()).widget(); remove.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
+            WButton edit = table.add(theme.button(GuiRenderer.EDIT)).widget(); edit.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
             WCheckbox mine = table.add(theme.checkbox(unit.breakBlock.get())).widget(); mine.action = () -> {unit.breakBlock.set(mine.checked);};
             WCheckbox place = table.add(theme.checkbox(unit.interactBlock.get())).widget(); place.action = () -> {unit.interactBlock.set(place.checked);};
             WButton ix = table.add(theme.button("x++")).widget(); ix.action = () -> unit.x++;
@@ -198,13 +198,12 @@ public class WorkersModule extends Module
             WButton sc = table.add(theme.button("SC")).widget(); sc.action = () -> {unit.setColumn(unit.column.get());};
             WCheckbox handle = table.add(theme.checkbox(unit.handler.get())).widget(); handle.action = () -> {unit.handler.set(handle.checked);};
             WCheckbox step = table.add(theme.checkbox(unit.stepper.get())).widget(); step.action = () -> {unit.stepper.set(step.checked);};
-            
-            WButton edit = table.add(theme.button(GuiRenderer.EDIT)).widget(); edit.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
-            
+            WConfirmedMinus remove = table.add(theme.confirmedMinus()).widget(); remove.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
+
             table.row();
         }
 
-        table.add(theme.horizontalSeparator());
+        table.add(theme.horizontalSeparator()).expandX();
         table.row();
 
         WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
