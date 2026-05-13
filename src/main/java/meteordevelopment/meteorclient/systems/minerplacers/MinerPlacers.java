@@ -76,17 +76,6 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
         boolean removed = minerPlacers.removeAll(c);
         if (removed) save();
     }
-
- /* public MinerPlacer get(String name)
-    {
-        for (MinerPlacer minerPlacer : minerPlacers)
-        {
-            if (minerPlacer.name.get().equalsIgnoreCase(name))
-				return minerPlacer;
-        }
-
-        return null;
-    } */
     
     @EventHandler
     private void onGameJoined(GameJoinedEvent event)
