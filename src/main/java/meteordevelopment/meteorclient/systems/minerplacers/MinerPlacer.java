@@ -117,7 +117,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .build()
     );
 
-    public int c,x,y,z;
+    public int s,c,x,y,z;
     public final UUID uuid;
 
     private MinerPlacer()
@@ -150,22 +150,9 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
 
 	public static class Builder
 	{
-/*		private String name = "";
-
-        public Builder name(String name)
-        {
-            this.name = name;
-            return this;
-        } */
-
         public MinerPlacer build()
         {
-            MinerPlacer minerPlacer = new MinerPlacer();
-
-		/*	if (!name.equals(minerPlacer.name.getDefaultValue()))
-				minerPlacer.name.set(name); */
-
-            return minerPlacer;
+            return new MinerPlacer();
         }
     }
 
@@ -207,10 +194,4 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     {
         return Objects.hashCode(uuid);
     }
-
- /*   @Override
-    public String toString()
-    {
-        return name.get();
-    } */
 }
