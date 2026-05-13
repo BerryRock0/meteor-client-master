@@ -224,9 +224,6 @@ public class WorkersModule extends Module
         @Override
         public boolean save()
         {
-          /*  if (value.name.get().isBlank())
-				return false; */
-
             MinerPlacers.get().add(value);
 			return true;
         }
