@@ -185,8 +185,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         if (o == null || getClass() != o.getClass())
 			return false;
 
-        MinerPlacer minerPlacer = (MinerPlacer) o;
-        return Objects.equals(uuid, minerPlacer.uuid);
+        return Objects.equals(uuid, (MinerPlacer) o.uuid);
     }
 
     @Override
