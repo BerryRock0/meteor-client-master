@@ -92,6 +92,7 @@ public class WorkersModule extends Module
         .build()
     );
 
+    public int w;
     public MinerPlacer unit;
 
 	public WorkersModule()
@@ -137,7 +138,7 @@ public class WorkersModule extends Module
         switch (management.get())
         {
             case Loop -> {for (MinerPlacer itr : MinerPlacers.get()) unit = itr;}
-            case Index -> {unit = MinerPlacers.minerPlacers.get(worker.get());}
+            case Index -> {unit = new MinerPlacers().minerPlacers.get(w);}
         }
 
         try
@@ -171,15 +172,15 @@ public class WorkersModule extends Module
         switch (c)
         {
             case '_': return;
+            case '>': w++; break;
+            case '<': w--; break;  
             case 'X': unit.x++; break;
             case 'Y': unit.y++; break;
             case 'Z': unit.z++; break;
             case 'x': unit.x--; break;
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
-            case '>': worker.set(worker.get()++);
-            case '<': worker.set(worker.get()--);
-            case ';': unit.setColumn(unit.column.get()); break; 
+            case '#': unit.setColumn(unit.column.get()); break; 
             case '?': unit.handler.set(!unit.handler.get()); break;
             case '!': unit.stepper.set(!unit.stepper.get()); break;
             case '-': unit.breakBlock.set(!unit.breakBlock.get()); break;    
@@ -205,6 +206,9 @@ public class WorkersModule extends Module
 
     private void initTable(GuiTheme theme, WTable table)
     {
+        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
+        WButton ws = table.add(theme.button("Set Worker")).expandX().widget(); create.action = () -> w=worker.get();
+        
         table.clear();
         for (MinerPlacer unit : MinerPlacers.get())
         {
@@ -230,8 +234,6 @@ public class WorkersModule extends Module
 
         table.add(theme.horizontalSeparator()).expandX();
         table.row();
-
-        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
     }
 	
 	 private static class EditMinerPlacerScreen extends EditSystemScreen<MinerPlacer>
