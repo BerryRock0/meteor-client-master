@@ -211,10 +211,10 @@ public class WorkersModule extends Module
             WButton place = table.add(theme.button("Place")).widget(); place.action = () -> {unit.interactBlock.set(!unit.interactBlock.get());};
             WButton handle = table.add(theme.button("Handle")).widget(); handle.action = () -> {unit.handler.set(!unit.handler.get());};
             WButton step = table.add(theme.button("Step")).widget(); step.action = () -> {unit.stepper.set(!unit.stepper.get());};
+            WButton sc = table.add(theme.button("Column")).widget(); sc.action = () -> {unit.setColumn(unit.column.get());};
             WButton sx = table.add(theme.button("SX")).widget(); sx.action = () -> {unit.x=unit.zero.get().getX();};
             WButton sy = table.add(theme.button("SY")).widget(); sy.action = () -> {unit.y=unit.zero.get().getY();};
             WButton sz = table.add(theme.button("SZ")).widget(); sz.action = () -> {unit.z=unit.zero.get().getZ();};
-            WButton sc = table.add(theme.button("SC")).widget(); sc.action = () -> {unit.setColumn(unit.column.get());};
             WButton ix = table.add(theme.button("x++")).widget(); ix.action = () -> unit.x++;
             WButton dx = table.add(theme.button("x--")).widget(); dx.action = () -> unit.x--;
             WButton iy = table.add(theme.button("y++")).widget(); iy.action = () -> unit.y++;
