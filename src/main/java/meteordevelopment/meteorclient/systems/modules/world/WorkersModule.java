@@ -137,7 +137,7 @@ public class WorkersModule extends Module
         switch (management.get())
         {
             case Loop -> {for (MinerPlacer itr : MinerPlacers.get()) unit = itr;}
-            case Index -> {unit = MinerPlacers.get().get(worker.get());}
+            case Index -> {unit = MinerPlacers.minerPlacers.get(worker.get());}
         }
 
         try
