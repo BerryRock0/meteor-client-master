@@ -36,6 +36,20 @@ public class WorkersModule extends Module
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgExecute = settings.createGroup("Execute");
 
+    public final Setting<Manage> management = sgGeneral.add(new EnumSetting.Builder<Manage>()
+        .name("Management")
+        .description("Hand to break.")
+        .defaultValue(Manage.Loop)
+        .build()
+    );
+    
+    public final Setting<Integer> worker = sgGeneral.add(new IntSetting.Builder()
+        .name("worker")
+        .description("Select worker")
+        .defaultValue(0)
+        .build()
+    );
+
     public final Setting<Boolean> pre = sgExecute.add(new BoolSetting.Builder()
         .name("pre")
         .description("Load script before tick.")
@@ -78,6 +92,8 @@ public class WorkersModule extends Module
         .build()
     );
 
+    public MinerPlacer unit;
+
 	public WorkersModule()
 	{
         super(Categories.World, "workers", "Allows you to create worker units.");
@@ -118,7 +134,12 @@ public class WorkersModule extends Module
 
     private void main()
     {
-        for (MinerPlacer unit : MinerPlacers.get())
+        switch (management.get())
+        {
+            case Loop -> {for (MinerPlacer itr : MinerPlacers.get()) unit = itr;}
+            case Index -> {unit = MinerPlacers.get().get(worker.get());}
+        }
+
         try
         {
             action(unit, unit.breakBlock.get(), unit.interactBlock.get());                
@@ -156,9 +177,13 @@ public class WorkersModule extends Module
             case 'x': unit.x--; break;
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
+            case '>': worker.set(worker.get()++);
+            case '<': worker.set(worker.get()--);
+            case ';': unit.setColumn(unit.column.get()); break; 
+            case '?': unit.handler.set(!unit.handler.get()) break;
+            case '!': unit.stepper.set(!unit.stepper.get()); break;
             case '-': unit.breakBlock.set(!unit.breakBlock.get()); break;    
             case '+': unit.interactBlock.set(!unit.interactBlock.get()); break;
-            case ';': unit.setColumn(unit.column.get()); break;
             default: break;
         }
     }
@@ -253,6 +278,12 @@ public class WorkersModule extends Module
             case Off -> {return InteractionHand.OFF_HAND;}
         }
         return null;
+    }
+
+    public enum Manage
+    {
+        Loop,
+        Index
     }
 
     public enum UseHand
