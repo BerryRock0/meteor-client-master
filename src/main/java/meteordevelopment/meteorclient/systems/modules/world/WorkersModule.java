@@ -78,6 +78,8 @@ public class WorkersModule extends Module
         .build()
     );
 
+    public int slot,cursor;
+
 	public WorkersModule()
 	{
         super(Categories.World, "workers", "Allows you to create worker units.");
@@ -142,12 +144,16 @@ public class WorkersModule extends Module
         if(b) BlockUtils.interact(new BlockHitResult(new BlockPos(unit.x, unit.y, unit.z).getCenter(), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
     }
 
-    private void translate(MinerPlacer unit, char c, boolean t)
+    private void translate(MinerPlacer unit, char ch, boolean t)
     {
         if(t)
-        switch (c)
+        switch (ch)
         {
             case '_': return;
+            case 'S': slot++; break;
+            case 's': slot--; break;
+            case 'C': cursor++; break;
+            case 'c': cursor--; break;                
             case 'X': unit.x++; break;
             case 'Y': unit.y++; break;
             case 'Z': unit.z++; break;
@@ -161,6 +167,8 @@ public class WorkersModule extends Module
             case '^': unit.stepper.set(!unit.stepper.get()); break;
             case '-': unit.breakBlock.set(!unit.breakBlock.get()); break;    
             case '+': unit.interactBlock.set(!unit.interactBlock.get()); break;
+            case '%': InvUtils.move().from(cursor).to(slot); break;
+            case '@': mc.player.getInventory().setSelectedSlot(slot) break;
             default: break;
         }
     }
