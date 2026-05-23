@@ -23,6 +23,7 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacer;
 import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacers;
 import meteordevelopment.meteorclient.utils.Utils;
+import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 
 import net.minecraft.client.Minecraft;
