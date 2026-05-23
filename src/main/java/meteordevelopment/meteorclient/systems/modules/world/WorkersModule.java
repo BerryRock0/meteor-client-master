@@ -180,7 +180,8 @@ public class WorkersModule extends Module
             case 'x': unit.x--; break;
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
-            case '#': unit.setColumn(unit.column.get()); break; 
+            case ';': w=worker.get(); break;
+            case '#': unit.setColumn(unit.column.get()); break;
             case '?': unit.handler.set(!unit.handler.get()); break;
             case '!': unit.stepper.set(!unit.stepper.get()); break;
             case '-': unit.breakBlock.set(!unit.breakBlock.get()); break;    
@@ -188,6 +189,7 @@ public class WorkersModule extends Module
             default: break;
         }
     }
+
     
     public Direction direction(MinerPlacer unit, BlockPos pos)
     {
