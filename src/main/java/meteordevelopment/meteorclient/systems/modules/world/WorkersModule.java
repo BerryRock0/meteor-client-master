@@ -206,9 +206,6 @@ public class WorkersModule extends Module
 
     private void initTable(GuiTheme theme, WTable table)
     {
-        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
-        WButton ws = table.add(theme.button("Set Worker")).expandX().widget(); create.action = () -> w=worker.get();
-        
         table.clear();
         for (MinerPlacer unit : MinerPlacers.get())
         {
@@ -234,6 +231,9 @@ public class WorkersModule extends Module
 
         table.add(theme.horizontalSeparator()).expandX();
         table.row();
+
+        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
+        WButton ws = table.add(theme.button("Set Worker")).expandX().widget(); create.action = () -> w=worker.get();
     }
 	
 	 private static class EditMinerPlacerScreen extends EditSystemScreen<MinerPlacer>
