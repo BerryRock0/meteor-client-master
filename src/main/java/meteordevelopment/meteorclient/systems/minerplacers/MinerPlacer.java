@@ -91,6 +91,20 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .build()
     );
 
+    public final Setting<Boolean> include = sgScript.add(new BoolSetting.Builder()
+        .name("include")
+        .description("Include this script.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> exclude = sgScript.add(new BoolSetting.Builder()
+        .name("exclude")
+        .description("Exclude this script.")
+        .defaultValue(false)
+        .build()
+    );
+
     //Render
     public final Setting<Boolean> render = sgRender.add(new BoolSetting.Builder()
         .name("render")
