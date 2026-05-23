@@ -180,7 +180,7 @@ public class WorkersModule extends Module
             case '>': worker.set(worker.get()++);
             case '<': worker.set(worker.get()--);
             case ';': unit.setColumn(unit.column.get()); break; 
-            case '?': unit.handler.set(!unit.handler.get()) break;
+            case '?': unit.handler.set(!unit.handler.get()); break;
             case '!': unit.stepper.set(!unit.stepper.get()); break;
             case '-': unit.breakBlock.set(!unit.breakBlock.get()); break;    
             case '+': unit.interactBlock.set(!unit.interactBlock.get()); break;
