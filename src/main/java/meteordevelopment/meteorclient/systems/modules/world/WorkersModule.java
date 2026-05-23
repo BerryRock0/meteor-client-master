@@ -216,10 +216,10 @@ public class WorkersModule extends Module
             WButton sz = table.add(theme.button("SZ")).widget(); sz.action = () -> {unit.z=unit.zero.get().getZ();};
             WButton sc = table.add(theme.button("SC")).widget(); sc.action = () -> {unit.setColumn(unit.column.get());};
             WButton ix = table.add(theme.button("x++")).widget(); ix.action = () -> unit.x++;
-            WButton iy = table.add(theme.button("y++")).widget(); iy.action = () -> unit.y++;
-            WButton iz = table.add(theme.button("z++")).widget(); iz.action = () -> unit.z++;
             WButton dx = table.add(theme.button("x--")).widget(); dx.action = () -> unit.x--;
+            WButton iy = table.add(theme.button("y++")).widget(); iy.action = () -> unit.y++;
             WButton dy = table.add(theme.button("y--")).widget(); dy.action = () -> unit.y--;
+            WButton iz = table.add(theme.button("z++")).widget(); iz.action = () -> unit.z++;
             WButton dz = table.add(theme.button("z--")).widget(); dz.action = () -> unit.z--;
             WButton remove = table.add(theme.button("Remove")).widget(); remove.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
 
