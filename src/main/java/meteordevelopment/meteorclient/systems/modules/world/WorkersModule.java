@@ -51,7 +51,13 @@ public class WorkersModule extends Module
         .defaultValue(false)
         .build()
     );
-    
+
+    public final Setting<Boolean> movement = sgControl.add(new BoolSetting.Builder()
+        .name("movement")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
     public final Setting<Boolean> forward = sgControl.add(new BoolSetting.Builder()
         .name("forward")
         .description("")
@@ -179,6 +185,7 @@ public class WorkersModule extends Module
             try
             {
                 work(unit, unit.breakBlock.get(), unit.interactBlock.get());
+                walk(movement.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
                 step(unit, unit.c!=unit.script.get().length(), unit.c==unit.script.get().length(), unit.stepper.get());
             }
@@ -193,16 +200,21 @@ public class WorkersModule extends Module
     {
         if(a) BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get());
         if(b) BlockUtils.interact(new BlockHitResult(new BlockPos(unit.x, unit.y, unit.z).getCenter(), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
-        
-        mc.options.keyUp.setDown(forward.get());
-        mc.options.keyDown.setDown(back.get());
-        mc.options.keyLeft.setDown(left.get());
-        mc.options.keyRight.setDown(right.get());
-        mc.options.keyShift.setDown(jump.get());
-        mc.options.keyJump.setDown(sneak.get());
-        mc.options.keyAttack.setDown(use.get());
-        mc.options.keyUse.setDown(attack.get());
-        
+    }
+
+    public void walk(boolean m)
+    {
+        if (m)
+        {
+            mc.options.keyUp.setDown(forward.get());
+            mc.options.keyDown.setDown(back.get());
+            mc.options.keyLeft.setDown(left.get());
+            mc.options.keyRight.setDown(right.get());
+            mc.options.keyShift.setDown(jump.get());
+            mc.options.keyJump.setDown(sneak.get());
+            mc.options.keyAttack.setDown(use.get());
+            mc.options.keyUse.setDown(attack.get());
+        }
     }
 
     private void translate(MinerPlacer unit, char ch, boolean t)
@@ -221,6 +233,7 @@ public class WorkersModule extends Module
             case 'x': unit.x--; break;
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
+            case '0': movement.set(!movement.get());
             case '1': forward.set(!forward.get());    
             case '2': back.set(!back.get());
             case '3': left.set(!left.get());
