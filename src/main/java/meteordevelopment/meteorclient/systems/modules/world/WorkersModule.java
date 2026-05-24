@@ -36,6 +36,7 @@ public class WorkersModule extends Module
 {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgExecute = settings.createGroup("Execute");
+    private final SettingGroup sgControl = settings.createGroup("Control");
 
     public final Setting<Boolean> pre = sgExecute.add(new BoolSetting.Builder()
         .name("pre")
@@ -47,6 +48,55 @@ public class WorkersModule extends Module
     public final Setting<Boolean> post = sgExecute.add(new BoolSetting.Builder()
         .name("post")
         .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> forward = sgControl.add(new BoolSetting.Builder()
+        .name("forward")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> back = sgControl.add(new BoolSetting.Builder()
+        .name("back")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> left = sgControl.add(new BoolSetting.Builder()
+        .name("left")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> right = sgControl.add(new BoolSetting.Builder()
+        .name("right")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> jump = sgControl.add(new BoolSetting.Builder()
+        .name("jump")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> sneak = sgControl.add(new BoolSetting.Builder()
+        .name("sneak")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> attack = sgControl.add(new BoolSetting.Builder()
+        .name("attack")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> use = sgControl.add(new BoolSetting.Builder()
+        .name("use")
+        .description("")
         .defaultValue(false)
         .build()
     );
@@ -143,6 +193,16 @@ public class WorkersModule extends Module
     {
         if(a) BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get());
         if(b) BlockUtils.interact(new BlockHitResult(new BlockPos(unit.x, unit.y, unit.z).getCenter(), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
+        
+        mc.options.keyUp.setDown(forward.get());
+        mc.options.keyDown.setDown(back.get());
+        mc.options.keyLeft.setDown(left.get());
+        mc.options.keyRight.setDown(right.get());
+        mc.options.keyShift.setDown(jump.get());
+        mc.options.keyJump.setDown(sneak.get());
+        mc.options.keyAttack.setDown(use.get());
+        mc.options.keyUse.setDown(attack.get());
+        
     }
 
     private void translate(MinerPlacer unit, char ch, boolean t)
@@ -161,6 +221,14 @@ public class WorkersModule extends Module
             case 'x': unit.x--; break;
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
+            case '1': forward.set(!forward.get());    
+            case '2': back.set(!back.get());
+            case '3': left.set(!left.get());
+            case '4': right.set(!right.get());
+            case '5': jump.set(!jump.get());
+            case '6': shift.set(!shift.get());
+            case '7': use.set(!use.get());
+            case '8': attack.set(!attack.get()); 
             case '\\':unit.x=unit.zero.get().getX(); break;    
             case '|': unit.y=unit.zero.get().getY(); break;
             case '/': unit.z=unit.zero.get().getZ(); break;
