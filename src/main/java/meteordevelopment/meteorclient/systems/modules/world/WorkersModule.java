@@ -185,9 +185,9 @@ public class WorkersModule extends Module
             try
             {
                 work(unit, unit.breakBlock.get(), unit.interactBlock.get());
-                walk(movement.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
                 step(unit, unit.c!=unit.script.get().length(), unit.c==unit.script.get().length(), unit.stepper.get());
+                walk(movement.get());
             }
             catch (Exception e)
             {
