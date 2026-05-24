@@ -226,7 +226,7 @@ public class WorkersModule extends Module
             case '3': left.set(!left.get());
             case '4': right.set(!right.get());
             case '5': jump.set(!jump.get());
-            case '6': shift.set(!shift.get());
+            case '6': sneak.set(!sneak.get());
             case '7': use.set(!use.get());
             case '8': attack.set(!attack.get()); 
             case '\\':unit.x=unit.zero.get().getX(); break;    
