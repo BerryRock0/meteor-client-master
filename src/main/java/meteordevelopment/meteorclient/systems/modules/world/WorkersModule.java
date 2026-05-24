@@ -162,8 +162,8 @@ public class WorkersModule extends Module
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
             case '\\':unit.x=unit.zero.get().getX(); break;    
-            case '|':unit.y=unit.zero.get().getY(); break;
-            case '/':unit.z=unit.zero.get().getZ(); break;
+            case '|': unit.y=unit.zero.get().getY(); break;
+            case '/': unit.z=unit.zero.get().getZ(); break;
             case '&': unit.setColumn(unit.column.get()); break;    
             case ':': unit.include.set(unit.include.get()); break;
             case ';': unit.exclude.set(unit.exclude.get()); break;
@@ -172,7 +172,7 @@ public class WorkersModule extends Module
             case '-': unit.breakBlock.set(!unit.breakBlock.get()); break;    
             case '+': unit.interactBlock.set(!unit.interactBlock.get()); break;
             case '%': InvUtils.move().from(cursor).to(slot); break;
-            case '@': mc.player.getInventory().setSelectedSlot(slot); break;
+            case '@': InvUtils.swap(slot, false); break;
             default: break;
         }
     }
