@@ -18,7 +18,7 @@ public class Category {
     }
 
     public Category(String name) {
-        this(name, null);
+        this(name);
     }
 
     @Override
