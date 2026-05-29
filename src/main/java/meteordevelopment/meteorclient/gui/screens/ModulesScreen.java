@@ -65,10 +65,6 @@ public class ModulesScreen extends TabScreen {
         w.padding = 0;
         w.spacing = 0;
 
-        if (theme.categoryIcons()) {
-            w.beforeHeaderInit = wContainer -> wContainer.add(theme.item(category.icon.get())).pad(2);
-        }
-
         c.add(w);
         w.view.scrollOnlyWhenMouseOver = true;
         w.view.hasScrollBar = false;
@@ -122,10 +118,6 @@ public class ModulesScreen extends TabScreen {
         w.id = "search";
         searchWindow = w;
 
-        if (theme.categoryIcons()) {
-            w.beforeHeaderInit = wContainer -> wContainer.add(theme.item(Items.COMPASS.getDefaultInstance())).pad(2);
-        }
-
         c.add(w);
         w.view.scrollOnlyWhenMouseOver = true;
         w.view.hasScrollBar = false;
@@ -176,10 +168,6 @@ public class ModulesScreen extends TabScreen {
         w.id = "favorites";
         w.padding = 0;
         w.spacing = 0;
-
-        if (theme.categoryIcons()) {
-            w.beforeHeaderInit = wContainer -> wContainer.add(theme.item(Items.NETHER_STAR.getDefaultInstance())).pad(2);
-        }
 
         Cell<WWindow> cell = c.add(w);
         w.view.scrollOnlyWhenMouseOver = true;
