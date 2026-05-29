@@ -17,10 +17,6 @@ public class Category {
         this.nameHash = name.hashCode();
     }
 
-    public Category(String name) {
-        this(name);
-    }
-
     @Override
     public String toString() {
         return name;
