@@ -1,9 +1,6 @@
 
 package meteordevelopment.meteorclient.systems.modules.world;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.events.game.OpenScreenEvent;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
@@ -15,15 +12,12 @@ import meteordevelopment.meteorclient.gui.widgets.WLabel;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.gui.widgets.containers.WTable;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
-import meteordevelopment.meteorclient.gui.widgets.pressable.WCheckbox;
-import meteordevelopment.meteorclient.gui.widgets.pressable.WConfirmedMinus;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacer;
 import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacers;
 import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 
 import net.minecraft.client.Minecraft;
@@ -48,61 +42,6 @@ public class WorkersModule extends Module
     public final Setting<Boolean> post = sgExecute.add(new BoolSetting.Builder()
         .name("post")
         .description("Load script after tick.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> movement = sgControl.add(new BoolSetting.Builder()
-        .name("movement")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> forward = sgControl.add(new BoolSetting.Builder()
-        .name("forward")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> back = sgControl.add(new BoolSetting.Builder()
-        .name("back")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> left = sgControl.add(new BoolSetting.Builder()
-        .name("left")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> right = sgControl.add(new BoolSetting.Builder()
-        .name("right")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> jump = sgControl.add(new BoolSetting.Builder()
-        .name("jump")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> sneak = sgControl.add(new BoolSetting.Builder()
-        .name("sneak")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> attack = sgControl.add(new BoolSetting.Builder()
-        .name("attack")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> use = sgControl.add(new BoolSetting.Builder()
-        .name("use")
-        .description("")
         .defaultValue(false)
         .build()
     );
@@ -187,12 +126,9 @@ public class WorkersModule extends Module
                 work(unit, unit.breakBlock.get(), unit.interactBlock.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
                 step(unit, unit.c!=unit.script.get().length(), unit.c==unit.script.get().length(), unit.stepper.get());
-                walk(movement.get());
             }
             catch (Exception e)
-            {
-                
-            }
+            {}
         }
     }    
 
@@ -202,46 +138,18 @@ public class WorkersModule extends Module
         if(b) BlockUtils.interact(new BlockHitResult(new BlockPos(unit.x, unit.y, unit.z).getCenter(), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
     }
 
-    public void walk(boolean m)
-    {
-        if (m)
-        {
-            mc.options.keyUp.setDown(forward.get());
-            mc.options.keyDown.setDown(back.get());
-            mc.options.keyLeft.setDown(left.get());
-            mc.options.keyRight.setDown(right.get());
-            mc.options.keyShift.setDown(jump.get());
-            mc.options.keyJump.setDown(sneak.get());
-            mc.options.keyAttack.setDown(use.get());
-            mc.options.keyUse.setDown(attack.get());
-        }
-    }
-
     private void translate(MinerPlacer unit, char ch, boolean t)
     {
         if(t)
         switch (ch)
         {
-            case '_': return;
-            case 'S': slot++; break;
-            case 's': slot--; break;
-            case 'C': cursor++; break;
-            case 'c': cursor--; break;                
+            case '_': return;              
             case 'X': unit.x++; break;
             case 'Y': unit.y++; break;
             case 'Z': unit.z++; break;
             case 'x': unit.x--; break;
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
-            case '0': movement.set(!movement.get());
-            case '1': forward.set(!forward.get());    
-            case '2': back.set(!back.get());
-            case '3': left.set(!left.get());
-            case '4': right.set(!right.get());
-            case '5': jump.set(!jump.get());
-            case '6': sneak.set(!sneak.get());
-            case '7': use.set(!use.get());
-            case '8': attack.set(!attack.get()); 
             case '\\':unit.x=unit.zero.get().getX(); break;    
             case '|': unit.y=unit.zero.get().getY(); break;
             case '/': unit.z=unit.zero.get().getZ(); break;
@@ -252,8 +160,6 @@ public class WorkersModule extends Module
             case '^': unit.stepper.set(!unit.stepper.get()); break;
             case '-': unit.breakBlock.set(!unit.breakBlock.get()); break;    
             case '+': unit.interactBlock.set(!unit.interactBlock.get()); break;
-            case '%': InvUtils.move().from(cursor).to(slot); break;
-            case '@': InvUtils.swap(slot, false); break;
             default: break;
         }
     }
