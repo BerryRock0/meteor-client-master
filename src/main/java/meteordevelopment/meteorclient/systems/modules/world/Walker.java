@@ -67,6 +67,13 @@ public class Walker extends Module
     );
 
 	//Control
+
+    public final Setting<Boolean> angle = sgControl.add(new BoolSetting.Builder()
+        .name("angle")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
 	public final Setting<Boolean> movement = sgControl.add(new BoolSetting.Builder()
         .name("movement")
         .description("")
@@ -122,7 +129,7 @@ public class Walker extends Module
         .build()
     );
 
-	public int character;
+    public int c,x,y;
 
 	public Walker()
 	{
@@ -147,9 +154,9 @@ public class Walker extends Module
     {
 		try
         {
-			walk(movement.get());
-            translate(script.get().charAt(character), handler.get());
-            step(character!=script.get().length(), character==script.get().length(), stepper.get());
+			walk(angle.get(), movement.get());
+            translate(script.get().charAt(c), handler.get());
+            step(c!=script.get().length(), c==script.get().length(), stepper.get());
         }
         catch (Exception e)
         {}
@@ -170,12 +177,23 @@ public class Walker extends Module
             case '6': sneak.set(!sneak.get());
             case '7': use.set(!use.get());
             case '8': attack.set(!attack.get());
+            case '9': angle.set(!angle.get());
+            case 'X': x++;
+            case 'x': x--;
+            case 'Y': y++;
+            case 'y': y--;
             default: break;
         }
     }
 
-	public void walk(boolean m)
+	public void walk(boolean a, boolean m)
 	{
+        if (a)
+        {
+            mc.player.setXRot((double)x);
+            mc.player.setYRot((double)y);
+        }
+
         if (m)
         {
             mc.options.keyUp.setDown(forward.get());
