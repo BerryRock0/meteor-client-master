@@ -18,6 +18,7 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacer;
 import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacers;
 import meteordevelopment.meteorclient.utils.Utils;
+import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 
 import net.minecraft.client.Minecraft;
@@ -147,9 +148,15 @@ public class WorkersModule extends Module
             case 'X': unit.x++; break;
             case 'Y': unit.y++; break;
             case 'Z': unit.z++; break;
+            case 'S': slot++; break;
+            case 'C': cursor++; break;    
             case 'x': unit.x--; break;
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
+            case 's': slot--; break;
+            case 'c': cursor--; break;
+            case '@': InvUtils.swap(slot, false); break;    
+            case '%': InvUtils.move().from(cursor).to(slot); break;
             case '\\':unit.x=unit.zero.get().getX(); break;    
             case '|': unit.y=unit.zero.get().getY(); break;
             case '/': unit.z=unit.zero.get().getZ(); break;
