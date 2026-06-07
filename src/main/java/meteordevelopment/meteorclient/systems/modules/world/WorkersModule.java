@@ -75,6 +75,68 @@ public class WorkersModule extends Module
         .build()
     );
 
+    //Control
+    public final Setting<Boolean> angle = sgControl.add(new BoolSetting.Builder()
+        .name("angle")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+	public final Setting<Boolean> movement = sgControl.add(new BoolSetting.Builder()
+        .name("movement")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> forward = sgControl.add(new BoolSetting.Builder()
+        .name("forward")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> back = sgControl.add(new BoolSetting.Builder()
+        .name("back")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> left = sgControl.add(new BoolSetting.Builder()
+        .name("left")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> right = sgControl.add(new BoolSetting.Builder()
+        .name("right")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> jump = sgControl.add(new BoolSetting.Builder()
+        .name("jump")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> sneak = sgControl.add(new BoolSetting.Builder()
+        .name("sneak")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> attack = sgControl.add(new BoolSetting.Builder()
+        .name("attack")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> use = sgControl.add(new BoolSetting.Builder()
+        .name("use")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+
     public int s,c,x,y;
 
 	public WorkersModule()
@@ -152,8 +214,8 @@ public class WorkersModule extends Module
 
         if(d)
         {
-            mc.player.setXRot((double)x);
-            mc.player.setYRot((double)y); 
+            mc.player.setXRot((float)x);
+            mc.player.setYRot((float)y); 
         }
     }
 
