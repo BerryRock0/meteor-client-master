@@ -75,7 +75,7 @@ public class WorkersModule extends Module
         .build()
     );
 
-    public int slot,cursor;
+    public int s,c,x,y;
 
 	public WorkersModule()
 	{
@@ -124,7 +124,7 @@ public class WorkersModule extends Module
 
             try
             {
-                work(unit, unit.breakBlock.get(), unit.interactBlock.get());
+                work(unit, unit.breakBlock.get(), unit.interactBlock.get(), movement.get(), angle.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
                 step(unit, unit.c!=unit.script.get().length(), unit.c==unit.script.get().length(), unit.stepper.get());
             }
@@ -133,10 +133,28 @@ public class WorkersModule extends Module
         }
     }    
 
-    private void work(MinerPlacer unit, boolean a, boolean b)
+    private void work(MinerPlacer unit, boolean a, boolean b, boolean c, boolean d)
     {
         if(a) BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get());
         if(b) BlockUtils.interact(new BlockHitResult(new BlockPos(unit.x, unit.y, unit.z).getCenter(), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
+
+        if (c)
+        {
+            mc.options.keyUp.setDown(forward.get());
+            mc.options.keyDown.setDown(back.get());
+            mc.options.keyLeft.setDown(left.get());
+            mc.options.keyRight.setDown(right.get());
+            mc.options.keyShift.setDown(jump.get());
+            mc.options.keyJump.setDown(sneak.get());
+            mc.options.keyAttack.setDown(use.get());
+            mc.options.keyUse.setDown(attack.get());  
+        }
+
+        if(d)
+        {
+            mc.player.setXRot((double)x);
+            mc.player.setYRot((double)y); 
+        }
     }
 
     private void translate(MinerPlacer unit, char ch, boolean t)
@@ -148,13 +166,27 @@ public class WorkersModule extends Module
             case 'X': unit.x++; break;
             case 'Y': unit.y++; break;
             case 'Z': unit.z++; break;
-            case 'S': slot++; break;
-            case 'C': cursor++; break;    
+            case 'S': s++; break;
+            case 'C': c++; break;    
+            case 'Y': x++;
+            case 'P': y++;    
             case 'x': unit.x--; break;
             case 'y': unit.y--; break;
             case 'z': unit.z--; break;
-            case 's': slot--; break;
-            case 'c': cursor--; break;
+            case 's': s--; break;
+            case 'c': c--; break;
+            case 'y': x--;
+            case 'p': y--;
+            case '0': movement.set(!movement.get());
+            case '1': forward.set(!forward.get());    
+            case '2': back.set(!back.get());
+            case '3': left.set(!left.get());
+            case '4': right.set(!right.get());
+            case '5': jump.set(!jump.get());
+            case '6': sneak.set(!sneak.get());
+            case '7': use.set(!use.get());
+            case '8': attack.set(!attack.get());
+            case '9': angle.set(!angle.get());
             case '@': InvUtils.swap(slot, false); break;    
             case '%': InvUtils.move().from(cursor).to(slot); break;
             case '\\':unit.x=unit.zero.get().getX(); break;    
