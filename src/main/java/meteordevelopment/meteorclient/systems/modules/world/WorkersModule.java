@@ -249,8 +249,8 @@ public class WorkersModule extends Module
             case '7': use.set(!use.get());
             case '8': attack.set(!attack.get());
             case '9': angle.set(!angle.get());
-            case '@': InvUtils.swap(slot, false); break;    
-            case '%': InvUtils.move().from(cursor).to(slot); break;
+            case '@': InvUtils.swap(s, false); break;    
+            case '%': InvUtils.move().from(c).to(s); break;
             case '\\':unit.x=unit.zero.get().getX(); break;    
             case '|': unit.y=unit.zero.get().getY(); break;
             case '/': unit.z=unit.zero.get().getZ(); break;
