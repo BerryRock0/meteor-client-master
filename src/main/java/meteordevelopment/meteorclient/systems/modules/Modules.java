@@ -550,13 +550,11 @@ public class Modules extends System<Modules> {
         add(new Nuker());
         add(new PacketMine());
         add(new Quantities());
-        add(new Slotter());
         add(new StashFinder());
         add(new Telekinesis());
         add(new SpawnProofer());
         add(new Timer());
         add(new VeinMiner());
-        add(new Walker());
         add(new WorkersModule());
 
         if (BaritoneUtils.IS_AVAILABLE) {
