@@ -15,8 +15,8 @@ import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import java.util.*;
 
 public class WTable extends WContainer {
-    public double horizontalSpacing = 3;
-    public double verticalSpacing = 3;
+    public double horizontalSpacing = 0;
+    public double verticalSpacing = 0;
 
     private final List<List<Cell<?>>> rows = new ArrayList<>();
     private int rowI;
