@@ -295,22 +295,23 @@ public class WorkersModule extends Module
 
         for (MinerPlacer unit : MinerPlacers.get())
         {
-            WButton edit = table.add(theme.button("Edit")).widget(); edit.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
-            WButton delete = table.add(theme.button("Delete")).widget(); delete.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
-            WButton mine = table.add(theme.button("Mine")).widget(); mine.action = () -> {unit.breakBlock.set(!unit.breakBlock.get());};
-            WButton interact = table.add(theme.button("Interact")).widget(); interact.action = () -> {unit.interactBlock.set(!unit.interactBlock.get());};
-            WButton handle = table.add(theme.button("Handle")).widget(); handle.action = () -> {unit.handler.set(!unit.handler.get());};
-            WButton step = table.add(theme.button("Step")).widget(); step.action = () -> {unit.stepper.set(!unit.stepper.get());};
-            WButton restart = table.add(theme.button("Restart")).widget(); restart.action = () -> {unit.setColumn(unit.column.get());};
-            WButton tx = table.add(theme.button("θX")).widget(); tx.action = () -> {unit.x=unit.zero.get().getX();};
-            WButton ty = table.add(theme.button("θY")).widget(); ty.action = () -> {unit.y=unit.zero.get().getY();};
-            WButton tz = table.add(theme.button("θZ")).widget(); tz.action = () -> {unit.z=unit.zero.get().getZ();};
             WButton ix = table.add(theme.button("x++")).widget(); ix.action = () -> unit.x++;
             WButton dx = table.add(theme.button("x--")).widget(); dx.action = () -> unit.x--;
             WButton iy = table.add(theme.button("y++")).widget(); iy.action = () -> unit.y++;
             WButton dy = table.add(theme.button("y--")).widget(); dy.action = () -> unit.y--;
             WButton iz = table.add(theme.button("z++")).widget(); iz.action = () -> unit.z++;
             WButton dz = table.add(theme.button("z--")).widget(); dz.action = () -> unit.z--;
+            WButton tx = table.add(theme.button("θX")).widget(); tx.action = () -> {unit.x=unit.zero.get().getX();};
+            WButton ty = table.add(theme.button("θY")).widget(); ty.action = () -> {unit.y=unit.zero.get().getY();};
+            WButton tz = table.add(theme.button("θZ")).widget(); tz.action = () -> {unit.z=unit.zero.get().getZ();};
+            WButton mine = table.add(theme.button("Mine")).widget(); mine.action = () -> {unit.breakBlock.set(!unit.breakBlock.get());};
+            WButton interact = table.add(theme.button("Interact")).widget(); interact.action = () -> {unit.interactBlock.set(!unit.interactBlock.get());};
+            WButton handle = table.add(theme.button("Handle")).widget(); handle.action = () -> {unit.handler.set(!unit.handler.get());};
+            WButton step = table.add(theme.button("Step")).widget(); step.action = () -> {unit.stepper.set(!unit.stepper.get());};
+            WButton restart = table.add(theme.button("Restart")).widget(); restart.action = () -> {unit.setColumn(unit.column.get());};
+            WButton edit = table.add(theme.button("Edit")).widget(); edit.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
+            WButton delete = table.add(theme.button("Delete")).widget(); delete.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
+
             table.row();
         }
 
