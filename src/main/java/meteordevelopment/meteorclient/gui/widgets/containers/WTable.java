@@ -117,7 +117,6 @@ public class WTable extends WContainer {
     @Override
     protected void onCalculateWidgetPositions()
     {
-        double x = this.x;
         double y = this.y;
         
         // Loop over rows
@@ -127,6 +126,7 @@ public class WTable extends WContainer {
 
             if (rowI > 0) y += verticalSpacing();
 
+            double x = this.x;
             double rowHeight = rowHeights.getDouble(rowI);
             double expandXAdd = rowExpandCellXCounts.getInt(rowI) > 0 ? (width - rowWidths.getDouble(rowI)) / rowExpandCellXCounts.getInt(rowI) : 0;
 
