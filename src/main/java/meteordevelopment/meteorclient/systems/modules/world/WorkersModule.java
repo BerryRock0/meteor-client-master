@@ -292,9 +292,9 @@ public class WorkersModule extends Module
     private void initTable(GuiTheme theme, WTable table)
     {
         table.clear();
+
         for (MinerPlacer unit : MinerPlacers.get())
         {
-            WButton restart = table.add(theme.button("Restart")).widget(); restart.action = () -> {unit.setColumn(unit.column.get());};
             WButton tx = table.add(theme.button("θX")).widget(); tx.action = () -> {unit.x=unit.zero.get().getX();};
             WButton ty = table.add(theme.button("θY")).widget(); ty.action = () -> {unit.y=unit.zero.get().getY();};
             WButton tz = table.add(theme.button("θZ")).widget(); tz.action = () -> {unit.z=unit.zero.get().getZ();};
@@ -308,6 +308,7 @@ public class WorkersModule extends Module
             WButton interact = table.add(theme.button("Interact")).widget(); interact.action = () -> {unit.interactBlock.set(!unit.interactBlock.get());};
             WButton handle = table.add(theme.button("Handle")).widget(); handle.action = () -> {unit.handler.set(!unit.handler.get());};
             WButton step = table.add(theme.button("Step")).widget(); step.action = () -> {unit.stepper.set(!unit.stepper.get());};
+            WButton restart = table.add(theme.button("Restart")).widget(); restart.action = () -> {unit.setColumn(unit.column.get());};
             WButton edit = table.add(theme.button("Edit")).widget(); edit.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
             WButton delete = table.add(theme.button("Delete")).widget(); delete.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
 
@@ -317,7 +318,7 @@ public class WorkersModule extends Module
         table.add(theme.horizontalSeparator()).expandX();
         table.row();
 
-        WButton q = table.add(theme.button("✎")).expandX().widget(); q.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
+        WButton init = table.add(theme.button("New")).expandX().widget(); q.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
     }
 	
 	 private static class EditMinerPlacerScreen extends EditSystemScreen<MinerPlacer>
