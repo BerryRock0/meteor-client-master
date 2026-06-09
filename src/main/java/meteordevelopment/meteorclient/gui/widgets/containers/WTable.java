@@ -115,11 +115,13 @@ public class WTable extends WContainer {
     }
 
     @Override
-    protected void onCalculateWidgetPositions() {
+    protected void onCalculateWidgetPositions()
+    {
         double y = this.y;
 
         // Loop over rows
-        for (int rowI = 0; rowI < rows.size(); rowI++) {
+        for (int rowI = 0; rowI < rows.size(); rowI++)
+        {
             List<Cell<?>> row = rows.get(rowI);
 
             if (rowI > 0) y += verticalSpacing();
@@ -130,7 +132,8 @@ public class WTable extends WContainer {
             double expandXAdd = rowExpandCellXCounts.getInt(rowI) > 0 ? (width - rowWidths.getDouble(rowI)) / rowExpandCellXCounts.getInt(rowI) : 0;
 
             // Loop over cells in the row
-            for (int cellI = 0; cellI < row.size(); cellI++) {
+            for (int cellI = 0; cellI < row.size(); cellI++)
+            {
                 Cell<?> cell = row.get(cellI);
 
                 if (cellI > 0) x += horizontalSpacing();
@@ -144,10 +147,10 @@ public class WTable extends WContainer {
 
                 cell.alignWidget();
 
-                x += columnWidth + (cell.expandCellX ? expandXAdd : 0);
+                //x += columnWidth + (cell.expandCellX ? expandXAdd : 0);
             }
 
-            y += rowHeight;
+            //y += rowHeight;
         }
     }
 
