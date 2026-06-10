@@ -426,6 +426,7 @@ public class Modules extends System<Modules> {
         add(new AirPlace());
         add(new AntiAFK());
         add(new AntiHunger());
+        add(new AutoActions());
         add(new AutoEat());
         add(new AutoClicker());
         add(new AutoFish());
