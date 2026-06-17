@@ -131,7 +131,7 @@ public class WorkersModule extends Module
             {
                 work(unit, unit.breakBlock.get(), unit.interactBlock.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
-                step(unit, unit.c!=unit.script.get().length(), unit.c==unit.script.get().length(), unit.stepper.get());
+                step(unit, unit.stepper.get());
             }
             catch (Exception e)
             {if(debug.get()) e.printStackTrace();}
@@ -179,12 +179,14 @@ public class WorkersModule extends Module
         }
     }
 
-    private void step(MinerPlacer unit, boolean i, boolean d, boolean s)
+    private void step(MinerPlacer unit, boolean s)
     {
         if(s)
+        switch (unit.stepDirections.get())
         {
-            if (i) unit.c++;
-            if (d) unit.c--;
+            case None -> {}
+            case Increment -> {unit.c++;}
+            case Decrement -> {unit.c--;}
         }
     }
 
