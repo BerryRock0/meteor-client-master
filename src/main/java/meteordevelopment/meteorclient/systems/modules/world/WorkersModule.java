@@ -33,6 +33,7 @@ public class WorkersModule extends Module
     private final SettingGroup sgExecute = settings.createGroup("Execute");
     private final SettingGroup sgControl = settings.createGroup("Control");
 
+    //Execute
     public final Setting<Boolean> pre = sgExecute.add(new BoolSetting.Builder()
         .name("pre")
         .description("Load script before tick.")
@@ -46,7 +47,14 @@ public class WorkersModule extends Module
         .defaultValue(false)
         .build()
     );
-
+    public final Setting<Boolean> debug = sgExecute.add(new BoolSetting.Builder()
+        .name("debug")
+        .description("Print errors on logs.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    //General
     public final Setting<UseHand> breakHand = sgGeneral.add(new EnumSetting.Builder<UseHand>()
         .name("break-hand")
         .description("Hand to break.")
@@ -126,7 +134,7 @@ public class WorkersModule extends Module
                 step(unit, unit.c!=unit.script.get().length(), unit.c==unit.script.get().length(), unit.stepper.get());
             }
             catch (Exception e)
-            {e.printStackTrace();}
+            {if(debug.get()) e.printStackTrace();}
             
             if (unit.include.get()) break;
             if (unit.exclude.get()) continue;
