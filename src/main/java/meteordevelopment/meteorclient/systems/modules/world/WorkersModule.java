@@ -126,7 +126,7 @@ public class WorkersModule extends Module
                 step(unit, unit.c!=unit.script.get().length(), unit.c==unit.script.get().length(), unit.stepper.get());
             }
             catch (Exception e)
-            {}
+            {e.printStackTrace();}
             
             if (unit.include.get()) break;
             if (unit.exclude.get()) continue;
