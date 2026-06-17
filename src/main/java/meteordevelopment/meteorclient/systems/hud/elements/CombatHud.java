@@ -98,7 +98,7 @@ public class CombatHud extends HudElement {
     private final Setting<Boolean> displayDistance = sgElements.add(new BoolSetting.Builder()
         .name("distance")
         .description("Shows the distance between you and the player.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );    
 
