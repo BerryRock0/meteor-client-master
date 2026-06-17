@@ -66,12 +66,17 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     );
 
     //Script
+    private final Setting<StepDirections> stepDirs = sgGeneral.add(new EnumSetting.Builder<StepDirections>()
+        .name("Step Direction")
+        .description("Direction of stepping.")
+        .defaultValue(StepDirection.None)
+        .build()
+    );
     public final Setting<String> script = sgScript.add(new StringSetting.Builder()
         .name("script")
         .description("Action commands. +-=XYZxyz_")
         .build()
     );
-    
     public final Setting<Integer> column = sgScript.add(new IntSetting.Builder()
         .name("column")
         .description("Reset column value.")
@@ -97,7 +102,6 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .defaultValue(false)
         .build()
     );
-
     public final Setting<Boolean> exclude = sgScript.add(new BoolSetting.Builder()
         .name("exclude")
         .description("Exclude this script.")
@@ -160,6 +164,13 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         South,
         East,
         West
+    }
+
+    public enum StepDirections
+    {
+        None,
+        Increment,
+        Decrement
     }
 
 	public static class Builder
