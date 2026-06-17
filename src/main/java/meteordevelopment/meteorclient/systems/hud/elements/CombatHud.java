@@ -445,19 +445,8 @@ public class CombatHud extends HudElement {
             x = this.x;
 
             // Health bar
-
             x /= getScale();
             y /= getScale();
-
-            x += 5;
-            y += 5;
-
-            Renderer2D.COLOR.begin();
-            Renderer2D.COLOR.boxLines(x, y, 165, 11, BLACK);
-            Renderer2D.COLOR.render();
-
-            x += 2;
-            y += 2;
 
             float maxHealth = playerEntity.getMaxHealth();
             int maxAbsorb = 16;
@@ -475,10 +464,13 @@ public class CombatHud extends HudElement {
             int healthWidth = (int) (totalHealthWidth * healthPercent);
             int absorbWidth = (int) (totalAbsorbWidth * absorbPercent);
 
-            Renderer2D.COLOR.begin();
-            Renderer2D.COLOR.quad(x, y, healthWidth, 7, healthColor1.get(), healthColor2.get(), healthColor3.get(), healthColor4.get());
-            Renderer2D.COLOR.quad(x + healthWidth, y, absorbWidth, 7, healthColor1.get(), healthColor2.get(), healthColor3.get(), healthColor4.get());
-            Renderer2D.COLOR.render();
+            if(displayHealth.get())
+            {
+                Renderer2D.COLOR.begin();
+                Renderer2D.COLOR.quad(x, y, healthWidth, 7, healthColor1.get(), healthColor2.get(), healthColor3.get(), healthColor4.get());
+                Renderer2D.COLOR.quad(x + healthWidth, y, absorbWidth, 7, healthColor1.get(), healthColor2.get(), healthColor3.get(), healthColor4.get());
+                Renderer2D.COLOR.render();
+            }
 
             matrices.popMatrix();
         });
