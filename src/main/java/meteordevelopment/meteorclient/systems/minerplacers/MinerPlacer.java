@@ -66,7 +66,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     );
 
     //Script
-    private final Setting<StepDirections> stepDirs = sgGeneral.add(new EnumSetting.Builder<StepDirections>()
+    private final Setting<StepDirections> stepDirections = sgGeneral.add(new EnumSetting.Builder<StepDirections>()
         .name("Step Direction")
         .description("Direction of stepping.")
         .defaultValue(StepDirection.None)
