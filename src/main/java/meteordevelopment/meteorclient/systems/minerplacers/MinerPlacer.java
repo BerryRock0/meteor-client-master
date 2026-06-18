@@ -30,11 +30,6 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     private final SettingGroup sgScript = settings.createGroup("Script");
     private final SettingGroup sgRender = settings.createGroup("Render");
 
- /*   public Setting<String> name = sgGeneral.add(new StringSetting.Builder()
-        .name("name")
-        .description("The name of the worker.")                                       
-        .build()
-    ); */
     public final Setting<BlockPos> zero = sgGeneral.add(new BlockPosSetting.Builder()
         .name("zero-pos")
         .description("Mining block position")
@@ -66,7 +61,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     );
 
     //Script
-    public final Setting<StepDirections> stepDirections = sgGeneral.add(new EnumSetting.Builder<StepDirections>()
+    public final Setting<StepDirections> stepDirections = sgScript.add(new EnumSetting.Builder<StepDirections>()
         .name("Step Direction")
         .description("Direction of stepping.")
         .defaultValue(StepDirections.None)
@@ -74,7 +69,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     );
     public final Setting<String> script = sgScript.add(new StringSetting.Builder()
         .name("script")
-        .description("Action commands. +-=XYZxyz_")
+        .description("Action commands. _!?+-XYZxyz&\|/:;")
         .build()
     );
     public final Setting<Integer> column = sgScript.add(new IntSetting.Builder()
