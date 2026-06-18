@@ -173,8 +173,10 @@ public class WorkersModule extends Module
             case ';': unit.exclude.set(unit.exclude.get()); break;
             case '*': unit.handler.set(!unit.handler.get()); break;
             case '^': unit.stepper.set(!unit.stepper.get()); break;
-            case '-': unit.breakBlock.set(!unit.breakBlock.get()); break;    
-            case '+': unit.interactBlock.set(!unit.interactBlock.get()); break;
+            case '!': unit.breakBlock.set(!unit.breakBlock.get()); break;    
+            case '?': unit.interactBlock.set(!unit.interactBlock.get()); break;
+            case '-': BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get()); break;
+            case '+': BlockUtils.interact(new BlockHitResult(new BlockPos(unit.x, unit.y, unit.z).getCenter(), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get()); break;
             default: break;
         }
     }
