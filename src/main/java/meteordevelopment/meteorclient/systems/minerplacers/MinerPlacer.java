@@ -69,7 +69,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     );
     public final Setting<String> script = sgScript.add(new StringSetting.Builder()
         .name("script")
-        .description("Action commands. _!?+-XYZSCxyzsc&\|/@%*^:;")
+        .description("Action commands. _!?+-XYZSCxyzsc&@%*^:;")
         .build()
     );
     public final Setting<Integer> column = sgScript.add(new IntSetting.Builder()
