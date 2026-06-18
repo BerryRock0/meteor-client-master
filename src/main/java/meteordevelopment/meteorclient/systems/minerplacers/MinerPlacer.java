@@ -69,7 +69,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
     private final Setting<StepDirections> stepDirections = sgGeneral.add(new EnumSetting.Builder<StepDirections>()
         .name("Step Direction")
         .description("Direction of stepping.")
-        .defaultValue(StepDirection.None)
+        .defaultValue(StepDirections.None)
         .build()
     );
     public final Setting<String> script = sgScript.add(new StringSetting.Builder()
