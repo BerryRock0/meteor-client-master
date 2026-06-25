@@ -239,7 +239,7 @@ public class WorkersModule extends Module
         table.row();
 
         //WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
-        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> {initTable(theme, table)};
+        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> {initTable(theme, table);};
     }
 	
 	 private static class EditMinerPlacerScreen extends EditSystemScreen<MinerPlacer>
