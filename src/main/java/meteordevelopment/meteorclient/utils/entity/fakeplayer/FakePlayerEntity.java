@@ -65,15 +65,6 @@ public class FakePlayerEntity extends RemotePlayer {
         setRemoved(RemovalReason.DISCARDED);
     }
 
-    public void attack(){}
-    public void mine(){}
-    public void use(){}
-    public void forward(){}
-    public void back(){}
-    public void left(){}
-    public void right(){}
-    public void sneak(){}
-
     @Nullable
     @Override
     protected PlayerInfo getPlayerInfo() {
