@@ -163,7 +163,7 @@ public class WorkersModule extends Module
             case 'z': unit.z--; break;
             case 's': s--; break;
             case 'c': c--; break;
-            case '=': InvUtils.swap(s, false); break;    
+            case '~': InvUtils.swap(s, false); break;    
             case '%': InvUtils.move().from(c).to(s); break;
             case '\\':unit.x=unit.zero.get().getX(); break;    
             case '|': unit.y=unit.zero.get().getY(); break;
