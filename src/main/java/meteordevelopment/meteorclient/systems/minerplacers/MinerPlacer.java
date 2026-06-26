@@ -117,7 +117,7 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .build()
     );
 
-    public int s,c,x,y,z;
+    public int c,x,y,z;
     public final UUID uuid;
 
     private MinerPlacer()
