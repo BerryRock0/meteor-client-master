@@ -214,12 +214,12 @@ public class WorkersModule extends Module
         for (MinerPlacer unit : MinerPlacers.get())
         {
             WButton restart = table.add(theme.button("Restart")).widget(); restart.action = () -> {unit.setColumn(unit.column.get());};
-            WButton ix = table.add(theme.button("x++")).widget(); ix.action = () -> unit.x++;
-            WButton dx = table.add(theme.button("x--")).widget(); dx.action = () -> unit.x--;
-            WButton iy = table.add(theme.button("y++")).widget(); iy.action = () -> unit.y++;
-            WButton dy = table.add(theme.button("y--")).widget(); dy.action = () -> unit.y--;
-            WButton iz = table.add(theme.button("z++")).widget(); iz.action = () -> unit.z++;
-            WButton dz = table.add(theme.button("z--")).widget(); dz.action = () -> unit.z--;
+            WButton ix = table.add(theme.button("+X")).widget(); ix.action = () -> unit.x++;
+            WButton dx = table.add(theme.button("-x")).widget(); dx.action = () -> unit.x--;
+            WButton iy = table.add(theme.button("+Y")).widget(); iy.action = () -> unit.y++;
+            WButton dy = table.add(theme.button("-y")).widget(); dy.action = () -> unit.y--;
+            WButton iz = table.add(theme.button("+Z")).widget(); iz.action = () -> unit.z++;
+            WButton dz = table.add(theme.button("-z")).widget(); dz.action = () -> unit.z--;
             WButton tx = table.add(theme.button("θX")).widget(); tx.action = () -> {unit.x=unit.zero.get().getX();};
             WButton ty = table.add(theme.button("θY")).widget(); ty.action = () -> {unit.y=unit.zero.get().getY();};
             WButton tz = table.add(theme.button("θZ")).widget(); tz.action = () -> {unit.z=unit.zero.get().getZ();};
@@ -238,8 +238,7 @@ public class WorkersModule extends Module
         table.add(theme.horizontalSeparator()).expandX();
         table.row();
 
-        //WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
-        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> {initTable(theme, table);};
+        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
     }
 	
 	 private static class EditMinerPlacerScreen extends EditSystemScreen<MinerPlacer>
