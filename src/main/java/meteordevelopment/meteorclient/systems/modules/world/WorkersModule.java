@@ -135,9 +135,6 @@ public class WorkersModule extends Module
             }
             catch (Exception e)
             {if(debug.get()) e.printStackTrace();}
-            
-            if (unit.include.get()) break;
-            if (unit.exclude.get()) continue;
         }
     }    
 
@@ -169,8 +166,6 @@ public class WorkersModule extends Module
             case '|': unit.y=unit.zero.get().getY(); break;
             case '/': unit.z=unit.zero.get().getZ(); break;
             case '&': unit.setColumn(unit.column.get()); break;    
-            case ':': unit.include.set(unit.include.get()); break;
-            case ';': unit.exclude.set(unit.exclude.get()); break;
             case '*': unit.handler.set(!unit.handler.get()); break;
             case '^': unit.stepper.set(!unit.stepper.get()); break;
             case '!': unit.breakBlock.set(!unit.breakBlock.get()); break;    
@@ -227,8 +222,6 @@ public class WorkersModule extends Module
             WButton interact = table.add(theme.button("Interact")).widget(); interact.action = () -> {unit.interactBlock.set(!unit.interactBlock.get());};
             WButton handle = table.add(theme.button("Handle")).widget(); handle.action = () -> {unit.handler.set(!unit.handler.get());};
             WButton step = table.add(theme.button("Step")).widget(); step.action = () -> {unit.stepper.set(!unit.stepper.get());};
-            WButton include = table.add(theme.button("Include")).widget(); include.action = () -> {unit.include.set(!unit.include.get());};
-            WButton exclude = table.add(theme.button("Exclude")).widget(); exclude.action = () -> {unit.exclude.set(!unit.exclude.get());};
             WButton edit = table.add(theme.button("Edit")).widget(); edit.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
             WButton delete = table.add(theme.button("Delete")).widget(); delete.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
 
