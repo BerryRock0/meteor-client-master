@@ -40,12 +40,12 @@ public class PacketCanceller extends Module {
         runInMainMenu = true;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST + 1)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onReceivePacket(PacketEvent.Receive event) {
         if (s2cPackets.get().contains(event.packet.getClass())) event.cancel();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST + 1)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onSendPacket(PacketEvent.Send event) {
         if (c2sPackets.get().contains(event.packet.getClass())) event.cancel();
     }
