@@ -67,7 +67,7 @@ public abstract class WidgetScreen extends Screen {
     public WidgetScreen(GuiTheme theme, String title) {
         super(Component.literal(title));
 
-        this.parent = mc.gui.screen;
+        this.parent = mc.gui.screen();
         this.root = new WFullScreenRoot();
         this.theme = theme;
 
