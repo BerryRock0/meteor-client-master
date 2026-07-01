@@ -554,8 +554,27 @@ public class Utils {
     }
 
     public static boolean isShulker(Item item) {
-        return true;
+        return item == Items.SHULKER_BOX || contains(Items.DYED_SHULKER_BOX, item);
     }
+
+public static <T> boolean contains(ColorCollection<T> collection, T value) {
+        return collection.white() == value
+            || collection.orange() == value
+            || collection.magenta() == value
+            || collection.lightBlue() == value
+            || collection.yellow() == value
+            || collection.lime() == value
+            || collection.pink() == value
+            || collection.gray() == value
+            || collection.lightGray() == value
+            || collection.cyan() == value
+            || collection.purple() == value
+            || collection.blue() == value
+            || collection.brown() == value
+            || collection.green() == value
+            || collection.red() == value
+            || collection.black() == value;
+}
 
     public static boolean isThrowable(Item item) {
         return item instanceof ExperienceBottleItem || item instanceof BowItem || item instanceof CrossbowItem || item instanceof SnowballItem || item instanceof EggItem || item instanceof EnderpearlItem || item instanceof SplashPotionItem || item instanceof LingeringPotionItem || item instanceof FishingRodItem || item instanceof TridentItem;
