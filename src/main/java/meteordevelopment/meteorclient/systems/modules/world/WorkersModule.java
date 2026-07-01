@@ -222,7 +222,7 @@ public class WorkersModule extends Module
             WButton interact = table.add(theme.button("Interact")).widget(); interact.action = () -> {unit.interactBlock.set(!unit.interactBlock.get());};
             WButton handle = table.add(theme.button("Handle")).widget(); handle.action = () -> {unit.handler.set(!unit.handler.get());};
             WButton step = table.add(theme.button("Step")).widget(); step.action = () -> {unit.stepper.set(!unit.stepper.get());};
-            WButton edit = table.add(theme.button("Edit")).widget(); edit.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
+            WButton edit = table.add(theme.button("Edit")).widget(); edit.action = () -> mc.gui.setScreen(new EditMinerPlacerScreen(theme, unit, () -> initTable(theme, table)));
             WButton delete = table.add(theme.button("Delete")).widget(); delete.action = () -> {MinerPlacers.get().remove(unit); initTable(theme, table);};
 
             table.row();
@@ -231,7 +231,7 @@ public class WorkersModule extends Module
         table.add(theme.horizontalSeparator()).expandX();
         table.row();
 
-        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
+        WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.gui.setScreen(new EditMinerPlacerScreen(theme, null, () -> initTable(theme, table)));
     }
 	
 	 private static class EditMinerPlacerScreen extends EditSystemScreen<MinerPlacer>
