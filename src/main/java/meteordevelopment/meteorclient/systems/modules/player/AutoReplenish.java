@@ -95,12 +95,12 @@ public class AutoReplenish extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Pre event) {
-        if (mc.screen == null && prevHadOpenScreen) {
+        if (mc.gui.screen() == null && prevHadOpenScreen) {
             fillItems();
         }
 
         prevHadOpenScreen = mc.screen != null;
-        if (mc.player.containerMenu.getItems().size() != 46 || mc.screen != null) return;
+        if (mc.player.containerMenu.getItems().size() != 46 || mc.gui.screen() != null) return;
 
         if (tickDelayLeft > 0) {
             tickDelayLeft--;
