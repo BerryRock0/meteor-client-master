@@ -752,6 +752,6 @@ public class Nametags extends Module {
     }
 
     public boolean playerNametags() {
-        return isActive() && entities.get().contains(EntityType.PLAYER);
+        return isActive() && entities.get().contains(EntityTypes.PLAYER);
     }
 }
