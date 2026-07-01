@@ -335,7 +335,7 @@ public class HudEditorScreen extends WidgetScreen implements Snapper.Container {
     }
 
     public static boolean isOpen() {
-        Screen s = mc.screen;
+        Screen s = mc.gui.screen();
         return s instanceof HudEditorScreen || s instanceof AddHudElementScreen || s instanceof HudElementPresetsScreen || s instanceof HudElementScreen || s instanceof HudTab.HudScreen;
     }
 
