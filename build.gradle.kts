@@ -69,12 +69,6 @@ dependencies {
     modInclude(fabricApi.module("fabric-api-base", fapiVersion))
     modInclude(fabricApi.module("fabric-resource-loader-v1", fapiVersion))
 
-    // Compat fixes
-    compileOnly(fabricApi.module("fabric-renderer-indigo", fapiVersion))
-
-    compileOnly(libs.baritone)
-    compileOnly(libs.modmenu)
-
     // Libraries (JAR-in-JAR)
     jij(libs.orbit)
     jij(libs.starscript)
