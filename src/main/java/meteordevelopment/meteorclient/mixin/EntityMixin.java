@@ -55,13 +55,9 @@ public abstract class EntityMixin {
     }
 
     @Inject(method = {"onAboveBubbleColumn", "onInsideBubbleColumn"}, at = @At("HEAD"))
-    private void onBubbleColumn(CallbackInfo ci) {
+    private void onBubbleColumn(CallbackInfo ci)
+    {
         if ((Object) this != mc.player) return;
-
-        Jesus jesus = Modules.get().get(Jesus.class);
-        if (jesus.isActive()) {
-            jesus.isInBubbleColumn = true;
-        }
     }
 
     @ModifyExpressionValue(method = "updateSwimming", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isUnderWater()Z"))
