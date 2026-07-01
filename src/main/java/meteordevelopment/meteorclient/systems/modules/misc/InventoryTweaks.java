@@ -270,8 +270,8 @@ public class InventoryTweaks extends Module {
         .build()
     );
 
-    private InventorySorter sorter;
-    private boolean invOpened;
+    public InventorySorter sorter;
+    public boolean invOpened;
 
     public InventoryTweaks() {
         super(Categories.Misc, "inventory-tweaks", "Various inventory related utilities.");
