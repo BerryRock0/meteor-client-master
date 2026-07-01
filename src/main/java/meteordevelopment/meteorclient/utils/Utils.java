@@ -93,7 +93,7 @@ public class Utils {
 
     @EventHandler
     private static void onTick(TickEvent.Post event) {
-        if (screenToOpen != null && mc.gui.screen == null) {
+        if (screenToOpen != null && mc.gui.screen() == null) {
             mc.gui.setScreen(screenToOpen);
             screenToOpen = null;
         }
@@ -520,11 +520,11 @@ public class Utils {
     }
 
     public static boolean canOpenGui() {
-        return canUpdate() && mc.gui.screen == null;
+        return canUpdate() && mc.gui.screen() == null;
     }
 
     public static boolean canCloseGui() {
-        return mc.gui.screen instanceof TabScreen;
+        return mc.gui.screen() instanceof TabScreen;
     }
 
     public static int random(int min, int max) {
