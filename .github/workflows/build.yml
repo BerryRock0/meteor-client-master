@@ -27,7 +27,7 @@ jobs:
           java-version: '25'
 
       - name: Build
-        run: ./gradlew build -Xmaxerrors 2147483647 
+        run: ./gradlew build 
 
       - name: Archive Artifacts
         uses: actions/upload-artifact@v5
