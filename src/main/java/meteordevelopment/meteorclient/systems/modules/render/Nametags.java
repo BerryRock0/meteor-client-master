@@ -34,6 +34,7 @@ import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -63,7 +64,7 @@ public class Nametags extends Module {
     private final Setting<Set<EntityType<?>>> entities = sgGeneral.add(new EntityTypeListSetting.Builder()
         .name("entities")
         .description("Select entities to draw nametags on.")
-        .defaultValue(EntityType.PLAYER, EntityType.ITEM)
+        .defaultValue(EntityTypes.PLAYER, EntityTypes.ITEM)
         .build()
     );
 
@@ -339,7 +340,7 @@ public class Nametags extends Module {
             EntityType<?> type = entity.getType();
             if (!entities.get().contains(type)) continue;
 
-            if (type == EntityType.PLAYER) {
+            if (type == EntityTypes.PLAYER) {
                 if ((ignoreSelf.get() || (freecamNotActive && notThirdPerson)) && entity == mc.player) continue;
                 if (EntityUtils.getGameMode((Player) entity) == null && ignoreBots.get()) continue;
                 if (Friends.get().isFriend((Player) entity) && ignoreFriends.get()) continue;
@@ -367,12 +368,12 @@ public class Nametags extends Module {
             EntityType<?> type = entity.getType();
 
             if (NametagUtils.to2D(pos, scale.get())) {
-                if (type == EntityType.PLAYER) renderNametagPlayer(event, (Player) entity, shadow);
-                else if (type == EntityType.ITEM) renderNametagItem(((ItemEntity) entity).getItem(), shadow);
-                else if (type == EntityType.ITEM_FRAME || type == EntityType.GLOW_ITEM_FRAME)
+                if (type == EntityTypes.PLAYER) renderNametagPlayer(event, (Player) entity, shadow);
+                else if (type == EntityTypes.ITEM) renderNametagItem(((ItemEntity) entity).getItem(), shadow);
+                else if (type == EntityTypes.ITEM_FRAME || type == EntityTypes.GLOW_ITEM_FRAME)
                     renderNametagItem(((ItemFrame) entity).getItem(), shadow);
-                else if (type == EntityType.TNT) renderTntNametag(ticksToTime(((PrimedTnt) entity).getFuse()), shadow);
-                else if (type == EntityType.TNT_MINECART && ((MinecartTNT) entity).isPrimed())
+                else if (type == EntityTypes.TNT) renderTntNametag(ticksToTime(((PrimedTnt) entity).getFuse()), shadow);
+                else if (type == EntityTypes.TNT_MINECART && ((MinecartTNT) entity).isPrimed())
                     renderTntNametag(ticksToTime(((MinecartTNT) entity).getFuse()), shadow);
                 else if (entity instanceof LivingEntity livingEntity) renderGenericLivingNametag(livingEntity, shadow);
                 else renderGenericNametag(entity, shadow);
@@ -395,7 +396,7 @@ public class Nametags extends Module {
     private double getHeight(Entity entity) {
         double height = entity.getEyeHeight(entity.getPose());
 
-        if (entity.getType() == EntityType.ITEM || entity.getType() == EntityType.ITEM_FRAME || entity.getType() == EntityType.GLOW_ITEM_FRAME)
+        if (entity.getType() == EntityTypes.ITEM || entity.getType() == EntityTypes.ITEM_FRAME || entity.getType() == EntityTypes.GLOW_ITEM_FRAME)
             height += 0.2;
         else height += 0.5;
 
