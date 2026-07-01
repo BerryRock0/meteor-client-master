@@ -53,7 +53,7 @@ public abstract class PostProcessShader {
         if (!shouldDraw()) return;
 
         var renderer = MeshRenderer.begin()
-            .attachments(mc.getMainRenderTarget())
+            .attachments(mc.gui.hud.mainRenderTarget())
             .pipeline(pipeline)
             .fullscreen()
             .uniform("PostData", UNIFORM_STORAGE.writeUniform(new UniformData(
