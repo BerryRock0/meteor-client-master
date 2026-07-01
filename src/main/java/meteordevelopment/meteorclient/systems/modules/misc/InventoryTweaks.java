@@ -1,3 +1,4 @@
+
 /*
  * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
  * Copyright (c) Meteor Development.
@@ -43,6 +44,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class InventoryTweaks extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgSorting = settings.createGroup("Sorting");
     private final SettingGroup sgAntiDrop = settings.createGroup("Anti Drop");
     private final SettingGroup sgAutoDrop = settings.createGroup("Auto Drop");
     private final SettingGroup sgStealDump = settings.createGroup("Steal and Dump");
@@ -81,6 +83,32 @@ public class InventoryTweaks extends Module {
         .description("Changes input handling to work every frame instead of every tick. A very minor effect but may\n" +
             "make inputs feel smoother, especially in laggy environments. Will flag anticheats that check packet order (Grim).")
         .defaultValue(false)
+        .build()
+    );
+
+    // Sorting
+
+    private final Setting<Boolean> sortingEnabled = sgSorting.add(new BoolSetting.Builder()
+        .name("sorting-enabled")
+        .description("Automatically sorts stacks in inventory.")
+        .defaultValue(true)
+        .build()
+    );
+
+    private final Setting<Keybind> sortingKey = sgSorting.add(new KeybindSetting.Builder()
+        .name("sorting-key")
+        .description("Key to trigger the sort.")
+        .visible(sortingEnabled::get)
+        .defaultValue(Keybind.fromButton(GLFW.GLFW_MOUSE_BUTTON_MIDDLE))
+        .build()
+    );
+
+    private final Setting<Integer> sortingDelay = sgSorting.add(new IntSetting.Builder()
+        .name("sorting-delay")
+        .description("Delay in ticks between moving items when sorting.")
+        .visible(sortingEnabled::get)
+        .defaultValue(1)
+        .min(0)
         .build()
     );
 
@@ -242,6 +270,7 @@ public class InventoryTweaks extends Module {
         .build()
     );
 
+    private InventorySorter sorter;
     private boolean invOpened;
 
     public InventoryTweaks() {
@@ -262,11 +291,59 @@ public class InventoryTweaks extends Module {
         }
     }
 
+    // Sorting and armour swapping
+
+    @EventHandler
+    private void onKey(KeyInputEvent event) {
+        if (event.action != KeyAction.Press) return;
+
+        if (sortingKey.get().matches(event.input)) {
+            if (sort()) event.cancel();
+        }
+    }
+
+    @EventHandler
+    private void onMouseClick(MouseClickEvent event) {
+        if (event.action != KeyAction.Press) return;
+
+        if (sortingKey.get().matches(event.input)) {
+            if (sort()) event.cancel();
+        }
+    }
+
+    private boolean sort() {
+        if (!sortingEnabled.get() || !(mc.gui.screen() instanceof AbstractContainerScreen<?> screen) || sorter != null || (mc.player.isCreative() && disableInCreative.get()))
+            return false;
+
+        if (!mc.player.containerMenu.getCarried().isEmpty()) {
+            FindItemResult empty = InvUtils.findEmpty();
+            if (!empty.found()) InvUtils.click().slot(-999);
+            else InvUtils.click().slot(empty.slot());
+        }
+
+        Slot focusedSlot = ((AbstractContainerScreenAccessor) screen).meteor$getHoveredSlot();
+        if (focusedSlot == null) return false;
+
+        sorter = new InventorySorter(screen, focusedSlot);
+        return true;
+    }
+
+    @EventHandler
+    private void onOpenScreen(OpenScreenEvent event) {
+        sorter = null;
+    }
+
+    @EventHandler
+    private void onTickPre(TickEvent.Pre event) {
+        if (sorter != null && sorter.tick(sortingDelay.get())) sorter = null;
+    }
+
     // Auto Drop
+
     @EventHandler
     private void onTickPost(TickEvent.Post event) {
         // Auto Drop
-        if (!Utils.canUpdate() || mc.screen instanceof AbstractContainerScreen<?> || autoDropItems.get().isEmpty())
+        if (!Utils.canUpdate() || mc.gui.screen() instanceof AbstractContainerScreen<?> || autoDropItems.get().isEmpty())
             return;
 
         for (int i = autoDropExcludeHotbar.get() ? 9 : 0; i < mc.player.getInventory().getContainerSize(); i++) {
@@ -338,7 +415,7 @@ public class InventoryTweaks extends Module {
             if (!handler.getSlot(i).hasItem()) continue;
 
             // Exit if user closes screen or exit world
-            if (mc.screen == null || !Utils.canUpdate()) break;
+            if (mc.gui.screen() == null || !Utils.canUpdate()) break;
 
             Item item = handler.getSlot(i).getItem().getItem();
             if (steal) {
@@ -367,7 +444,7 @@ public class InventoryTweaks extends Module {
             }
 
             // Exit if user closes screen or exit world
-            if (mc.screen == null || !Utils.canUpdate()) break;
+            if (mc.gui.screen() == null || !Utils.canUpdate()) break;
 
             if (steal && stealDrop.get()) {
                 if (dropBackwards.get()) {
