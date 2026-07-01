@@ -18,6 +18,7 @@ orbit = "0.2.4"
 starscript = "0.2.5"
 reflections = "0.10.2"
 netty = "4.2.7.Final"
+viafabricplus = "4.5.2"
 waybackauthlib = "1.1.0"
 
 [libraries]
