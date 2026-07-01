@@ -27,7 +27,6 @@ public class Hitboxes extends Module {
     private final Setting<Set<EntityType<?>>> entities = sgGeneral.add(new EntityTypeListSetting.Builder()
         .name("entities")
         .description("Which entities to target.")
-        .defaultValue(EntityType.PLAYER)
         .build()
     );
 
