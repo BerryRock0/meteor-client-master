@@ -148,7 +148,7 @@ public class MeteorClient implements ClientModInitializer {
 
     @EventHandler
     private void onTick(TickEvent.Post event) {
-        if (mc.gui.screen == null && mc.getOverlay() == null && KeyBinds.OPEN_COMMANDS.consumeClick()) {
+        if (mc.gui.screen() == null && mc.getOverlay() == null && KeyBinds.OPEN_COMMANDS.consumeClick()) {
             mc.gui.setScreen(new ChatScreen(Config.get().prefix.get(), true));
         }
     }
@@ -168,7 +168,7 @@ public class MeteorClient implements ClientModInitializer {
     }
 
     private void toggleGui() {
-        if (Utils.canCloseGui()) mc.gui.screen.onClose();
+        if (Utils.canCloseGui()) mc.gui.screen().onClose();
         else if (Utils.canOpenGui()) Tabs.get().getFirst().openScreen(GuiThemes.get());
     }
 
