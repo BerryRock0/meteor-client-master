@@ -405,7 +405,7 @@ public class Nuker extends Module {
             Vec3 center = Vec3.atCenterOf(blockPos);
             switch (shape.get()) {
                 case Sphere -> {
-                    if (center.distanceToSqr(pX, pY, pZ, center.x(), center.y(), center.z()) > rangeSq)
+                    if (center.distanceToSqr(pX, pY, pZ) > rangeSq)
                         return;
                 }
                 case UniformCube -> {
