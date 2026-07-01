@@ -171,6 +171,7 @@ tasks {
         sourceCompatibility = JavaVersion.VERSION_1_8.toString()
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
         options.compilerArgs.add("-Xlint:-options")
+        
     }
 
     jar {
@@ -195,6 +196,7 @@ tasks {
                 "-Xlint:unchecked"
             )
         )
+        options.compilerArgs.addAll(['-Xmaxerrs', '2147483647'])
     }
 
     javadoc {
