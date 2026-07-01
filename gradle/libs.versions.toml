@@ -10,6 +10,10 @@ loom = "1.16-SNAPSHOT"
 
 # Mods
 baritone = "26.1-SNAPSHOT"
+sodium = "mc26.1.1-0.8.9-fabric"
+lithium = "mc26.1.2-0.24.2-fabric"
+iris = "1.10.9+26.1-fabric"
+modmenu = "18.0.0-alpha.8"
 orbit = "0.2.4"
 starscript = "0.2.5"
 reflections = "0.10.2"
