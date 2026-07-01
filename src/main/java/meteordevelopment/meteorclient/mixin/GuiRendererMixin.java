@@ -77,13 +77,13 @@ public abstract class GuiRendererMixin {
             Profiler.get().pop();
         }
 
-        if (mc.screen instanceof WidgetScreen widgetScreen) {
+        if (mc.gui.screen() instanceof WidgetScreen widgetScreen) {
             var graphics = new GuiGraphicsExtractor(mc, renderState, mouseX, mouseY);
             widgetScreen.renderCustom(graphics, mouseX, mouseY, delta);
             guiRenderer.render(fogRenderer.getBuffer(FogRenderer.FogMode.NONE));
         }
 
-        RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(mc.getMainRenderTarget().getDepthTexture(), 1.0);
+        RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(mc.gameRenderer.mainRenderTarget().getDepthTexture(), 1.0);
         guiRenderer.endFrame();
     }
 }
