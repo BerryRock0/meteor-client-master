@@ -90,7 +90,7 @@ public class AutoReplenish extends Module {
     public void onActivate() {
         fillItems();
         tickDelayLeft = tickDelay.get();
-        prevHadOpenScreen = mc.screen != null;
+        prevHadOpenScreen = mc.gui.screen() != null;
     }
 
     @EventHandler
@@ -99,7 +99,7 @@ public class AutoReplenish extends Module {
             fillItems();
         }
 
-        prevHadOpenScreen = mc.screen != null;
+        prevHadOpenScreen = mc.gui.screen() != null;
         if (mc.player.containerMenu.getItems().size() != 46 || mc.gui.screen() != null) return;
 
         if (tickDelayLeft > 0) {
