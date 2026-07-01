@@ -18,6 +18,8 @@ starscript = "0.2.5"
 reflections = "0.10.2"
 # Netty (https://github.com/netty/netty)
 netty = "4.2.7.Final"
+# WaybackAuthLib (https://github.com/florianreuth/WaybackAuthLib)
+waybackauthlib = "1.1.0"
 
 [libraries]
 # Fabric base
@@ -33,6 +35,7 @@ starscript = { module = "org.meteordev:starscript", version.ref = "starscript" }
 reflections = { module = "org.reflections:reflections", version.ref = "reflections" }
 netty-handler-proxy = { module = "io.netty:netty-handler-proxy", version.ref = "netty" }
 netty-codec-socks = { module = "io.netty:netty-codec-socks", version.ref = "netty" }
+waybackauthlib = { module = "de.florianreuth:waybackauthlib", version.ref = "waybackauthlib" }
 
 [plugins]
 fabric-loom = { id = "net.fabricmc.fabric-loom", version.ref = "loom" }
