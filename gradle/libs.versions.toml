@@ -6,19 +6,14 @@ fabric-loader = "0.19.3"
 fabric-api = "0.153.0+26.2"
 
 # Plugins
-# Loom (https://github.com/FabricMC/fabric-loom)
 loom = "1.16-SNAPSHOT"
 
 # Mods
-# Orbit (https://github.com/MeteorDevelopment/orbit)
+baritone = "26.1-SNAPSHOT"
 orbit = "0.2.4"
-# Starscript (https://github.com/MeteorDevelopment/starscript)
 starscript = "0.2.5"
-# Reflections (https://github.com/ronmamo/reflections)
 reflections = "0.10.2"
-# Netty (https://github.com/netty/netty)
 netty = "4.2.7.Final"
-# WaybackAuthLib (https://github.com/florianreuth/WaybackAuthLib)
 waybackauthlib = "1.1.0"
 
 [libraries]
