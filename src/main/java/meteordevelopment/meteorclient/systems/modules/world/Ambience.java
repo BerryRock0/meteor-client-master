@@ -190,7 +190,7 @@ public class Ambience extends Module {
     }
 
     private void reload() {
-        if (mc.levelRenderer != null && isActive()) mc.levelRenderer.invalidateCompiledGeometry(mc.level, mc.options, mc.gameRenderer.mainCamera(), mc.getBlockColors());
+        if (mc.levelRenderer != null && isActive()) mc.levelExtractor.allChanged();
     }
 
     public SettingColor skyColor() {
