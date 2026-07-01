@@ -169,10 +169,10 @@ public class Modules extends System<Modules> {
                 }
             }
 
-            modules.put(new Tuple<>(module, title), score);
+            modules.put(Pair.of(module, title), score);
         }
 
-        List<Tuple<Module, String>> l = new ArrayList<>(modules.keySet());
+        List<Pair<Module, String>> l = new ArrayList<>(modules.keySet());
         l.sort(Comparator.comparingInt(modules::get));
 
         return l;
@@ -277,7 +277,7 @@ public class Modules extends System<Modules> {
     }
 
     private void onAction(boolean isKey, int value, int modifiers, boolean isPress) {
-        if (mc.screen != null || Input.isKeyPressed(GLFW.GLFW_KEY_F3)) return;
+        if (mc.gui.screen() != null || Input.isKeyPressed(GLFW.GLFW_KEY_F3)) return;
 
         for (Module module : moduleInstances.values()) {
             if (module.keybind.matches(isKey, value, modifiers) && (isPress || (module.toggleOnBindRelease && module.isActive()))) {
