@@ -320,7 +320,7 @@ public class AnchorAura extends Module {
             float bestDamage = isPlacing ? (float) bestPlaceDamage : (float) bestBreakDamage;
             Vec3 center = Vec3.atCenterOf(blockPos);
             float selfDamage = DamageUtils.anchorDamage(mc.player, center);
-            float targetDamage = DamageUtils.anchorDamage(target, center)
+            float targetDamage = DamageUtils.anchorDamage(target, center);
 
             // Is the anchor optimal?
             if (targetDamage >= minDamage.get() && targetDamage > bestDamage
