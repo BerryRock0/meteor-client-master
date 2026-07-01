@@ -22,7 +22,6 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.utils.misc.NbtUtils;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
