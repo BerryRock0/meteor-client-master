@@ -44,45 +44,11 @@ public class EntityUtils {
     }
 
     public static boolean isAttackable(EntityType<?> type) {
-        return type != EntityType.AREA_EFFECT_CLOUD && type != EntityType.ARROW && type != EntityType.FALLING_BLOCK && type != EntityType.FIREWORK_ROCKET && type != EntityType.ITEM && type != EntityType.LLAMA_SPIT && type != EntityType.SPECTRAL_ARROW && type != EntityType.ENDER_PEARL && type != EntityType.EXPERIENCE_BOTTLE && type != EntityType.SPLASH_POTION && type != EntityType.LINGERING_POTION && type != EntityType.TRIDENT && type != EntityType.LIGHTNING_BOLT && type != EntityType.FISHING_BOBBER && type != EntityType.EXPERIENCE_ORB && type != EntityType.EGG;
+        return true;
     }
 
     public static boolean isRideable(EntityType<?> type) {
-        return type == EntityType.PIG ||
-            type == EntityType.STRIDER ||
-            type == EntityType.HORSE ||
-            type == EntityType.DONKEY ||
-            type == EntityType.MULE ||
-            type == EntityType.SKELETON_HORSE ||
-            type == EntityType.ZOMBIE_HORSE ||
-            type == EntityType.LLAMA ||
-            type == EntityType.TRADER_LLAMA ||
-            type == EntityType.CAMEL ||
-            type == EntityType.CAMEL_HUSK ||
-            type == EntityType.MINECART ||
-            type == EntityType.OAK_BOAT ||
-            type == EntityType.SPRUCE_BOAT ||
-            type == EntityType.BIRCH_BOAT ||
-            type == EntityType.JUNGLE_BOAT ||
-            type == EntityType.ACACIA_BOAT ||
-            type == EntityType.CHERRY_BOAT ||
-            type == EntityType.DARK_OAK_BOAT ||
-            type == EntityType.PALE_OAK_BOAT ||
-            type == EntityType.MANGROVE_BOAT ||
-            type == EntityType.BAMBOO_RAFT ||
-            type == EntityType.ACACIA_CHEST_BOAT ||
-            type == EntityType.BIRCH_CHEST_BOAT ||
-            type == EntityType.CHERRY_CHEST_BOAT ||
-            type == EntityType.DARK_OAK_CHEST_BOAT ||
-            type == EntityType.JUNGLE_CHEST_BOAT ||
-            type == EntityType.MANGROVE_CHEST_BOAT ||
-            type == EntityType.OAK_CHEST_BOAT ||
-            type == EntityType.PALE_OAK_CHEST_BOAT ||
-            type == EntityType.SPRUCE_CHEST_BOAT ||
-            type == EntityType.BAMBOO_CHEST_RAFT ||
-            type == EntityType.NAUTILUS ||
-            type == EntityType.ZOMBIE_NAUTILUS ||
-            type == EntityType.HAPPY_GHAST;
+        return true;
     }
 
     public static float getTotalHealth(LivingEntity target) {
