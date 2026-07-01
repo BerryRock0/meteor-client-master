@@ -79,7 +79,7 @@ public class MeteorGuiTheme extends GuiTheme {
         .description("Hide HUD when in GUI.")
         .defaultValue(false)
         .onChanged(v -> {
-            if (mc.screen instanceof WidgetScreen) mc.options.hideGui = v;
+            if (mc.screen instanceof WidgetScreen) mc.gameRenderer.gameRenderState().guiRenderState.isHudHidden = v;
         })
         .build()
     );
