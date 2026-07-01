@@ -9,8 +9,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.ScreenEffectRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,7 +30,7 @@ public abstract class ScreenEffectRendererMixin {
     }
 
     @Inject(method = "submitBlockSprite", at = @At("HEAD"), cancellable = true)
-    private static void render(TextureAtlasSprite sprite, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CallbackInfo ci) {
+    private static void render(TextureAtlasSprite sprite, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int color, CallbackInfo ci) {
         if (Modules.get().get(NoRender.class).noInWallOverlay()) ci.cancel();
     }
 }
