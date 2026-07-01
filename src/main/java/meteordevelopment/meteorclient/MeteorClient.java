@@ -19,7 +19,6 @@ import meteordevelopment.meteorclient.systems.config.Config;
 import meteordevelopment.meteorclient.systems.hud.screens.HudEditorScreen;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Modules;
-import meteordevelopment.meteorclient.systems.modules.misc.DiscordPresence;
 import meteordevelopment.meteorclient.utils.PostInit;
 import meteordevelopment.meteorclient.utils.PreInit;
 import meteordevelopment.meteorclient.utils.ReflectInit;
