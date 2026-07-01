@@ -171,8 +171,8 @@ public class Freecam extends Module {
         perspective = mc.options.getCameraType();
         speedValue = speed.get();
 
-        Utils.set(pos, mc.gameRenderer.getMainCamera().position());
-        Utils.set(prevPos, mc.gameRenderer.getMainCamera().position());
+        Utils.set(pos, mc.gameRenderer.mainCamera().position());
+        Utils.set(prevPos, mc.gameRenderer.mainCamera().position());
 
         if (mc.options.getCameraType() == CameraType.THIRD_PERSON_FRONT) {
             yaw += 180;
