@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.accounts;
 
+import com.mojang.datafixers.util.Pair;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import meteordevelopment.meteorclient.MeteorClient;
@@ -139,12 +141,12 @@ public class MicrosoftLogin {
     private static void handleRequest(HttpExchange req) throws IOException {
         if (req.getRequestMethod().equals("GET")) {
             // Login
-            List<Tuple<String, String>> query = parseURL(req.getRequestURI().getRawQuery());
+            List<Pair<String, String>> query = parseURL(req.getRequestURI().getRawQuery());
 
             boolean ok = false;
-            for (Tuple<String, String> pair : query) {
-                if (pair.getA().equals("code")) {
-                    handleCode(pair.getB());
+            for (Pair<String, String> pair : query) {
+                if (pair.getFirst().equals("code")) {
+                    handleCode(pair.getSecond());
 
                     ok = true;
                     break;
@@ -179,8 +181,8 @@ public class MicrosoftLogin {
     }
 
     // reimplementation of apache https URLEncodedUtils#parse
-    private static List<Tuple<String, String>> parseURL(String string) {
-        List<Tuple<String, String>> query = new ArrayList<>();
+    private static List<Pair<String, String>> parseURL(String string) {
+        List<Pair<String, String>> query = new ArrayList<>();
         char[] buf = string.toCharArray();
         int i = 0;
         while (i < buf.length) {
@@ -207,7 +209,7 @@ public class MicrosoftLogin {
             }
 
             if (!name.isEmpty()) {
-                query.add(new Tuple<>(urlDecode(name.toString()), urlDecode(value.toString())));
+                query.add(Pair.of(urlDecode(name.toString()), urlDecode(value.toString())));
             }
         }
 
