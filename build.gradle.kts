@@ -24,10 +24,6 @@ repositories {
         name = "Terraformers"
         url = uri("https://maven.terraformersmc.com")
     }
-    maven {
-        name = "ViaVersion"
-        url = uri("https://repo.viaversion.com")
-    }
     mavenCentral()
 
     exclusiveContent {
@@ -75,11 +71,6 @@ dependencies {
 
     // Compat fixes
     compileOnly(fabricApi.module("fabric-renderer-indigo", fapiVersion))
-    compileOnly(libs.sodium) { isTransitive = false }
-    compileOnly(libs.lithium) { isTransitive = false }
-    compileOnly(libs.iris) { isTransitive = false }
-    compileOnly(libs.viafabricplus) { isTransitive = false }
-    compileOnly(libs.viafabricplus.api) { isTransitive = false }
 
     compileOnly(libs.baritone)
     compileOnly(libs.modmenu)
@@ -87,7 +78,6 @@ dependencies {
     // Libraries (JAR-in-JAR)
     jij(libs.orbit)
     jij(libs.starscript)
-    jij(libs.discord.ipc)
     jij(libs.reflections)
     jij(libs.netty.handler.proxy) { isTransitive = false }
     jij(libs.netty.codec.socks) { isTransitive = false }
