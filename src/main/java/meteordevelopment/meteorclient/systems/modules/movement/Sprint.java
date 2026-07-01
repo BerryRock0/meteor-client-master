@@ -95,7 +95,7 @@ public class Sprint extends Module {
     }
 
     public boolean shouldSprint() {
-        if (mc.screen != null && !Modules.get().get(GUIMove.class).sprint.get()) return false;
+        if (mc.gui.screen() != null && !Modules.get().get(GUIMove.class).sprint.get()) return false;
 
         float movement = mode.get() == Mode.Rage
             ? (Math.abs(mc.player.zza) + Math.abs(mc.player.xxa))
@@ -107,8 +107,9 @@ public class Sprint extends Module {
 
         boolean strictSprint = !(mc.player.isInShallowWater())
             && !mc.player.isMobilityRestricted()
-            && mc.player.isPassenger() ? (mc.player.getVehicle().canSprint() && mc.player.getVehicle().isLocalInstanceAuthoritative()) : mc.player.getFoodData().hasEnoughFood()
-                                                                                                                                         && (!mc.player.horizontalCollision || mc.player.minorHorizontalCollision);
+            && mc.player.isPassenger() ? (mc.player.getVehicle().canSprint() 
+            && mc.player.getVehicle().isLocalInstanceAuthoritative()) : mc.player.getFoodData().hasEnoughFood()
+            && (!mc.player.horizontalCollision || mc.player.minorHorizontalCollision);
 
         return isActive() && (mode.get() == Mode.Rage || strictSprint);
     }
