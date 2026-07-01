@@ -118,8 +118,6 @@ public class Zoom extends Module {
     public void onStop() {
         mc.options.smoothCamera = preCinematic;
         mc.options.sensitivity().set(preMouseSensitivity);
-
-        mc.levelExtractor.allChanged();
     }
 
     @EventHandler
@@ -166,10 +164,6 @@ public class Zoom extends Module {
     @EventHandler
     private void onGetFov(GetFovEvent event) {
         event.fov /= (float) getScaling();
-
-        if (lastFov != event.fov) {
-            mc.levelExtractor.allChanged();
-        }
         lastFov = event.fov;
     }
 
