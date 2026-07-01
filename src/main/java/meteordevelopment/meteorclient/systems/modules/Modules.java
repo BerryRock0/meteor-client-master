@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules;
 
+import com.mojang.datafixers.util.Pair;
+
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
@@ -150,8 +152,8 @@ public class Modules extends System<Modules> {
         return active;
     }
 
-    public List<Tuple<Module, String>> searchTitles(String text) {
-        Map<Tuple<Module, String>, Integer> modules = new HashMap<>();
+    public List<Pair<Module, String>> searchTitles(String text) {
+        Map<Pair<Module, String>, Integer> modules = new HashMap<>();
 
         for (Module module : this.moduleInstances.values()) {
             String title = module.title;
