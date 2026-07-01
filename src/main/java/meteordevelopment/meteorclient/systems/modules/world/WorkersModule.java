@@ -23,6 +23,7 @@ import meteordevelopment.meteorclient.utils.world.BlockUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -141,7 +142,7 @@ public class WorkersModule extends Module
     private void work(MinerPlacer unit, boolean a, boolean b)
     {
         if(a) BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get());
-        if(b) BlockUtils.interact(new BlockHitResult(new BlockPos(unit.x, unit.y, unit.z).getCenter(), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
+        if(b) BlockUtils.interact(new BlockHitResult(Vec3.atCenterOf(new BlockPos(unit.x, unit.y, unit.z)), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
     }
 
     private void translate(MinerPlacer unit, char ch, boolean t)
@@ -171,7 +172,7 @@ public class WorkersModule extends Module
             case '!': unit.breakBlock.set(!unit.breakBlock.get()); break;    
             case '?': unit.interactBlock.set(!unit.interactBlock.get()); break;
             case '-': BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get()); break;
-            case '+': BlockUtils.interact(new BlockHitResult(new BlockPos(unit.x, unit.y, unit.z).getCenter(), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get()); break;
+            case '+': BlockUtils.interact(new BlockHitResult(Vec3.atCenterOf(new BlockPos(unit.x, unit.y, unit.z)), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get()); break;
             default: break;
         }
     }
