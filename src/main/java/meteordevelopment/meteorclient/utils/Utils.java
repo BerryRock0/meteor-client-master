@@ -93,8 +93,8 @@ public class Utils {
 
     @EventHandler
     private static void onTick(TickEvent.Post event) {
-        if (screenToOpen != null && mc.screen == null) {
-            mc.setScreen(screenToOpen);
+        if (screenToOpen != null && mc.gui.screen == null) {
+            mc.gui.setScreen(screenToOpen);
             screenToOpen = null;
         }
     }
@@ -233,7 +233,7 @@ public class Utils {
         if (hasItems(itemStack) || itemStack.getItem() == Items.ENDER_CHEST) {
             Utils.getItemsInContainerItem(itemStack, contents);
             if (pause) screenToOpen = new PeekScreen(itemStack, contents);
-            else mc.setScreen(new PeekScreen(itemStack, contents));
+            else mc.gui.setScreen(new PeekScreen(itemStack, contents));
             return true;
         }
 
@@ -520,11 +520,11 @@ public class Utils {
     }
 
     public static boolean canOpenGui() {
-        return canUpdate() && mc.screen == null;
+        return canUpdate() && mc.gui.screen == null;
     }
 
     public static boolean canCloseGui() {
-        return mc.screen instanceof TabScreen;
+        return mc.gui.screen instanceof TabScreen;
     }
 
     public static int random(int min, int max) {
@@ -554,7 +554,7 @@ public class Utils {
     }
 
     public static boolean isShulker(Item item) {
-        return item instanceof ShulkerBoxItem;
+        return true;
     }
 
     public static boolean isThrowable(Item item) {
