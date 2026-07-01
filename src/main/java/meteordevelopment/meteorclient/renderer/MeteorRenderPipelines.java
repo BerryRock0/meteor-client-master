@@ -38,7 +38,7 @@ public abstract class MeteorRenderPipelines {
     
     private static final RenderPipeline.Snippet MESH_UNIFORMS = RenderPipeline.builder()
         .withBindGroupLayout(MESH_BIND_GROUP)
-
+        .buildSnippet();
     // World
 
     public static final RenderPipeline WORLD_COLORED = add(new ExtendedRenderPipelineBuilder(MESH_UNIFORMS)
@@ -128,7 +128,7 @@ public abstract class MeteorRenderPipelines {
         .withVertexFormat(MeteorVertexFormats.POS2_TEXTURE_COLOR).withPrimitiveTopology(PrimitiveTopologyTRIANGLES)
         .withVertexShader(MeteorClient.identifier("shaders/text.vert"))
         .withFragmentShader(MeteorClient.identifier("shaders/text.frag"))
-        ..withBindGroupLayout(BindGroupLayout.builder().withSampler("u_Texture").build())
+        .withBindGroupLayout(BindGroupLayout.builder().withSampler("u_Texture").build())
         .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
         .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
         .withCull(true)
