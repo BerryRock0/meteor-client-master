@@ -208,7 +208,6 @@ public class Config extends System<Config> {
     public CompoundTag toTag() {
         CompoundTag tag = new CompoundTag();
 
-        tag.putString("version", MeteorClient.VERSION.toString());
         tag.put("settings", settings.toTag());
         tag.put("dontShowAgainPrompts", listToTag(dontShowAgainPrompts));
 
