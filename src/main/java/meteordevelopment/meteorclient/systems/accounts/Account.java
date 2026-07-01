@@ -72,7 +72,7 @@ public abstract class Account<T extends Account<?>> implements ISerializable<T> 
 
         UserApiService apiService = yggdrasilAuthenticationService.createUserApiService(session.getAccessToken());
         mca.meteor$setUserApiService(apiService);
-        mca.meteor$setPlayerSocialManager(new PlayerSocialManager(mc, apiService));
+        mca.meteor$setPlayerSocialManager(new PlayerSocialManager(mc, apiService, friendsService, remoteFriendListUpdateHandler));
         mca.meteor$setProfileKeyPairManager(ProfileKeyPairManager.create(apiService, session, mc.gameDirectory.toPath()));
         mca.meteor$setReportingContext(ReportingContext.create(ReportEnvironment.local(), apiService));
         mca.meteor$setProfileFuture(CompletableFuture.supplyAsync(() -> mc.services().sessionService().fetchProfile(mc.getUser().getProfileId(), true), Util.ioPool()));
