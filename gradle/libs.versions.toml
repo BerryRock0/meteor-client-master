@@ -1,24 +1,24 @@
 [versions]
 # Fabric (https://fabricmc.net/develop)
 jdk = "25"
-minecraft = "26.1.2"
-fabric-loader = "0.19.2"
-fabric-api = "0.146.1+26.1.2"
+minecraft = "26.2"
+fabric-loader = "0.19.3"
+fabric-api = "0.153.0+26.2"
 
 # Plugins
-loom = "1.16-SNAPSHOT"
+loom = "1.17-SNAPSHOT"
 
 # Mods
 baritone = "26.1-SNAPSHOT"
-sodium = "mc26.1.1-0.8.9-fabric"
-lithium = "mc26.1.2-0.24.2-fabric"
-iris = "1.10.9+26.1-fabric"
-modmenu = "18.0.0-alpha.8"
-orbit = "0.2.4"
+sodium = "mc26.2-0.9.0-fabric"
+lithium = "mc26.2-0.25.1-fabric"
+iris = "1.11.1+26.2-fabric"
+modmenu = "20.0.0-beta.4"
+orbit = "0.2.5"
 starscript = "0.2.5"
 reflections = "0.10.2"
-netty = "4.2.7.Final"
-viafabricplus = "4.5.2"
+netty = "4.2.15.Final"
+viafabricplus = "4.6.1"
 waybackauthlib = "1.1.0"
 
 [libraries]
