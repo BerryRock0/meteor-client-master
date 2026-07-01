@@ -49,7 +49,7 @@ public class WBlockPosEdit extends WHorizontalList {
 
                 clicking = true;
                 MeteorClient.EVENT_BUS.subscribe(this);
-                previousScreen = mc.gui.screen;
+                previousScreen = mc.gui.screen();
                 mc.gui.setScreen(null);
             };
 
