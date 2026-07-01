@@ -6,6 +6,7 @@
 package meteordevelopment.meteorclient.gui.screens.settings;
 
 import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.datafixers.util.Pair;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.WindowScreen;
 import meteordevelopment.meteorclient.gui.utils.Cell;
@@ -21,7 +22,6 @@ import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.misc.Names;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -171,7 +171,7 @@ public class EntityTypeListSettingScreen extends WindowScreen {
         if (filterText.isEmpty()) {
             BuiltInRegistries.ENTITY_TYPE.forEach(entityTypeForEach);
         } else {
-            List<Tuple<EntityType<?>, Integer>> entities = new ArrayList<>();
+            List<Pair<EntityType<?>, Integer>> entities = new ArrayList<>();
             BuiltInRegistries.ENTITY_TYPE.forEach(entity -> {
                 int words = Utils.searchInWords(Names.get(entity), filterText);
                 int diff = Utils.searchLevenshteinDefault(Names.get(entity), filterText, false);
@@ -179,7 +179,7 @@ public class EntityTypeListSettingScreen extends WindowScreen {
                 if (words > 0 || diff < Names.get(entity).length() / 2) entities.add(new Tuple<>(entity, -diff));
             });
             entities.sort(Comparator.comparingInt(value -> -value.getB()));
-            for (Tuple<EntityType<?>, Integer> pair : entities) entityTypeForEach.accept(pair.getA());
+            for (Pair<EntityType<?>, Integer> pair : entities) entityTypeForEach.accept(pair.getA());
         }
 
         if (animalsT.cells.isEmpty()) list.cells.remove(animalsCell);
