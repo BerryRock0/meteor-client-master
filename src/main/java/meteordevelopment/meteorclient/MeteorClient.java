@@ -25,7 +25,6 @@ import meteordevelopment.meteorclient.utils.PostInit;
 import meteordevelopment.meteorclient.utils.PreInit;
 import meteordevelopment.meteorclient.utils.ReflectInit;
 import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.misc.Version;
 import meteordevelopment.meteorclient.utils.misc.input.KeyAction;
 import meteordevelopment.meteorclient.utils.misc.input.KeyBinds;
 import meteordevelopment.meteorclient.utils.network.OnlinePlayers;
@@ -52,7 +51,6 @@ public class MeteorClient implements ClientModInitializer {
     public static final String MOD_ID = "meteor-client";
     public static final ModMetadata MOD_META;
     public static final String NAME;
-    public static final Version VERSION;
     public static final String BUILD_NUMBER;
 
     public static MeteorClient INSTANCE;
@@ -75,7 +73,6 @@ public class MeteorClient implements ClientModInitializer {
         // When building and running through IntelliJ and not Gradle it doesn't replace the version so just use a dummy
         if (versionString.equals("${version}")) versionString = "0.0.0";
 
-        VERSION = new Version(versionString);
         BUILD_NUMBER = MOD_META.getCustomValue(MeteorClient.MOD_ID + ":build_number").getAsString();
     }
 
