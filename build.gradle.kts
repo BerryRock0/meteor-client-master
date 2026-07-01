@@ -196,7 +196,7 @@ tasks {
                 "-Xlint:unchecked"
             )
         )
-        options.compilerArgs.addAll(['-Xmaxerrs', '2147483647'])
+        options.compilerArgs.addAll(listOf("-Xmaxerrs", "9999"))
     }
 
     javadoc {
