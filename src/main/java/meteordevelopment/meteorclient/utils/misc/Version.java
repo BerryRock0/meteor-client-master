@@ -14,7 +14,7 @@ public class Version {
         this.numbers = new int[3];
 
         String[] split = string.split("\\.");
-        if (split.length != 3) throw new IllegalArgumentException("Version string needs to have 3 numbers.");
+        if (split.length != 3) return;
 
         for (int i = 0; i < 3; i++) {
             try {
