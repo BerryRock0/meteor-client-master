@@ -176,10 +176,10 @@ public class EntityTypeListSettingScreen extends WindowScreen {
                 int words = Utils.searchInWords(Names.get(entity), filterText);
                 int diff = Utils.searchLevenshteinDefault(Names.get(entity), filterText, false);
 
-                if (words > 0 || diff < Names.get(entity).length() / 2) entities.add(new Tuple<>(entity, -diff));
+                if (words > 0 || diff < Names.get(entity).length() / 2) entities.add(Pair.of(entity, -diff));
             });
-            entities.sort(Comparator.comparingInt(value -> -value.getB()));
-            for (Pair<EntityType<?>, Integer> pair : entities) entityTypeForEach.accept(pair.getA());
+            entities.sort(Comparator.comparingInt(value -> -value.getSecond()));
+            for (Pair<EntityType<?>, Integer> pair : entities) entityTypeForEach.accept(pair.getFirst());
         }
 
         if (animalsT.cells.isEmpty()) list.cells.remove(animalsCell);
