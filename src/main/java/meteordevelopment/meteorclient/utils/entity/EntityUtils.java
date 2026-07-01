@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
@@ -44,11 +45,60 @@ public class EntityUtils {
     }
 
     public static boolean isAttackable(EntityType<?> type) {
-        return true;
+        return type != EntityTypes.AREA_EFFECT_CLOUD &&
+            type != EntityTypes.ARROW &&
+            type != EntityTypes.FALLING_BLOCK &&
+            type != EntityTypes.FIREWORK_ROCKET &&
+            type != EntityTypes.ITEM &&
+            type != EntityTypes.LLAMA_SPIT &&
+            type != EntityTypes.SPECTRAL_ARROW &&
+            type != EntityTypes.ENDER_PEARL &&
+            type != EntityTypes.EXPERIENCE_BOTTLE &&
+            type != EntityTypes.SPLASH_POTION &&
+            type != EntityTypes.LINGERING_POTION &&
+            type != EntityTypes.TRIDENT &&
+            type != EntityTypes.LIGHTNING_BOLT &&
+            type != EntityTypes.FISHING_BOBBER &&
+            type != EntityTypes.EXPERIENCE_ORB &&
+            type != EntityTypes.EGG;
     }
 
     public static boolean isRideable(EntityType<?> type) {
-        return true;
+        return type == EntityTypes.PIG ||
+            type == EntityTypes.STRIDER ||
+            type == EntityTypes.HORSE ||
+            type == EntityTypes.DONKEY ||
+            type == EntityTypes.MULE ||
+            type == EntityTypes.SKELETON_HORSE ||
+            type == EntityTypes.ZOMBIE_HORSE ||
+            type == EntityTypes.LLAMA ||
+            type == EntityTypes.TRADER_LLAMA ||
+            type == EntityTypes.CAMEL ||
+            type == EntityTypes.CAMEL_HUSK ||
+            type == EntityTypes.MINECART ||
+            type == EntityTypes.OAK_BOAT ||
+            type == EntityTypes.SPRUCE_BOAT ||
+            type == EntityTypes.BIRCH_BOAT ||
+            type == EntityTypes.JUNGLE_BOAT ||
+            type == EntityTypes.ACACIA_BOAT ||
+            type == EntityTypes.CHERRY_BOAT ||
+            type == EntityTypes.DARK_OAK_BOAT ||
+            type == EntityTypes.PALE_OAK_BOAT ||
+            type == EntityTypes.MANGROVE_BOAT ||
+            type == EntityTypes.BAMBOO_RAFT ||
+            type == EntityTypes.ACACIA_CHEST_BOAT ||
+            type == EntityTypes.BIRCH_CHEST_BOAT ||
+            type == EntityTypes.CHERRY_CHEST_BOAT ||
+            type == EntityTypes.DARK_OAK_CHEST_BOAT ||
+            type == EntityTypes.JUNGLE_CHEST_BOAT ||
+            type == EntityTypes.MANGROVE_CHEST_BOAT ||
+            type == EntityTypes.OAK_CHEST_BOAT ||
+            type == EntityTypes.PALE_OAK_CHEST_BOAT ||
+            type == EntityTypes.SPRUCE_CHEST_BOAT ||
+            type == EntityTypes.BAMBOO_CHEST_RAFT ||
+            type == EntityTypes.NAUTILUS ||
+            type == EntityTypes.ZOMBIE_NAUTILUS ||
+            type == EntityTypes.HAPPY_GHAST;
     }
 
     public static float getTotalHealth(LivingEntity target) {
