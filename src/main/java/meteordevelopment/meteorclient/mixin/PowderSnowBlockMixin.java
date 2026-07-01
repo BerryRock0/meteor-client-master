@@ -7,7 +7,6 @@ package meteordevelopment.meteorclient.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import meteordevelopment.meteorclient.systems.modules.Modules;
-import meteordevelopment.meteorclient.systems.modules.movement.Jesus;
 import net.minecraft.world.level.block.PowderSnowBlock;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
