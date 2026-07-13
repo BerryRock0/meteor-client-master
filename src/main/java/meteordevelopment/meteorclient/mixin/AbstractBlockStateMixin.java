@@ -8,8 +8,6 @@ package meteordevelopment.meteorclient.mixin;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
 import meteordevelopment.meteorclient.systems.modules.world.Markers;
-import meteordevelopment.meteorclient.systems.cuboids.Frame;
-import meteordevelopment.meteorclient.systems.cuboids.Frames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -39,19 +37,10 @@ public abstract class AbstractBlockStateMixin
 	private void onGetVisualShape(BlockGetter view, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
 	    if (Modules.get() == null) return;
-        Markers mar = Modules.get().get(Markers.class);
+        Markers mark = Modules.get().get(Markers.class);
 
-       /* if (mar.isActive())
-        for (Frame frame: Frames.get())
-        {
-
-            
-        } */
-		if(mar.emptyBlock(pos))
-            cir.setReturnValue(Shapes.empty());
-        
-	    if(mar.fullBlock(pos))
-            cir.setReturnValue(Shapes.block());
+        if (mark.isActive() && mark.inFrames(pos))
+           cir.setReturnValue(mark.blockShape(pos));
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
@@ -59,11 +48,8 @@ public abstract class AbstractBlockStateMixin
 	{
         if (Modules.get() == null) return;
         Markers mar = Modules.get().get(Markers.class);
-
-		if(mar.emptyPlayer(pos))
-            cir.setReturnValue(Shapes.empty());
         
-	    if(mar.fullPlayer(pos))
-            cir.setReturnValue(Shapes.block());
+        if (mark.isActive() && mark.inFrames(pos))
+           cir.setReturnValue(mark.collisionShape(pos));
 	}
 }
