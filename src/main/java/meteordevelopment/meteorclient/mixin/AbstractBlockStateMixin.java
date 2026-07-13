@@ -47,7 +47,7 @@ public abstract class AbstractBlockStateMixin
 	private void onGetCollisionShape(BlockGetter view, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
         if (Modules.get() == null) return;
-        Markers mar = Modules.get().get(Markers.class);
+        Markers mark = Modules.get().get(Markers.class);
         
         if (mark.isActive() && mark.inFrames(pos))
            cir.setReturnValue(mark.collisionShape(pos));
