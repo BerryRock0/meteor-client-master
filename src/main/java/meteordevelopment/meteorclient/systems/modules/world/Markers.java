@@ -38,7 +38,7 @@ public class Markers extends Module
     
     public boolean fullBlock(BlockPos pos)
     {        
-        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullBlock.get()).orElse(false);    
+        return Frames.get().values().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullBlock.get()).orElse(false);    
     }
     public boolean emptyBlock(BlockPos pos)
     {
