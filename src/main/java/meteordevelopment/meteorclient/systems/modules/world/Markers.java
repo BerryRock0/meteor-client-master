@@ -81,13 +81,9 @@ public class Markers extends Module
     }
 
     public boolean inFrames(BlockPos pos)
-    {	
-        boolean x = pos.getX() >= obj.startPos.get().getX() && pos.getX() <= obj.endPos.get().getX();
-	    boolean y = pos.getY() >= obj.startPos.get().getY() && pos.getX() <= obj.endPos.get().getY();
-	    boolean z = pos.getZ() >= obj.startPos.get().getZ() && pos.getX() <= obj.endPos.get().getZ();
-        
+    {        
         if (obj != null)
-            return x&&y&&z;
+            return (pos.getX() >= obj.startPos.get().getX() && pos.getX() <= obj.endPos.get().getX())&&(pos.getY() >= obj.startPos.get().getY() && pos.getX() <= obj.endPos.get().getY())&&(pos.getZ() >= obj.startPos.get().getZ() && pos.getX() <= obj.endPos.get().getZ());
 
 		return obj == null;
 	}
