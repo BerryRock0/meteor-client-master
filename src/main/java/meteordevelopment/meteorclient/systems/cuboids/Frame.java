@@ -72,7 +72,7 @@ public class Frame implements ISerializable<Frame>
     );
 
     // Collisions
-    public final Setting<Boolean> fullBlock = sgBlock.add(new Setting.Builder()
+    public final Setting<Boolean> fullBlock = sgBlock.add(new BoolSetting.Builder()
         .name("full-block")
         .description("What blocks should be added collision box.")
         .defaultValue(false)
