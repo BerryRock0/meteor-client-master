@@ -12,18 +12,17 @@ import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import net.minecraft.core.BlockPos;
 
 // TODO: Add outline and more modes
-public class CuboidMarker extends BaseMarker {
-    public static final String type = "Cuboid";
-
-    public enum Mode {
-        Full
-    }
-
+public class CuboidMarker extends BaseMarker
+{
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    private final SettingGroup sgPlayer = settings.createGroup("Player");
+    private final SettingGroup sgBlock = settings.createGroup("Block");
+    private final SettingGroup sgEntity = settings.createGroup("Entity");
     private final SettingGroup sgRender = settings.createGroup("Render");
 
-    // General
+    public static final String type = "Cuboid";
 
+    // General
     private final Setting<BlockPos> pos1 = sgGeneral.add(new BlockPosSetting.Builder()
         .name("pos-1")
         .description("1st corner of the cuboid")
@@ -36,8 +35,108 @@ public class CuboidMarker extends BaseMarker {
         .build()
     );
 
-    // Render
+    // Collisions
+        public final Setting<List<Block>> fullBlock = sgBlock.add(new BlockListSetting.Builder()
+        .name("full-block")
+        .description("What blocks should be added collision box.")
+        .build()
+    );
+    
+    public final Setting<Boolean> fullBlockCase = sgBlock.add(new BoolSetting.Builder()
+        .name("fullblock-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> fullBlockFinal = sgBlock.add(new BoolSetting.Builder()
+        .name("fullblock-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<List<Block>> emptyBlock = sgBlock.add(new BlockListSetting.Builder()
+        .name("emptyblock")
+        .description("What blocks should be emptied.")
+        .build()
+    );
 
+    public final Setting<Boolean> emptyBlockCase = sgBlock.add(new BoolSetting.Builder()
+        .name("emptyblock-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> emptyBlockFinal = sgBlock.add(new BoolSetting.Builder()
+        .name("emptyblock-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );    
+
+    public final Setting<List<Block>> fullPlayer = sgPlayer.add(new BlockListSetting.Builder()
+        .name("fullplayer-block")
+        .description("What blocks should be added collision box.")
+        .build()
+    );
+    
+    public final Setting<Boolean> fullPlayerCase = sgPlayer.add(new BoolSetting.Builder()
+        .name("fullplayer-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> fullPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
+        .name("fullplayer-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<List<Block>> emptyPlayer = sgPlayer.add(new BlockListSetting.Builder()
+        .name("emptyplayer")
+        .description("What blocks should be emptied.")
+        .build()
+    );
+
+    public final Setting<Boolean> emptyPlayerCase = sgPlayer.add(new BoolSetting.Builder()
+        .name("emptyplayer-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> emptyPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
+        .name("emptyplayer-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<List<Block>> emptyEntity = sgEntity.add(new BlockListSetting.Builder()
+        .name("emptyentity")
+        .description("What blocks should be emptied.")
+        .build()
+    );
+
+    public final Setting<Boolean> emptyEntityCase = sgEntity.add(new BoolSetting.Builder()
+        .name("emptyentity-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> emptyEntityFinal = sgEntity.add(new BoolSetting.Builder()
+        .name("emptyentity-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    // Render
     private final Setting<Mode> mode = sgRender.add(new EnumSetting.Builder<Mode>()
         .name("mode")
         .description("What mode to use for this marker.")
@@ -76,7 +175,8 @@ public class CuboidMarker extends BaseMarker {
     }
 
     @Override
-    protected void render(Render3DEvent event) {
+    protected void render(Render3DEvent event)
+    {
         int minX = Math.min(pos1.get().getX(), pos2.get().getX());
         int minY = Math.min(pos1.get().getY(), pos2.get().getY());
         int minZ = Math.min(pos1.get().getZ(), pos2.get().getZ());
@@ -85,5 +185,10 @@ public class CuboidMarker extends BaseMarker {
         int maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ());
 
         event.renderer.box(minX, minY, minZ, maxX , maxY, maxZ, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
+    }
+
+    public enum Mode
+    {
+        Full
     }
 }
