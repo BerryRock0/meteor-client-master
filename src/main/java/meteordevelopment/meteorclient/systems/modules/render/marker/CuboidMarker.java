@@ -17,7 +17,6 @@ public class CuboidMarker extends BaseMarker
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgPlayer = settings.createGroup("Player");
     private final SettingGroup sgBlock = settings.createGroup("Block");
-    private final SettingGroup sgEntity = settings.createGroup("Entity");
     private final SettingGroup sgRender = settings.createGroup("Render");
 
     public static final String type = "Cuboid";
@@ -115,26 +114,6 @@ public class CuboidMarker extends BaseMarker
         .defaultValue(false)
         .build()
     );
-
-    public final Setting<List<Block>> emptyEntity = sgEntity.add(new BlockListSetting.Builder()
-        .name("emptyentity")
-        .description("What blocks should be emptied.")
-        .build()
-    );
-
-    public final Setting<Boolean> emptyEntityCase = sgEntity.add(new BoolSetting.Builder()
-        .name("emptyentity-case")
-        .description("Switches black/white case.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> emptyEntityFinal = sgEntity.add(new BoolSetting.Builder()
-        .name("emptyentity-final")
-        .description("Switches black/white final.")
-        .defaultValue(false)
-        .build()
-    );
     
     // Render
     private final Setting<Mode> mode = sgRender.add(new EnumSetting.Builder<Mode>()
@@ -185,6 +164,34 @@ public class CuboidMarker extends BaseMarker
         int maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ());
 
         event.renderer.box(minX, minY, minZ, maxX , maxY, maxZ, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
+    }
+
+    public boolean fullBlock(Block block, BlockPos pos)
+    {
+        if (fullBlock.get().contains(block))
+            return isActive() && fullBlockCase.get();
+        return isActive() && fullBlockFinal.get();   
+    }
+    
+    public boolean emptyBlock(Block block, BlockPos pos)
+    {
+        if (emptyBlock.get().contains(block))
+            return isActive() && emptyBlockCase.get();
+        return isActive() && emptyBlockFinal.get();
+    }
+
+    public boolean fullPlayer(Block block, BlockPos pos)
+    {
+        if (fullPlayer.get().contains(block))
+            return isActive() && fullPlayerCase.get();
+        return isActive() && fullPlayerFinal.get();   
+    }
+    
+    public boolean emptyPlayer(Block block, BlockPos pos)
+    {
+        if (emptyPlayer.get().contains(block))
+            return isActive() && emptyPlayerCase.get();
+        return isActive() && emptyPlayerFinal.get();
     }
 
     public enum Mode
