@@ -80,7 +80,7 @@ public class Markers extends Module
     {
         for (Frame unit : Frames.get())
         if(unit.render.get())
-            event.renderer.box(unit.startPos.getX(), unit.startPos.getY(), unit.startPos.getZ(), unit.endPos.getX(), unit.endPos.getY(), unit.endPos.getZ(), unit.sideColor.get(), unit.lineColor.get(), unit.shapeMode.get(), 0);
+            event.renderer.box(unit.startPos.get().getX(), unit.startPos.get().getY(), unit.startPos.get().getZ(), unit.endPos.get().getX(), unit.endPos.get().getY(), unit.endPos.get().getZ(), unit.sideColor.get(), unit.lineColor.get(), unit.shapeMode.get(), 0);
     }
     
 	@Override
