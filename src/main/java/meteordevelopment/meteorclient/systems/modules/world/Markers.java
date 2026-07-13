@@ -98,7 +98,7 @@ public class Markers extends Module
     {
         table.clear();
 
-        for (Frame unit : MinerPlacers.get())
+        for (Frame unit : Frames.get())
         {
             WButton edit = table.add(theme.button("Edit")).widget(); edit.action = () -> mc.gui.setScreen(new EditFrameScreen(theme, unit, () -> initTable(theme, table)));
             WButton delete = table.add(theme.button("Delete")).widget(); delete.action = () -> {Frames.get().remove(unit); initTable(theme, table);};
