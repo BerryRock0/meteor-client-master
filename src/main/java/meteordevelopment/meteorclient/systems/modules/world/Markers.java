@@ -1,4 +1,3 @@
-
 package meteordevelopment.meteorclient.systems.modules.world;
 
 import meteordevelopment.orbit.EventHandler;
