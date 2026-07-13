@@ -8,6 +8,8 @@ package meteordevelopment.meteorclient.mixin;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
 import meteordevelopment.meteorclient.systems.modules.world.Markers;
+import meteordevelopment.meteorclient.systems.cuboids.Frame;
+import meteordevelopment.meteorclient.systems.cuboids.Frames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -39,6 +41,12 @@ public abstract class AbstractBlockStateMixin
 	    if (Modules.get() == null) return;
         Markers mar = Modules.get().get(Markers.class);
 
+       /* if (mar.isActive())
+        for (Frame frame: Frames.get())
+        {
+
+            
+        } */
 		if(mar.emptyBlock(pos))
             cir.setReturnValue(Shapes.empty());
         
