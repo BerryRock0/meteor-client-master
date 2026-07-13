@@ -22,6 +22,7 @@ import meteordevelopment.meteorclient.systems.cuboids.Frame;
 import meteordevelopment.meteorclient.systems.cuboids.Frames;
 import meteordevelopment.meteorclient.utils.Utils;
 
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 
@@ -40,27 +41,27 @@ public class Markers extends Module
             event.renderer.box(unit.startPos.get().getX(), unit.startPos.get().getY(), unit.startPos.get().getZ(), unit.endPos.get().getX(), unit.endPos.get().getY(), unit.endPos.get().getZ(), unit.sideColor.get(), unit.lineColor.get(), unit.shapeMode.get(), 0);
     }
 
-    public Shape visualShape(BlockPos pos)
+    public Shapes visualShape(BlockPos pos)
     {
         for(Frame frame: Frames.get())
         {
-            if(frame.blockMode.get() == frame.blockMode.get().Empty) return Shape.empty();
-            if(frame.blockMode.get() == frame.blockMode.get().Full) return Shape.full();
+            if(frame.blockMode.get() == frame.blockMode.get().Empty) return Shapes.empty();
+            if(frame.blockMode.get() == frame.blockMode.get().Full) return Shapes.full();
         }
 
-        return Shape.absent();
+        return Shapes.absent();
     }
 
     
-    public Shape collisionShape(BlockPos pos)
+    public Shapes collisionShape(BlockPos pos)
     {
         for(Frame frame: Frames.get())
         {
-            if(frame.blockMode.get() == frame.Mode.get().Empty) return Shape.empty();
-            if(frame.blockMode.get() == frame.blockMode.get().Full) return Shape.full();
+            if(frame.blockMode.get() == frame.Mode.get().Empty) return Shapes.empty();
+            if(frame.blockMode.get() == frame.blockMode.get().Full) return Shapes.full();
         }
 
-        return Shape.absent();
+        return Shapes.absent();
     }
 
     public boolean inFrames(Frame obj, BlockPos pos)
