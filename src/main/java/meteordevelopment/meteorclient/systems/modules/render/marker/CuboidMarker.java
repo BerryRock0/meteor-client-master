@@ -84,6 +84,6 @@ public class CuboidMarker extends BaseMarker {
         int maxY = Math.max(pos1.get().getY(), pos2.get().getY());
         int maxZ = Math.max(pos1.get().getZ(), pos2.get().getZ());
 
-        event.renderer.box(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
+        event.renderer.box(minX, minY, minZ, maxX , maxY, maxZ, sideColor.get(), lineColor.get(), shapeMode.get(), 0);
     }
 }
