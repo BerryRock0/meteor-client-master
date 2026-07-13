@@ -45,24 +45,24 @@ public class Markers extends Module
     public VoxelShape visualShape(BlockPos pos)
     {
         for(Frame frame: Frames.get())
-        {
-            if(frame.blockMode.get() == frame.blockMode.get().Empty) return Shapes.empty();
-            if(frame.blockMode.get() == frame.blockMode.get().Full) return Shapes.full();
-        }
+        if(frame.blockMode.get() == frame.blockMode.get().Empty)
+            return Shapes.empty();
+        else if(frame.blockMode.get() == frame.blockMode.get().Full) 
+            return Shapes.full();
 
-        return Shapes.absent();
+        return mc.level.getBlockState(pos).getShape(mc.level, pos);
     }
 
     
     public VoxelShape collisionShape(BlockPos pos)
     {
         for(Frame frame: Frames.get())
-        {
-            if(frame.blockMode.get() == frame.Mode.get().Empty) return Shapes.empty();
-            if(frame.blockMode.get() == frame.blockMode.get().Full) return Shapes.full();
-        }
+        if(frame.blockMode.get() == frame.Mode.get().Empty) 
+            return Shapes.empty();
+        else if(frame.blockMode.get() == frame.blockMode.get().Full) 
+            return Shapes.full();
 
-        return Shapes.absent();
+        return mc.level.getBlockState(pos).getCollisionShape(mc.level, pos);
     }
 
     public boolean inFrames(Frame obj, BlockPos pos)
