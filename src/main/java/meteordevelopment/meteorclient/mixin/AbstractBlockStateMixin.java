@@ -7,7 +7,7 @@ package meteordevelopment.meteorclient.mixin;
 
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
-import meteordevelopment.meteorclient.systems.modules.world.Collisions;
+import meteordevelopment.meteorclient.systems.modules.world.Markers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -37,12 +37,12 @@ public abstract class AbstractBlockStateMixin
 	private void onGetVisualShape(BlockGetter view, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
 	    if (Modules.get() == null) return;
-        Collisions coll = Modules.get().get(Collisions.class);
+        Markers mar = Modules.get().get(Markers.class);
 
-		if(coll.emptyBlock(view.getBlockState(pos).getBlock()))
+		if(mar.emptyBlock(pos))
             cir.setReturnValue(Shapes.empty());
         
-	    if(coll.fullBlock(view.getBlockState(pos).getBlock()))
+	    if(mar.fullBlock(pos))
             cir.setReturnValue(Shapes.block());
 	}
 	
@@ -50,12 +50,12 @@ public abstract class AbstractBlockStateMixin
 	private void onGetCollisionShape(BlockGetter view, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
         if (Modules.get() == null) return;
-        Collisions coll = Modules.get().get(Collisions.class);
+        Markers mar = Modules.get().get(Collisions.class);
 
-		if(coll.emptyPlayer(view.getBlockState(pos).getBlock()))
+		if(mar.emptyPlayer(pos))
             cir.setReturnValue(Shapes.empty());
         
-	    if(coll.fullPlayer(view.getBlockState(pos).getBlock()))
+	    if(mar.fullPlayer(pos))
             cir.setReturnValue(Shapes.block());
 	}
 }
