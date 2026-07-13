@@ -117,7 +117,7 @@ public class Frame implements ISerializable<Frame>
     );    
 
     public final Setting<Boolean> fullPlayer = sgPlayer.add(new BoolSetting.Builder()
-        .name("fullplayer-block")
+        .name("fullplayer")
         .description("What blocks should be added collision box.")
         .defaultValue(false)
         .build()
