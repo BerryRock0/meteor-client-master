@@ -81,40 +81,12 @@ public class Frame implements ISerializable<Frame>
         .build()
     );
     
-    public final Setting<Boolean> fullBlockCase = sgBlock.add(new BoolSetting.Builder()
-        .name("fullblock-case")
-        .description("Switches black/white case.")
-        .defaultValue(false)
-        .build()
-    );
-    
-    public final Setting<Boolean> fullBlockFinal = sgBlock.add(new BoolSetting.Builder()
-        .name("fullblock-final")
-        .description("Switches black/white final.")
-        .defaultValue(false)
-        .build()
-    );
-    
     public final Setting<Boolean> emptyBlock = sgBlock.add(new BoolSetting.Builder()
         .name("emptyblock")
         .description("What blocks should be emptied.")
         .defaultValue(false)
         .build()
-    );
-
-    public final Setting<Boolean> emptyBlockCase = sgBlock.add(new BoolSetting.Builder()
-        .name("emptyblock-case")
-        .description("Switches black/white case.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> emptyBlockFinal = sgBlock.add(new BoolSetting.Builder()
-        .name("emptyblock-final")
-        .description("Switches black/white final.")
-        .defaultValue(false)
-        .build()
-    );    
+    ); 
 
     public final Setting<Boolean> fullPlayer = sgPlayer.add(new BoolSetting.Builder()
         .name("fullplayer")
@@ -123,37 +95,9 @@ public class Frame implements ISerializable<Frame>
         .build()
     );
     
-    public final Setting<Boolean> fullPlayerCase = sgPlayer.add(new BoolSetting.Builder()
-        .name("fullplayer-case")
-        .description("Switches black/white case.")
-        .defaultValue(false)
-        .build()
-    );
-    
-    public final Setting<Boolean> fullPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
-        .name("fullplayer-final")
-        .description("Switches black/white final.")
-        .defaultValue(false)
-        .build()
-    );
-    
     public final Setting<Boolean> emptyPlayer = sgPlayer.add(new BoolSetting.Builder()
         .name("emptyplayer")
         .description("What blocks should be emptied.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> emptyPlayerCase = sgPlayer.add(new BoolSetting.Builder()
-        .name("emptyplayer-case")
-        .description("Switches black/white case.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> emptyPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
-        .name("emptyplayer-final")
-        .description("Switches black/white final.")
         .defaultValue(false)
         .build()
     );
