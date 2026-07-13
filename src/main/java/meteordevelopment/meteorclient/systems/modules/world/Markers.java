@@ -22,6 +22,7 @@ import meteordevelopment.meteorclient.systems.cuboids.Frame;
 import meteordevelopment.meteorclient.systems.cuboids.Frames;
 import meteordevelopment.meteorclient.utils.Utils;
 
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -41,7 +42,7 @@ public class Markers extends Module
             event.renderer.box(unit.startPos.get().getX(), unit.startPos.get().getY(), unit.startPos.get().getZ(), unit.endPos.get().getX(), unit.endPos.get().getY(), unit.endPos.get().getZ(), unit.sideColor.get(), unit.lineColor.get(), unit.shapeMode.get(), 0);
     }
 
-    public Shapes visualShape(BlockPos pos)
+    public VoxelShape visualShape(BlockPos pos)
     {
         for(Frame frame: Frames.get())
         {
@@ -53,7 +54,7 @@ public class Markers extends Module
     }
 
     
-    public Shapes collisionShape(BlockPos pos)
+    public VoxelShape collisionShape(BlockPos pos)
     {
         for(Frame frame: Frames.get())
         {
