@@ -39,22 +39,28 @@ public class Markers extends Module
         if(unit.render.get())
             event.renderer.box(unit.startPos.get().getX(), unit.startPos.get().getY(), unit.startPos.get().getZ(), unit.endPos.get().getX(), unit.endPos.get().getY(), unit.endPos.get().getZ(), unit.sideColor.get(), unit.lineColor.get(), unit.shapeMode.get(), 0);
     }
+
+    public Shape visualShape(BlockPos pos)
+    {
+        for(Frame frame: Frames.get())
+        {
+            if(frame.blockMode.get() == frame.blockMode.get().Empty) return Shape.empty();
+            if(frame.blockMode.get() == frame.blockMode.get().Full) return Shape.full();
+        }
+
+        return Shape.absent();
+    }
+
     
-    public boolean fullBlock(BlockPos pos)
-    {        
-        return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullBlock.get()).orElse(false);   
-    }
-    public boolean emptyBlock(BlockPos pos)
+    public Shape collisionShape(BlockPos pos)
     {
-        return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyBlock.get()).orElse(false);
-    }
-    public boolean fullPlayer(BlockPos pos)
-    {
-        return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullPlayer.get()).orElse(false);
-    }
-    public boolean emptyPlayer(BlockPos pos)
-    {
-        return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyPlayer.get()).orElse(false);
+        for(Frame frame: Frames.get())
+        {
+            if(frame.blockMode.get() == frame.Mode.get().Empty) return Shape.empty();
+            if(frame.blockMode.get() == frame.blockMode.get().Full) return Shape.full();
+        }
+
+        return Shape.absent();
     }
 
     public boolean inFrames(Frame obj, BlockPos pos)
@@ -65,7 +71,6 @@ public class Markers extends Module
 
 	    return x && y && z;
 	}
-
 
 	@Override
     public WWidget getWidget(GuiTheme theme)
