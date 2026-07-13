@@ -107,9 +107,9 @@ public class Markers extends Module
         WButton create = table.add(theme.button("Create")).expandX().widget(); create.action = () -> mc.gui.setScreen(new EditFrameScreen(theme, null, () -> initTable(theme, table)));
     }
 	
-	 private static class EditFrameScreen extends EditSystemScreen<MinerPlacer>
+	 private static class EditFrameScreen extends EditSystemScreen<Frame>
 	 {
-        public EditFrameScreen(GuiTheme theme, MinerPlacer value, Runnable reload) {
+        public EditFrameScreen(GuiTheme theme, Frame value, Runnable reload) {
             super(theme, value, reload);
         }
 
