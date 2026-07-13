@@ -1,5 +1,9 @@
 package meteordevelopment.meteorclient.systems.modules.world;
 
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.meteorclient.events.game.OpenScreenEvent;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
@@ -38,27 +42,28 @@ public class Markers extends Module
     
     public boolean fullBlock(BlockPos pos)
     {        
-        return Frames.get().values().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullBlock.get()).orElse(false);    
+        return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullBlock.get()).orElse(false);   
     }
     public boolean emptyBlock(BlockPos pos)
     {
-        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyBlock.get()).orElse(false);
+        return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyBlock.get()).orElse(false);
     }
     public boolean fullPlayer(BlockPos pos)
     {
-        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullPlayer.get()).orElse(false);
+        return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullPlayer.get()).orElse(false);
     }
     public boolean emptyPlayer(BlockPos pos)
     {
-        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyPlayer.get()).orElse(false);
+        return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyPlayer.get()).orElse(false);
     }
 
-    public boolean inFrames(Frame obj, BlockPos pos)
-    {   
-        if (obj != null)
-            return (pos.getX() >= obj.startPos.get().getX() && pos.getX() <= obj.endPos.get().getX())&&(pos.getY() >= obj.startPos.get().getY() && pos.getX() <= obj.endPos.get().getY())&&(pos.getZ() >= obj.startPos.get().getZ() && pos.getX() <= obj.endPos.get().getZ());
-
-		return obj == null;
+    public boolean inFrames(BlockPos pos)
+    {
+        int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+        int sx = obj.startPos.get().getX(), sy = obj.startPos.get().getY(), sz = obj.startPos.get().getZ(); 
+        int ex = obj.endPos.get().getX(), ey = obj.endPos.get().getY(), ez = obj.endPos.get().getZ();
+        
+	    return Stream.of(x >= sx && x <= ex, y >= sy && y <= ey,z >= sz && z <= ez).allMatch(b -> b);
 	}
 
 
