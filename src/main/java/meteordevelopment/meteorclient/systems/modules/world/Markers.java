@@ -29,34 +29,39 @@ public class Markers extends Module
         super(Categories.World, "markers", "Allows you to create marker units.");
     }
 
+    public Frame unit()
+    {
+        Frame value;
+        for(Frame unit: Frames:get())
+        value = unit;
+
+        return value;
+    }
+
     public boolean fullBlock(BlockPos pos)
     {
-		for (Frame unit: Frames.get())
-        if (inFrames(unit, pos) && unit.fullBlock.get())
+        if (inFrames(unit(), pos) && unit().fullBlock.get())
             return isActive() && fullBlockCase.get();
         return isActive() && fullBlockFinal.get();   
     }
     
     public boolean emptyBlock(BlockPos pos)
     {
-		for (Frame unit: Frames.get())
-        if (inFrames(unit, pos) && unit.emptyBlock.get())
+        if (inFrames(unit(), pos) && unit().emptyBlock.get())
             return isActive() && emptyBlockCase.get();
         return isActive() && emptyBlockFinal.get();
     }
 
     public boolean fullPlayer(BlockPos pos)
     {
-		for (Frame unit: Frames.get())
-        if (inFrames(unit, pos) && unit.fullPlayer.get())
+        if (inFrames(unit(), pos) && unit().fullPlayer.get())
             return isActive() && fullPlayerCase.get();
         return isActive() && fullPlayerFinal.get();   
     }
     
     public boolean emptyPlayer(BlockPos pos)
     {
-		for (Frame unit: Frames.get())
-        if (inFrames(unit, pos) && unit.emptyPlayer.get())
+        if (inFrames(unit(), pos) && unit().emptyPlayer.get())
             return isActive() && emptyPlayerCase.get();
         return isActive() && emptyPlayerFinal.get();
     }
