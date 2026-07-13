@@ -54,39 +54,42 @@ public class Markers extends Module
 
     public boolean fullBlock(BlockPos pos)
     {
-        if (inFrames(obj, pos) && obj.fullBlock.get())
+        if (inFrames(pos) && obj.fullBlock.get())
             return isActive() && obj.fullBlockCase.get();
         return isActive() && obj.fullBlockFinal.get();   
     }
     
     public boolean emptyBlock(BlockPos pos)
     {
-        if (inFrames(obj, pos) && obj.emptyBlock.get())
+        if (inFrames(pos) && obj.emptyBlock.get())
             return isActive() && obj.emptyBlockCase.get();
         return isActive() && obj.emptyBlockFinal.get();
     }
 
     public boolean fullPlayer(BlockPos pos)
     {
-        if (inFrames(obj, pos) && obj.fullPlayer.get())
+        if (inFrames(pos) && obj.fullPlayer.get())
             return isActive() && obj.fullPlayerCase.get();
         return isActive() && obj.fullPlayerFinal.get();   
     }
     
     public boolean emptyPlayer(BlockPos pos)
     {
-        if (inFrames(obj, pos) && obj.emptyPlayer.get())
+        if (inFrames(pos) && obj.emptyPlayer.get())
             return isActive() && obj.emptyPlayerCase.get();
         return isActive() && obj.emptyPlayerFinal.get();
     }
 
-    public boolean inFrames(Frame frame, BlockPos pos)
-    {
-		boolean x = pos.getX() >= frame.startPos.get().getX() && pos.getX() <= frame.endPos.get().getX();
-		boolean y = pos.getY() >= frame.startPos.get().getY() && pos.getX() <= frame.endPos.get().getY();
-		boolean z = pos.getZ() >= frame.startPos.get().getZ() && pos.getX() <= frame.endPos.get().getZ();
-		
-		return x&&y&&z;
+    public boolean inFrames(BlockPos pos)
+    {	
+        boolean x = pos.getX() >= obj.startPos.get().getX() && pos.getX() <= obj.endPos.get().getX();
+	    boolean y = pos.getY() >= obj.startPos.get().getY() && pos.getX() <= obj.endPos.get().getY();
+	    boolean z = pos.getZ() >= obj.startPos.get().getZ() && pos.getX() <= obj.endPos.get().getZ();
+        
+        if (obj != null)
+            return x&&y&&z;
+
+		return obj == null;
 	}
 
     @EventHandler
