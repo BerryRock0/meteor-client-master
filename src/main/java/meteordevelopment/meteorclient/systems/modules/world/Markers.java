@@ -30,11 +30,10 @@ public class Markers extends Module
 
     public Frame unit()
     {
-        Frame value;
         for(Frame unit: Frames.get())
-        value = unit;
+            return unit;
 
-        return value;
+        return null;
     }
 
     public boolean fullBlock(BlockPos pos)
