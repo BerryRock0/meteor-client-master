@@ -49,9 +49,7 @@ public class Markers extends Module
     public void engine()
     {
         for(Frame unit: Frames.get())
-            return obj = unit;
-
-        return obj;
+            obj = unit;
     }
 
     public boolean fullBlock(BlockPos pos)
