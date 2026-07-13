@@ -41,29 +41,29 @@ public class Markers extends Module
     public boolean fullBlock(BlockPos pos)
     {
         if (inFrames(unit(), pos) && unit().fullBlock.get())
-            return isActive() && fullBlockCase.get();
-        return isActive() && fullBlockFinal.get();   
+            return isActive() && unit().fullBlockCase.get();
+        return isActive() && unit().fullBlockFinal.get();   
     }
     
     public boolean emptyBlock(BlockPos pos)
     {
         if (inFrames(unit(), pos) && unit().emptyBlock.get())
-            return isActive() && emptyBlockCase.get();
-        return isActive() && emptyBlockFinal.get();
+            return isActive() && unit().emptyBlockCase.get();
+        return isActive() && unit().emptyBlockFinal.get();
     }
 
     public boolean fullPlayer(BlockPos pos)
     {
         if (inFrames(unit(), pos) && unit().fullPlayer.get())
-            return isActive() && fullPlayerCase.get();
-        return isActive() && fullPlayerFinal.get();   
+            return isActive() && unit().fullPlayerCase.get();
+        return isActive() && unit().fullPlayerFinal.get();   
     }
     
     public boolean emptyPlayer(BlockPos pos)
     {
         if (inFrames(unit(), pos) && unit().emptyPlayer.get())
-            return isActive() && emptyPlayerCase.get();
-        return isActive() && emptyPlayerFinal.get();
+            return isActive() && unit().emptyPlayerCase.get();
+        return isActive() && unit().emptyPlayerFinal.get();
     }
 
     public boolean inFrames(Frame frame, BlockPos pos)
