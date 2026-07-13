@@ -38,19 +38,19 @@ public class Markers extends Module
     
     public boolean fullBlock(BlockPos pos)
     {        
-        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findAny().map(unit -> unit.fullBlock.get());    
+        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullBlock.get()).orElse(false);    
     }
     public boolean emptyBlock(BlockPos pos)
     {
-        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findAny().map(unit -> unit.emptyBlock.get());
+        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyBlock.get()).orElse(false);
     }
     public boolean fullPlayer(BlockPos pos)
     {
-        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findAny().map(unit -> unit.fullPlayer.get());
+        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.fullPlayer.get()).orElse(false);
     }
     public boolean emptyPlayer(BlockPos pos)
     {
-        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findAny().map(unit -> unit.emptyPlayer.get());
+        return Frames.get().stream().filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyPlayer.get()).orElse(false);
     }
 
     public boolean inFrames(Frame obj, BlockPos pos)
