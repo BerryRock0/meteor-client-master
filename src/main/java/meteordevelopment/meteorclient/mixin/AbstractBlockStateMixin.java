@@ -40,7 +40,7 @@ public abstract class AbstractBlockStateMixin
         Markers mark = Modules.get().get(Markers.class);
 
         if (mark.isActive() && mark.inFrames(pos))
-           cir.setReturnValue(mark.blockShape(pos));
+           cir.setReturnValue(mark.visualShape(pos));
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
