@@ -22,6 +22,8 @@ import net.minecraft.core.BlockPos;
 // TODO: Add outline and more modes
 public class Frame implements ISerializable<Frame>
 {
+    public final Settings settings = new Settings();
+
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgPlayer = settings.createGroup("Player");
     private final SettingGroup sgBlock = settings.createGroup("Block");
