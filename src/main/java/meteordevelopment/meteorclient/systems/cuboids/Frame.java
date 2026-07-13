@@ -74,36 +74,21 @@ public class Frame implements ISerializable<Frame>
     );
 
     // Collisions
-    public final Setting<Boolean> fullBlock = sgBlock.add(new BoolSetting.Builder()
-        .name("full-block")
-        .description("What blocks should be added collision box.")
-        .defaultValue(false)
+    public final Setting<Mode> blockMode = sgBlock.add(new EnumSetting.Builder<Mode>()
+        .name("BlockMode")
+        .description("Direction of stepping.")
+        .defaultValue(Mode.None)
         .build()
     );
-    
-    public final Setting<Boolean> emptyBlock = sgBlock.add(new BoolSetting.Builder()
-        .name("emptyblock")
-        .description("What blocks should be emptied.")
-        .defaultValue(false)
-        .build()
-    ); 
 
-    public final Setting<Boolean> fullPlayer = sgPlayer.add(new BoolSetting.Builder()
-        .name("fullplayer")
-        .description("What blocks should be added collision box.")
-        .defaultValue(false)
-        .build()
-    );
-    
-    public final Setting<Boolean> emptyPlayer = sgPlayer.add(new BoolSetting.Builder()
-        .name("emptyplayer")
-        .description("What blocks should be emptied.")
-        .defaultValue(false)
+    public final Setting<Mode> PlayerMode = sgPlayer.add(new EnumSetting.Builder<Mode>()
+        .name("PlayerMode")
+        .description("Direction of stepping.")
+        .defaultValue(Mode.None)
         .build()
     );
     
     public final UUID uuid;
-    
     
 	private Frame()
 	{
@@ -136,7 +121,7 @@ public class Frame implements ISerializable<Frame>
         return tag;
     }
     
-     @Override
+    @Override
     public Frame fromTag(CompoundTag tag)
     {
         if (tag.contains("settings"))
@@ -163,5 +148,12 @@ public class Frame implements ISerializable<Frame>
     public int hashCode()
     {
         return Objects.hashCode(uuid);
+    }
+
+    public enum Mode
+    {
+        None,
+        Empty,
+        Full
     }
 }
