@@ -65,12 +65,13 @@ public class Markers extends Module
         return mc.level.getBlockState(pos).getCollisionShape(mc.level, pos);
     }
 
-    public boolean inFrames(Frame obj, BlockPos pos)
+    public boolean inFrames(BlockPos pos)
     {
-        if (obj != null && pos != null)
-            return (pos.getX() >= obj.startPos.get().getX() && pos.getX() <= obj.endPos.get().getX()) && (pos.getY() >= obj.startPos.get().getY() && pos.getY() <= obj.endPos.get().getY()) && (pos.getZ() >= obj.startPos.get().getZ() && pos.getZ() <= obj.endPos.get().getZ());
+        for(Frame obj: Frames.get())
+            if (pos != null)
+                return (pos.getX() >= obj.startPos.get().getX() && pos.getX() <= obj.endPos.get().getX()) && (pos.getY() >= obj.startPos.get().getY() && pos.getY() <= obj.endPos.get().getY()) && (pos.getZ() >= obj.startPos.get().getZ() && pos.getZ() <= obj.endPos.get().getZ());
 
-	    return obj == null && pos == null;
+	    return pos == null;
 	}
 
 	@Override
