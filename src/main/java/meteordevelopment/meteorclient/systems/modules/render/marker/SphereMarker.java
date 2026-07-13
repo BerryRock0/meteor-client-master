@@ -18,7 +18,7 @@ import net.minecraft.core.BlockPos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sphere2dMarker extends BaseMarker {
+public class SphereMarker extends BaseMarker {
     private static class Block {
         public final int x, y, z;
         public int excludeDir;
@@ -30,7 +30,7 @@ public class Sphere2dMarker extends BaseMarker {
         }
     }
 
-    public static final String type = "Sphere-2D";
+    public static final String type = "Sphere";
 
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgRender = settings.createGroup("Render");
