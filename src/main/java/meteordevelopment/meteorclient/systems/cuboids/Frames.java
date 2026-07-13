@@ -65,7 +65,7 @@ public class Frames extends System<Frames> implements Iterable<Frame>
         boolean removed = frames.remove(frame);
         if (removed) {
             save();
-            MeteorClient.EVENT_BUS.post(new MinerPlacerRemovedEvent(frame));
+            MeteorClient.EVENT_BUS.post(new FrameRemovedEvent(frame));
         }
 
         return removed;
@@ -119,7 +119,7 @@ public class Frames extends System<Frames> implements Iterable<Frame>
 
         for (Tag frameTag : tag.getListOrEmpty("frames"))
         {
-            frames.add(new Frame(minerPlacerTag));
+            frames.add(new Frame(frameTag));
         }
 
         return this;
