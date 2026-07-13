@@ -23,45 +23,63 @@ import net.minecraft.core.BlockPos;
 
 public class Markers extends Module
 {
+    private final SettingGroup sgExecute = settings.createGroup("Execute");
+
+    public final Setting<Boolean> pre = sgExecute.add(new BoolSetting.Builder()
+        .name("pre")
+        .description("Load script before tick.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> post = sgExecute.add(new BoolSetting.Builder()
+        .name("post")
+        .description("Load script after tick.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public Frame obj;
+
 	public Markers()
 	{
         super(Categories.World, "markers", "Allows you to create marker units.");
     }
 
-    public Frame unit()
+    public void engine()
     {
         for(Frame unit: Frames.get())
-            return unit;
+            return obj = unit;
 
-        return null;
+        return obj;
     }
 
     public boolean fullBlock(BlockPos pos)
     {
-        if (inFrames(unit(), pos) && unit().fullBlock.get())
-            return isActive() && unit().fullBlockCase.get();
-        return isActive() && unit().fullBlockFinal.get();   
+        if (inFrames(obj, pos) && obj.fullBlock.get())
+            return isActive() && obj.fullBlockCase.get();
+        return isActive() && obj.fullBlockFinal.get();   
     }
     
     public boolean emptyBlock(BlockPos pos)
     {
-        if (inFrames(unit(), pos) && unit().emptyBlock.get())
-            return isActive() && unit().emptyBlockCase.get();
-        return isActive() && unit().emptyBlockFinal.get();
+        if (inFrames(obj, pos) && obj.emptyBlock.get())
+            return isActive() && obj.emptyBlockCase.get();
+        return isActive() && obj.emptyBlockFinal.get();
     }
 
     public boolean fullPlayer(BlockPos pos)
     {
-        if (inFrames(unit(), pos) && unit().fullPlayer.get())
-            return isActive() && unit().fullPlayerCase.get();
-        return isActive() && unit().fullPlayerFinal.get();   
+        if (inFrames(obj, pos) && obj.fullPlayer.get())
+            return isActive() && obj.fullPlayerCase.get();
+        return isActive() && obj.fullPlayerFinal.get();   
     }
     
     public boolean emptyPlayer(BlockPos pos)
     {
-        if (inFrames(unit(), pos) && unit().emptyPlayer.get())
-            return isActive() && unit().emptyPlayerCase.get();
-        return isActive() && unit().emptyPlayerFinal.get();
+        if (inFrames(obj, pos) && obj.emptyPlayer.get())
+            return isActive() && obj.emptyPlayerCase.get();
+        return isActive() && obj.emptyPlayerFinal.get();
     }
 
     public boolean inFrames(Frame frame, BlockPos pos)
@@ -72,6 +90,20 @@ public class Markers extends Module
 		
 		return x&&y&&z;
 	}
+
+    @EventHandler
+    private void onTickPre(TickEvent.Pre event)
+    {
+        if (pre.get())
+            engine();
+    }
+        
+    @EventHandler
+    private void onTickPre(TickEvent.Post event) 
+    {
+        if (post.get())
+            engine();
+    }
 
     @EventHandler
     private void onRender(Render3DEvent event)
