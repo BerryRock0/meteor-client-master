@@ -57,13 +57,13 @@ public class Markers extends Module
         return StreamSupport.stream(Frames.get().spliterator(), false).filter(unit -> inFrames(unit, pos)).findFirst().map(unit -> unit.emptyPlayer.get()).orElse(false);
     }
 
-    public boolean inFrames(BlockPos pos)
+    public boolean inFrames(Frame obj, BlockPos pos)
     {
-        int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-        int sx = obj.startPos.get().getX(), sy = obj.startPos.get().getY(), sz = obj.startPos.get().getZ(); 
-        int ex = obj.endPos.get().getX(), ey = obj.endPos.get().getY(), ez = obj.endPos.get().getZ();
+        boolean x = pos.getX() >= obj.startPos.get().getX() && <= obj.endPos.get().getX()
+        boolean y = pos.getY() >= obj.startPos.get().getY() && <= obj.endPos.get().getY();
+        boolean z = pos.getZ() >= obj.startPos.get().getZ() && <= obj.endPos.get().getZ();
         
-	    return Stream.of(x >= sx && x <= ex, y >= sy && y <= ey,z >= sz && z <= ez).allMatch(b -> b);
+	    return x && y && z;
 	}
 
 
