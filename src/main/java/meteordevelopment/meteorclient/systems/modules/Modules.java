@@ -31,7 +31,7 @@ import meteordevelopment.meteorclient.systems.modules.movement.speed.Speed;
 import meteordevelopment.meteorclient.systems.modules.player.*;
 import meteordevelopment.meteorclient.systems.modules.render.*;
 import meteordevelopment.meteorclient.systems.modules.render.blockesp.BlockESP;
-import meteordevelopment.meteorclient.systems.modules.render.marker.Marker;
+import meteordevelopment.meteorclient.systems.modules.world.Markers;
 import meteordevelopment.meteorclient.systems.modules.world.*;
 import meteordevelopment.meteorclient.systems.modules.world.Timer;
 import meteordevelopment.meteorclient.utils.Utils;
@@ -545,6 +545,7 @@ public class Modules extends System<Modules> {
         add(new EndermanLook());
         add(new Flamethrower());
         add(new LiquidFiller());
+        add(new Markers());
         add(new MountBypass());
         add(new NoGhostBlocks());
         add(new Nuker());
