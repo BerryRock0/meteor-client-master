@@ -30,13 +30,13 @@ public class Frame implements ISerializable<Frame>
     private final SettingGroup sgRender = settings.createGroup("Render");
 
     // General
-    private final Setting<BlockPos> startPos = sgGeneral.add(new BlockPosSetting.Builder()
+    public final Setting<BlockPos> startPos = sgGeneral.add(new BlockPosSetting.Builder()
         .name("pos-1")
         .description("1st corner of the cuboid")
         .build()
     );
 
-    private final Setting<BlockPos> endPos = sgGeneral.add(new BlockPosSetting.Builder()
+    public final Setting<BlockPos> endPos = sgGeneral.add(new BlockPosSetting.Builder()
         .name("pos-2")
         .description("2nd corner of the cuboid")
         .build()
