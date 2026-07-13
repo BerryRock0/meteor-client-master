@@ -74,15 +74,15 @@ public class Frame implements ISerializable<Frame>
     );
 
     // Collisions
-    public final Setting<Mode> blockMode = sgBlock.add(new EnumSetting.Builder<Mode>()
-        .name("BlockMode")
+    public final Setting<Mode> collisionMode = sgBlock.add(new EnumSetting.Builder<Mode>()
+        .name("CollisionMode")
         .description("Direction of stepping.")
         .defaultValue(Mode.None)
         .build()
     );
 
-    public final Setting<Mode> PlayerMode = sgPlayer.add(new EnumSetting.Builder<Mode>()
-        .name("PlayerMode")
+    public final Setting<Mode> visualMode = sgPlayer.add(new EnumSetting.Builder<Mode>()
+        .name("VisualMode")
         .description("Direction of stepping.")
         .defaultValue(Mode.None)
         .build()
