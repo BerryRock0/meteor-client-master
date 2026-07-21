@@ -42,27 +42,37 @@ public class Markers extends Module
             event.renderer.box(unit.startPos.get().getX(), unit.startPos.get().getY(), unit.startPos.get().getZ(), unit.endPos.get().getX(), unit.endPos.get().getY(), unit.endPos.get().getZ(), unit.sideColor.get(), unit.lineColor.get(), unit.shapeMode.get(), 0);
     }
 
-    public VoxelShape visualShape(BlockPos pos)
-    {
+    public boolean visualEmpty(BlockPos pos)
+    { 
         for(Frame frame: Frames.get())
-        if(frame.visualMode.get() == frame.visualMode.get().Empty)
-            return Shapes.empty();
-        else if(frame.visualMode.get() == frame.visualMode.get().Full) 
-            return Shapes.block();
-
-        return mc.level.getBlockState(pos).getShape(mc.level, pos);
+            if (pos != null)   
+                return frame.visualMode.get() == frame.visualMode.get().Empty && inFrames(pos);
+ 
+        return pos == null
     }
-
-    
-    public VoxelShape collisionShape(BlockPos pos)
+    public boolean visualFull(BlockPos pos)
     {
         for(Frame frame: Frames.get())
-        if(frame.collisionMode.get() == frame.collisionMode.get().Empty) 
-            return Shapes.empty();
-        else if(frame.collisionMode.get() == frame.collisionMode.get().Full) 
-            return Shapes.block();
+            if (pos != null)    
+                return frame.visualMode.get() == frame.visualMode.get().Full && inFrames(pos);
+ 
+        return pos == null
+    }
+    public boolean collisionEmpty(BlockPos pos)
+    {
+        for(Frame frame: Frames.get())
+            if (pos != null)   
+                return frame.collisionMode.get() == frame.collisionMode.get().Empty && inFrames(pos);
 
-        return mc.level.getBlockState(pos).getCollisionShape(mc.level, pos);
+        return pos == null;
+    }
+    public boolean collisionFull(BlockPos pos)
+    {
+        for(Frame frame: Frames.get())
+            if(pos != null)    
+                return frame.collisionMode.get() == frame.collisionMode.get().Full && inFrames(pos);
+
+        return pos == null;
     }
 
     public boolean inFrames(BlockPos pos)
