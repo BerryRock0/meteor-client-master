@@ -48,7 +48,7 @@ public class Markers extends Module
             if (pos != null)   
                 return frame.visualMode.get() == frame.visualMode.get().Empty && inFrames(pos);
  
-        return pos == null
+        return pos == null;
     }
     public boolean visualFull(BlockPos pos)
     {
@@ -56,7 +56,7 @@ public class Markers extends Module
             if (pos != null)    
                 return frame.visualMode.get() == frame.visualMode.get().Full && inFrames(pos);
  
-        return pos == null
+        return pos == null;
     }
     public boolean collisionEmpty(BlockPos pos)
     {
