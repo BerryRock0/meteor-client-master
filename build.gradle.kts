@@ -81,6 +81,7 @@ dependencies {
     compileOnly(libs.viafabricplus) { isTransitive = false }
     compileOnly(libs.viafabricplus.api) { isTransitive = false }
     compileOnly(libs.baritone)
+    compileOnly(libs.modmenu)
 
     // Libraries (JAR-in-JAR)
     jij(libs.orbit)
