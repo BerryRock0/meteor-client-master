@@ -48,7 +48,7 @@ public class Markers extends Module
         if(frame.visualMode.get() == frame.visualMode.get().Empty)
             return Shapes.empty();
         else if(frame.visualMode.get() == frame.visualMode.get().Full) 
-            return Shapes.full();
+            return Shapes.block();
 
         return mc.level.getBlockState(pos).getShape(mc.level, pos);
     }
@@ -60,7 +60,7 @@ public class Markers extends Module
         if(frame.collisionMode.get() == frame.collisionMode.get().Empty) 
             return Shapes.empty();
         else if(frame.collisionMode.get() == frame.collisionMode.get().Full) 
-            return Shapes.full();
+            return Shapes.block();
 
         return mc.level.getBlockState(pos).getCollisionShape(mc.level, pos);
     }
