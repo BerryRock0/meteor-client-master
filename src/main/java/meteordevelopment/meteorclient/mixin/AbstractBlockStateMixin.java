@@ -26,7 +26,6 @@ public abstract class AbstractBlockStateMixin
     @Inject(method = "getOffset", at = @At("HEAD"), cancellable = true)
     private void modifyPos(BlockPos pos, CallbackInfoReturnable<Vec3> cir)
     {
-    
         if (Modules.get() == null) return;
 
         if (Modules.get().get(NoRender.class).noTextureRotations())
@@ -39,8 +38,11 @@ public abstract class AbstractBlockStateMixin
 	    if (Modules.get() == null) return;
         Markers mark = Modules.get().get(Markers.class);
 
-        if (mark.isActive() && mark.inFrames(pos))
-           cir.setReturnValue(mark.visualShape(pos));
+        if (mark.isActive())
+        {
+            if(mark.visualEmpty) cir.setReturnValue(Shapes.empty());
+            if(mark.visualFull) cir.setReturnValue(Shapes.block());
+        }
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
@@ -48,8 +50,11 @@ public abstract class AbstractBlockStateMixin
 	{
         if (Modules.get() == null) return;
         Markers mark = Modules.get().get(Markers.class);
-        
-        if (mark.isActive() && mark.inFrames(pos))
-           cir.setReturnValue(mark.collisionShape(pos));
+
+        if (mark.isActive())
+        {
+            if(mark.collisionEmpty)cir.setReturnValue(Shapes.empty());
+            if(mark.collisionFull)cir.setReturnValue(Shapes.block());
+        }
 	}
 }
