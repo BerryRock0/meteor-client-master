@@ -15,6 +15,6 @@ public enum ShapeMode {
     }
 
     public boolean sides() {
-        return this == Sides ||this == Both;
+        return this == Sides || this == Both;
     }
 }
