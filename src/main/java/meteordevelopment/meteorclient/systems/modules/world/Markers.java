@@ -39,7 +39,7 @@ public class Markers extends Module
     {
         for (Frame unit : Frames.get())
         if(unit.render.get())
-            event.renderer.box(unit.startPos.get().getX(), unit.startPos.get().getY(), unit.startPos.get().getZ(), unit.endPos.get().getX(), unit.endPos.get().getY(), unit.endPos.get().getZ(), unit.sideColor.get(), unit.lineColor.get(), unit.shapeMode.get(), 0);
+            event.renderer.box(unit.startPos.get().getX(), unit.startPos.get().getY(), unit.startPos.get().getZ(), unit.endPos.get().getX()+1, unit.endPos.get().getY()+1, unit.endPos.get().getZ()+1, unit.sideColor.get(), unit.lineColor.get(), unit.shapeMode.get(), 0);
     }
 
     public boolean visualEmpty(BlockPos pos)
