@@ -40,8 +40,8 @@ public abstract class AbstractBlockStateMixin
 
         if (mark.isActive())
         {
-            if(mark.visualEmpty)cir.setReturnValue(Shapes.empty());
-            if(mark.visualFull)cir.setReturnValue(Shapes.block());
+            if(mark.visualEmpty(pos))cir.setReturnValue(Shapes.empty());
+            if(mark.visualFull(pos))cir.setReturnValue(Shapes.block());
         }
 	}
 	
@@ -53,8 +53,8 @@ public abstract class AbstractBlockStateMixin
 
         if (mark.isActive())
         {
-            if(mark.collisionEmpty)cir.setReturnValue(Shapes.empty());
-            if(mark.collisionFull)cir.setReturnValue(Shapes.block());
+            if(mark.collisionEmpty(pos))cir.setReturnValue(Shapes.empty());
+            if(mark.collisionFull(pos))cir.setReturnValue(Shapes.block());
         }
 	}
 }
