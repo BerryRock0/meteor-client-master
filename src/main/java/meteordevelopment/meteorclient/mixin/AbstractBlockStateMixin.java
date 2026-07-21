@@ -40,8 +40,8 @@ public abstract class AbstractBlockStateMixin
 
         if (mark.isActive())
         {
-            if(mark.visualEmpty) cir.setReturnValue(Shapes.empty());
-            if(mark.visualFull) cir.setReturnValue(Shapes.block());
+            if(mark.visualEmpty)cir.setReturnValue(Shapes.empty());
+            if(mark.visualFull)cir.setReturnValue(Shapes.block());
         }
 	}
 	
