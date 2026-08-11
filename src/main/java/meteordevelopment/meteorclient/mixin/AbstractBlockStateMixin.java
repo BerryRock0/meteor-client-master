@@ -7,7 +7,7 @@ package meteordevelopment.meteorclient.mixin;
 
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
-import meteordevelopment.meteorclient.systems.modules.world.Markers;
+import meteordevelopment.meteorclient.systems.modules.world.Collisions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -36,25 +36,20 @@ public abstract class AbstractBlockStateMixin
 	private void onGetVisualShape(BlockGetter view, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
 	    if (Modules.get() == null) return;
-        Markers mark = Modules.get().get(Markers.class);
+        Collisions collision = Modules.get().get(Collisions.class);
 
-        if (mark.isActive())
-        {
-            if(mark.visualEmpty(pos))cir.setReturnValue(Shapes.empty());
-            if(mark.visualFull(pos))cir.setReturnValue(Shapes.block());
-        }
+        if(collision.emptyBlock(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.empty());
+        if(collision.fullBlock(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.block());
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
 	private void onGetCollisionShape(BlockGetter view, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
 	{
         if (Modules.get() == null) return;
-        Markers mark = Modules.get().get(Markers.class);
+        Collisions collision = Modules.get().get(Collisions.class);
 
-        if (mark.isActive())
-        {
-            if(mark.collisionEmpty(pos))cir.setReturnValue(Shapes.empty());
-            if(mark.collisionFull(pos))cir.setReturnValue(Shapes.block());
-        }
+        if(collision.emptyPlayer(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.empty());
+        if(collision.fullPlayer(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.block());
+
 	}
 }
