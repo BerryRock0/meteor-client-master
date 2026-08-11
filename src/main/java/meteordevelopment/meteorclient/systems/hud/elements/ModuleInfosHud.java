@@ -99,7 +99,7 @@ public class ModuleInfosHud extends HudElement {
             double x = this.x + alignX(moduleWidth, alignment.get());
             x = renderer.text(module.title, x, y, moduleColor.get(), textShadow.get());
             renderer.text(text, x + renderer.textWidth("="), y, module.isActive() ? onColor.get() : offColor.get(), textShadow.get());
-            y += renderer.textHeight()++;
+            y += renderer.textHeight() + 1;
 
             width = Math.max(width, moduleWidth);
             height += renderer.textHeight();
