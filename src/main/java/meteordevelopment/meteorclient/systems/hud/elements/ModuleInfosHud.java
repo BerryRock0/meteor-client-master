@@ -90,7 +90,7 @@ public class ModuleInfosHud extends HudElement {
         int i = 0;
         for (Module module : modules.get())
         {
-            double moduleWidth = renderer.textWidth(module.title) + renderer.textWidth("=");
+            double moduleWidth = renderer.textWidth(module.title);
             String text = null;
 
             text = Boolean.toString(module.isActive()); 
@@ -98,12 +98,12 @@ public class ModuleInfosHud extends HudElement {
 
             double x = this.x + alignX(moduleWidth, alignment.get());
             x = renderer.text(module.title, x, y, moduleColor.get(), textShadow.get());
-            renderer.text(text, x + renderer.textWidth(" "), y, module.isActive() ? onColor.get() : offColor.get(), textShadow.get());
-            y += renderer.textHeight() + 2;
+            renderer.text(text, x + renderer.textWidth("="), y, module.isActive() ? onColor.get() : offColor.get(), textShadow.get());
+            y += renderer.textHeight()++;
 
             width = Math.max(width, moduleWidth);
             height += renderer.textHeight();
-            if (i > 0) height += 2;
+            if (i > 0) height++;
 
             i++;
         }
