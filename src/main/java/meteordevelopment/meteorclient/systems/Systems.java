@@ -52,7 +52,6 @@ public class Systems {
         add(new Accounts());
         add(new Waypoints());
         add(new MinerPlacers());
-        add(new Frames());
         add(new Profiles());
         add(new Proxies());
         add(new Hud());
