@@ -58,15 +58,6 @@ public abstract class LivingEntityMixin extends Entity {
         if (noRender.noEatParticles() && itemStack.getComponents().has(DataComponents.FOOD)) ci.cancel();
     }
 
-    @Inject(method = "onEquipItem", at = @At("HEAD"), cancellable = true)
-    private void onEquipStack(EquipmentSlot slot, ItemStack oldStack, ItemStack stack, CallbackInfo ci) {
-        if ((Object) this != mc.player) return;
-
-        if (Modules.get().get(OffhandCrash.class).isAntiCrash()) {
-            ci.cancel();
-        }
-    }
-
     @ModifyVariable(method = "swing(Lnet/minecraft/world/InteractionHand;)V", at = @At("HEAD"), argsOnly = true, name = "hand")
     private InteractionHand setHand(InteractionHand hand) {
         if ((Object) this != mc.player) return hand;
