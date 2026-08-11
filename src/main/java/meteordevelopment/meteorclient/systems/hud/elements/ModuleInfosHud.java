@@ -73,8 +73,10 @@ public class ModuleInfosHud extends HudElement {
     }
 
     @Override
-    public void render(HudRenderer renderer) {
-        if (Modules.get() == null || modules.get().isEmpty()) {
+    public void render(HudRenderer renderer)
+    {
+        if (Modules.get() == null || modules.get().isEmpty())
+        {
             renderer.text("Module Info", x, y, moduleColor.get(), textShadow.get());
             setSize(renderer.textWidth("Module Info"), renderer.textHeight());
             return;
@@ -86,19 +88,12 @@ public class ModuleInfosHud extends HudElement {
         double height = 0;
 
         int i = 0;
-        for (Module module : modules.get()) {
-            double moduleWidth = renderer.textWidth(module.title) + renderer.textWidth(" ");
+        for (Module module : modules.get())
+        {
+            double moduleWidth = renderer.textWidth(module.title) + renderer.textWidth("=");
             String text = null;
 
-            if (module.isActive()) {
-                if (additionalInfo.get()) {
-                    String info = module.getInfoString();
-                    if (info != null) text = info;
-                }
-
-                if (text == null) text = "ON";
-            }
-            else text = "OFF";
+            text = Boolean.toString(module.isActive()); 
             moduleWidth += renderer.textWidth(text);
 
             double x = this.x + alignX(moduleWidth, alignment.get());
