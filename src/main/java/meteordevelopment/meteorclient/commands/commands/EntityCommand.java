@@ -22,13 +22,13 @@ public class EntityCommand extends Command
   @Override
   public void build(LiteralArgumentBuilder<ClientSuggestionProvider> builder)
   {
-    builder.then(literal("help")).executes(_ -> {showHelp(this); return SINGLE_SUCCESS;}));
-    builder.then(literal("list")).executes(context -> {list(); return SINGLE_SUCCESS;}));
-    builder.then(literal("create")).executes(context -> {return SINGLE_SUCCESS;}));
-    builder.then(literal("erase")).executes(context -> {return SINGLE_SUCCESS;}));
-    builder.then(literal("teleport")).executes(context -> {return SINGLE_SUCCESS;}));
-    builder.then(literal("tick")).executes(context -> {return SINGLE_SUCCESS;}));  
-    builder.then(literal("move")).executes(context -> {return SINGLE_SUCCESS;}));
+    builder.then(literal("help")).executes(_ -> {showHelp(this); return SINGLE_SUCCESS;});
+    builder.then(literal("list")).executes(context -> {list(); return SINGLE_SUCCESS;});
+    builder.then(literal("create")).executes(context -> {return SINGLE_SUCCESS;});
+    builder.then(literal("erase")).executes(context -> {return SINGLE_SUCCESS;});
+    builder.then(literal("teleport")).executes(context -> {return SINGLE_SUCCESS;});
+    builder.then(literal("tick")).executes(context -> {return SINGLE_SUCCESS;});  
+    builder.then(literal("move")).executes(context -> {return SINGLE_SUCCESS;});
   }
 
   public void list()
