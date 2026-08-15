@@ -148,11 +148,10 @@ public class MeshBuilder {
 
         putIndex(p, i1);
         putIndex(p + indexType.bytes, i2);
-        putIndex(p + indexType.bytes * 2L, i3);
-
-        putIndex(p + indexType.bytes * 3L, i3);
-        putIndex(p + indexType.bytes * 4L, i4);
-        putIndex(p + indexType.bytes * 5L, i1);
+        putIndex(p + indexType.bytes + indexType.bytes, i3);
+        putIndex(p + indexType.bytes + indexType.bytes + indexType.bytes, i3);
+        putIndex(p + indexType.bytes + indexType.bytes + indexType.bytes + indexType.bytes, i4);
+        putIndex(p + indexType.bytes + indexType.bytes + indexType.bytes + indexType.bytes + indexType.bytes, i1);
 
         indicesCount += 6;
     }
@@ -164,7 +163,7 @@ public class MeshBuilder {
 
         putIndex(p, i1);
         putIndex(p + indexType.bytes, i2);
-        putIndex(p + indexType.bytes * 2L, i3);
+        putIndex(p + indexType.bytes + indexType.bytes, i3);
 
         indicesCount += 3;
     }
@@ -193,7 +192,7 @@ public class MeshBuilder {
 
         if ((vertexI + vertexCount) * primitiveVerticesSize >= vertices.capacity()) {
             int offset = getVerticesOffset();
-            int newSize = Math.max(vertices.capacity() * 2, vertices.capacity() + vertexCount * primitiveVerticesSize);
+            int newSize = Math.max(vertices.capacity() + vertices.capacity(), vertices.capacity() + vertexCount * primitiveVerticesSize);
             ByteBuffer newVertices = BufferUtils.createByteBuffer(newSize);
             memCopy(memAddress0(vertices), memAddress0(newVertices), offset);
 
@@ -203,7 +202,7 @@ public class MeshBuilder {
         }
 
         if ((indicesCount + indexCount) * indexType.bytes >= indices.capacity()) {
-            int newSize = Math.max(indices.capacity() * 2, indices.capacity() + indexCount * indexType.bytes);
+            int newSize = Math.max(indices.capacity() + indices.capacity(), indices.capacity() + indexCount * indexType.bytes);
 
             ByteBuffer newIndices = BufferUtils.createByteBuffer(newSize);
             memCopy(memAddress0(indices), memAddress0(newIndices), indicesCount * (long) indexType.bytes);
