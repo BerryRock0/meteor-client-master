@@ -22,9 +22,6 @@ public class BlockCommand extends Command
   public void build(LiteralArgumentBuilder<ClientSuggestionProvider> builder)
   {
     builder.then(literal("search").executes(_ -> {return SINGLE_SUCCESS;}))
-    .then(literal("break").executes(_ -> {return SINGLE_SUCCESS;}))
-    .then(literal("interact").executes(_ -> {return SINGLE_SUCCESS;}))
-    .then(literal("place").executes(_ -> {return SINGLE_SUCCESS;}))
-    .then(literal("remove").executes(_ -> {return SINGLE_SUCCESS;}));
+    .then(literal("change").executes(_ -> {return SINGLE_SUCCESS;}));
   }
 }
