@@ -104,7 +104,7 @@ public class Collisions extends Module {
         .build()
     );
 
-    public final Setting<List<Block>> emptyEntity = sgEntity.add(new EntityTypeListSetting.Builder()
+    public final Setting<Set<EntityType<?>>> emptyEntity = sgEntity.add(new EntityTypeListSetting.Builder()
         .name("emptyentity")
         .description("What blocks should be emptied.")
         .build()
