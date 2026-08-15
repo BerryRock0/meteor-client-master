@@ -166,8 +166,7 @@ public abstract class WWidget implements BaseWidget {
     }
 
     public WView getView() {
-        if (this instanceof WView view) return view;
-        return parent != null ? parent.getView() : null;
+        return parent != null ? parent.getView() : (this instanceof WView ? this : null);
     }
 
     public boolean isOver(double x, double y) {
