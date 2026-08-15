@@ -21,10 +21,10 @@ public class BlockCommand extends Command
   @Override
   public void build(LiteralArgumentBuilder<ClientSuggestionProvider> builder)
   {
-    builder.then(literal("search")).executes(_ -> {return SINGLE_SUCCESS;});
-    builder.then(literal("break")).executes(_ -> {return SINGLE_SUCCESS;});
-    builder.then(literal("interact")).executes(_ -> {return SINGLE_SUCCESS;});
-    builder.then(literal("place")).executes(_ -> {return SINGLE_SUCCESS;});
-    builder.then(literal("remove")).executes(_ -> {return SINGLE_SUCCESS;});
+    builder.then(literal("search")).executes(_ -> {return SINGLE_SUCCESS;})
+    .then(literal("break")).executes(_ -> {return SINGLE_SUCCESS;})
+    .then(literal("interact")).executes(_ -> {return SINGLE_SUCCESS;})
+    .then(literal("place")).executes(_ -> {return SINGLE_SUCCESS;})
+    .then(literal("remove")).executes(_ -> {return SINGLE_SUCCESS;});
   }
 }
