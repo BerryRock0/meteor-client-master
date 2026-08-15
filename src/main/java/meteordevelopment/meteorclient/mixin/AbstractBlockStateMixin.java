@@ -38,8 +38,8 @@ public abstract class AbstractBlockStateMixin
 	    if (Modules.get() == null) return;
         Collisions collision = Modules.get().get(Collisions.class);
 
-        if(collision.emptyBlock(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.empty());
-        if(collision.fullBlock(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.block());
+        if(collision.emptyPlayer(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.empty());
+        if(collision.fullPlayer(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.block());
 	}
 	
 	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
@@ -48,8 +48,8 @@ public abstract class AbstractBlockStateMixin
         if (Modules.get() == null) return;
         Collisions collision = Modules.get().get(Collisions.class);
 
-        if(collision.emptyPlayer(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.empty());
-        if(collision.fullPlayer(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.block());
+        if(collision.emptyBlock(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.empty());
+        if(collision.fullBlock(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.block());
 
 	}
 }
