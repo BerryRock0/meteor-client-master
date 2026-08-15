@@ -59,15 +59,10 @@ public class MacrosTab extends Tab {
 
             for (Macro macro : Macros.get()) {
                 table.add(theme.label(macro.name.get() + " (" + macro.keybind.get() + ")"));
-
-                WButton edit = table.add(theme.button(GuiRenderer.EDIT)).expandCellX().right().widget();
-                edit.action = () -> mc.gui.setScreen(new EditMacroScreen(theme, macro, this::reload));
-
-                WConfirmedMinus remove = table.add(theme.confirmedMinus()).widget();
-                remove.action = () -> {
-                    Macros.get().remove(macro);
-                    reload();
-                };
+                
+                WButton exec = table.add(theme.button("Execute")).widget(); exec.action = () -> {macro.onAction();};
+                WButton edit = table.add(theme.button(GuiRenderer.EDIT)).expandCellX().right().widget(); edit.action = () -> mc.gui.setScreen(new EditMacroScreen(theme, macro, this::reload));
+                WConfirmedMinus remove = table.add(theme.confirmedMinus()).widget(); remove.action = () -> {Macros.get().remove(macro); reload();};
 
                 table.row();
             }
