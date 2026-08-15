@@ -21,7 +21,6 @@ public class BlockCommand extends Command
   @Override
   public void build(LiteralArgumentBuilder<ClientSuggestionProvider> builder)
   {
-    builder.then(literal("help")).executes(_ -> {showHelp(this); return SINGLE_SUCCESS;});
     builder.then(literal("search")).executes(context -> {return SINGLE_SUCCESS;});
     builder.then(literal("break")).executes(context -> {return SINGLE_SUCCESS;});
     builder.then(literal("interact")).executes(context -> {return SINGLE_SUCCESS;});
