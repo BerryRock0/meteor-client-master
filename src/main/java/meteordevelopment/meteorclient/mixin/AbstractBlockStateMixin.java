@@ -32,8 +32,8 @@ public abstract class AbstractBlockStateMixin
             cir.setReturnValue(Vec3.ZERO);
     }
 
-    @Inject(at = @At("HEAD"), method = "getInteractionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
-	private void onGetInteractionShape(BlockGetter view, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
+    @Inject(at = @At("HEAD"), method = "getInteractionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
+	private void onGetInteractionShape(BlockGetter view, BlockPos pos, CallbackInfoReturnable<VoxelShape> cir)
 	{
 	    if (Modules.get() == null) return;
         Collisions collision = Modules.get().get(Collisions.class);
