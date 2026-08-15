@@ -24,11 +24,11 @@ public class EntityCommand extends Command
   public void build(LiteralArgumentBuilder<ClientSuggestionProvider> builder)
   {
     builder.then(literal("list")).executes(_ -> {list(); return SINGLE_SUCCESS;})
-    .then(literal("create")).executes(_ -> {return SINGLE_SUCCESS;})
-    .then(literal("erase")).executes(_ -> {return SINGLE_SUCCESS;})
-    .then(literal("teleport")).executes(_ -> {return SINGLE_SUCCESS;})
-    .then(literal("tick")).executes(_ -> {return SINGLE_SUCCESS;})
-    .then(literal("move")).executes(_ -> {return SINGLE_SUCCESS;});
+    .then(literal("create").executes(_ -> {return SINGLE_SUCCESS;}))
+    .then(literal("erase").executes(_ -> {return SINGLE_SUCCESS;}))
+    .then(literal("teleport").executes(_ -> {return SINGLE_SUCCESS;}))
+    .then(literal("tick").executes(_ -> {return SINGLE_SUCCESS;}))
+    .then(literal("move").executes(_ -> {return SINGLE_SUCCESS;}));
   }
 
   public void list()
