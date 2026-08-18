@@ -88,7 +88,7 @@ public class AutoArmor extends Module {
     private int timer;
 
     public AutoArmor() {
-        super(Categories.Combat, "autoarmor", "Automatically equips armor.");
+        super(Categories.Combat, "autoArmor", "Automatically equips armor.");
 
         armorPieces[0] = helmet;
         armorPieces[1] = chestplate;
