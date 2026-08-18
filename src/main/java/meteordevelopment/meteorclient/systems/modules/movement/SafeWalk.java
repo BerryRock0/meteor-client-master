@@ -83,7 +83,7 @@ public class SafeWalk extends Module {
     );
 
     public SafeWalk() {
-        super(Categories.Movement, "safe-walk", "Prevents you from walking off blocks.");
+        super(Categories.Movement, "safeWalk", "Prevents you from walking off blocks.");
     }
 
     @EventHandler
