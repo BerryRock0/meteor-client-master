@@ -156,7 +156,7 @@ public class EntityControl extends Module {
     );
 
     public EntityControl() {
-        super(Categories.Movement, "entity-control", "Lets you control rideable entities without a saddle.", "entity-speed", "entity-fly", "boat-fly");
+        super(Categories.Movement, "entityControl", "Lets you control rideable entities without a saddle.", "entity-speed", "entity-fly", "boat-fly");
     }
 
     private int delayLeft;
