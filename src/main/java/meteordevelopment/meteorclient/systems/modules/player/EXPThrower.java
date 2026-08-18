@@ -16,7 +16,7 @@ import net.minecraft.world.item.Items;
 
 public class EXPThrower extends Module {
     public EXPThrower() {
-        super(Categories.Player, "exp-thrower", "Automatically throws XP bottles from your hotbar.");
+        super(Categories.Player, "eXPThrower", "Automatically throws XP bottles from your hotbar.");
     }
 
     @EventHandler
