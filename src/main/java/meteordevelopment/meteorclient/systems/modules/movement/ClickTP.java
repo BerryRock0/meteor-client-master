@@ -28,7 +28,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class ClickTP extends Module {
 
     public ClickTP() {
-        super(Categories.Movement, "click-tp", "Teleports you to the block you click on.");
+        super(Categories.Movement, "clickTP", "Teleports you to the block you click on.");
     }
 
     @EventHandler
