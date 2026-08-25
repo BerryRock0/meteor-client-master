@@ -11,8 +11,12 @@ import meteordevelopment.meteorclient.events.entity.player.FinishUsingItemEvent;
 import meteordevelopment.meteorclient.events.entity.player.StoppedUsingItemEvent;
 import meteordevelopment.meteorclient.events.game.ItemStackTooltipEvent;
 import meteordevelopment.meteorclient.utils.Utils;
+import meteordevelopment.meteorclient.systems.modules.Modules;
+import meteordevelopment.meteorclient.systems.modules.world.Damages;
+import meteordevelopment.meteorclient.systems.modules.world.Quantities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,5 +53,30 @@ public abstract class ItemStackMixin {
         if (entity == mc.player) {
             MeteorClient.EVENT_BUS.post(StoppedUsingItemEvent.get((ItemStack) (Object) this));
         }
+    }
+    
+    @Inject(at = @At("HEAD"), method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V", cancellable = true)
+    private void isApplyDamage(int amount, ServerLevel level, @Nullable ServerPlayer player, Consumer<Item> breakCallback, CallbackInfo ci)
+    {
+        ItemStack itemStack = (ItemStack)(Object)this;
+        Item thisObj = itemStack.getItem();
+        if(Modules.get().get(Damages.class).inItemsList(thisObj))
+        ci.cancel();
+    }
+    
+    @Inject(at = @At("HEAD"), method = "grow(I)V", cancellable = true)
+    private void incrementControl(int amount, CallbackInfo ci)
+    {
+        ItemStack itemStack = (ItemStack)(Object)this;
+        Item thisObj = itemStack.getItem();
+        if (Modules.get().get(Quantities.class).incr(thisObj)) ci.cancel();
+    }
+
+    @Inject(at = @At("HEAD"), method = "shrink(I)V", cancellable = true)
+    private void decrementControl(int amount, CallbackInfo ci)
+    {
+        ItemStack itemStack = (ItemStack)(Object)this;
+        Item thisObj = itemStack.getItem();
+        if (Modules.get().get(Quantities.class).decr(thisObj)) ci.cancel();
     }
 }
