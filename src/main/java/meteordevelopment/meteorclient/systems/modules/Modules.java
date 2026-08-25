@@ -544,6 +544,7 @@ public class Modules extends System<Modules> {
         add(new AutoSmelter());
         add(new BuildHeight());
         add(new Collisions());
+        add(new Damages());
         add(new EChestFarmer());
         add(new EndermanLook());
         add(new Flamethrower());
@@ -552,10 +553,13 @@ public class Modules extends System<Modules> {
         add(new NoGhostBlocks());
         add(new Nuker());
         add(new PacketMine());
+        add(new Quantities());
         add(new StashFinder());
+        add(new Telekinesis());
         add(new SpawnProofer());
         add(new Timer());
         add(new VeinMiner());
+        add(new WorkersModule());
 
         if (BaritoneUtils.IS_AVAILABLE) {
             add(new Excavator());
