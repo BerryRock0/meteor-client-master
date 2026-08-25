@@ -1940,7 +1940,7 @@ public class HighwayBuilder extends Module {
                 boolean multiBreak = b.blocksPerTick.get() > 1 && BlockUtils.canInstaBreak(mcPos) && !b.rotation.get().mine;
                 if (BlockUtils.canBreak(mcPos)) {
                     if (b.rotation.get().mine)
-                        Rotations.rotate(Rotations.getYaw(mcPos), Rotations.getPitch(mcPos), () -> BlockUtils.breakBlock(mcPos, true));
+                        Rotations.rotate(Rotations.getYaw(mcPos), Rotations.getPitch(mcPos), () -> BlockUtils.breakBlock(mcPos, BlockUtils.getDirection(blockPos), InteractionHand.MAIN_HAND, true));
                     else BlockUtils.breakBlock(mcPos, BlockUtils.getDirection(mcPos), InteractionHand.MAIN_HAND, true);
                     breaking = true;
 
