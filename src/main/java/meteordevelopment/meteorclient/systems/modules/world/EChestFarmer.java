@@ -20,6 +20,7 @@ import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -166,7 +167,7 @@ public class EChestFarmer extends Module {
             if (bestSlot == -1) return;
 
             InvUtils.swap(bestSlot, true);
-            BlockUtils.breakBlock(target, swingHand.get());
+            BlockUtils.breakBlock(target, BlockUtils.getDirection(blockPos), InteractionHand.MAIN_HAND, swingHand.get());
         }
 
         // Place echest if the target pos is empty
