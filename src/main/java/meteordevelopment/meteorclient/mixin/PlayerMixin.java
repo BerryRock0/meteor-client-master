@@ -28,6 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -134,4 +135,14 @@ public abstract class PlayerMixin extends LivingEntity {
     private double modifyEntityInteractionRange(double original) {
         return Math.max(0, original + Modules.get().get(Reach.class).entityReach());
     }
+
+    @Inject(method = "isWithinAttackRange", at = @At("HEAD"), cancellable = true)
+    private void canReachAttackIn(ItemStack weaponItem, AABB box, double additionalRange, CallbackInfoReturnable<Boolean> cir) {
+        if (Modules.get().get(Reach.class).isActive()) cir.setReturnValue(true);
+    }
+    
+    @Inject(method = "isWithinBlockInteractionRange", at = @At("HEAD"), cancellable = true)
+    private void canReachBlock(BlockPos pos, double additionalRange, CallbackInfoReturnable<Boolean> cir) {
+        if (Modules.get().get(Reach.class).isActive()) cir.setReturnValue(true);
+    } 
 }
