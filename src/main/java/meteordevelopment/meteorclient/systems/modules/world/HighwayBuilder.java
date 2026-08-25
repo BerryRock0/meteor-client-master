@@ -1350,7 +1350,7 @@ public class HighwayBuilder extends Module {
                     } else {
                         if (b.rotation.get().mine)
                             Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () -> BlockUtils.breakBlock(bp, true));
-                        else BlockUtils.breakBlock(bp, true);
+                        else BlockUtils.breakBlock(bp, BlockUtils.getDirection(bp), InteractionHand.MAIN_HAND, true);
                     }
                 } else {
                     // Place ender chest
@@ -1691,7 +1691,7 @@ public class HighwayBuilder extends Module {
 
                     if (b.rotation.get().mine)
                         Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () -> BlockUtils.breakBlock(bp, true));
-                    else BlockUtils.breakBlock(bp, true);
+                    else BlockUtils.breakBlock(bp, BlockUtils.getDirection(bp), InteractionHand.MAIN_HAND, true);
                 } else {
                     if (b.rotation.get().place) {
                         Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () ->
@@ -1941,7 +1941,7 @@ public class HighwayBuilder extends Module {
                 if (BlockUtils.canBreak(mcPos)) {
                     if (b.rotation.get().mine)
                         Rotations.rotate(Rotations.getYaw(mcPos), Rotations.getPitch(mcPos), () -> BlockUtils.breakBlock(mcPos, true));
-                    else BlockUtils.breakBlock(mcPos, true);
+                    else BlockUtils.breakBlock(mcPos, BlockUtils.getDirection(mcPos), InteractionHand.MAIN_HAND, true);
                     breaking = true;
 
                     b.breakTimer = b.breakDelay.get();
