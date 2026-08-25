@@ -50,8 +50,6 @@ public class AutoFish extends Module {
         .name("cast-delay")
         .description("How long to wait between recasts if the bobber fails to land in water.")
         .defaultValue(14)
-        .min(1)
-        .sliderMax(60)
         .build()
     );
 
@@ -59,8 +57,6 @@ public class AutoFish extends Module {
         .name("cast-delay-variance")
         .description("Maximum amount of randomness added to cast delay.")
         .defaultValue(0)
-        .min(0)
-        .sliderMax(30)
         .build()
     );
 
@@ -68,8 +64,6 @@ public class AutoFish extends Module {
         .name("catch-delay")
         .description("How long to wait after hooking a fish to reel it in.")
         .defaultValue(6)
-        .min(1)
-        .sliderMax(20)
         .build()
     );
 
@@ -77,8 +71,6 @@ public class AutoFish extends Module {
         .name("catch-delay-variance")
         .description("Maximum amount of randomness added to catch delay.")
         .defaultValue(0)
-        .min(0)
-        .sliderMax(10) // Since the shortest Java edition catch window is 20 ticks, this is the highest possible variance that won't miss fish.
         .build()
     );
 
