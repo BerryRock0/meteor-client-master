@@ -1690,7 +1690,7 @@ public class HighwayBuilder extends Module {
                     InvUtils.swap(toolSlot, false);
 
                     if (b.rotation.get().mine)
-                        Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () -> BlockUtils.breakBlock(bp, true));
+                        Rotations.rotate(Rotations.getYaw(bp), Rotations.getPitch(bp), () -> BlockUtils.breakBlock(bp, BlockUtils.getDirection(bp), InteractionHand.MAIN_HAND, true));
                     else BlockUtils.breakBlock(bp, BlockUtils.getDirection(bp), InteractionHand.MAIN_HAND, true);
                 } else {
                     if (b.rotation.get().place) {
