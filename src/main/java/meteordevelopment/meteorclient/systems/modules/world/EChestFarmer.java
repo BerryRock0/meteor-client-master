@@ -167,7 +167,7 @@ public class EChestFarmer extends Module {
             if (bestSlot == -1) return;
 
             InvUtils.swap(bestSlot, true);
-            BlockUtils.breakBlock(target, BlockUtils.getDirection(blockPos), InteractionHand.MAIN_HAND, swingHand.get());
+            BlockUtils.breakBlock(target, BlockUtils.getDirection(target), InteractionHand.MAIN_HAND, swingHand.get());
         }
 
         // Place echest if the target pos is empty
