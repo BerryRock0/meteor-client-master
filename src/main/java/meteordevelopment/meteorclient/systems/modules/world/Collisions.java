@@ -24,95 +24,160 @@ import net.minecraft.world.phys.shapes.Shapes;
 import java.util.List;
 
 public class Collisions extends Module {
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();
-
-    public final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
-        .name("blocks")
+    private final SettingGroup sgPlayer = settings.createGroup("Player");
+    private final SettingGroup sgBlock = settings.createGroup("Block");
+    private final SettingGroup sgEntity = settings.createGroup("Entity");
+    private final SettingGroup sgOther = settings.createGroup("Other");
+    
+    public final Setting<List<Block>> fullBlock = sgBlock.add(new BlockListSetting.Builder()
+        .name("full-block")
         .description("What blocks should be added collision box.")
-        .filter(this::blockFilter)
+        .build()
+    );
+    
+    public final Setting<Boolean> fullBlockCase = sgBlock.add(new BoolSetting.Builder()
+        .name("fullblock-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> fullBlockFinal = sgBlock.add(new BoolSetting.Builder()
+        .name("fullblock-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<List<Block>> emptyBlock = sgBlock.add(new BlockListSetting.Builder()
+        .name("emptyblock")
+        .description("What blocks should be emptied.")
         .build()
     );
 
-    private final Setting<Boolean> magma = sgGeneral.add(new BoolSetting.Builder()
-        .name("magma")
-        .description("Prevents you from walking over magma blocks.")
+    public final Setting<Boolean> emptyBlockCase = sgBlock.add(new BoolSetting.Builder()
+        .name("emptyblock-case")
+        .description("Switches black/white case.")
         .defaultValue(false)
         .build()
     );
 
-    private final Setting<Boolean> unloadedChunks = sgGeneral.add(new BoolSetting.Builder()
-        .name("unloaded-chunks")
-        .description("Stops you from going into unloaded chunks.")
+    public final Setting<Boolean> emptyBlockFinal = sgBlock.add(new BoolSetting.Builder()
+        .name("emptyblock-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );    
+
+    public final Setting<List<Block>> fullPlayer = sgPlayer.add(new BlockListSetting.Builder()
+        .name("fullplayer-block")
+        .description("What blocks should be added collision box.")
+        .build()
+    );
+    
+    public final Setting<Boolean> fullPlayerCase = sgPlayer.add(new BoolSetting.Builder()
+        .name("fullplayer-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<Boolean> fullPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
+        .name("fullplayer-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+    
+    public final Setting<List<Block>> emptyPlayer = sgPlayer.add(new BlockListSetting.Builder()
+        .name("emptyplayer")
+        .description("What blocks should be emptied.")
+        .build()
+    );
+
+    public final Setting<Boolean> emptyPlayerCase = sgPlayer.add(new BoolSetting.Builder()
+        .name("emptyplayer-case")
+        .description("Switches black/white case.")
         .defaultValue(false)
         .build()
     );
 
-    private final Setting<Boolean> ignoreBorder = sgGeneral.add(new BoolSetting.Builder()
+    public final Setting<Boolean> emptyPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
+        .name("emptyplayer-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Set<EntityType<?>>> emptyEntity = sgEntity.add(new EntityTypeListSetting.Builder()
+        .name("emptyentity")
+        .description("What blocks should be emptied.")
+        .build()
+    );
+
+    public final Setting<Boolean> emptyEntityCase = sgEntity.add(new BoolSetting.Builder()
+        .name("emptyentity-case")
+        .description("Switches black/white case.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> emptyEntityFinal = sgEntity.add(new BoolSetting.Builder()
+        .name("emptyentity-final")
+        .description("Switches black/white final.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> ignoreBorder = sgOther.add(new BoolSetting.Builder()
         .name("ignore-border")
         .description("Removes world border collision.")
         .defaultValue(false)
         .build()
     );
 
-    public Collisions() {
+    public Collisions()
+    {
         super(Categories.World, "collisions", "Adds collision boxes to certain blocks/areas.");
     }
-
-    @EventHandler
-    private void onCollisionShape(CollisionShapeEvent event) {
-        if (mc.level == null || mc.player == null) return;
-        if (!event.state.getFluidState().isEmpty()) return;
-        if (blocks.get().contains(event.state.getBlock())) {
-            event.shape = Shapes.block();
-        } else if (magma.get() && !mc.player.isShiftKeyDown()
-            && event.state.isAir()
-            && mc.level.getBlockState(event.pos.below()).getBlock() == Blocks.MAGMA_BLOCK) {
-            event.shape = Shapes.block();
-        }
+    
+    public boolean fullBlock(Block block)
+    {
+        if (fullBlock.get().contains(block))
+            return isActive() && fullBlockCase.get();
+        return isActive() && fullBlockFinal.get();   
+    }
+    
+    public boolean emptyBlock(Block block)
+    {
+        if (emptyBlock.get().contains(block))
+            return isActive() && emptyBlockCase.get();
+        return isActive() && emptyBlockFinal.get();
     }
 
-    @EventHandler
-    private void onPlayerMove(PlayerMoveEvent event) {
-        int x = (int) (mc.player.getX() + event.movement.x) >> 4;
-        int z = (int) (mc.player.getZ() + event.movement.z) >> 4;
-        if (unloadedChunks.get() && !mc.level.getChunkSource().hasChunk(x, z)) {
-            ((IVec3) event.movement).meteor$set(0, event.movement.y, 0);
-        }
+    public boolean fullPlayer(Block block)
+    {
+        if (fullPlayer.get().contains(block))
+            return isActive() && fullPlayerCase.get();
+        return isActive() && fullPlayerFinal.get();   
+    }
+    
+    public boolean emptyPlayer(Block block)
+    {
+        if (emptyPlayer.get().contains(block))
+            return isActive() && emptyPlayerCase.get();
+        return isActive() && emptyPlayerFinal.get();
     }
 
-    @EventHandler
-    private void onPacketSend(PacketEvent.Send event) {
-        if (!unloadedChunks.get()) return;
-        if (event.packet instanceof ServerboundMoveVehiclePacket packet) {
-            if (!mc.level.getChunkSource().hasChunk((int) packet.position().x() >> 4, (int) packet.position().z() >> 4)) {
-                mc.player.getVehicle().absSnapTo(mc.player.getVehicle().xo, mc.player.getVehicle().yo, mc.player.getVehicle().zo);
-                event.cancel();
-            }
-        } else if (event.packet instanceof ServerboundMovePlayerPacket packet) {
-            if (!mc.level.getChunkSource().hasChunk((int) packet.getX(mc.player.getX()) >> 4, (int) packet.getZ(mc.player.getZ()) >> 4)) {
-                event.cancel();
-            }
-        }
+    public boolean emptyEntity(Entity entity)
+    {
+        if(emptyEntity.get().contains(entity.getType()))
+            return isActive() && emptyEntityCase.get();
+        return isActive() && emptyEntityFinal.get();
     }
 
-    private boolean blockFilter(Block block) {
-        return (block instanceof BaseFireBlock
-            || block instanceof BasePressurePlateBlock
-            || block instanceof TripWireBlock
-            || block instanceof TripWireHookBlock
-            || block instanceof WebBlock
-            || block instanceof CampfireBlock
-            || block instanceof SweetBerryBushBlock
-            || block instanceof CactusBlock
-            || block instanceof BaseRailBlock
-            || block instanceof TrapDoorBlock
-            || block instanceof PowderSnowBlock
-            || block instanceof AbstractCauldronBlock
-            || block instanceof HoneyBlock
-        );
-    }
-
-    public boolean ignoreBorder() {
+    public boolean ignoreBorder()
+    {
         return isActive() && ignoreBorder.get();
     }
 }
