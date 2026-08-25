@@ -230,7 +230,7 @@ public class VeinMiner extends Module {
         }
 
         private void updateBlockBreakingProgress() {
-            BlockUtils.breakBlock(blockPos, swingHand.get());
+            BlockUtils.breakBlock(blockPos, BlockUtils.getDirection(blockPos), InteractionHand.MAIN_HAND, swingHand.get());
         }
 
         public void render(Render3DEvent event) {
