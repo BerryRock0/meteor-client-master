@@ -48,7 +48,7 @@ public class MacrosTab extends Tab {
             initTable(table);
 
             add(theme.horizontalSeparator()).expandX();
-
+            WButton exec = table.add(theme.button("Execute")).widget(); exec.action = () -> {macro.onAction();};
             WButton create = add(theme.button("Create")).expandX().widget();
             create.action = () -> mc.gui.setScreen(new EditMacroScreen(theme, null, this::reload));
         }
