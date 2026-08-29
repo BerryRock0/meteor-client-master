@@ -23,4 +23,25 @@ public abstract class AbstractBlockStateMixin {
 
         if (Modules.get().get(NoRender.class).noTextureRotations()) cir.setReturnValue(Vec3.ZERO);
     }
+
+    @Inject(at = @At("HEAD"), method = "getInteractionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
+	private void onGetInteractionShape(BlockGetter view, BlockPos pos, CallbackInfoReturnable<VoxelShape> cir)
+	{
+	    if (Modules.get() == null) return;
+        Collisions collision = Modules.get().get(Collisions.class);
+
+        if(collision.emptyPlayer(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.empty());
+        if(collision.fullPlayer(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.block());
+	}
+	
+	@Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
+	private void onGetCollisionShape(BlockGetter view, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir)
+	{
+        if (Modules.get() == null) return;
+        Collisions collision = Modules.get().get(Collisions.class);
+
+        if(collision.emptyBlock(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.empty());
+        if(collision.fullBlock(view.getBlockState(pos).getBlock())) cir.setReturnValue(Shapes.block());
+
+	}
 }
