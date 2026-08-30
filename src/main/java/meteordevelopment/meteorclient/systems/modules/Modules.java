@@ -448,7 +448,6 @@ public class Modules extends System<Modules> {
         add(new Multitask());
         add(new NameProtect());
         add(new NoInteract());
-        add(new NoMiningTrace());
         add(new NoRotate());
         add(new NoStatusEffects());
         add(new Portals());
