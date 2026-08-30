@@ -130,7 +130,7 @@ public class WorkersModule extends Module
         {
             try
             {
-                work(unit, unit.breakBlock.get(), unit.interactBlock.get());
+                work(unit, unit.breakBlock.get(), unit.interactBlock.get(), unit.move.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
                 step(unit, unit.stepper.get());
             }
@@ -139,10 +139,21 @@ public class WorkersModule extends Module
         }
     }    
 
-    private void work(MinerPlacer unit, boolean a, boolean b)
+    private void work(MinerPlacer unit, boolean a, boolean b, boolean c)
     {
         if(a) BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get());
         if(b) BlockUtils.interact(new BlockHitResult(Vec3.atCenterOf(new BlockPos(unit.x, unit.y, unit.z)), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
+        if(c)
+        {
+            mc.options.forwardKey.setDown(forward.get());
+            mc.options.backKey.setDown(unit.back.get());
+            mc.options.leftKey.setDown(unit.left.get());
+            mc.options.rightKey.setDown(unit.right.get());
+            mc.options.jumpKey.setDown(unit.jump.get());
+            mc.options.sneakKey.setDown(unit.sneak.get());
+            mc.options.attackKey.setDown(unit.attack.get());
+            mc.options.useKey.setDown(unit.use.get()); 
+        }
     }
 
     private void translate(MinerPlacer unit, char ch, boolean t)
@@ -161,6 +172,14 @@ public class WorkersModule extends Module
             case 'z': unit.z--; break;
             case 's': s--; break;
             case 'c': c--; break;
+            case '0': unit.attack.set(!unit.attack.get()); break;
+            case '1': unit.use.set(!unit.use.get()); break;
+            case '2': unit.forward.set(!unit.forward.get()); break;
+            case '3': unit.back.set(!unit.back.get()); break;
+            case '4': unit.left.set(!unit.left.get()); break;
+            case '5': unit.right.set(!unit.right.get()); break;
+            case '6': unit.sneak.set(!unit.sneak.get()); break;
+            case '7': unit.jump.set(!unit.jump.get()); break;
             case '~': InvUtils.swap(s, false); break;    
             case '%': InvUtils.move().from(c).to(s); break;
             case '\\':unit.x=unit.zero.get().getX(); break;    
