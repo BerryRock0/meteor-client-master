@@ -205,14 +205,14 @@ public class WorkersModule extends Module
     {
         if(t)
         {
-            mc.options.forwardKey.setDown(a);
-            mc.options.backKey.setDown(b);
-            mc.options.leftKey.setDown(c);
-            mc.options.rightKey.setDown(d);
-            mc.options.jumpKey.setDown(e);
-            mc.options.sneakKey.setDown(f);
-            mc.options.attackKey.setDown(g);
-            mc.options.useKey.setDown(h);
+            mc.options.keyUp.setDown(a);
+            mc.options.keyDown.setDown(b);
+            mc.options.keyLeft.setDown(c);
+            mc.options.keyRight.setDown(d);
+            mc.options.keyJump.setDown(e);
+            mc.options.keyShift.setDown(f);
+            mc.options.keyAttack.setDown(g);
+            mc.options.keyUse.setDown(h);
         }
     }
 
