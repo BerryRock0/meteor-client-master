@@ -184,7 +184,14 @@ public class Nuker extends Module {
     private final Setting<Boolean> rotate = sgGeneral.add(new BoolSetting.Builder()
         .name("rotate")
         .description("Rotates server-side to the block being mined.")
-        .defaultValue(true)
+        .defaultValue(false)
+        .build()
+    );
+    
+    private final Setting<Boolean> client = sgGeneral.add(new BoolSetting.Builder()
+        .name("client")
+        .description("Rotates client-side to the block being mined.")
+        .defaultValue(false)
         .build()
     );
 
@@ -223,14 +230,14 @@ public class Nuker extends Module {
     private final Setting<Boolean> swing = sgRender.add(new BoolSetting.Builder()
         .name("swing")
         .description("Whether to swing hand client-side.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
 
     private final Setting<Boolean> enableRenderBounding = sgRender.add(new BoolSetting.Builder()
         .name("bounding-box")
         .description("Enable rendering bounding box for Cube and Uniform Cube.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
 
@@ -481,7 +488,7 @@ public class Nuker extends Module {
                 boolean canInstaMine = BlockUtils.canInstaBreak(block);
 
                 if (rotate.get())
-                    Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block), () -> breakBlock(block));
+                    Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block), client.get(), () -> breakBlock(block));
                 else breakBlock(block);
 
                 if (enableRenderBreaking.get())
