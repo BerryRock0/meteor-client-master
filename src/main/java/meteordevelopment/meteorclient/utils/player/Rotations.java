@@ -61,7 +61,11 @@ public class Rotations {
     public static void rotate(double yaw, double pitch, int priority, Runnable callback) {
         rotate(yaw, pitch, priority, false, callback);
     }
-
+    
+    public static void rotate(double yaw, double pitch, boolean clientSide, Runnable callback) {
+        rotate(yaw, pitch, 0, clientSide, callback);
+    }
+    
     public static void rotate(double yaw, double pitch, Runnable callback) {
         rotate(yaw, pitch, 0, callback);
     }
