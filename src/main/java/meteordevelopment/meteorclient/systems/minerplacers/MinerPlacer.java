@@ -58,6 +58,54 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .defaultValue(false)
         .build()
     );
+    public final Setting<Boolean> attack = sgControl.add(new BoolSetting.Builder()
+        .name("attack")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> use = sgControl.add(new BoolSetting.Builder()
+        .name("use")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> forward = sgControl.add(new BoolSetting.Builder()
+        .name("forward")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> back = sgControl.add(new BoolSetting.Builder()
+        .name("back")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> left = sgControl.add(new BoolSetting.Builder()
+        .name("left")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> right = sgControl.add(new BoolSetting.Builder()
+        .name("right")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> jump = sgControl.add(new BoolSetting.Builder()
+        .name("jump")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
+    public final Setting<Boolean> sneak = sgControl.add(new BoolSetting.Builder()
+        .name("sneak")
+        .description("")
+        .defaultValue(false)
+        .build()
+    );
 
     //Script
     public final Setting<StepDirections> stepDirections = sgScript.add(new EnumSetting.Builder<StepDirections>()
