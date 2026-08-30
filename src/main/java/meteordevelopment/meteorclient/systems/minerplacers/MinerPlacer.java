@@ -34,6 +34,12 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .description("Mining block position")
         .build()
     );
+    public final Setting<CardinalDirections> cardinaldirection = sgSettings.add(new EnumSetting.Builder<CardinalDirections>()
+        .name("place-pirection")
+        .description("Direction to use.")
+        .defaultValue(CardinalDirections.Auto)
+        .build()
+    );
     public final Setting<Boolean> breakBlock = sgGeneral.add(new BoolSetting.Builder()
         .name("breaking-block")
         .description("Break blocks in area.")
@@ -46,69 +52,9 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .defaultValue(false)
         .build()
     );
-    public final Setting<CardinalDirections> cardinaldirection = sgSettings.add(new EnumSetting.Builder<CardinalDirections>()
-        .name("place-pirection")
-        .description("Direction to use.")
-        .defaultValue(CardinalDirections.Auto)
-        .build()
-    );
     public final Setting<Boolean> insideBlock = sgSettings.add(new BoolSetting.Builder()
         .name("inside-block")
         .description("Inside block value.")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> move = sgSettings.add(new BoolSetting.Builder()
-        .name("move")
-        .description("Enables player move.")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> attack = sgControl.add(new BoolSetting.Builder()
-        .name("attack")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> use = sgControl.add(new BoolSetting.Builder()
-        .name("use")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> forward = sgControl.add(new BoolSetting.Builder()
-        .name("forward")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> back = sgControl.add(new BoolSetting.Builder()
-        .name("back")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> left = sgControl.add(new BoolSetting.Builder()
-        .name("left")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> right = sgControl.add(new BoolSetting.Builder()
-        .name("right")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> jump = sgControl.add(new BoolSetting.Builder()
-        .name("jump")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> sneak = sgControl.add(new BoolSetting.Builder()
-        .name("sneak")
-        .description("")
         .defaultValue(false)
         .build()
     );
