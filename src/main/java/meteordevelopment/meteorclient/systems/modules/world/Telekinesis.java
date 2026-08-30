@@ -55,13 +55,6 @@ public class Telekinesis extends Module {
         .build()
     );
 
-    public final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
-        .name("list-final-boolean")
-        .description("Switches black/white cases.")
-        .defaultValue(false)
-        .build()
-    );
-    
     public final Setting<Boolean> entitylist = sgBounds.add(new BoolSetting.Builder()
         .name("entitylist-case-boolean")
         .description("Switches black/white list.")
@@ -72,6 +65,13 @@ public class Telekinesis extends Module {
     public final Setting<Boolean> uuidlist = sgBounds.add(new BoolSetting.Builder()
         .name("uuidlist-case-boolean")
         .description("Switches black/white list.")
+        .defaultValue(false)
+        .build()
+    );
+
+    public final Setting<Boolean> cases = sgBounds.add(new BoolSetting.Builder()
+        .name("lists-final-boolean")
+        .description("Switches black/white cases.")
         .defaultValue(false)
         .build()
     );
