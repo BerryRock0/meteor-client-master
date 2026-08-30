@@ -51,7 +51,13 @@ public class Nuker extends Module {
     private final SettingGroup sgRender = settings.createGroup("Render");
 
     // General
-
+    private final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
+        .name("mode")
+        .description("The way the blocks are broken.")
+        .defaultValue(Mode.Flatten)
+        .build()
+    );
+    
     private final Setting<Shape> shape = sgGeneral.add(new EnumSetting.Builder<Shape>()
         .name("shape")
         .description("The shape of nuking algorithm.")
@@ -59,10 +65,17 @@ public class Nuker extends Module {
         .build()
     );
 
-    private final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
-        .name("mode")
-        .description("The way the blocks are broken.")
-        .defaultValue(Mode.Flatten)
+    private final Setting<SortMode> sortMode = sgGeneral.add(new EnumSetting.Builder<SortMode>()
+        .name("sort-mode")
+        .description("The blocks you want to mine first.")
+        .defaultValue(SortMode.Closest)
+        .build()
+    );
+
+    public final Setting<Rotate> rotate = sgGeneral.add(new EnumSetting.Builder<Rotate>()
+        .name("rotate-mode")
+        .description("Rotate mode.")
+        .defaultValue(UseHand.Main)
         .build()
     );
 
@@ -152,24 +165,10 @@ public class Nuker extends Module {
         .min(1)
         .build()
     );
-
-    private final Setting<SortMode> sortMode = sgGeneral.add(new EnumSetting.Builder<SortMode>()
-        .name("sort-mode")
-        .description("The blocks you want to mine first.")
-        .defaultValue(SortMode.Closest)
-        .build()
-    );
-
+    
     private final Setting<Boolean> packetMine = sgGeneral.add(new BoolSetting.Builder()
         .name("packet-mine")
         .description("Attempt to instamine everything at once.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> suitableTools = sgGeneral.add(new BoolSetting.Builder()
-        .name("only-suitable-tools")
-        .description("Only mines when using an appropriate for the block.")
         .defaultValue(false)
         .build()
     );
@@ -181,22 +180,14 @@ public class Nuker extends Module {
         .build()
     );
 
-    private final Setting<Boolean> rotate = sgGeneral.add(new BoolSetting.Builder()
-        .name("rotate")
-        .description("Rotates server-side to the block being mined.")
+    private final Setting<Boolean> suitableTools = sgGeneral.add(new BoolSetting.Builder()
+        .name("only-suitable-tools")
+        .description("Only mines when using an appropriate for the block.")
         .defaultValue(false)
         .build()
     );
     
-    private final Setting<Boolean> client = sgGeneral.add(new BoolSetting.Builder()
-        .name("client")
-        .description("Rotates client-side to the block being mined.")
-        .defaultValue(false)
-        .build()
-    );
-
     // Whitelist and blacklist
-
     private final Setting<ListMode> listMode = sgWhitelist.add(new EnumSetting.Builder<ListMode>()
         .name("list-mode")
         .description("Selection mode.")
@@ -226,21 +217,6 @@ public class Nuker extends Module {
     );
 
     // Rendering
-
-    private final Setting<Boolean> swing = sgRender.add(new BoolSetting.Builder()
-        .name("swing")
-        .description("Whether to swing hand client-side.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> enableRenderBounding = sgRender.add(new BoolSetting.Builder()
-        .name("bounding-box")
-        .description("Enable rendering bounding box for Cube and Uniform Cube.")
-        .defaultValue(false)
-        .build()
-    );
-
     private final Setting<ShapeMode> shapeModeBox = sgRender.add(new EnumSetting.Builder<ShapeMode>()
         .name("nuke-box-mode")
         .description("How the shape for the bounding box is rendered.")
@@ -262,10 +238,24 @@ public class Nuker extends Module {
         .build()
     );
 
+    private final Setting<Boolean> swing = sgRender.add(new BoolSetting.Builder()
+        .name("swing")
+        .description("Whether to swing hand client-side.")
+        .defaultValue(false)
+        .build()
+    );
+
+    private final Setting<Boolean> enableRenderBounding = sgRender.add(new BoolSetting.Builder()
+        .name("bounding-box")
+        .description("Enable rendering bounding box for Cube and Uniform Cube.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<Boolean> enableRenderBreaking = sgRender.add(new BoolSetting.Builder()
         .name("broken-blocks")
         .description("Enable rendering bounding box for Cube and Uniform Cube.")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
 
@@ -482,14 +472,19 @@ public class Nuker extends Module {
             // Break
             int count = 0;
 
-            for (BlockPos block : blocks) {
+            for (BlockPos block : blocks)
+            {
                 if (count >= maxBlocksPerTick.get()) break;
 
                 boolean canInstaMine = BlockUtils.canInstaBreak(block);
 
-                if (rotate.get())
-                    Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block), client.get(), () -> breakBlock(block));
-                else breakBlock(block);
+                switch(rotate.get())
+                {
+                    case None -> {}
+                    case Client -> {mc.player.setXRot(Rotations.getPitch(block)); mc.player.setYRot(Rotations.getYaw(block));}
+                    case Server -> {Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block));}
+                }
+                breakBlock(block);
 
                 if (enableRenderBreaking.get())
                     RenderUtils.renderTickingBlock(block, sideColor.get(), lineColor.get(), shapeModeBreak.get(), 0, 8, true, false);
@@ -566,6 +561,12 @@ public class Nuker extends Module {
         All,
         Flatten,
         Smash
+    }
+    public enum Rotate
+    {
+        None,
+        Client,
+        Server
     }
 
     public enum SortMode {
