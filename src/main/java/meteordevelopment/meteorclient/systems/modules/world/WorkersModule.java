@@ -195,7 +195,7 @@ public class WorkersModule extends Module
         }
     }    
 
-    private void work(MinerPlacer unit, boolean a, boolean b, boolean c)
+    private void work(MinerPlacer unit, boolean a, boolean b)
     {
         if(a) BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get());
         if(b) BlockUtils.interact(new BlockHitResult(Vec3.atCenterOf(new BlockPos(unit.x, unit.y, unit.z)), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
