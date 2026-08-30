@@ -24,7 +24,7 @@ public abstract class AbstractBlockStateMixin {
         if (Modules.get().get(NoRender.class).noTextureRotations()) cir.setReturnValue(Vec3.ZERO);
     }
 
-    @Inject(at = @At("HEAD"), method = "getInteractionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "getShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;", cancellable = true)
 	private void onGetInteractionShape(BlockGetter view, BlockPos pos, CallbackInfoReturnable<VoxelShape> cir)
 	{
 	    if (Modules.get() == null) return;
