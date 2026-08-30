@@ -438,6 +438,7 @@ public class Modules extends System<Modules> {
         add(new AutoTool());
         add(new BreakDelay());
         add(new ChestSwap());
+        add(new Collisions());        
         add(new EXPThrower());
         add(new FakePlayer());
         add(new FastUse());
@@ -542,7 +543,6 @@ public class Modules extends System<Modules> {
         add(new AutoSign());
         add(new AutoSmelter());
         add(new BuildHeight());
-        add(new Collisions());
         add(new Damages());
         add(new EChestFarmer());
         add(new EndermanLook());
