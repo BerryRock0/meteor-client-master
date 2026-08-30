@@ -93,7 +93,7 @@ public class Collisions extends Module {
 
     public Collisions()
     {
-        super(Categories.World, "collisions", "Adds collision boxes to certain blocks/areas.");
+        super(Categories.Player, "collisions", "Adds collision boxes to certain blocks/areas.");
     }
     
     public boolean fullBlock(Block block)
