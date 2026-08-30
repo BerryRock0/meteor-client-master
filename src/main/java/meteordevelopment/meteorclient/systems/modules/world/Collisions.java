@@ -20,7 +20,6 @@ import meteordevelopment.orbit.EventHandler;
 import java.util.List;
 
 public class Collisions extends Module {
-    private final SettingGroup sgPlayer = settings.createGroup("Player");
     private final SettingGroup sgBlock = settings.createGroup("Block");
     private final SettingGroup sgEntity = settings.createGroup("Entity");
     private final SettingGroup sgOther = settings.createGroup("Other");
@@ -64,46 +63,6 @@ public class Collisions extends Module {
         .defaultValue(false)
         .build()
     );    
-
-    public final Setting<List<Block>> fullPlayer = sgPlayer.add(new BlockListSetting.Builder()
-        .name("fullplayer-block")
-        .description("What blocks should be added collision box.")
-        .build()
-    );
-    
-    public final Setting<Boolean> fullPlayerCase = sgPlayer.add(new BoolSetting.Builder()
-        .name("fullplayer-case")
-        .description("Switches black/white case.")
-        .defaultValue(false)
-        .build()
-    );
-    
-    public final Setting<Boolean> fullPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
-        .name("fullplayer-final")
-        .description("Switches black/white final.")
-        .defaultValue(false)
-        .build()
-    );
-    
-    public final Setting<List<Block>> emptyPlayer = sgPlayer.add(new BlockListSetting.Builder()
-        .name("emptyplayer")
-        .description("What blocks should be emptied.")
-        .build()
-    );
-
-    public final Setting<Boolean> emptyPlayerCase = sgPlayer.add(new BoolSetting.Builder()
-        .name("emptyplayer-case")
-        .description("Switches black/white case.")
-        .defaultValue(false)
-        .build()
-    );
-
-    public final Setting<Boolean> emptyPlayerFinal = sgPlayer.add(new BoolSetting.Builder()
-        .name("emptyplayer-final")
-        .description("Switches black/white final.")
-        .defaultValue(false)
-        .build()
-    );
 
     public final Setting<Set<EntityType<?>>> emptyEntity = sgEntity.add(new EntityTypeListSetting.Builder()
         .name("emptyentity")
@@ -149,20 +108,6 @@ public class Collisions extends Module {
         if (emptyBlock.get().contains(block))
             return isActive() && emptyBlockCase.get();
         return isActive() && emptyBlockFinal.get();
-    }
-
-    public boolean fullPlayer(Block block)
-    {
-        if (fullPlayer.get().contains(block))
-            return isActive() && fullPlayerCase.get();
-        return isActive() && fullPlayerFinal.get();   
-    }
-    
-    public boolean emptyPlayer(Block block)
-    {
-        if (emptyPlayer.get().contains(block))
-            return isActive() && emptyPlayerCase.get();
-        return isActive() && emptyPlayerFinal.get();
     }
 
     public boolean emptyEntity(Entity entity)
