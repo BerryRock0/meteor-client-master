@@ -58,6 +58,12 @@ public class MinerPlacer implements ISerializable<MinerPlacer>
         .defaultValue(false)
         .build()
     );
+    public final Setting<Boolean> move = sgSettings.add(new BoolSetting.Builder()
+        .name("move")
+        .description("Enables player move.")
+        .defaultValue(false)
+        .build()
+    );
     public final Setting<Boolean> attack = sgControl.add(new BoolSetting.Builder()
         .name("attack")
         .description("")
