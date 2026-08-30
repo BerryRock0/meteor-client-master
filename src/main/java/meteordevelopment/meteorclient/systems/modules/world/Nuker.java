@@ -75,7 +75,7 @@ public class Nuker extends Module {
     public final Setting<Rotate> rotate = sgGeneral.add(new EnumSetting.Builder<Rotate>()
         .name("rotate-mode")
         .description("Rotate mode.")
-        .defaultValue(UseHand.Main)
+        .defaultValue(Rotate.None)
         .build()
     );
 
@@ -481,7 +481,7 @@ public class Nuker extends Module {
                 switch(rotate.get())
                 {
                     case None -> {}
-                    case Client -> {mc.player.setXRot(Rotations.getPitch(block)); mc.player.setYRot(Rotations.getYaw(block));}
+                    case Client -> {mc.player.setXRot((float)Rotations.getPitch(block)); mc.player.setYRot((float)Rotations.getYaw(block));}
                     case Server -> {Rotations.rotate(Rotations.getYaw(block), Rotations.getPitch(block));}
                 }
                 breakBlock(block);
