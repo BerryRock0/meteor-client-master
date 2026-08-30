@@ -185,7 +185,7 @@ public class WorkersModule extends Module
         {
             try
             {
-                work(unit, unit.breakBlock.get(), unit.interactBlock.get(), );
+                work(unit, unit.breakBlock.get(), unit.interactBlock.get());
                 move(forward.get(), back.get(), left.get(), right.get(), jump.get(), sneak.get(), attack.get(), use.get(), move.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
                 step(unit, unit.stepper.get());
@@ -199,7 +199,6 @@ public class WorkersModule extends Module
     {
         if(a) BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get());
         if(b) BlockUtils.interact(new BlockHitResult(Vec3.atCenterOf(new BlockPos(unit.x, unit.y, unit.z)), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
-        
     }
 
     private void move(boolean a, boolean b, boolean c, boolean d, boolean e, boolean f, boolean g, boolean h, boolean t)
