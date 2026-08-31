@@ -185,8 +185,8 @@ public class WorkersModule extends Module
         {
             try
             {
-                work(unit, unit.breakBlock.get(), unit.interactBlock.get());
                 move(forward.get(), back.get(), left.get(), right.get(), jump.get(), sneak.get(), attack.get(), use.get(), move.get());
+                work(unit, unit.breakBlock.get(), unit.interactBlock.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
                 step(unit, unit.stepper.get());
             }
