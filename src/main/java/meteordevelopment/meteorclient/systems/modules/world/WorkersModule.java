@@ -32,7 +32,6 @@ public class WorkersModule extends Module
 {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgExecute = settings.createGroup("Execute");
-    private final SettingGroup sgControl = settings.createGroup("Control");
 
     //Execute
     public final Setting<Boolean> pre = sgExecute.add(new BoolSetting.Builder()
@@ -84,61 +83,6 @@ public class WorkersModule extends Module
         .build()
     );
 
-    public final Setting<Boolean> move = sgControl.add(new BoolSetting.Builder()
-        .name("move")
-        .description("Enables player move.")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> attack = sgControl.add(new BoolSetting.Builder()
-        .name("attack")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> use = sgControl.add(new BoolSetting.Builder()
-        .name("use")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> forward = sgControl.add(new BoolSetting.Builder()
-        .name("forward")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> back = sgControl.add(new BoolSetting.Builder()
-        .name("back")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> left = sgControl.add(new BoolSetting.Builder()
-        .name("left")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> right = sgControl.add(new BoolSetting.Builder()
-        .name("right")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> jump = sgControl.add(new BoolSetting.Builder()
-        .name("jump")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-    public final Setting<Boolean> sneak = sgControl.add(new BoolSetting.Builder()
-        .name("sneak")
-        .description("")
-        .defaultValue(false)
-        .build()
-    );
-
     public int s,c;
 
 	public WorkersModule()
@@ -185,7 +129,6 @@ public class WorkersModule extends Module
         {
             try
             {
-                move(forward.get(), back.get(), left.get(), right.get(), jump.get(), sneak.get(), attack.get(), use.get(), move.get());
                 work(unit, unit.breakBlock.get(), unit.interactBlock.get());
                 translate(unit, unit.script.get().charAt(unit.c), unit.handler.get());
                 step(unit, unit.stepper.get());
@@ -199,21 +142,6 @@ public class WorkersModule extends Module
     {
         if(a) BlockUtils.breakBlock(new BlockPos(unit.x, unit.y, unit.z), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), usedBreakHand(), breakingswing.get());
         if(b) BlockUtils.interact(new BlockHitResult(Vec3.atCenterOf(new BlockPos(unit.x, unit.y, unit.z)), direction(unit, new BlockPos(unit.x, unit.y, unit.z)), new BlockPos(unit.x, unit.y, unit.z), unit.insideBlock.get()), usedInteractHand(), placingswing.get());
-    }
-
-    private void move(boolean a, boolean b, boolean c, boolean d, boolean e, boolean f, boolean g, boolean h, boolean t)
-    {
-        if(t)
-        {
-            mc.options.keyUp.setDown(a);
-            mc.options.keyDown.setDown(b);
-            mc.options.keyLeft.setDown(c);
-            mc.options.keyRight.setDown(d);
-            mc.options.keyJump.setDown(e);
-            mc.options.keyShift.setDown(f);
-            mc.options.keyAttack.setDown(g);
-            mc.options.keyUse.setDown(h);
-        }
     }
 
     private void translate(MinerPlacer unit, char ch, boolean t)
@@ -232,15 +160,6 @@ public class WorkersModule extends Module
             case 'z': unit.z--; break;
             case 's': s--; break;
             case 'c': c--; break;
-            case '0': move.set(!move.get()); break;
-            case '1': attack.set(!attack.get()); break;
-            case '2': use.set(!use.get()); break;
-            case '3': forward.set(!forward.get()); break;
-            case '4': back.set(!back.get()); break;
-            case '5': left.set(!left.get()); break;
-            case '6': right.set(!right.get()); break;
-            case '7': sneak.set(!sneak.get()); break;
-            case '8': jump.set(!jump.get()); break;
             case '~': InvUtils.swap(s, false); break;    
             case '%': InvUtils.move().from(c).to(s); break;
             case '\\':unit.x=unit.zero.get().getX(); break;    
