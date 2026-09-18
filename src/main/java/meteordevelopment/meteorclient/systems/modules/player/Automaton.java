@@ -134,7 +134,7 @@ public class Automaton extends Module
 
   public Automaton()
   {
-    super(Categories.Player, "automaton", "Allows scripted inaccurate moving without presence at the keyboard.")
+    super(Categories.Player, "automaton", "Allows scripted inaccurate moving without presence at the keyboard.");
   }
 
     @EventHandler
