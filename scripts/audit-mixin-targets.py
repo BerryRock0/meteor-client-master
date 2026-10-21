@@ -35,7 +35,7 @@ MIXIN_RE = re.compile(r"@Mixin\s*\(\s*(?:value\s*=\s*)?([\w.]+)\.class")
 MIXIN_TARGETS_RE = re.compile(r'@Mixin\s*\([^)]*targets\s*=\s*"([\w.$]+)"')
 METHOD_RE = re.compile(r'method\s*=\s*"([^"]*)"')
 METHOD_LIST_RE = re.compile(r'method\s*=\s*\{([^}]*)\}')
-DESCRIPTOR_RE = re.compile(r'target\s*=\s*"(L[^"]+;)"')
+DESCRIPTOR_RE = re.compile(r'target\s*=\s*"(L[^"]+)"')
 IMPORT_RE = re.compile(r"^import\s+(?:static\s+)?([\w.]+)\s*;", re.M)
 ACCESSOR_RE = re.compile(r"@(Accessor|Invoker)\s*\(\s*(?:value\s*=\s*)?\"([\w$<>]+)\"")
 ACCESSOR_RE_BARE = re.compile(r"@(Accessor|Invoker)\s*$")
@@ -396,6 +396,25 @@ class Jar:
             return {"calls": calls, "fields": fields, "strings": strings}
         return None
 
+    def field_types(self, fqn, field):
+        """The types of the fields of a class, by name."""
+        found = {}
+
+        for _, output in self.hierarchy(fqn):
+            for line in output.splitlines():
+                stripped = line.strip()
+                if "(" in stripped or not stripped.endswith(";"):
+                    continue
+                parts = stripped[:-1].split()
+                if len(parts) < 2:
+                    continue
+                name = parts[-1]
+                if name in found:
+                    continue
+                found[name] = simple_name(parts[-2])
+
+        return found
+
     def method_descriptors(self, fqn, method):
         """The descriptors of every overload of a method."""
         found = []
@@ -446,7 +465,7 @@ def split_parameters(text):
 def type_of(parameter):
     """The type of a parameter, without its annotations and its name."""
     parameter = re.sub(r"@\w+(\([^)]*\))?\s*", "", parameter).strip()
-    words = parameter.split()
+    words = [w for w in parameter.split() if w != "final"]
     if len(words) > 1:
         parameter = " ".join(words[:-1])
     return simple_name(parameter)
@@ -517,8 +536,10 @@ def parse_field(line):
     modifiers = []
     while words and words[0] in MODIFIERS:
         modifiers.append(words.pop(0))
+    words.pop()  # the name
+    words = [w for w in words if not w.startswith("@")]  # the annotations
 
-    return modifiers, name
+    return modifiers, name, " ".join(words)
 
 
 CALL_RE = re.compile(r"// (?:Interface)?Method (?:([\w/$]+)\.)?(\w+):(\([^)]*\).*)")
@@ -587,7 +608,14 @@ def collect(text, class_name):
             continue
 
         if stripped and not stripped.startswith(("//", "*", "/*")):
-            method = parse_declaration(lines[i])
+            # a declaration can span several lines
+            block = lines[i]
+            last = i
+            while block.count("(") > block.count(")") and last + 1 < len(lines):
+                last += 1
+                block += "\n" + lines[last]
+
+            method = parse_declaration(block)
             if method and method[1] == class_name:
                 pending = []  # a constructor
             elif method:
@@ -597,11 +625,13 @@ def collect(text, class_name):
                 yield (annotations, "method", name, modifiers, len(params),
                        [type_of(p) for p in params], ", ".join(params))
             else:
-                field = parse_field(lines[i])
+                field = parse_field(block)
                 if field:
                     annotations = pending
                     pending = []
-                    yield (annotations, "field", field[1], field[0], 0, [], "")
+                    yield (annotations, "field", field[1], field[0], 0,
+                           [simple_name(field[2])], "")
+            i = last
         i += 1
 
 
@@ -646,6 +676,7 @@ def main():
         sys.exit(__doc__)
     version = sys.argv[1]
     roots = sys.argv[2:] or ["src/main/java"]
+    root_glob = roots
 
     jar_file = jar(version)
     out_dir = f"/tmp/meteor-mixin-audit-{version}"
@@ -859,14 +890,34 @@ def main():
                         continue
                     if declaration_kind == "field":
                         for fqn in targets:
-                            if fqn in minecraft.classes and minecraft.find(fqn, member) is None:
+                            if fqn not in minecraft.classes:
+                                continue
+                            if minecraft.find(fqn, member) is None:
                                 problems.append(f"{relative}: shadowed field {fqn}#{member} does not exist")
+                                continue
+                            fields = minecraft.field_types(fqn, member)
+                            shadowed = fields.get(member)
+                            if shadowed and types and shadowed != types[0] and not shadowed.isupper():
+                                problems.append(f"{relative}: shadowed field {fqn}#{member} is a "
+                                                f"{shadowed}, but the mixin says {types[0]}")
                     else:
                         for fqn in targets:
                             if fqn not in minecraft.classes:
                                 continue
-                            if minecraft.find(fqn, member) is None:
+                            output = minecraft.find(fqn, member)
+                            if output is None:
                                 problems.append(f"{relative}: shadowed method {fqn}#{member} does not exist")
+                                continue
+                            # the signature of the shadowed method has to be the one of the mixin
+                            descriptors = minecraft.method_descriptors(fqn, member)
+                            if descriptors and count:
+                                wanted = types[:count]
+                                matches = [descriptor_types(d)[:count] == wanted
+                                           for d in descriptors]
+                                if not any(matches):
+                                    problems.append(f"{relative}: shadowed method {fqn}#{member} is "
+                                                    f"{[descriptor_types(d) for d in descriptors]}, "
+                                                    f"but the mixin says {wanted}")
 
                 # 7. and 8. the handlers of the injectors
                 for annotations, declaration_kind, member, modifiers, count, types, param_types in declarations:
@@ -992,6 +1043,25 @@ def main():
             problems.append(f"target class {owner} does not exist")
         elif minecraft.find(owner, member) is None:
             problems.append(f"target {owner}#{member} does not exist")
+
+    # every mixin of the config has to exist, and every mixin has to be in a config
+    configs = Path("src/main/resources")
+    for config in sorted(configs.glob("*.mixins.json")):
+        import json
+
+        listed = set(json.loads(config.read_text()).get("client", []))
+        package = json.loads(config.read_text()).get("package", "").replace(".", "/")
+
+        for name in sorted(listed):
+            path = Path(root_glob[0]) / package / (name + ".java")
+            if not path.is_file():
+                found = False
+                for root in root_glob:
+                    if (Path(root) / package / (name + ".java")).is_file():
+                        found = True
+                        break
+                if not found:
+                    problems.append(f"{config.name}: the mixin {name} does not exist")
 
     print(f"Minecraft {version}: {checked_methods} injected methods, {checked_targets} invoke targets, "
           f"{checked_handlers} handlers checked")
