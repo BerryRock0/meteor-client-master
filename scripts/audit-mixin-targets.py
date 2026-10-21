@@ -393,8 +393,63 @@ class Jar:
                 if match:
                     strings.append(match.group(1))
 
-            return {"calls": calls, "fields": fields, "strings": strings}
+            created = []
+            opcodes = {}
+            for line in lines:
+                match = re.search(r"// class ([\w/$]+)", line)
+                if match:
+                    created.append(match.group(1))
+                match = re.search(r"\b(getfield|putfield|getstatic|putstatic)\b", line)
+                if match:
+                    field = re.search(r"// Field (?:([\w/$]+)\.)?(\w+):", line)
+                    if field:
+                        opcodes.setdefault(field.group(2), set()).add(match.group(1))
+
+            return {"calls": calls, "fields": fields, "strings": strings,
+                    "created": created, "opcodes": opcodes}
         return None
+
+    def class_info(self, fqn):
+        """The superclass, the interfaces and the modifiers of a class."""
+        output = self.javap(fqn)
+        if not output:
+            return None
+
+        lines = output.splitlines()
+        declaration = lines[1] if len(lines) > 1 else ""
+
+        superclass = None
+        interfaces = []
+        match = re.search(r"\bclass\s+[\w$]+(?:<[^>]*>)?(?:\s+extends\s+([\w$.]+))?"
+                          r"(?:\s+implements\s+([^{]+))?", declaration)
+        if match:
+            superclass = match.group(1)
+            if match.group(2):
+                interfaces = [i.strip() for i in match.group(2).split(",")]
+
+        return {
+            "final": " final " in declaration or declaration.strip().startswith("final "),
+            "superclass": superclass,
+            "interfaces": interfaces,
+        }
+
+    def is_final_method(self, fqn, method):
+        """Whether the method is final."""
+        for _, output in self.hierarchy(fqn):
+            for line in method_lines(output, method):
+                if re.match(r"\s*(public|protected|private)?\s*final\s", line):
+                    return True
+        return False
+
+    def implements(self, fqn, interface):
+        """Whether the class implements the interface, directly or not."""
+        name = interface.replace(".", "/")
+        for _, output in self.hierarchy(fqn):
+            for line in output.splitlines():
+                match = re.search(r"\b(?:implements|extends)\s+([^{]+)", line)
+                if match and name in match.group(1).replace(".", "/"):
+                    return True
+        return False
 
     def field_types(self, fqn, field):
         """The types of the fields of a class, by name."""
@@ -635,6 +690,21 @@ def collect(text, class_name):
         i += 1
 
 
+def mixin_interfaces(text):
+    """The interfaces of the mixin itself, the ones of the mixininterface package."""
+    interfaces = []
+
+    match = re.search(r"public\s+(?:abstract\s+)?class\s+\w+(?:<[^>]*>)?(?:\s+extends\s+[\w$.]+)?"
+                      r"((?:\s+implements\s+[^{]+))?", text)
+    if match and match.group(1):
+        for name in match.group(1).replace("implements", "").split(","):
+            name = name.strip()
+            if name.startswith("I") and name not in ("I",):
+                interfaces.append(name)
+
+    return interfaces
+
+
 def injector_of(annotations):
     """The injector of a declaration, if it has one."""
     for annotation in annotations:
@@ -725,6 +795,7 @@ def main():
                         problems.append(f"{relative}: mixin target class {fqn} does not exist")
                 for match in MIXIN_TARGETS_RE.finditer(text):
                     target = match.group(1)
+                    targets.append(target)
                     if target.startswith(("net.minecraft", "com.mojang")) and target not in minecraft.classes:
                         problems.append(f"{relative}: mixin target class {target} does not exist")
 
@@ -736,6 +807,30 @@ def main():
                 methods = [d for d in declarations if d[1] == "method"]
                 accessor_only = all(any(ACCESSOR_RE.search(a) or ACCESSOR_RE_BARE.search(a)
                                         for a in d[0]) for d in methods)
+
+                # 1. the structure of the mixin
+                mixin_superclass = None
+                match = re.search(r"public\s+(?:abstract\s+)?class\s+\w+(?:<[^>]*>)?\s+extends\s+([\w$.]+)",
+                                  text)
+                if match:
+                    mixin_superclass = match.group(1)
+
+                for fqn in targets:
+                    if fqn not in minecraft.classes:
+                        continue
+                    info = minecraft.class_info(fqn)
+                    if info is None:
+                        continue
+
+                    # the superclass of the mixin has to be a superclass of the target
+                    if mixin_superclass and mixin_superclass not in ("java.lang.Object", "Object"):
+                        if minecraft.implements(fqn, mixin_superclass):
+                            continue
+                        owner = mixin_superclass.replace(".", "/")
+                        if owner not in minecraft.classes:
+                            continue
+                        problems.append(f"{relative}: the mixin extends {mixin_superclass}, but "
+                                        f"{fqn} does not")
 
                 # 2. the kind of the target
                 for fqn in targets:
@@ -801,6 +896,23 @@ def main():
                         for match in re.finditer(r'value\s*=\s*"FIELD"[^@]*?target\s*=\s*"L([^"]+);(\w+):(\S+)"',
                                                  annotation):
                             owner, field = match.group(1), match.group(2)
+
+                            # the opcode of the access has to be the one of the injection
+                            opcode = re.search(r'opcode\s*=\s*Opcodes\.(\w+)', annotation)
+                            if opcode:
+                                for fqn in targets:
+                                    if fqn not in minecraft.classes:
+                                        continue
+                                    for target_method in wanted:
+                                        body = minecraft.body(fqn, target_method)
+                                        if body is None:
+                                            continue
+                                        used = body["opcodes"].get(field, set())
+                                        if used and opcode.group(1).lower() not in used:
+                                            problems.append(
+                                                f"{relative}: {fqn}#{target_method} accesses the field "
+                                                f"{field} with {sorted(used)}, but the injection "
+                                                f"wants {opcode.group(1)}")
                             for fqn in targets:
                                 if fqn not in minecraft.classes:
                                     continue
@@ -957,11 +1069,33 @@ def main():
                                 continue
                             checked_handlers += 1
 
+                            # NOTE: injecting into final vanilla methods is allowed. Mixin only rejects
+                            # final methods that were merged from another mixin (@MixinMerged), which is
+                            # a mixin-vs-mixin conflict that cannot be detected from the jar alone.
+
                             # 8. a static method needs a static handler
                             if injector in ("Inject", "Redirect"):
                                 if len(arities) == 1 and arities[0][1] and not handler_static:
                                     problems.append(f"{relative}: {member} must be static, "
                                                     f"{fqn}#{target_method} is static")
+
+                            # the index of a @ModifyArg has to exist
+                            if injector == "ModifyArg":
+                                index = re.search(r"index\s*=\s*(\d+)", " ".join(annotations))
+                                if index:
+                                    for annotation in annotations:
+                                        for match in DESCRIPTOR_RE.finditer(annotation):
+                                            descriptor = match.group(1)
+                                            semicolon = descriptor.index(";")
+                                            rest = descriptor[semicolon + 1:]
+                                            if "(" not in rest:
+                                                continue
+                                            args = rest[rest.find("(") + 1:rest.rindex(")")]
+                                            amount = len(descriptor_types("(" + args + ")V"))
+                                            if int(index.group(1)) >= amount:
+                                                problems.append(
+                                                    f"{relative}: {member} changes the argument "
+                                                    f"{index.group(1)}, but the call has {amount}")
 
                             # 7. the arguments of the handler
                             if injector == "Inject":
@@ -1060,6 +1194,9 @@ def main():
                     if (Path(root) / package / (name + ".java")).is_file():
                         found = True
                         break
+                # a mixin may also exist only for other versions (the config is shared)
+                if not found and list(Path("src/mc").glob(f"*/{package}/{name}.java")):
+                    found = True
                 if not found:
                     problems.append(f"{config.name}: the mixin {name} does not exist")
 
