@@ -12,6 +12,7 @@ import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import com.mojang.renderpearl.api.vertex.VertexFormat;
 import meteordevelopment.meteorclient.mixininterface.IRenderPipeline;
+import meteordevelopment.meteorclient.renderer.LineSmoothPipelines;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
 
@@ -87,7 +88,13 @@ public class ExtendedRenderPipelineBuilder {
     @NonNull
     public RenderPipeline build() {
         RenderPipeline pipeline = delegate.build();
-        ((IRenderPipeline) pipeline).meteor$setLineSmooth(lineSmooth);
+
+        if (lineSmooth) {
+            // The backend pipeline only shares its name with the frontend one, so register the location
+            // instead of relying on the frontend pipeline object.
+            LineSmoothPipelines.add(pipeline.getLocation().toString());
+            ((IRenderPipeline) pipeline).meteor$setLineSmooth(lineSmooth);
+        }
 
         return pipeline;
     }

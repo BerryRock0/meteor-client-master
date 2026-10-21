@@ -110,6 +110,7 @@
 "GameRendererRenderLevelMixin",
 "GlCommandEncoderMixin",
 "GlDeviceMixin",
+    "GlRenderPipelineMixin",
 "GpuDeviceMixin",
 "GuiGraphicsExtractorAccessor",
 "GuiGraphicsExtractorMixin",
