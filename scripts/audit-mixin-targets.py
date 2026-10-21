@@ -314,6 +314,17 @@ class Jar:
         self.classes = set(n[:-6].replace("/", ".") for n in self.archive.namelist() if n.endswith(".class"))
         self.cache = {}
 
+    def resolve(self, fqn):
+        """The name of an inner class as the jar spells it: mixins name inner
+        classes with dots (Outer.Inner), the jar with dollars (Outer$Inner)."""
+        if fqn in self.classes:
+            return fqn
+        while "." in fqn:
+            fqn = fqn[:fqn.rindex(".")] + "$" + fqn[fqn.rindex(".") + 1:]
+            if fqn in self.classes:
+                return fqn
+        return None
+
     def javap(self, fqn):
         if fqn not in self.cache:
             entry = fqn.replace(".", "/") + ".class"
@@ -460,13 +471,21 @@ class Jar:
                 stripped = line.strip()
                 if "(" in stripped or not stripped.endswith(";"):
                     continue
-                parts = stripped[:-1].split()
-                if len(parts) < 2:
+                declaration = stripped[:-1]
+                if " " not in declaration:
                     continue
-                name = parts[-1]
+                # the name is the last word, the type is everything before it:
+                # javap prints generics as "Map<A, B>", so they may contain spaces
+                words = declaration.split()
+                name = words[-1]
                 if name in found:
                     continue
-                found[name] = simple_name(parts[-2])
+                type_name = declaration[:declaration.rindex(name)]
+                while type_name.split() and type_name.split()[0] in MODIFIERS:
+                    type_name = " ".join(type_name.split()[1:])
+                if not type_name.strip():
+                    continue
+                found[name] = simple_name(type_name)
 
         return found
 
@@ -515,6 +534,24 @@ def split_parameters(text):
     if current.strip():
         parts.append(current)
     return [p.strip() for p in parts if p.strip()]
+
+
+def declared_type_of(text, name):
+    """The type an accessor works with: the return type of a getter, the
+    argument type of a setter. Mixin matches accessors by name AND type."""
+    for match in re.finditer(
+            r"(?:^|\n)\s*(?:@\w+(?:\([^)]*\))?\s*)*"
+            r"(?:public\s+|private\s+|protected\s+)?(?:abstract\s+)?"
+            r"([\w.$]+(?:<[^>]*>)?(?:\[\])?)\s+" + re.escape(name) + r"\s*\(([^)]*)\)",
+            text):
+        returns, arguments = match.group(1), match.group(2)
+        if simple_name(returns) in ("void",):
+            parameters = [p for p in arguments.split(",") if p.strip()]
+            if len(parameters) == 1:
+                return type_of(parameters[0])
+            return None
+        return simple_name(returns)
+    return None
 
 
 def type_of(parameter):
@@ -787,14 +824,21 @@ def main():
                 targets = []
                 for match in MIXIN_RE.finditer(text):
                     target = match.group(1)
-                    fqn = target if "." in target else imports.get(target)
+                    if "." in target:
+                        # a full name, or an imported class and one of its inner classes
+                        head = target.split(".")[0]
+                        fqn = target if target in minecraft.classes else \
+                            (imports.get(head) + target[len(head):]) if imports.get(head) else target
+                    else:
+                        fqn = imports.get(target)
                     if not fqn:
                         continue
+                    fqn = minecraft.resolve(fqn) or fqn  # inner classes: Outer$Inner
                     targets.append(fqn)
                     if fqn.startswith(("net.minecraft", "com.mojang")) and fqn not in minecraft.classes:
                         problems.append(f"{relative}: mixin target class {fqn} does not exist")
                 for match in MIXIN_TARGETS_RE.finditer(text):
-                    target = match.group(1)
+                    target = minecraft.resolve(match.group(1)) or match.group(1)
                     targets.append(target)
                     if target.startswith(("net.minecraft", "com.mojang")) and target not in minecraft.classes:
                         problems.append(f"{relative}: mixin target class {target} does not exist")
@@ -1003,8 +1047,21 @@ def main():
                         if accessor:
                             accessor_name = accessor.group(2).split("(")[0]
                             for fqn in targets:
-                                if fqn in minecraft.classes and minecraft.find(fqn, accessor_name) is None:
+                                if fqn not in minecraft.classes:
+                                    continue
+                                if minecraft.find(fqn, accessor_name) is None:
                                     problems.append(f"{relative}: {fqn}#{accessor_name} does not exist")
+                                    continue
+
+                                # Mixin matches an accessor by the name AND the type of the
+                                # field: a getter returns the type of the field and a setter
+                                # takes it as its only argument.
+                                declared = declared_type_of(text, member)
+                                field_type = minecraft.field_types(fqn, accessor_name).get(accessor_name)
+                                if declared and field_type and declared != field_type \
+                                        and not field_type.isupper():
+                                    problems.append(f"{relative}: {fqn}#{accessor_name} is a "
+                                                    f"{field_type}, but the accessor says {declared}")
 
                     # 3. shadows
                     if not any("@Shadow" in a for a in annotations):
