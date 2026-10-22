@@ -609,7 +609,7 @@ def method_body(output, method):
     inside = False
 
     for line in lines:
-        if re.match(r"\s{2}[\w $<>\[\],.?]*\s\w+\(", line):
+        if re.match(r"\s{2}[\w $<>\[\],.?]*\s[\w$]+\(", line):
             inside = re.search(r"\b" + re.escape(method) + r"\(", line) is not None
             if inside:
                 continue
@@ -628,7 +628,7 @@ def method_descriptors_of(output, method):
     inside = False
 
     for line in lines:
-        if re.match(r"\s{2}[\w $<>\[\],.?]*\s\w+\(", line):
+        if re.match(r"\s{2}[\w $<>\[\],.?]*\s[\w$]+\(", line):
             inside = re.search(r"\b" + re.escape(method) + r"\(", line) is not None
             continue
         if inside:
@@ -874,7 +874,16 @@ def main():
                                 for target_method in wanted:
                                     body = minecraft.body(fqn, target_method)
                                     if body is None:
+                                        # The method exists (checked above) but its body could
+                                        # not be read: never skip silently, that is how broken
+                                        # injection points got through before.
+                                        if minecraft.find(fqn, target_method.split("(")[0]) is not None:
+                                            problems.append(
+                                                f"{relative}: could not read the body of "
+                                                f"{fqn}#{target_method}, the injection target "
+                                                f"has not been verified")
                                         continue
+                                    checked_targets += 1
                                     calls = [c for c in body["calls"]
                                              if c[1] == called
                                              and c[2].startswith("(" + arg_types)
