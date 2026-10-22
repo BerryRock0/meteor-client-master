@@ -9,7 +9,9 @@ game starts, so compiling is not enough. This script checks, for every mixin:
   3. that every @Shadow field and method exists on the target,
   4. that every injected / overwritten method exists on the target,
   5. that every @Accessor / @Invoker member exists on the target,
-  6. that every @At(INVOKE) / @At(FIELD) target still resolves,
+  6. that every @At(INVOKE) target matches a call with exactly those arguments and every
+     @At(FIELD) target a field access of exactly that type (the return type of a call is
+     ignored, as in Mixin itself),
   7. that the handler of an injector takes the arguments of the method it injects into,
   8. that a static method is injected into with a static handler.
 
@@ -399,7 +401,7 @@ class Jar:
                     calls.append((match.group(1), match.group(2), match.group(3)))
                 match = FIELD_CALL_RE.search(line)
                 if match:
-                    fields.append((match.group(1), match.group(2)))
+                    fields.append((match.group(1), match.group(2), match.group(3)))
                 match = STRING_RE.search(line)
                 if match:
                     strings.append(match.group(1))
@@ -637,6 +639,11 @@ def parse_field(line):
 CALL_RE = re.compile(r"// (?:Interface)?Method (?:([\w/$]+)\.)?(\w+):(\([^)]*\).*)")
 FIELD_CALL_RE = re.compile(r"// Field (?:([\w/$]+)\.)?(\w+):(\S+)")
 STRING_RE = re.compile(r"// String (\S+)")
+
+
+def call_args(descriptor):
+    """The argument list of a method descriptor, brackets included."""
+    return descriptor[:descriptor.rindex(")") + 1]
 
 
 def method_body(output, method):
@@ -901,6 +908,14 @@ def main():
                         continue
 
                     for annotation in annotations:
+                        # resolve MixinTargets constants so that their targets are
+                        # checked just like string literals
+                        annotation = re.sub(
+                            r"MixinTargets\.([A-Z_]+)",
+                            lambda m: '"' + mixin_targets[m.group(1)] + '"'
+                            if m.group(1) in mixin_targets else m.group(0),
+                            annotation)
+
                         # an invoke target
                         for match in DESCRIPTOR_RE.finditer(annotation):
                             descriptor = match.group(1)
@@ -928,9 +943,14 @@ def main():
                                                 f"has not been verified")
                                         continue
                                     checked_targets += 1
+                                    # Mixin matches the arguments of a call exactly, only
+                                    # the return type is ignored, so the comparison has to
+                                    # be exact too: a prefix match let a target with
+                                    # (BlockPos;)Z through although the version only had
+                                    # (BlockPos;J)Z.
                                     calls = [c for c in body["calls"]
                                              if c[1] == called
-                                             and c[2].startswith("(" + arg_types)
+                                             and call_args(c[2]) == "(" + arg_types + ")"
                                              and minecraft.related(owner, c[0])]
                                     if not calls:
                                         problems.append(
@@ -948,7 +968,7 @@ def main():
                         # a field target
                         for match in re.finditer(r'value\s*=\s*"FIELD"[^@]*?target\s*=\s*"L([^"]+);(\w+):(\S+)"',
                                                  annotation):
-                            owner, field = match.group(1), match.group(2)
+                            owner, field, field_type = match.group(1), match.group(2), match.group(3)
 
                             # the opcode of the access has to be the one of the injection
                             opcode = re.search(r'opcode\s*=\s*Opcodes\.(\w+)', annotation)
@@ -973,12 +993,14 @@ def main():
                                     body = minecraft.body(fqn, target_method)
                                     if body is None:
                                         continue
+                                    # Mixin resolves a field target by name and exact type
                                     fields = [c for c in body["fields"]
-                                              if c[1] == field and minecraft.related(owner, c[0])]
+                                              if c[1] == field and c[2] == field_type
+                                              and minecraft.related(owner, c[0])]
                                     if not fields:
                                         problems.append(
                                             f"{relative}: {fqn}#{target_method} does not touch the field "
-                                            f"{owner.replace('/', '.')}.{field}")
+                                            f"{owner.replace('/', '.')}.{field}:{field_type}")
 
                         # a string argument
                         for match in re.finditer(r'args\s*=\s*"ldc=([^"]+)"', annotation):

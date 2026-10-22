@@ -221,8 +221,10 @@ mixin:
 4. every injected / overwritten method exists on that target class (walking up the superclass
    chain, because a descriptor names the type the call site used),
 5. every `@Accessor` / `@Invoker` member exists on that target class,
-6. every `@At(INVOKE)` / `@At(FIELD)` target still resolves **in the bytecode of the target
-   method**, with the ordinal it asks for, and the string argument it names is really used,
+6. every `@At(INVOKE)` target still resolves **in the bytecode of the target method**, with
+   exactly those arguments (Mixin ignores only the return type, so the audit does too) and the
+   ordinal it asks for, every `@At(FIELD)` target a field access of exactly that type, and the
+   string argument it names is really used,
 7. the handler takes the arguments Mixin passes to it — the arguments of the target method and a
    callback, or only the callback — with the same types, and a static method is injected into
    with a static handler,
@@ -242,7 +244,10 @@ already broken — the totem animation, both drop events, the swing duration, th
 the block-break particles, the whole renderer stack of 26.3 and 26.4, where the handlers still
 had the arguments of 26.2, and the two mixins whose target method changed its signature
 (`LivingEntity#swing` and `ProjectileUtil#getManyEntityHitResult`). Those are fixed for all three
-versions now.
+versions now. Comparing arguments exactly also caught the `isSectionCompiledAndVisible` call in
+`LevelExtractor#isEntityVisible`: 26.3 and 26.4 pass a section position `long` next to the
+`BlockPos`, so the 26.2 descriptor failed the injection at startup — it now lives in
+`MixinTargets` as well.
 
 A mixin that names the descriptor of its target has to name the one of the version it is built
 for, so the descriptors that differ live in `MixinTargets` like the names of the methods do.

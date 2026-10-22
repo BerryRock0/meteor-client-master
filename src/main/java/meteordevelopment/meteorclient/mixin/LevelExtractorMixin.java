@@ -12,6 +12,7 @@ import meteordevelopment.meteorclient.systems.modules.render.BreakIndicators;
 import meteordevelopment.meteorclient.systems.modules.render.ESP;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
 import meteordevelopment.meteorclient.systems.modules.world.Ambience;
+import meteordevelopment.meteorclient.mc.MixinTargets;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -86,7 +87,7 @@ public abstract class LevelExtractorMixin {
         method = "isEntityVisible",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/LevelRenderer;isSectionCompiledAndVisible(Lnet/minecraft/core/BlockPos;)Z"
+            target = MixinTargets.IS_SECTION_COMPILED_AND_VISIBLE_INVOKE
         )
     )
     private boolean isEntityVisible$forceRender(boolean original) {
