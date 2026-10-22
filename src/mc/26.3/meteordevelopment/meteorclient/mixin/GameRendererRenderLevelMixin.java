@@ -65,7 +65,10 @@ public abstract class GameRendererRenderLevelMixin {
     @Unique
     private final PoseStack matrices = new PoseStack();
 
-    @Inject(method = "renderLevel", at = @At("TAIL"))
+    // render3dHud renders the hands, so firing here draws the 3D world under them,
+    // which is where the 26.2 variant hooks the "hand" marker and what the upstream port does
+    @Inject(method = "renderLevel", at = @At(value = "INVOKE",
+        target = "Lnet/minecraft/client/renderer/GameRenderer;render3dHud(Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lnet/minecraft/client/renderer/state/level/PlayerRenderState;Lnet/minecraft/client/renderer/state/OptionsRenderState;Z)V"))
     private void onRenderLevel(CallbackInfo ci, @Local(name = "projectionMatrix") Matrix4f projectionMatrix, @Local(name = "worldPartialTicks") float worldPartialTicks, @Local(name = "bobStack") PoseStack bobStack) {
         // the model view matrix is not a local of renderLevel any more
         Matrix4fc modelViewMatrix = this.gameRenderState.levelRenderState.cameraRenderState.viewRotationMatrix;
