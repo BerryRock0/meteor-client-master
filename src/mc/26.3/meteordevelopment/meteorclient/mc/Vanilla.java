@@ -85,7 +85,7 @@ public final class Vanilla {
     public static java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> quads(
         net.minecraft.client.renderer.item.ItemStackRenderState.LayerRenderState layer
     ) {
-        return ((net.minecraft.client.resources.model.geometry.ItemQuads) ((meteordevelopment.meteorclient.mixin.LayerRenderStateAccessor) layer).meteor$getQuads()).all();
+        return ((meteordevelopment.meteorclient.mixin.LayerRenderStateAccessor) layer).meteor$getQuads().all();
     }
 
     // Registries

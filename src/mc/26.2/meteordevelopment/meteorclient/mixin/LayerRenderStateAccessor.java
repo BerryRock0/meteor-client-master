@@ -16,5 +16,5 @@ public interface LayerRenderStateAccessor {
     ItemTransform meteor$getTransform();
 
     @Accessor("quads")
-    Object meteor$getQuads();
+    java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> meteor$getQuads();
 }
