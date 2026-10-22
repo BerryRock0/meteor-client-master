@@ -220,9 +220,14 @@ public abstract class MeteorRenderPipelines {
     }
 
     public static void precompile() {
-        // 26.3 compiles pipelines lazily and caches them in RenderSystem.
+        // Pipelines are compiled lazily and cached by RenderSystem; warm them up here so the first
+        // frame does not pay for it, but never let a failed warm-up break the resource reload.
         for (RenderPipeline pipeline : PIPELINES) {
-            RenderSystem.getCompiledPipeline(pipeline);
+            try {
+                RenderSystem.getCompiledPipeline(pipeline);
+            } catch (Throwable t) {
+                MeteorClient.LOG.error("Failed to precompile pipeline {}", pipeline.getLocation(), t);
+            }
         }
     }
 
