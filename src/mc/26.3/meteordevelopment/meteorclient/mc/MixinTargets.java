@@ -26,4 +26,5 @@ public final class MixinTargets {
     public static final String REGISTRY_BOOTSTRAP_TARGET = "net.minecraft.core.registries.BuiltInRegistries";
     public static final String DOWNLOAD_QUEUE_TARGET = "net.minecraft.server.packs.DownloadQueue";
     public static final String REMOVE_ENTITY_IDS_INVOKE = "Lnet/minecraft/network/protocol/game/ClientboundRemoveEntitiesPacket;entityIds()Lit/unimi/dsi/fastutil/ints/IntList;";
+    public static final String IS_SECTION_COMPILED_AND_VISIBLE_INVOKE = "Lnet/minecraft/client/renderer/LevelRenderer;isSectionCompiledAndVisible(Lnet/minecraft/core/BlockPos;J)Z";
 }
