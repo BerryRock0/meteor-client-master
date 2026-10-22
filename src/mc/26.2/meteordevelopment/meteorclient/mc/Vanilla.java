@@ -127,6 +127,16 @@ public final class Vanilla {
         return event.scancode();
     }
 
+    /** 26.2 text input API takes no owner. */
+    public static void startTextInput(Object owner) {
+        mc.textInputManager().startTextInput();
+    }
+
+    /** 26.2 text input API takes no owner. */
+    public static void stopTextInput(Object owner) {
+        mc.textInputManager().stopTextInput();
+    }
+
     public static void selectCursor(com.mojang.blaze3d.platform.cursor.CursorType cursor) {
         cursor.select(mc.getWindow());
     }

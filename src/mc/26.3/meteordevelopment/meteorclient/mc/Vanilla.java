@@ -130,6 +130,14 @@ public final class Vanilla {
         return event.keycode();
     }
 
+    public static void startTextInput(Object owner) {
+        mc.textInputManager().startTextInput(owner);
+    }
+
+    public static void stopTextInput(Object owner) {
+        mc.textInputManager().stopTextInput(owner);
+    }
+
     public static void selectCursor(com.mojang.blaze3d.platform.cursor.CursorType cursor) {
         cursor.select();
     }

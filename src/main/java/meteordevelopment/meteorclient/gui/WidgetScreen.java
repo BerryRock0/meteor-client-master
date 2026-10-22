@@ -107,6 +107,9 @@ public abstract class WidgetScreen extends Screen {
             firstInit = false;
             initWidgets();
         }
+
+        // 26.2+ delivers charTyped only while a text input session is active (SDL)
+        Vanilla.startTextInput(this);
     }
 
     public abstract void initWidgets();
@@ -186,7 +189,9 @@ public abstract class WidgetScreen extends Screen {
     public boolean keyReleased(@NonNull KeyEvent input) {
         if (locked) return false;
 
-        if ((input.modifiers() == MOD_CONTROL || input.modifiers() == MOD_SUPER) && input.key() == KEY_9) {
+        boolean ctrl = Input.modsMatch(input.modifiers(), MacosUtil.IS_MACOS ? MOD_SUPER : MOD_CONTROL);
+
+        if (ctrl && input.key() == KEY_9) {
             debug = !debug;
             return true;
         }
@@ -238,7 +243,7 @@ public abstract class WidgetScreen extends Screen {
             return true;
         }
 
-        boolean control = MacosUtil.IS_MACOS ? input.modifiers() == MOD_SUPER : input.modifiers() == MOD_CONTROL;
+        boolean control = Input.modsMatch(input.modifiers(), MacosUtil.IS_MACOS ? MOD_SUPER : MOD_CONTROL);
 
         return (control && input.key() == KEY_C && toClipboard())
             || (control && input.key() == KEY_V && fromClipboard());
@@ -369,6 +374,8 @@ public abstract class WidgetScreen extends Screen {
 
         super.onClose();
         removed();
+
+        Vanilla.stopTextInput(this);
 
         onClose = preOnClose;
     }
