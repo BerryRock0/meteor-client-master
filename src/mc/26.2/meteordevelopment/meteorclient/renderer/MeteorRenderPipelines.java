@@ -224,15 +224,26 @@ public abstract class MeteorRenderPipelines {
         ResourceManager resources = Minecraft.getInstance().getResourceManager();
 
         for (RenderPipeline pipeline : PIPELINES) {
-            device.precompilePipeline(pipeline, (identifier, _) -> {
-                var resource = resources.getResource(identifier).get();
+            try {
+                // Pipelines declare bare shader ids (e.g. "pos_color"); the game resolves them to
+                // "shaders/<id>.vsh|.fsh" resources via the shader type converter.
+                device.precompilePipeline(pipeline, (identifier, type) -> {
+                    var file = type.idConverter().idToFile(identifier);
 
-                try (var in = resource.open()) {
-                    return IOUtils.toString(in, StandardCharsets.UTF_8);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+                    var resource = resources.getResource(file).orElseThrow(
+                        () -> new IllegalStateException("Shader resource not found: " + file)
+                    );
+
+                    try (var in = resource.open()) {
+                        return IOUtils.toString(in, StandardCharsets.UTF_8);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            } catch (Exception e) {
+                // Never let a pipeline warm-up failure break the resource reload.
+                MeteorClient.LOG.error("Failed to precompile pipeline {}", pipeline.getLocation(), e);
+            }
         }
     }
 
