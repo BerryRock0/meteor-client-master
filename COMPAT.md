@@ -206,48 +206,24 @@ churn, but Mojang still changes gameplay and networking APIs that Meteor's ~200 
 directly, and those ported call sites change behaviour that cannot be validated by compiling
 alone.
 
-### Auditing the mixins
+### Reading the game
 
 A mixin that targets a method which no longer exists compiles fine and then **throws when the
-game starts**, so compiling is not enough. `scripts/audit-mixin-targets.py` checks, for every
-mixin:
+game starts**, so compiling is not enough. Before a mixin is written or moved, its target is
+read from the jar of the game it has to run in — the very class files the game loads:
 
-1. the `@Mixin` target class exists,
-2. the mixin has the kind Mixin requires of its target — a class target needs a class mixin, an
-   interface target needs an interface mixin (an interface mixin with methods of its own may
-   only target an interface, one with only `@Accessor` / `@Invoker` methods may only target a
-   class),
-3. every `@Shadow` field and method exists on that target class,
-4. every injected / overwritten method exists on that target class (walking up the superclass
-   chain, because a descriptor names the type the call site used),
-5. every `@Accessor` / `@Invoker` member exists on that target class,
-6. every `@At(INVOKE)` target still resolves **in the bytecode of the target method**, with
-   exactly those arguments (Mixin ignores only the return type, so the audit does too) and the
-   ordinal it asks for, every `@At(FIELD)` target a field access of exactly that type, and the
-   string argument it names is really used,
-7. the handler takes the arguments Mixin passes to it — the arguments of the target method and a
-   callback, or only the callback — with the same types, and a static method is injected into
-   with a static handler,
-8. every `@Local` capture names a local variable that really exists in the target method. The
-   jar has no local variable table, so this needs the decompiled sources, which loom keeps in
-   its cache (`./gradlew genSources`).
-
-```
-scripts/audit-mixin-targets.py 26.4-snapshot-4 src/mc/26.4 src/main/java
+```bash
+cd /tmp && unzip -o ~/.minecraft/versions/"Fabric 26.3"/"Fabric 26.3.jar" \
+    'net/minecraft/client/gui/GuiGraphicsExtractor.class'
+javap -c -l -p net/minecraft/client/gui/GuiGraphicsExtractor.class
 ```
 
-The audit runs as a part of `scripts/build-all-versions.sh` and in the CI, so a mixin that does
-not fit the version it is built for fails the build instead of the game.
-
-All the checks are clean for 26.2, 26.3 and 26.4. The audit also uncovered mixins that were
-already broken — the totem animation, both drop events, the swing duration, the enchant glint,
-the block-break particles, the whole renderer stack of 26.3 and 26.4, where the handlers still
-had the arguments of 26.2, and the two mixins whose target method changed its signature
-(`LivingEntity#swing` and `ProjectileUtil#getManyEntityHitResult`). Those are fixed for all three
-versions now. Comparing arguments exactly also caught the `isSectionCompiledAndVisible` call in
-`LevelExtractor#isEntityVisible`: 26.3 and 26.4 pass a section position `long` next to the
-`BlockPos`, so the 26.2 descriptor failed the injection at startup — it now lives in
-`MixinTargets` as well.
+The output holds the bytecode of every overload with its line numbers and its local variable
+table, and answers everything a mixin depends on: which overload really contains the call an
+`@At` points at, the order of the parameters a handler has to take, and the names of the locals
+an `@Local` capture needs. For a version that is not installed the class comes from the loom
+cache instead
+(`~/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-merged-deobf/<version>/`).
 
 A mixin that names the descriptor of its target has to name the one of the version it is built
 for, so the descriptors that differ live in `MixinTargets` like the names of the methods do.
@@ -312,5 +288,6 @@ if (Compat.get().currentScreenKind() == ScreenKind.TITLE) ...
 ```
 
 Compiling is necessary but not sufficient: a mixin whose target method no longer exists still
-compiles and then throws while the game starts. The two mixin audits described above cover that
-class of failure; what they cannot cover is behaviour, which needs a running game.
+compiles and then throws while the game starts — reading the target from the game jar (see
+above) covers that class of failure. What neither covers is behaviour, which needs a running
+game.

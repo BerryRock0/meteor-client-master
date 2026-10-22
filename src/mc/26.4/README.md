@@ -6,7 +6,7 @@ This directory holds the Minecraft 26.4 variant of the version-specific sources.
 
 `./gradlew build -PminecraftVersion=26.4` **succeeds** and produces
 `build/libs/meteor-client-26.4-snapshot-4-local.jar`. `checkCompatLayer` and
-`validateAccessWidener` pass, and the mixin audits (see below) are clean.
+`validateAccessWidener` pass.
 
 26.4 is still a development snapshot, so the Minecraft coordinate points at
 `26.4-snapshot-4` — the newest snapshot Fabric API covers (`0.164.0+26.4`).
@@ -104,19 +104,11 @@ method it injects into, and those methods changed:
 `GameRendererMixin` went the other way: their handlers did not use the arguments at all, so they
 take only the callback now and are shared by every version again.
 
-## Mixin audits
+## Reading the game
 
-`scripts/audit-mixin-targets.py` catches the mixins that compile but cannot be applied at runtime
-(a missing method makes Mixin throw when the game starts). It checks that the target class
-exists, that the mixin has the kind Mixin requires of its target, that the `@Shadow`,
-`@Accessor` and `@Invoker` members exist, that the `@At(INVOKE)` / `@At(FIELD)` targets are really
-in the bytecode of the target method, and that the handler takes the arguments Mixin passes to it.
-
-The audit is clean for 26.2, 26.3 and 26.4, and it runs as a part of the build. It uncovered
-**six mixins that were already broken in 26.3** (a totem animation, the drop events, the swing
-duration, the enchant glint and the block-break particles) and **the whole renderer stack of 26.3
-and 26.4**, whose handlers still had the arguments of 26.2 — the game could not even start there.
-Those are fixed now for all three versions.
+A mixin that does not fit the version compiles and then throws while the game starts, so before
+a mixin is written or moved its target is read from the jar of the game itself
+(`javap -c -l -p` — see `COMPAT.md`).
 
 ## Runtime risks
 
