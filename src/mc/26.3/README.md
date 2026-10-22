@@ -108,6 +108,7 @@ arguments of the method it injects into, and those methods changed:
 | `EntityShouldRenderMixin` | `EntityRenderer#shouldRender(T, Frustum, double, double, double)` | `... , float` |
 | `GameRendererRenderLevelMixin` | `GameRenderer#renderLevel(DeltaTracker)` | `GameRenderer#renderLevel()` |
 | `LightningBoltRendererMixin` | `LightningBoltRenderer#quad(..., float, float, float, ...)` | the three colour arguments are gone |
+| `GuiGraphicsExtractorMixin` | `setTooltipForNextFrame(Font, List, Optional, int, int, Identifier)` | `... , boolean)` |
 
 `CloudRendererMixin`, `ScreenEffectRendererMixin` and the `renderItemInHand` injection of
 `GameRendererMixin` went the other way: their handlers did not use the arguments at all, so they
