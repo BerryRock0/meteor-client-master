@@ -150,12 +150,12 @@ The mod ships with **no third party dependencies**. What is left in the build is
 | `fabric-renderer-indigo` | compile only, part of Fabric API | the indigo renderer mixin |
 | `meteordevelopment:orbit` | bundled (jar-in-jar) | Meteor's own event bus |
 | `org.meteordev:starscript` | bundled (jar-in-jar) | the scripting API for addons |
+| `net.raphimc:MinecraftAuth` | bundled (jar-in-jar) | the Microsoft account login |
 
 Everything else was removed: the Sodium / Lithium / Iris / ModMenu / ViaFabricPlus / Baritone
 integrations, LWJGL's `tinyfd` (files are picked with the in-game `FileBrowserScreen` instead),
-`reflections` (addons use `AddonManager#onInitialize` instead of the reflective init), the Netty
-SOCKS proxy handlers (the proxy system is gone) and `MinecraftAuth` (the Microsoft account login
-is gone).
+`reflections` (addons use `AddonManager#onInitialize` instead of the reflective init) and the Netty
+SOCKS proxy handlers (the proxy system is gone).
 
 ## Worked example: porting 26.2 to 26.3, and 26.3 to 26.4
 
