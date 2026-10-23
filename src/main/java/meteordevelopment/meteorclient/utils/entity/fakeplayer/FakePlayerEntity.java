@@ -13,7 +13,9 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.player.FakePlayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.RemotePlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -121,47 +123,77 @@ public class FakePlayerEntity extends RemotePlayer {
         // Stasis keeps the original statue behaviour: no physics, no movement.
         if (module.behaviour.get() == FakePlayer.Behaviour.Stasis) return;
 
-        boolean wantMove = false;
-        double targetX = getX(), targetZ = getZ();
+        // Target point the bot is interested in this tick, plus whether it should walk there or
+        // stand and act on the target once close.
+        double tx = getX(), ty = getEyeY(), tz = getZ();
+        boolean moving = false;
+        boolean acting = false;
 
-        if (module.behaviour.get() == FakePlayer.Behaviour.Follow) {
-            double dx = mc.player.getX() - getX();
-            double dz = mc.player.getZ() - getZ();
-            double stopSq = module.followDistance.get() * module.followDistance.get();
+        switch (module.behaviour.get()) {
+            case Follow -> {
+                double dx = mc.player.getX() - getX();
+                double dz = mc.player.getZ() - getZ();
+                double stopSq = module.followDistance.get() * module.followDistance.get();
 
-            if (dx * dx + dz * dz > stopSq) {
-                targetX = mc.player.getX();
-                targetZ = mc.player.getZ();
-                wantMove = true;
+                tx = mc.player.getX();
+                ty = mc.player.getEyeY();
+                tz = mc.player.getZ();
+
+                if (dx * dx + dz * dz > stopSq) moving = true;
             }
-        } else { // Wander
-            if (wanderTarget == null || wanderTimer <= 0 || position().distanceToSqr(wanderTarget) < 1.0) {
-                double r = module.wanderRadius.get();
-                wanderTarget = new Vec3(
-                    getX() + (random.nextDouble() - 0.5) * 2 * r,
-                    getY(),
-                    getZ() + (random.nextDouble() - 0.5) * 2 * r
-                );
-                wanderTimer = 100; // re-pick a target roughly every 5 seconds
+            case Wander -> {
+                if (wanderTarget == null || wanderTimer <= 0 || position().distanceToSqr(wanderTarget) < 1.0) {
+                    double r = module.wanderRadius.get();
+                    wanderTarget = new Vec3(
+                        getX() + (random.nextDouble() - 0.5) * 2 * r,
+                        getY(),
+                        getZ() + (random.nextDouble() - 0.5) * 2 * r
+                    );
+                    wanderTimer = 100; // re-pick a target roughly every 5 seconds
+                }
+
+                wanderTimer--;
+
+                tx = wanderTarget.x;
+                ty = wanderTarget.y + 0.5;
+                tz = wanderTarget.z;
+                moving = true;
             }
+            case Mine -> {
+                // The bot seeks an ore near itself, walks up to it, then stands and swings.
+                BlockPos ore = module.findNearestResource(position(), module.range.get());
+                if (ore != null) {
+                    tx = ore.getX() + 0.5;
+                    ty = ore.getY() + 0.5;
+                    tz = ore.getZ() + 0.5;
 
-            wanderTimer--;
+                    if (position().distanceToSqr(tx, ty, tz) > 2.5) moving = true;
+                    else acting = true;
+                }
+            }
+            case Fight -> {
+                // The bot seeks the nearest living thing, closes in to melee range, then swings.
+                LivingEntity enemy = module.findNearestEnemy(position(), module.range.get());
+                if (enemy != null) {
+                    tx = enemy.getX();
+                    ty = enemy.getY() + enemy.getBbHeight() / 2;
+                    tz = enemy.getZ();
 
-            targetX = wanderTarget.x;
-            targetZ = wanderTarget.z;
-            wantMove = true;
+                    if (distanceToSqr(enemy) > 6.0) moving = true; // ~2.4 blocks, safely inside melee
+                    else acting = true;
+                }
+            }
         }
 
         xxa = 0;
-        zza = wantMove ? 1 : 0;
+        zza = moving ? 1 : 0;
 
-        if (wantMove) {
+        if (moving) {
             // Face the movement target. Minecraft's look vector is (-sin(yaw), cos(yaw)), so the
             // yaw that points at (dx, dz) is atan2(-dx, dz).
-            double dx = targetX - getX();
-            double dz = targetZ - getZ();
+            double dx = tx - getX();
+            double dz = tz - getZ();
             float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
-
             setYRot(yaw);
             setXRot(0);
             yBodyRot = yaw;
@@ -173,14 +205,37 @@ public class FakePlayerEntity extends RemotePlayer {
             // the previous move, so hop over it.
             if (onGround() && horizontalCollision) jumpFromGround();
 
-            if (module.swing.get() && tickCount % 10 == 0) {
+            if (module.swing.get() && module.behaviour.get() == FakePlayer.Behaviour.Fight && tickCount % 10 == 0) {
                 Vanilla.swing(this, InteractionHand.MAIN_HAND);
             }
         } else {
             setSprinting(false);
+
+            if (acting) {
+                // Look straight at the target (including pitch) and swing to act out mining/attacking.
+                faceTarget(tx, ty, tz);
+
+                if (module.swing.get() && tickCount % 10 == 0) {
+                    Vanilla.swing(this, InteractionHand.MAIN_HAND);
+                }
+            }
         }
 
         // Apply vanilla physics: gravity, friction, collision and the movement set above.
         travel(new Vec3(xxa, 0, zza));
+    }
+
+    /** Turns the bot to look directly at a point, including pitch. */
+    private void faceTarget(double x, double y, double z) {
+        double dx = x - getX();
+        double dz = z - getZ();
+        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+        setYRot(yaw);
+        yBodyRot = yaw;
+        yHeadRot = yaw;
+
+        double dy = y - getEyeY();
+        double distXZ = Math.sqrt(dx * dx + dz * dz);
+        setXRot((float) Math.toDegrees(-Math.atan2(dy, distXZ)));
     }
 }
