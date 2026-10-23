@@ -5,16 +5,35 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.gui.widgets.containers.WTable;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WMinus;
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.settings.*;
+import meteordevelopment.meteorclient.systems.friends.Friends;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
+import meteordevelopment.meteorclient.systems.modules.render.Xray;
+import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
 import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerManager;
+import meteordevelopment.meteorclient.utils.player.PlayerUtils;
+import meteordevelopment.meteorclient.utils.player.Rotations;
+import meteordevelopment.meteorclient.utils.world.BlockUtils;
+import meteordevelopment.orbit.EventHandler;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+
+import static meteordevelopment.meteorclient.MeteorClient.mc;
 
 public class FakePlayer extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -85,7 +104,26 @@ public class FakePlayer extends Module {
         .build()
     );
 
+    public final Setting<Double> range = sgGeneral.add(new DoubleSetting.Builder()
+        .name("range")
+        .description("How far to look for mining or combat targets.")
+        .defaultValue(6)
+        .min(1)
+        .sliderRange(1, 16)
+        .visible(() -> behaviour.get() == Behaviour.Mine || behaviour.get() == Behaviour.Fight)
+        .build()
+    );
+
+    public final Setting<Boolean> real = sgGeneral.add(new BoolSetting.Builder()
+        .name("real")
+        .description("Also performs the action for real through your own player (actual blocks broken / damage dealt), moving you into reach.")
+        .defaultValue(false)
+        .visible(() -> behaviour.get() == Behaviour.Mine || behaviour.get() == Behaviour.Fight)
+        .build()
+    );
+
     private WTable table;
+    private BlockPos minePos;
 
     public FakePlayer() {
         super(Categories.Player, "fake-player", "Spawns a client-side fake player for testing usages. No need to be active.");
@@ -94,13 +132,145 @@ public class FakePlayer extends Module {
     public enum Behaviour {
         Stasis,
         Follow,
-        Wander
+        Wander,
+        Mine,
+        Fight
     }
 
     @Override
     public void onDeactivate() {
+        releaseKeys();
+        minePos = null;
         FakePlayerManager.clear();
         if (table != null) table.clear();
+    }
+
+    /** Real (non-simulated) mining/attack autopilot for your own player. Only runs while active. */
+    @EventHandler
+    private void onTick(TickEvent.Pre event) {
+        if (!Utils.canUpdate() || !real.get()) {
+            releaseKeys();
+            minePos = null;
+            return;
+        }
+
+        switch (behaviour.get()) {
+            case Mine -> tickMine();
+            case Fight -> tickFight();
+            default -> {
+                releaseKeys();
+                minePos = null;
+            }
+        }
+    }
+
+    private void tickMine() {
+        // Drop the current target once it has been broken.
+        if (minePos != null && !Xray.ORES.contains(mc.level.getBlockState(minePos).getBlock())) minePos = null;
+        if (minePos == null) minePos = findNearestResource(mc.player.position(), range.get());
+
+        if (minePos == null) {
+            releaseKeys();
+            return;
+        }
+
+        boolean reached = PlayerUtils.isWithinReach(minePos);
+        faceAndMove(minePos.getX() + 0.5, minePos.getY() + 0.5, minePos.getZ() + 0.5, reached);
+
+        if (reached) {
+            BlockUtils.breakBlock(minePos, Direction.UP, InteractionHand.MAIN_HAND, true);
+            if (!Xray.ORES.contains(mc.level.getBlockState(minePos).getBlock())) minePos = null;
+        }
+    }
+
+    private void tickFight() {
+        LivingEntity target = findNearestEnemy(mc.player.position(), range.get());
+
+        if (target == null) {
+            releaseKeys();
+            return;
+        }
+
+        boolean reached = PlayerUtils.isWithin(target, mc.player.entityInteractionRange());
+        faceAndMove(target.getX(), target.getY() + target.getBbHeight() / 2, target.getZ(), reached);
+
+        if (reached && mc.player.getAttackStrengthScale(0) >= 1) {
+            mc.gameMode.attack(mc.player, target);
+            Vanilla.swing(mc.player, InteractionHand.MAIN_HAND);
+        }
+    }
+
+    /** Faces your player at (x, y, z) and walks toward it, stopping when {@code stop} is true. */
+    private void faceAndMove(double x, double y, double z, boolean stop) {
+        Vec3 target = new Vec3(x, y, z);
+        mc.player.setYRot((float) Rotations.getYaw(target));
+        mc.player.setXRot((float) Rotations.getPitch(target));
+
+        mc.options.keyUp.setDown(!stop);
+        mc.options.keyJump.setDown(!stop && mc.player.horizontalCollision);
+    }
+
+    private void releaseKeys() {
+        if (mc.options == null) return;
+        mc.options.keyUp.setDown(false);
+        mc.options.keyJump.setDown(false);
+    }
+
+    /** Nearest resource block within {@code range} of {@code origin}, or null. */
+    public BlockPos findNearestResource(Vec3 origin, double range) {
+        if (mc.level == null) return null;
+
+        BlockPos best = null;
+        double bestDist = range * range;
+        int r = (int) Math.ceil(range);
+        int ox = Mth.floor(origin.x()), oy = Mth.floor(origin.y()), oz = Mth.floor(origin.z());
+
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int x = ox - r; x <= ox + r; x++) {
+            for (int y = oy - r; y <= oy + r; y++) {
+                for (int z = oz - r; z <= oz + r; z++) {
+                    pos.set(x, y, z);
+                    if (!Xray.ORES.contains(mc.level.getBlockState(pos).getBlock())) continue;
+
+                    double d = origin.distanceToSqr(x + 0.5, y + 0.5, z + 0.5);
+                    if (d <= bestDist) {
+                        bestDist = d;
+                        best = pos.immutable();
+                    }
+                }
+            }
+        }
+
+        return best;
+    }
+
+    /** Nearest attackable living entity within {@code range} of {@code origin}, or null. */
+    public LivingEntity findNearestEnemy(Vec3 origin, double range) {
+        if (mc.level == null) return null;
+
+        LivingEntity best = null;
+        double bestDist = range * range;
+
+        for (Entity e : mc.level.entitiesForRendering()) {
+            if (!(e instanceof LivingEntity le)) continue;
+            if (!le.isAlive() || le.isDeadOrDying()) continue;
+            if (le == mc.player) continue;
+            // Our own bots are client-side dummies: attacking them is meaningless.
+            if (le instanceof FakePlayerEntity) continue;
+
+            if (le instanceof Player p) {
+                if (p.isCreative() || p.isSpectator()) continue;
+                if (!Friends.get().shouldAttack(p)) continue;
+            }
+
+            double d = origin.distanceToSqr(le.position());
+            if (d <= bestDist) {
+                bestDist = d;
+                best = le;
+            }
+        }
+
+        return best;
     }
 
     @Override
