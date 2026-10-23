@@ -36,6 +36,7 @@ public class FakePlayerManager {
         if (!Utils.canUpdate()) return;
 
         FakePlayerEntity fakePlayer = new FakePlayerEntity(mc.player, name, health, copyInv);
+        fakePlayer.aiControlled = true;
         fakePlayer.spawn();
         ENTITIES.add(fakePlayer);
     }

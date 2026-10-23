@@ -42,10 +42,59 @@ public class FakePlayer extends Module {
         .build()
     );
 
+    public final Setting<Behaviour> behaviour = sgGeneral.add(new EnumSetting.Builder<Behaviour>()
+        .name("behaviour")
+        .description("How the fake player behaves. Stasis keeps it motionless; Follow and Wander drive client-side movement.")
+        .defaultValue(Behaviour.Stasis)
+        .build()
+    );
+
+    public final Setting<Double> followDistance = sgGeneral.add(new DoubleSetting.Builder()
+        .name("follow-distance")
+        .description("How close the fake player follows you before stopping.")
+        .defaultValue(2)
+        .min(0.5)
+        .sliderRange(0.5, 16)
+        .visible(() -> behaviour.get() == Behaviour.Follow)
+        .build()
+    );
+
+    public final Setting<Double> wanderRadius = sgGeneral.add(new DoubleSetting.Builder()
+        .name("wander-radius")
+        .description("How far from its current position the fake player wanders.")
+        .defaultValue(10)
+        .min(1)
+        .sliderRange(1, 32)
+        .visible(() -> behaviour.get() == Behaviour.Wander)
+        .build()
+    );
+
+    public final Setting<Boolean> sprint = sgGeneral.add(new BoolSetting.Builder()
+        .name("sprint")
+        .description("Makes the fake player sprint while moving.")
+        .defaultValue(false)
+        .visible(() -> behaviour.get() != Behaviour.Stasis)
+        .build()
+    );
+
+    public final Setting<Boolean> swing = sgGeneral.add(new BoolSetting.Builder()
+        .name("swing")
+        .description("Makes the fake player swing its arm while moving.")
+        .defaultValue(true)
+        .visible(() -> behaviour.get() != Behaviour.Stasis)
+        .build()
+    );
+
     private WTable table;
 
     public FakePlayer() {
         super(Categories.Player, "fake-player", "Spawns a client-side fake player for testing usages. No need to be active.");
+    }
+
+    public enum Behaviour {
+        Stasis,
+        Follow,
+        Wander
     }
 
     @Override
