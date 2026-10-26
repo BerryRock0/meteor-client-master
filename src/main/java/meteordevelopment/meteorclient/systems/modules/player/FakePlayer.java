@@ -124,6 +124,10 @@ public class FakePlayer extends Module {
 
     private WTable table;
     private BlockPos minePos;
+    /** Whether the autopilot currently holds the forward key, so we never cancel the user's own input. */
+    private boolean moving;
+    /** Whether the autopilot currently holds the jump key. */
+    private boolean jumping;
 
     public FakePlayer() {
         super(Categories.Player, "fake-player", "Spawns a client-side fake player for testing usages. No need to be active.");
@@ -206,14 +210,37 @@ public class FakePlayer extends Module {
         mc.player.setYRot((float) Rotations.getYaw(target));
         mc.player.setXRot((float) Rotations.getPitch(target));
 
-        mc.options.keyUp.setDown(!stop);
-        mc.options.keyJump.setDown(!stop && mc.player.horizontalCollision);
+        driveKeys(!stop, !stop && mc.player.horizontalCollision);
     }
 
-    private void releaseKeys() {
+    /**
+     * Drives the forward/jump keys for the autopilot. The keys are only touched while the
+     * autopilot actually needs them: while driving, the forward key is re-asserted every tick
+     * (like {@code PathFinder} does), and when it stops, it is released exactly once. This way
+     * the key is never force-cleared on ticks where the autopilot is idle, so manual movement
+     * keeps working in every mode.
+     */
+    private void driveKeys(boolean move, boolean jump) {
         if (mc.options == null) return;
-        mc.options.keyUp.setDown(false);
-        mc.options.keyJump.setDown(false);
+
+        if (move) {
+            if (!mc.options.keyUp.isDown()) mc.options.keyUp.setDown(true);
+        } else if (moving && mc.options.keyUp.isDown()) {
+            mc.options.keyUp.setDown(false);
+        }
+        moving = move;
+
+        if (jump) {
+            if (!mc.options.keyJump.isDown()) mc.options.keyJump.setDown(true);
+        } else if (jumping && mc.options.keyJump.isDown()) {
+            mc.options.keyJump.setDown(false);
+        }
+        jumping = jump;
+    }
+
+    /** Releases the keys only if this module pressed them itself. */
+    private void releaseKeys() {
+        driveKeys(false, false);
     }
 
     /** Nearest resource block within {@code range} of {@code origin}, or null. */
