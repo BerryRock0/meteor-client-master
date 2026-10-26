@@ -53,6 +53,13 @@ public class FakePlayer extends Module {
         .build()
     );
 
+    public final Setting<Boolean> serverClone = sgGeneral.add(new BoolSetting.Builder()
+        .name("server-clone")
+        .description("In singleplayer, spawns clones as real players on the integrated server: they mine and fight for real, mobs react to them and you can hit them. On multiplayer servers a real server-side player is impossible without a second account, so there the clone stays a full-featured client-side imitation (your skin, inventory, animations and AI).")
+        .defaultValue(true)
+        .build()
+    );
+
     public final Setting<Integer> health = sgGeneral.add(new IntSetting.Builder()
         .name("health")
         .description("The fake player's default health.")
@@ -64,7 +71,7 @@ public class FakePlayer extends Module {
 
     public final Setting<Behaviour> behaviour = sgGeneral.add(new EnumSetting.Builder<Behaviour>()
         .name("behaviour")
-        .description("How the fake player behaves. Stasis keeps it motionless; Follow and Wander drive client-side movement.")
+        .description("How the fake player behaves. Stasis keeps it motionless; Mirror repeats your movements and actions from its own spot; Follow, Wander, Mine and Fight drive it autonomously.")
         .defaultValue(Behaviour.Stasis)
         .build()
     );
@@ -141,11 +148,12 @@ public class FakePlayer extends Module {
     private boolean jumping;
 
     public FakePlayer() {
-        super(Categories.Player, "fake-player", "Spawns a client-side fake player for testing usages. No need to be active.");
+        super(Categories.Player, "fake-player", "Spawns clones of the player: real server-side players in singleplayer, client-side imitations on servers. No need to be active.");
     }
 
     public enum Behaviour {
         Stasis,
+        Mirror,
         Follow,
         Wander,
         Mine,
@@ -383,8 +391,10 @@ public class FakePlayer extends Module {
             if (!(e instanceof LivingEntity le)) continue;
             if (!le.isAlive() || le.isDeadOrDying()) continue;
             if (le == mc.player) continue;
-            // Our own bots are client-side dummies: attacking them is meaningless.
+            // Our own bots: client-side dummies and the server twin of a singleplayer clone -
+            // attacking them is either meaningless or handled by the clone itself.
             if (le instanceof FakePlayerEntity) continue;
+            if (FakePlayerManager.isClone(le)) continue;
 
             if (le instanceof Player p) {
                 if (p.isCreative() || p.isSpectator()) continue;
@@ -411,7 +421,7 @@ public class FakePlayer extends Module {
 
     private void fillTable(GuiTheme theme, WTable table) {
         for (FakePlayerEntity fakePlayer : FakePlayerManager.getFakePlayers()) {
-            table.add(theme.label(fakePlayer.getName().getString()));
+            table.add(theme.label(fakePlayer.getName().getString() + (fakePlayer.server != null ? " (real)" : " (imitation)")));
             WMinus delete = table.add(theme.minus()).expandCellX().right().widget();
             delete.action = () -> {
                 FakePlayerManager.remove(fakePlayer);
