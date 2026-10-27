@@ -50,6 +50,16 @@ public final class Vanilla {
         player.swing(hand, SwingAnimation.DEFAULT, false);
     }
 
+    /** Swings for a real server-side player (singleplayer clone): broadcast to trackers happens inside swing(). */
+    public static void swingClone(net.minecraft.server.level.ServerPlayer player) {
+        player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
+    }
+
+    /** Whether the player is mid-swing (the swing state API differs between versions). */
+    public static boolean isSwinging(Player player) {
+        return player.isSwinging();
+    }
+
     // Blocks
 
     public static BlockPos copy(BlockPos pos) {

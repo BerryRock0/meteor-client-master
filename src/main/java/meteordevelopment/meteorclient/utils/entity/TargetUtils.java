@@ -46,7 +46,10 @@ public class TargetUtils {
         }
 
         FakePlayerManager.forEach(fp -> {
-            if (fp != null && isGood.test(fp)) targetList.add(fp);
+            // Server-backed clones already live in the world as real tracked players (found by
+            // the regular entity scan above); adding the pilot too would duplicate it - and the
+            // pilot's client-assigned entity id must never reach the server in an interact packet.
+            if (fp != null && fp.server == null && isGood.test(fp)) targetList.add(fp);
         });
 
         targetList.sort(sortPriority);
