@@ -24,7 +24,7 @@ import meteordevelopment.meteorclient.systems.modules.world.HighwayBuilder;
 import meteordevelopment.meteorclient.systems.modules.world.Telekinesis;
 import meteordevelopment.meteorclient.systems.modules.world.Damages;
 import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
@@ -84,8 +84,8 @@ public abstract class EntityMixin {
             args.set(0, (double) args.get(0) * multiplier);
             args.set(2, (double) args.get(2) * multiplier);
         }
-        // FakePlayerEntity
-        else if (entity instanceof FakePlayerEntity player && player.doNotPush) {
+        // CloneEntity
+        else if (entity instanceof CloneEntity player && player.doNotPush) {
             args.set(0, 0.0);
             args.set(2, 0.0);
         }

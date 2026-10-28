@@ -11,8 +11,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerManager;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneManager;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,19 +20,19 @@ import java.util.concurrent.CompletableFuture;
 
 import static net.minecraft.commands.SharedSuggestionProvider.suggest;
 
-public class FakePlayerArgumentType implements ArgumentType<String> {
-    private static final FakePlayerArgumentType INSTANCE = new FakePlayerArgumentType();
+public class CloneArgumentType implements ArgumentType<String> {
+    private static final CloneArgumentType INSTANCE = new CloneArgumentType();
     private static final Collection<String> EXAMPLES = List.of("seasnail8169", "MineGame159");
 
-    public static FakePlayerArgumentType create() {
+    public static CloneArgumentType create() {
         return INSTANCE;
     }
 
-    public static FakePlayerEntity get(CommandContext<?> context) {
-        return FakePlayerManager.get(context.getArgument("fp", String.class));
+    public static CloneEntity get(CommandContext<?> context) {
+        return CloneManager.get(context.getArgument("fp", String.class));
     }
 
-    private FakePlayerArgumentType() {
+    private CloneArgumentType() {
     }
 
     @Override
@@ -42,7 +42,7 @@ public class FakePlayerArgumentType implements ArgumentType<String> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return suggest(FakePlayerManager.stream().map(fakePlayerEntity -> fakePlayerEntity.getName().getString()), builder);
+        return suggest(CloneManager.stream().map(clone -> clone.getName().getString()), builder);
     }
 
     @Override

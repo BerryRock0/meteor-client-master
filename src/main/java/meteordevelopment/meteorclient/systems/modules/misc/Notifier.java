@@ -19,7 +19,7 @@ import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.friends.Friends;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
 import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 import meteordevelopment.orbit.EventHandler;
@@ -129,9 +129,9 @@ public class Notifier extends Module {
         .build()
     );
 
-    private final Setting<Boolean> visualRangeIgnoreFakes = sgVisualRange.add(new BoolSetting.Builder()
-        .name("ignore-fake-players")
-        .description("Ignores fake players.")
+    private final Setting<Boolean> visualRangeIgnoreClones = sgVisualRange.add(new BoolSetting.Builder()
+        .name("ignore-clones")
+        .description("Ignores clones.")
         .defaultValue(true)
         .build()
     );
@@ -210,7 +210,7 @@ public class Notifier extends Module {
     private void onEntityAdded(EntityAddedEvent event) {
         if (!event.entity.getUUID().equals(mc.player.getUUID()) && entities.get().contains(event.entity.getType()) && visualRange.get() && this.event.get() != Event.Despawn) {
             if (event.entity instanceof Player player) {
-                if ((!visualRangeIgnoreFriends.get() || !Friends.get().isFriend(player)) && (!visualRangeIgnoreFakes.get() || !(event.entity instanceof FakePlayerEntity))) {
+                if ((!visualRangeIgnoreFriends.get() || !Friends.get().isFriend(player)) && (!visualRangeIgnoreClones.get() || !(event.entity instanceof CloneEntity))) {
                     ChatUtils.sendMsg(event.entity.getId() + 100, ChatFormatting.GRAY, "(highlight)%s(default) has entered your visual range!", event.entity.getName().getString());
 
                     if (visualMakeSound.get())
@@ -234,7 +234,7 @@ public class Notifier extends Module {
     private void onEntityRemoved(EntityRemovedEvent event) {
         if (!event.entity.getUUID().equals(mc.player.getUUID()) && entities.get().contains(event.entity.getType()) && visualRange.get() && this.event.get() != Event.Spawn) {
             if (event.entity instanceof Player player) {
-                if ((!visualRangeIgnoreFriends.get() || !Friends.get().isFriend(player)) && (!visualRangeIgnoreFakes.get() || !(event.entity instanceof FakePlayerEntity))) {
+                if ((!visualRangeIgnoreFriends.get() || !Friends.get().isFriend(player)) && (!visualRangeIgnoreClones.get() || !(event.entity instanceof CloneEntity))) {
                     ChatUtils.sendMsg(event.entity.getId() + 100, ChatFormatting.GRAY, "(highlight)%s(default) has left your visual range!", event.entity.getName().getString());
 
                     if (visualMakeSound.get())

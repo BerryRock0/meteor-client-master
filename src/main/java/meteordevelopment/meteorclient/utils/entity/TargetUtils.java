@@ -7,8 +7,8 @@ package meteordevelopment.meteorclient.utils.entity;
 
 import meteordevelopment.meteorclient.systems.friends.Friends;
 import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerManager;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneManager;
 import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -45,8 +45,11 @@ public class TargetUtils {
             if (entity != null && isGood.test(entity)) targetList.add(entity);
         }
 
-        FakePlayerManager.forEach(fp -> {
-            if (fp != null && isGood.test(fp)) targetList.add(fp);
+        CloneManager.forEach(fp -> {
+            // Server-backed clones already live in the world as real tracked players (found by
+            // the regular entity scan above); adding the pilot too would duplicate it - and the
+            // pilot's client-assigned entity id must never reach the server in an interact packet.
+            if (fp != null && fp.server == null && isGood.test(fp)) targetList.add(fp);
         });
 
         targetList.sort(sortPriority);
@@ -64,7 +67,7 @@ public class TargetUtils {
             if (player.isDeadOrDying() || player.getHealth() <= 0) return false;
             if (!PlayerUtils.isWithin(entity, range)) return false;
             if (!Friends.get().shouldAttack(player)) return false;
-            if (entity instanceof FakePlayerEntity fakePlayer) return !fakePlayer.noHit;
+            if (entity instanceof CloneEntity clone) return !clone.noHit;
             return EntityUtils.getGameMode(player) == GameType.SURVIVAL;
         }, priority);
     }

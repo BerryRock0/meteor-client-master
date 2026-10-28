@@ -8,7 +8,7 @@ package meteordevelopment.meteorclient.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import meteordevelopment.meteorclient.mixininterface.IEntityRenderState;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -31,7 +31,7 @@ public abstract class EntityRenderDispatcherMixin {
     private <S extends EntityRenderState> void render(S renderState, CameraRenderState camera, double x, double y, double z, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CallbackInfo ci) {
         var entity = ((IEntityRenderState) renderState).meteor$getEntity();
 
-        if (entity instanceof FakePlayerEntity player && player.hideWhenInsideCamera) {
+        if (entity instanceof CloneEntity player && player.hideWhenInsideCamera) {
             int cX = Mth.floor(this.camera.position().x);
             int cY = Mth.floor(this.camera.position().y);
             int cZ = Mth.floor(this.camera.position().z);

@@ -12,7 +12,7 @@ import meteordevelopment.meteorclient.renderer.ShapeMode;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import meteordevelopment.meteorclient.utils.render.WireframeEntityRenderer;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.orbit.EventHandler;
@@ -123,12 +123,12 @@ public class PopChams extends Module {
         }
     }
 
-    private class GhostPlayer extends FakePlayerEntity {
+    private class GhostPlayer extends CloneEntity {
         private final UUID uuid;
         private double timer, scale = 1;
 
         public GhostPlayer(Player player) {
-            super(player, "ghost", 20, false);
+            super(player, "ghost", 20, 0);
 
             uuid = player.getUUID();
         }
