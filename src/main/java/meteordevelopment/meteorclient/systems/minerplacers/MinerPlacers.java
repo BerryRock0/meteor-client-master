@@ -6,8 +6,6 @@ import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
 import meteordevelopment.meteorclient.systems.System;
 import meteordevelopment.meteorclient.systems.Systems;
-import meteordevelopment.meteorclient.systems.minerplacers.events.MinerPlacerAddedEvent;
-import meteordevelopment.meteorclient.systems.minerplacers.events.MinerPlacerRemovedEvent;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.files.StreamUtils;
 import meteordevelopment.meteorclient.utils.misc.NbtUtils;
@@ -45,31 +43,23 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
         return Systems.get(MinerPlacers.class);
     }
     
-	public boolean add(MinerPlacer minerPlacer)
+	public void add(MinerPlacer minerPlacer)
 	{
         if (minerPlacers.contains(minerPlacer))
         {
             save();
-            return true;
+            return;
         }
 
         minerPlacers.add(minerPlacer);
         save();
-
-        MeteorClient.EVENT_BUS.post(new MinerPlacerAddedEvent(minerPlacer));
-
-		return false;
     }
     
-    public boolean remove(MinerPlacer minerPlacer)
+    public void remove(MinerPlacer minerPlacer)
     {
         boolean removed = minerPlacers.remove(minerPlacer);
-        if (removed) {
+        if (removed)
             save();
-            MeteorClient.EVENT_BUS.post(new MinerPlacerRemovedEvent(minerPlacer));
-        }
-
-        return removed;
     }
     
     public void removeAll(Collection<MinerPlacer> c) {
