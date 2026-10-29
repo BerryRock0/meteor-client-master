@@ -46,23 +46,20 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
 
     public void add(CloneUnit unit)
     {
-        boolean added = units.add(unit);
-        if (added)
-            save();
+        units.add(unit);
+        save();
     }
 
     public void remove(CloneUnit unit)
     {
-        boolean removed = units.remove(unit);
-        if (removed)
-			save();
+        units.remove(unit);
+		save();
     }
 
     public void removeAll(Collection<CloneUnit> c)
     {
-        boolean removed = units.removeAll(c);
-        if (removed)
-			save();
+        units.removeAll(c);
+		save();
     }
 
     public boolean isEmpty()
