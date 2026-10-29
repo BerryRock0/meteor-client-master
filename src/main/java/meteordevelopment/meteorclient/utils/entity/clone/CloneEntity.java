@@ -10,7 +10,7 @@ import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.mixin.AbstractClientPlayerAccessor;
 import meteordevelopment.meteorclient.mixin.EntityAccessor;
 import meteordevelopment.meteorclient.systems.modules.player.Clones;
-import meteordevelopment.meteorclient.systems.modules.player.CloneUnit;
+import meteordevelopment.meteorclient.systems.clones.CloneUnit;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.BlockPos;

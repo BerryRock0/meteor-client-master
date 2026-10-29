@@ -440,7 +440,7 @@ public class Modules extends System<Modules> {
         add(new ChestSwap());
         add(new Collisions());        
         add(new EXPThrower());
-        add(new FakePlayer());
+        add(new Clones());
         add(new FastUse());
         add(new GhostHand());
         add(new InstantRebreak());

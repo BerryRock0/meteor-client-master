@@ -7,7 +7,7 @@ package meteordevelopment.meteorclient.utils.entity.clone;
 
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.world.TickEvent;
-import meteordevelopment.meteorclient.systems.modules.player.CloneUnit;
+import meteordevelopment.meteorclient.systems.clones.CloneUnit;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.core.registries.BuiltInRegistries;
