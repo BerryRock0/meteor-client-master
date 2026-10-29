@@ -52,6 +52,7 @@ public class Systems {
         add(new Profiles());
         add(new Hud());
         add(new MinerPlacers());
+        add(new CloneUnits());
 
         MeteorClient.EVENT_BUS.subscribe(Systems.class);
     }
