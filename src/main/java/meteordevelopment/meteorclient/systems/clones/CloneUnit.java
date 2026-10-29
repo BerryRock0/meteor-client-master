@@ -3,7 +3,10 @@
  * Copyright (c) Meteor Development.
  */
 
-package meteordevelopment.meteorclient.systems.modules.player;
+package meteordevelopment.meteorclient.systems.clones;
+
+import java.util.Objects;
+import java.util.UUID;
 
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.DoubleSetting;
@@ -14,12 +17,10 @@ import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.settings.Settings;
 import meteordevelopment.meteorclient.settings.StringSetting;
 import meteordevelopment.meteorclient.utils.misc.ISerializable;
+import meteordevelopment.meteorclient.systems.modules.player.Clones;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-
-import java.util.Objects;
-import java.util.UUID;
 
 /**
  * A persistent description of one clone - the equivalent of a {@code MinerPlacer} worker unit.
@@ -28,7 +29,8 @@ import java.util.UUID;
  * {@link CloneUnits}) and brought back to life by enabling the {@link Clones} module, which runs
  * one live clone per unit.
  */
-public class CloneUnit implements ISerializable<CloneUnit> {
+public class CloneUnit implements ISerializable<CloneUnit>
+{
     public final Settings settings = new Settings();
 
     private final SettingGroup sgGeneral = settings.createGroup("General");

@@ -3,7 +3,13 @@
  * Copyright (c) Meteor Development.
  */
 
-package meteordevelopment.meteorclient.systems.modules.player;
+package meteordevelopment.meteorclient.systems.clones;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
@@ -17,12 +23,6 @@ import meteordevelopment.orbit.EventPriority;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Per-world storage of {@link CloneUnit}s - the clone equivalent of the worker units of
@@ -56,18 +56,18 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
         save();
     }
 
-    public boolean remove(CloneUnit unit)
+    public void remove(CloneUnit unit)
     {
         boolean removed = units.remove(unit);
-        if (removed) save();
-
-        return removed;
+        if (removed)
+			save();
     }
 
     public void removeAll(Collection<CloneUnit> c)
     {
         boolean removed = units.removeAll(c);
-        if (removed) save();
+        if (removed)
+			save();
     }
 
     public boolean isEmpty()
@@ -90,7 +90,9 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
     @Override
     public File getFile()
     {
-        if (!Utils.canUpdate()) return null;
+        if (!Utils.canUpdate())
+			return null;
+
         return new File(new File(MeteorClient.FOLDER, "clones"), Utils.getFileWorldName() + ".nbt");
     }
 
@@ -114,9 +116,7 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
         units.clear();
 
         for (Tag unitTag : tag.getListOrEmpty("units"))
-        {
             units.add(new CloneUnit(unitTag));
-        }
 
         return this;
     }
