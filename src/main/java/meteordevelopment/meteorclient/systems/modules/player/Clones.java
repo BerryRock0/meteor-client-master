@@ -5,7 +5,6 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
-import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.screens.EditSystemScreen;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
@@ -66,24 +65,11 @@ public class Clones extends Module
         CloneManager.clear();
     }
 
-    /** The engine: every unit keeps one live clone spawned at your position. */
-    @EventHandler
-    private void onTick(TickEvent.Pre event)
-    {
-        if (!Utils.canUpdate())
-			return;
-
-        for (CloneUnit unit : CloneUnits.get())
-        {
-            if (CloneManager.get(unit) == null)
-                CloneManager.add(unit);
-        }
-    }
-
     /** Nearest resource block within {@code range} of {@code origin}, or null. */
     public static BlockPos findNearestResource(Vec3 origin, double range)
     {
-        if (MeteorClient.mc.level == null) return null;
+        if (MeteorClient.mc.level == null)
+            return null;
 
         BlockPos best = null;
         double bestDist = range * range;
