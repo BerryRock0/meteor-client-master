@@ -128,15 +128,6 @@ public class CloneManager
         return clone;
     }
 
-    /**
-     * Public API overload: wraps the arguments into a transient unit (stored nowhere) with
-     * default settings and spawns it.
-     */
-    public static CloneEntity add(String name, float health)
-    {
-        return add(CloneUnit.transientOf(name, health));
-    }
-
     /** Spawns a clone with the unit defaults. */
     public static CloneEntity add()
     {
