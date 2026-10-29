@@ -13,8 +13,6 @@ import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.renderer.McTexture;
 import meteordevelopment.meteorclient.systems.System;
 import meteordevelopment.meteorclient.systems.Systems;
-import meteordevelopment.meteorclient.systems.waypoints.events.WaypointAddedEvent;
-import meteordevelopment.meteorclient.systems.waypoints.events.WaypointRemovedEvent;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.files.StreamUtils;
 import meteordevelopment.meteorclient.utils.misc.NbtUtils;
