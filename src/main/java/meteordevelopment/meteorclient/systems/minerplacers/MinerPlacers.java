@@ -45,14 +45,9 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
     
 	public void add(MinerPlacer minerPlacer)
 	{
-        if (minerPlacers.contains(minerPlacer))
-        {
+       boolean added = minerPlacers.add(minerPlacer); 
+        if (added)
             save();
-            return;
-        }
-
-        minerPlacers.add(minerPlacer);
-        save();
     }
     
     public void remove(MinerPlacer minerPlacer)
@@ -62,9 +57,11 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
             save();
     }
     
-    public void removeAll(Collection<MinerPlacer> c) {
+    public void removeAll(Collection<MinerPlacer> c)
+    {
         boolean removed = minerPlacers.removeAll(c);
-        if (removed) save();
+        if (removed)
+            save();
     }
     
     @EventHandler
@@ -86,7 +83,8 @@ public class MinerPlacers extends System<MinerPlacers> implements Iterable<Miner
         return new File(new File(MeteorClient.FOLDER, "minerplacers"), Utils.getFileWorldName() + ".nbt");
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return minerPlacers.isEmpty();
     }
 
