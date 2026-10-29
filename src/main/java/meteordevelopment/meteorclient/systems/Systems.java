@@ -17,6 +17,7 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.profiles.Profiles;
 import meteordevelopment.meteorclient.systems.waypoints.Waypoints;
 import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacers;
+import meteordevelopment.meteorclient.systems.clones.CloneUnits;
 import meteordevelopment.orbit.EventHandler;
 
 import java.io.File;
