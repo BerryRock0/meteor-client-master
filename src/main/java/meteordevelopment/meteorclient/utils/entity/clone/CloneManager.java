@@ -153,7 +153,8 @@ public class CloneManager
     public static void remove(CloneUnit unit)
     {
         CloneEntity fp = get(unit);
-        if (fp != null) remove(fp);
+        if (fp != null)
+			remove(fp);
     }
 
     public static void remove(CloneEntity fp)
@@ -198,7 +199,9 @@ public class CloneManager
 
     private static void subscribeTicker()
     {
-        if (tickerSubscribed) return;
+        if (tickerSubscribed)
+			return;
+
         MeteorClient.EVENT_BUS.subscribe(CloneManager.class);
         tickerSubscribed = true;
     }
@@ -210,9 +213,10 @@ public class CloneManager
      * as usual and are skipped.
      */
     @EventHandler
-    private static void onTick(TickEvent.Pre event) {
+    private static void onTick(TickEvent.Pre event)
+    {
         if (ENTITIES.isEmpty())
-        return;
+			return;
 
         // Left the world: drop stale pilots (their server clones go with the shutting-down server).
         if (!Utils.canUpdate())
@@ -224,7 +228,8 @@ public class CloneManager
         for (Iterator<CloneEntity> it = ENTITIES.iterator(); it.hasNext(); )
         {
             CloneEntity fp = it.next();
-            if (fp.server == null) continue;
+            if (fp.server == null)
+				continue;
 
             if (!fp.server.isAlive() || !fp.server.isInExpectedLevel())
             {
