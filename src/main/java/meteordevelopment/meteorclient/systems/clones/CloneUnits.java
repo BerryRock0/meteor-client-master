@@ -98,12 +98,6 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
     }
 
     @Override
-    public @NotNull Iterator<CloneUnit> iterator()
-    {
-        return units.iterator();
-    }
-
-    @Override
     public CompoundTag toTag()
     {
         CompoundTag tag = new CompoundTag();
