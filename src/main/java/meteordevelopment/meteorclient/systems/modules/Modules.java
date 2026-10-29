@@ -552,6 +552,7 @@ public class Modules extends System<Modules> {
         add(new MobControl());
         add(new NoGhostBlocks());
         add(new Nuker());
+        add(new MultiBreak());
         add(new PacketMine());
         add(new Quantities());
         add(new StashFinder());
