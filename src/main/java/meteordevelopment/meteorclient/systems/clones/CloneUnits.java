@@ -46,19 +46,25 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
 
     public void add(CloneUnit unit)
     {
-        units.add(unit);
+        if(!units.contains(unit))
+            units.add(unit);
+
         save();
     }
 
     public void remove(CloneUnit unit)
     {
-        units.remove(unit);
+        if (units.contains(unit))
+            units.remove(unit);
+
 		save();
     }
 
     public void removeAll(Collection<CloneUnit> c)
     {
-        units.removeAll(c);
+        if (units.containsAll(c))
+            units.removeAll(c);    
+
 		save();
     }
 
