@@ -115,4 +115,28 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
 
         return this;
     }
+
+    private final class CloneIterator implements Iterator<CloneUnit>
+    {
+        private final Iterator<CloneUnit> it = units.iterator();
+
+        @Override
+        public boolean hasNext()
+        {
+            return it.hasNext();
+        }
+
+        @Override
+        public CloneUnit next()
+        {
+            return it.next();
+        }
+
+        @Override
+        public void remove()
+        {
+            it.remove();
+            save();
+        }
+    }    
 }
