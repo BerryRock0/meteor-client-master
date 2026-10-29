@@ -9,7 +9,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import meteordevelopment.meteorclient.commands.Command;
 import meteordevelopment.meteorclient.commands.arguments.CloneArgumentType;
-import meteordevelopment.meteorclient.systems.modules.player.CloneUnit;
+import meteordevelopment.meteorclient.systems.clones.CloneUnit;
 import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import meteordevelopment.meteorclient.utils.entity.clone.CloneManager;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
