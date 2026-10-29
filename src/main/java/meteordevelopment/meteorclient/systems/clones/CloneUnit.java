@@ -191,18 +191,6 @@ public class CloneUnit implements ISerializable<CloneUnit>
         fromTag(nbt);
     }
 
-    /**
-     * Wraps one-off spawn parameters of the public {@code CloneManager#add} API into a unit
-     * that is not stored in {@link CloneUnits}.
-     */
-    public static CloneUnit transientOf(String name, float health)
-    {
-        CloneUnit unit = new Builder().build();
-        unit.name.set(name);
-        unit.maxHealth.set((double) health);
-        return unit;
-    }
-
     public static class Builder
     {
         public CloneUnit build()
