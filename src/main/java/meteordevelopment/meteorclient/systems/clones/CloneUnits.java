@@ -70,6 +70,12 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
         return units.isEmpty();
     }
 
+    @Override
+    public @NotNull Iterator<CloneUnit> iterator()
+    {
+        return new CloneIterator();
+    }
+
     @EventHandler
     private void onGameJoined(GameJoinedEvent event)
     {
