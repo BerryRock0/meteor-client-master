@@ -13,7 +13,7 @@ import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import meteordevelopment.meteorclient.utils.misc.Keybind;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
@@ -55,7 +55,7 @@ public class Blink extends Module {
     );
 
     private final List<ServerboundMovePlayerPacket> packets = new ArrayList<>();
-    private FakePlayerEntity model;
+    private CloneEntity model;
     private final Vector3d start = new Vector3d();
 
     private boolean cancelled, sending;
@@ -72,7 +72,7 @@ public class Blink extends Module {
         if (!Utils.canUpdate()) return;
 
         if (renderOriginal.get()) {
-            model = new FakePlayerEntity(mc.player, mc.player.getGameProfile().name(), 20, true);
+            model = new CloneEntity(mc.player, mc.player.getGameProfile().name(), 20, 0);
             model.doNotPush = true;
             model.hideWhenInsideCamera = true;
             model.noHit = true;

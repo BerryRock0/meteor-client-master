@@ -8,7 +8,7 @@ package meteordevelopment.meteorclient.utils.entity;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import meteordevelopment.meteorclient.utils.Utils;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -128,7 +128,7 @@ public class DamageUtils {
 
     private static float explosionDamage(LivingEntity target, Vec3 explosionPos, float power, boolean predictMovement, RaycastFactory raycastFactory) {
         if (target == null) return 0f;
-        if (target instanceof Player player && EntityUtils.getGameMode(player) == GameType.CREATIVE && !(player instanceof FakePlayerEntity))
+        if (target instanceof Player player && EntityUtils.getGameMode(player) == GameType.CREATIVE && !(player instanceof CloneEntity))
             return 0f;
 
         Vec3 position = predictMovement ? target.position().add(target.getDeltaMovement()) : target.position();

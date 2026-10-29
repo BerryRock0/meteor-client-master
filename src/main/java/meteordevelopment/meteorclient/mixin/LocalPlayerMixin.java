@@ -21,7 +21,7 @@ import meteordevelopment.meteorclient.systems.modules.player.LiquidInteract;
 import meteordevelopment.meteorclient.systems.modules.player.Collisions;
 import meteordevelopment.meteorclient.systems.modules.player.Portals;
 import meteordevelopment.meteorclient.systems.modules.world.MobControl;
-import meteordevelopment.meteorclient.utils.entity.fakeplayer.FakePlayerEntity;
+import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -121,7 +121,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
         if (original instanceof EntityHitResult ehr) {
             if (Modules.get().get(Collisions.class).emptyEntity(ehr.getEntity()) && blockHitResult.getType() == HitResult.Type.BLOCK) {
                 return blockHitResult;
-            } else if (ehr.getEntity() instanceof FakePlayerEntity fakePlayer && fakePlayer.noHit) {
+            } else if (ehr.getEntity() instanceof CloneEntity clone && clone.noHit) {
                 return blockHitResult;
             }
         }
