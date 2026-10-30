@@ -7,14 +7,13 @@ package meteordevelopment.meteorclient.commands.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import meteordevelopment.meteorclient.commands.Command;
+import meteordevelopment.meteorclient.utils.player.FakeGamemode;
 import net.minecraft.client.multiplayer.ClientSuggestionProvider;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.level.GameType;
 
 public class GamemodeCommand extends Command {
     public GamemodeCommand() {
-        super("gamemode", "Changes your gamemode. Real in singleplayer, client-side on servers.", "gm");
+        super("gamemode", "Changes your gamemode. Really where the server allows it (always in singleplayer), otherwise an invisible client-side fake.", "gm");
     }
 
     @Override
@@ -26,55 +25,24 @@ public class GamemodeCommand extends Command {
                     return 0;
                 }
 
-                // Switch the client-side mode right away: block breaking, the creative
-                // inventory screen and every prediction key off getPlayerMode().
-                mc.gameMode.setLocalMode(gameMode);
+                GameType confirmed = FakeGamemode.serverConfirmed();
 
-                // Mirror the mode into the player abilities so everything that checks
-                // isCreative()/hasInfiniteMaterials() - infinite items, creative flight,
-                // instant building - behaves like the real thing instead of only looking
-                // like it.
-                applyAbilities(gameMode);
-
-                // Singleplayer: change the actual gamemode on the integrated server, so it
-                // is a real change - the server accepts everything vanilla would (creative
-                // inventory gives real items, block actions are not rolled back, no fall
-                // damage, ...). On multiplayer servers this stays client-side only.
-                if (mc.hasSingleplayerServer() && mc.getSingleplayerServer() != null) {
-                    ServerPlayer serverPlayer = mc.getSingleplayerServer().getPlayerList().getPlayer(mc.player.getUUID());
-                    if (serverPlayer != null) serverPlayer.gameMode.changeGameModeForPlayer(gameMode);
+                if (gameMode == confirmed) {
+                    // The server already has this mode: make everything real - sync the
+                    // local state and drop any fake that may still be armed.
+                    FakeGamemode.disarm();
+                    info("Gamemode changed to " + gameMode.getName() + ".");
+                } else {
+                    // Real attempt first (vanilla flow in singleplayer, the vanilla
+                    // gamemode packet on servers); while the server has not granted the
+                    // mode, an invisible client-side fake keeps it working locally.
+                    FakeGamemode.arm(gameMode);
+                    if (confirmed == null) info("Gamemode changed to " + gameMode.getName() + ".");
+                    else info("Requested " + gameMode.getName() + ": real if the server allows it, otherwise an invisible client-side fake.");
                 }
 
-                info("Gamemode changed to " + gameMode.getName() + ".");
                 return SINGLE_SUCCESS;
             }));
-        }
-    }
-
-    private static void applyAbilities(GameType gameMode) {
-        Abilities abilities = mc.player.getAbilities();
-
-        switch (gameMode) {
-            case CREATIVE -> {
-                abilities.instabuild = true;   // isCreative(): infinite items, no consumption
-                abilities.mayfly = true;       // allows creative flight
-                abilities.invulnerable = true; // no damage
-                abilities.mayBuild = true;     // can place/break
-            }
-            case SPECTATOR -> {
-                abilities.instabuild = false;
-                abilities.mayfly = true;
-                abilities.flying = true;
-                abilities.invulnerable = true;
-                abilities.mayBuild = false;
-            }
-            default -> {
-                abilities.instabuild = false;
-                abilities.mayfly = false;
-                abilities.flying = false;
-                abilities.invulnerable = false;
-                abilities.mayBuild = true;
-            }
         }
     }
 }
