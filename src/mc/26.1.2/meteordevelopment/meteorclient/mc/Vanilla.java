@@ -26,7 +26,6 @@ import com.mojang.authlib.*;
 import com.mojang.authlib.yggdrasil.*;
 import com.mojang.authlib.minecraft.*;
 import org.lwjgl.*;
-import org.lwjgl.sdl.*;
 import org.lwjgl.glfw.*;
 
 import it.unimi.dsi.fastutil.*;
@@ -188,7 +187,7 @@ public final class Vanilla
 
     public static final int SUPER_KEY_RIGHT = InputConstants.KEY_RSUPER;
 
-    public static int scancode(net.minecraft.client.input.KeyEvent event)
+    public static int scancode(KeyEvent event)
     {
         return event.scancode();
     }
@@ -321,7 +320,7 @@ public final class Vanilla
 
     public static <S> void submitBannerModel(SubmitNodeCollector collector, Model<? super S> model, S state, PoseStack poseStack, int light, int overlay, int outlineColor, SpriteId sprite, SpriteGetter sprites, int color, Object crumblingOverlay)
     {
-        collector.submitModel(model, state, poseStack, light, overlay, outlineColor, sprite, sprites, color, (net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay) crumblingOverlay);
+        collector.submitModel(model, state, poseStack, light, overlay, outlineColor, sprite, sprites, color, (ModelFeatureRenderer.CrumblingOverlay) crumblingOverlay);
     }
 
     /**
@@ -353,13 +352,13 @@ public final class Vanilla
         YggdrasilAuthenticationService service = (YggdrasilAuthenticationService) authService;
         MinecraftAccessor mca = (MinecraftAccessor) mc;
         SignatureValidator.from(service.getServicesKeySet(), ServicesKeyType.PROFILE_KEY);
-        resources.SkinManager.TextureCache skinCache = ((SkinManagerAccessor) mc.getSkinManager()).meteor$getSkinTextures();
+        SkinManager.TextureCache skinCache = ((SkinManagerAccessor) mc.getSkinManager()).meteor$getSkinTextures();
         Path skinCachePath = ((FileCacheAccessor) skinCache).meteor$getRoot();
         mca.meteor$setServices(Services.create(service, mc.gameDirectory));
         mca.meteor$setSkinManager(new SkinManager(skinCachePath, mc.services(), new SkinTextureDownloader(mc.getProxy(), mc.getTextureManager(), mc), mc));
     }
 
-    public static void setSession(net.minecraft.client.User session)
+    public static void setSession(User session)
     {
         meteordevelopment.meteorclient.mixin.MinecraftAccessor mca = (MinecraftAccessor) mc;
         mca.meteor$setUser(session);
@@ -379,12 +378,12 @@ public final class Vanilla
 
     public static Object createAlteningService(Object environment)
     {
-        return new YggdrasilAuthenticationService(mc.getProxy(), (com.mojang.authlib.Environment) environment);
+        return new YggdrasilAuthenticationService(mc.getProxy(), (Environment) environment);
     }
 
     public static String alteningAuthUrl(Object environment)
     {
-        return ((com.mojang.authlib.Environment) environment).servicesHost() + "/authenticate";
+        return ((Environment) environment).servicesHost() + "/authenticate";
     }
 
     // Packets
