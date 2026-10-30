@@ -50,7 +50,7 @@ public class MeshBuilder {
         primitiveIndicesCount = drawMode.primitiveLength;
     }
 
-    public MeshBuilder(VertexFormat format, PrimitiveTopology drawMode, int vertexCount, int indexCount) {
+    public MeshBuilder(VertexFormat format, VertexFormat.Mode drawMode, int vertexCount, int indexCount) {
         this(format, drawMode);
         allocateBuffers(vertexCount, indexCount);
     }
@@ -84,22 +84,138 @@ public class MeshBuilder {
         return building;
     }
 
+    public MeshBuilder vec3(double x, double y, double z) {
+        debugVertexBufferCapacity();
+
+        long p = verticesPointer;
+
+        memPutFloat(p, (float) (x - cameraX));
+        memPutFloat(p + 4, (float) y);
+        memPutFloat(p + 8, (float) (z - cameraZ));
+
+        verticesPointer += 12;
+        return this;
+    }
+
+    public MeshBuilder vec2(double x, double y) {
+        debugVertexBufferCapacity();
+
+        long p = verticesPointer;
+
+        memPutFloat(p, (float) x);
+        memPutFloat(p + 4, (float) y);
+
+        verticesPointer += 8;
+        return this;
+    }
+
+    public MeshBuilder color(Color c) {
+        debugVertexBufferCapacity();
+
+        long p = verticesPointer;
+
+        memPutByte(p, (byte) c.r);
+        memPutByte(p + 1, (byte) c.g);
+        memPutByte(p + 2, (byte) c.b);
+        memPutByte(p + 3, (byte) (c.a * (float) alpha));
+
+        verticesPointer += 4;
+        return this;
+    }
+
+    public int next() {
+        return vertexI++;
+    }
+
+    public void line(int i1, int i2) {
+        debugIndexBufferCapacity();
+
+        long p = indicesPointer + indicesCount * 4L;
+
+        memPutInt(p, i1);
+        memPutInt(p + 4, i2);
+
+        indicesCount += 2;
+    }
+
+    public void quad(int i1, int i2, int i3, int i4) {
+        debugIndexBufferCapacity();
+
+        long p = indicesPointer + indicesCount * 4L;
+
+        memPutInt(p, i1);
+        memPutInt(p + 4, i2);
+        memPutInt(p + 8, i3);
+
+        memPutInt(p + 12, i3);
+        memPutInt(p + 16, i4);
+        memPutInt(p + 20, i1);
+
+        indicesCount += 6;
+    }
+
+    public void triangle(int i1, int i2, int i3) {
+        debugIndexBufferCapacity();
+
+        long p = indicesPointer + indicesCount * 4L;
+
+        memPutInt(p, i1);
+        memPutInt(p + 4, i2);
+        memPutInt(p + 8, i3);
+
+        indicesCount += 3;
+    }
+
+    public void ensureQuadCapacity() {
+        ensureCapacity(4, 6);
+    }
+
+    public void ensureTriCapacity() {
+        ensureCapacity(3, 3);
+    }
+
+    public void ensureLineCapacity() {
+        ensureCapacity(2, 2);
+    }
+
     public void ensureCapacity(int vertexCount, int indexCount) {
-        if (vertices == null || vertexCount * primitiveVerticesSize > vertices.capacity() || indexCount * 4 > (indices != null ? indices.capacity() : 0)) {
-            allocateBuffers(vertexCount, indexCount);
+        if (DEBUG && (indexCount % primitiveIndicesCount != 0)) {
+            throw new IllegalArgumentException("Unexpected amount of indices written to MeshBuilder.");
+        }
+
+        if (vertices == null || indices == null) {
+            allocateBuffers(256 * 4, 512 * 4);
+            return;
+        }
+
+        if ((vertexI + vertexCount) * primitiveVerticesSize >= vertices.capacity()) {
+            int offset = getVerticesOffset();
+            int newSize = Math.max(vertices.capacity() * 2, vertices.capacity() + vertexCount * primitiveVerticesSize);
+            ByteBuffer newVertices = BufferUtils.createByteBuffer(newSize);
+            memCopy(memAddress0(vertices), memAddress0(newVertices), offset);
+
+            vertices = newVertices;
+            verticesPointerStart = memAddress0(vertices);
+            verticesPointer = verticesPointerStart + offset;
+        }
+
+        if ((indicesCount + indexCount) * Integer.BYTES >= indices.capacity()) {
+            int newSize = Math.max(indices.capacity() * 2, indices.capacity() + indexCount * Integer.BYTES);
+
+            ByteBuffer newIndices = BufferUtils.createByteBuffer(newSize);
+            memCopy(memAddress0(indices), memAddress0(newIndices), indicesCount * 4L);
+
+            indices = newIndices;
+            indicesPointer = memAddress0(indices);
         }
     }
 
-    public void allocateBuffers(int vertexCount, int indexCount) {
-        vertices = BufferUtils.createByteBuffer(vertexCount * primitiveVerticesSize);
-        indices = BufferUtils.createByteBuffer(indexCount * 4);
+    private void allocateBuffers(int vertexCount, int indexCount) {
+        vertices = BufferUtils.createByteBuffer(primitiveVerticesSize * vertexCount);
+        verticesPointer = verticesPointerStart = memAddress0(vertices);
 
-        verticesPointerStart = memAddress(vertices);
-        verticesPointer = verticesPointerStart;
-        indicesPointer = memAddress(indices);
-
-        vertexI = 0;
-        indicesCount = 0;
+        indices = BufferUtils.createByteBuffer(indexCount * Integer.BYTES);
+        indicesPointer = memAddress0(indices);
     }
 
     public int getPrimitiveVerticesSize() {
@@ -173,5 +289,17 @@ public class MeshBuilder {
 
     private int getVerticesOffset() {
         return (int) (verticesPointer - verticesPointerStart);
+    }
+
+    private void debugVertexBufferCapacity() {
+        if (DEBUG && (vertices == null || (verticesPointer - verticesPointerStart + primitiveVerticesSize) > vertices.capacity())) {
+            throw new IndexOutOfBoundsException("Vertices written to MeshBuilder without calling 'ensureCapacity()' first!");
+        }
+    }
+
+    private void debugIndexBufferCapacity() {
+        if (DEBUG && (indices == null || (indicesCount + primitiveIndicesCount) * Integer.BYTES > indices.capacity())) {
+            throw new IndexOutOfBoundsException("Indices written to MeshBuilder without calling 'ensureCapacity()' first!");
+        }
     }
 }
