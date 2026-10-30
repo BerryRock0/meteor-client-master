@@ -50,6 +50,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.material.*;
 import net.minecraft.world.level.dimension.*;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.blockentity.*;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.saveddata.maps.*;
