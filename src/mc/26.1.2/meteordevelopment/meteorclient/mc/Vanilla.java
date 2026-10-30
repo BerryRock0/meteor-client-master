@@ -82,7 +82,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screens.*;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.gui.screens.inventory.tooltip.*;
-import net.minecraft.server.*
+import net.minecraft.server.*;
 import net.minecraft.server.level.*;
 
 import meteordevelopment.meteorclient.mixin.*;
