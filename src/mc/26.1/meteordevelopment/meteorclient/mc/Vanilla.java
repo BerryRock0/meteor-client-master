@@ -340,7 +340,7 @@ public final class Vanilla {
         DyeColor color,
         BannerPatternLayers patterns
     ) {
-        blockentity.BannerRenderer.submitPatterns(sprites, poseStack, collector, light, overlay, model, state, renderOverlay, color, patterns, null);
+        BannerRenderer.submitPatterns(sprites, poseStack, collector, light, overlay, model, state, renderOverlay, color, patterns, null);
     }
 
     public static <S> void submitBannerModel(
@@ -401,7 +401,7 @@ public final class Vanilla {
         UserApiService apiService = service.createUserApiService(session.getAccessToken());
         mca.meteor$setUserApiService(apiService);
         mca.meteor$setProfileKeyPairManager(ProfileKeyPairManager.create(apiService, session, mc.gameDirectory.toPath()));
-        mca.meteor$setReportingContext(chat.report.ReportingContext.create(ReportEnvironment.local(), apiService));
+        mca.meteor$setReportingContext(ReportingContext.create(ReportEnvironment.local(), apiService));
         mca.meteor$setProfileFuture(CompletableFuture.supplyAsync(() -> mc.services().sessionService().fetchProfile(mc.getUser().getProfileId(), true), Util.ioPool()));
     }
 
