@@ -117,7 +117,8 @@ public final class Vanilla
     }
 
     /** Whether the player is mid-swing (the swing state API differs between versions). */
-    public static boolean isSwinging(Player player) {
+    public static boolean isSwinging(Player player)
+    {
         return player.swinging;
     }
 
@@ -165,8 +166,7 @@ public final class Vanilla
         mc.getConnection().send(new ServerboundSwingPacket(hand));
     }
 
-    public static void dropMainHand(LocalPlayer player)
-    {
+    public static void dropMainHand(LocalPlayer player) {
         player.drop(true);
     }
 
@@ -188,7 +188,7 @@ public final class Vanilla
 
     public static final int SUPER_KEY_RIGHT = InputConstants.KEY_RSUPER;
 
-    public static int scancode(KeyEvent event)
+    public static int scancode(net.minecraft.client.input.KeyEvent event)
     {
         return event.scancode();
     }
@@ -216,7 +216,7 @@ public final class Vanilla
     }
 
     // Transforms
-    public static void rotate(PoseStack poseStack, Axis axis, float degrees)
+    public static void rotate(PoseStack poseStack, com.mojang.math.Axis axis, float degrees)
     {
         poseStack.mulPose(axis.rotationDegrees(degrees));
     }
@@ -232,18 +232,15 @@ public final class Vanilla
         return ((EnderMan) entity).isCreepy();
     }
 
-
     public static void tooltip(GuiGraphicsExtractor graphics, Font font, List<ClientTooltipComponent> components, int x, int y, ItemStack stack)
     {
         graphics.tooltip(font, components, x, y, DefaultTooltipPositioner.INSTANCE, stack.get(DataComponents.TOOLTIP_STYLE));
     }
 
-
     public static boolean isSameFluid(Fluid a, Fluid b)
     {
         return a.isSame(b);
     }
-
 
     public static ClientLevel createClientLevel(ClientPacketListener listener, ClientLevel.ClientLevelData data, ResourceKey<Level> dimension, Holder<DimensionType> dimensionType, int x, int z, LevelRenderer extractor, boolean isClientSide, int seaLevel)
     {
@@ -256,7 +253,7 @@ public final class Vanilla
         return new McTexture(new DynamicTexture(name, image));
     }
 
-    public static void registerTexture(Identifier id, McTexture texture)
+    public static void registerTexture(Identifier id, McTexture texture) 
     {
         mc.getTextureManager().register(id, (DynamicTexture) texture.handle());
     }
@@ -276,7 +273,6 @@ public final class Vanilla
     {
         return components.get(DataComponents.CONTAINER).allItemsCopyStream().toList();
     }
-
 
     public static NativeImage mapImage(MapTextureManagerAccessor accessor, MapId id, MapItemSavedData state)
     {
@@ -313,21 +309,19 @@ public final class Vanilla
         return GLFW.glfwGetMouseButton(mc.getWindow().handle(), button) != InputConstants.RELEASE;
     }
 
-
     public static BakedQuad.MaterialInfo translucentMaterialInfo(BakedQuad.MaterialInfo info)
     {
-        return new BakedQuad.MaterialInfo(info.sprite(), ChunkSectionLayer.TRANSLUCENT, info.itemRenderType(), info.tintIndex(), info.shade(), info.lightEmission());
+        return new BakedQuad.MaterialInfo(info.sprite(),ChunkSectionLayer.TRANSLUCENT, info.itemRenderType(), info.tintIndex(), info.shade(), info.lightEmission());
     }
 
-
-    public static <S> void submitBannerPatterns(SpriteGetter sprites, PoseStack poseStack, SubmitNodeCollector collector, int light, int overlay, Model<S> model, S state, boolean renderOverlay, DyeColor color, BannerPatternLayers patterns
-    ) {
+    public static <S> void submitBannerPatterns(SpriteGetter sprites,PoseStack poseStack, SubmitNodeCollector collector, int light, int overlay, Model<S> model, S state, boolean renderOverlay, DyeColor color, BannerPatternLayers patterns)
+    {
         BannerRenderer.submitPatterns(sprites, poseStack, collector, light, overlay, model, state, renderOverlay, color, patterns, null);
     }
 
-    public static <S> void submitBannerModel(SubmitNodeCollector collector,Model<? super S> model, S state, PoseStack poseStack, int light, int overlay, int outlineColor, SpriteId sprite, SpriteGetter sprites, int color, Object crumblingOverlay)
+    public static <S> void submitBannerModel(SubmitNodeCollector collector, Model<? super S> model, S state, PoseStack poseStack, int light, int overlay, int outlineColor, SpriteId sprite, SpriteGetter sprites, int color, Object crumblingOverlay)
     {
-        collector.submitModel(model, state, poseStack, light, overlay, outlineColor, sprite, sprites, color, (ModelFeatureRenderer.CrumblingOverlay) crumblingOverlay);
+        collector.submitModel(model, state, poseStack, light, overlay, outlineColor, sprite, sprites, color, (net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay) crumblingOverlay);
     }
 
     /**
@@ -359,7 +353,7 @@ public final class Vanilla
         YggdrasilAuthenticationService service = (YggdrasilAuthenticationService) authService;
         MinecraftAccessor mca = (MinecraftAccessor) mc;
         SignatureValidator.from(service.getServicesKeySet(), ServicesKeyType.PROFILE_KEY);
-        SkinManager.TextureCache skinCache = ((SkinManagerAccessor) mc.getSkinManager()).meteor$getSkinTextures();
+        resources.SkinManager.TextureCache skinCache = ((SkinManagerAccessor) mc.getSkinManager()).meteor$getSkinTextures();
         Path skinCachePath = ((FileCacheAccessor) skinCache).meteor$getRoot();
         mca.meteor$setServices(Services.create(service, mc.gameDirectory));
         mca.meteor$setSkinManager(new SkinManager(skinCachePath, mc.services(), new SkinTextureDownloader(mc.getProxy(), mc.getTextureManager(), mc), mc));
@@ -367,8 +361,9 @@ public final class Vanilla
 
     public static void setSession(net.minecraft.client.User session)
     {
-        MinecraftAccessor mca = (MinecraftAccessor) mc;
+        meteordevelopment.meteorclient.mixin.MinecraftAccessor mca = (MinecraftAccessor) mc;
         mca.meteor$setUser(session);
+
         YggdrasilAuthenticationService service = new YggdrasilAuthenticationService(mc.getProxy());
         UserApiService apiService = service.createUserApiService(session.getAccessToken());
         mca.meteor$setUserApiService(apiService);
@@ -379,17 +374,17 @@ public final class Vanilla
 
     public static Object createAlteningEnvironment()
     {
-        return new Environment("https://sessionserver.thealtening.com", "https://authserver.thealtening.com", "https://api.mojang.com", "The Altening");
+        return new com.mojang.authlib.Environment("https://sessionserver.thealtening.com", "https://authserver.thealtening.com", "https://api.mojang.com", "The Altening");
     }
 
     public static Object createAlteningService(Object environment)
     {
-        return new YggdrasilAuthenticationService(mc.getProxy(), (Environment) environment);
+        return new YggdrasilAuthenticationService(mc.getProxy(), (com.mojang.authlib.Environment) environment);
     }
 
     public static String alteningAuthUrl(Object environment)
     {
-        return ((Environment) environment).servicesHost() + "/authenticate";
+        return ((com.mojang.authlib.Environment) environment).servicesHost() + "/authenticate";
     }
 
     // Packets
@@ -438,10 +433,10 @@ public final class Vanilla
     {
         Util.getPlatform().openUri(URI.create(url));
     }
-
+ 
     // Gui / screens (26.1 keeps screen management on Minecraft itself)
-    public static Screen screen() 
-    
+    public static Screen screen()
+    {
         return mc.screen;
     }
 
@@ -476,7 +471,7 @@ public final class Vanilla
         return mc.gameRenderer.getGameRenderState();
     }
 
-    public static net.minecraft.client.Camera mainCamera()
+    public static Camera mainCamera()
     {
         return mc.gameRenderer.getMainCamera();
     }
@@ -535,7 +530,6 @@ public final class Vanilla
     {
         return ((ILevelRenderer) (Object) mc.levelRenderer).meteor$destructionProgress();
     }
-
 
     // Weathered copper lookups (26.1 keeps the plain block constants)
     public static Block oxidizedCopper()
