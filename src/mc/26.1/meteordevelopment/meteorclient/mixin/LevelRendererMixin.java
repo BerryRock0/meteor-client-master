@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
+import meteordevelopment.meteorclient.mc.Vanilla;
 import net.minecraft.world.entity.Entity;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -85,11 +86,11 @@ public abstract class LevelRendererMixin implements ILevelRenderer {
                 new SubmitNodeStorage(),
                 mc.getModelManager(),
                 mc.renderBuffers().bufferSource(),
-                mc.getAtlasManager(),
+                Vanilla.atlasManager(),
                 mc.renderBuffers().outlineBufferSource(),
                 mc.renderBuffers().crumblingBufferSource(),
                 mc.font,
-                mc.gameRenderer.getGameRenderState()
+                Vanilla.gameRenderState()
             );
         }
 

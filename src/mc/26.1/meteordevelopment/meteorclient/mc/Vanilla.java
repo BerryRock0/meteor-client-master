@@ -24,6 +24,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.client.resources.model.AtlasManager;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -276,6 +277,14 @@ public final class Vanilla {
         );
     }
 
+
+    public static net.minecraft.client.resources.model.sprite.SpriteGetter bannerSpriteGetter() {
+        return mc.getModelManager().getAtlas(net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS).getSpriteGetter();
+    }
+
+    public static net.minecraft.client.resources.model.AtlasManager atlasManager() {
+        return mc.getModelManager().getAtlasManager();
+    }
 
     public static <S> void submitBannerPatterns(
         net.minecraft.client.resources.model.sprite.SpriteGetter sprites,

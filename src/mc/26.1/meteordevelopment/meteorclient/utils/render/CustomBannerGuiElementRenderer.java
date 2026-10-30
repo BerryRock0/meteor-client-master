@@ -13,17 +13,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
-import net.minecraft.client.resources.model.AtlasManager;
 import org.jspecify.annotations.NonNull;
 
 public class CustomBannerGuiElementRenderer extends PictureInPictureRenderer<CustomBannerGuiElementRenderState> {
     private final SpriteGetter sprites;
     private final MultiBufferSource.BufferSource bufferSource;
 
-    public CustomBannerGuiElementRenderer(MultiBufferSource.BufferSource bufferSource, AtlasManager atlasManager) {
+    public CustomBannerGuiElementRenderer(MultiBufferSource.BufferSource bufferSource) {
         super(bufferSource);
         this.bufferSource = bufferSource;
-        this.sprites = atlasManager.getBannerSpriteGetter();
+        this.sprites = Vanilla.bannerSpriteGetter();
     }
 
     @Override
