@@ -1,0 +1,114 @@
+/*
+ * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
+ * Copyright (c) Meteor Development.
+ */
+
+package meteordevelopment.meteorclient.commands.commands;
+
+import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import meteordevelopment.meteorclient.MeteorClient;
+import meteordevelopment.meteorclient.commands.Command;
+import meteordevelopment.meteorclient.gui.GuiThemes;
+import meteordevelopment.meteorclient.gui.screens.FileBrowserScreen;
+import meteordevelopment.meteorclient.mc.Vanilla;
+import meteordevelopment.meteorclient.mixin.MapTextureManagerAccessor;
+import net.minecraft.client.multiplayer.ClientSuggestionProvider;
+import net.minecraft.client.resources.MapTextureManager;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.jspecify.annotations.Nullable;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.io.File;
+import java.io.IOException;
+
+public class SaveMapCommand extends Command {
+    private static final SimpleCommandExceptionType MAP_NOT_FOUND = new SimpleCommandExceptionType(Component.literal("You must be holding a filled map."));
+    private static final SimpleCommandExceptionType OOPS = new SimpleCommandExceptionType(Component.literal("Something went wrong."));
+
+    public SaveMapCommand() {
+        super("save-map", "Saves a map to an image.", "sm");
+    }
+
+    @Override
+    public void build(LiteralArgumentBuilder<ClientSuggestionProvider> builder) {
+        builder.executes(_ -> {
+            saveMap(128);
+
+            return SINGLE_SUCCESS;
+        }).then(argument("scale", IntegerArgumentType.integer(1)).executes(context -> {
+            saveMap(IntegerArgumentType.getInteger(context, "scale"));
+
+            return SINGLE_SUCCESS;
+        }));
+    }
+
+    @SuppressWarnings("deprecation") // Use of NativeImage#makePixelArray
+    private void saveMap(int scale) throws CommandSyntaxException {
+        ItemStack map = getMap();
+        MapItemSavedData state = getMapState();
+        if (map == null || state == null) throw MAP_NOT_FOUND.create();
+
+        Vanilla.setScreen(new FileBrowserScreen(GuiThemes.get(), "Save image", true, List.of("*.png"), file -> {
+            if (!file.getName().endsWith(".png")) file = new File(file.getPath() + ".png");
+
+            try {
+                writeMap(file, scale, map, state);
+            } catch (CommandSyntaxException e) {
+                error(e.getMessage());
+            }
+        }));
+    }
+
+    private void writeMap(File path, int scale, ItemStack map, MapItemSavedData state) throws CommandSyntaxException {
+        MapTextureManagerAccessor textureManager = (MapTextureManagerAccessor) mc.getMapTextureManager();
+        NativeImage mapImage = Vanilla.mapImage(textureManager, map.get(DataComponents.MAP_ID), state);
+        if (mapImage == null) throw OOPS.create();
+
+        try {
+            if (scale == 128) mapImage.writeToFile(path);
+            else {
+                int[] data = mapImage.makePixelArray();
+                BufferedImage image = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
+                image.setRGB(0, 0, image.getWidth(), image.getHeight(), data, 0, 128);
+
+                BufferedImage scaledImage = new BufferedImage(scale, scale, 2);
+                scaledImage.createGraphics().drawImage(image, 0, 0, scale, scale, null);
+
+                ImageIO.write(scaledImage, "png", path);
+            }
+        } catch (IOException e) {
+            error("Error writing map texture");
+            MeteorClient.LOG.error(e.toString());
+        } finally {
+            Vanilla.closeMapImage(mapImage);
+        }
+    }
+
+    private @Nullable MapItemSavedData getMapState() {
+        ItemStack map = getMap();
+        if (map == null) return null;
+
+        return MapItem.getSavedData(map.get(DataComponents.MAP_ID), mc.level);
+    }
+
+    private @Nullable ItemStack getMap() {
+        ItemStack itemStack = mc.player.getMainHandItem();
+        if (itemStack.getItem() == Items.FILLED_MAP) return itemStack;
+
+        itemStack = mc.player.getOffhandItem();
+        if (itemStack.getItem() == Items.FILLED_MAP) return itemStack;
+
+        return null;
+    }
+}
