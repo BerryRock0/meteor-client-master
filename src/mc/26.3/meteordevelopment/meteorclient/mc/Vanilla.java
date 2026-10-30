@@ -16,18 +16,18 @@ import java.nio.file.*;
 import com.google.common.collect.*;
 
 import com.mojang.math.*;
+
 import com.mojang.blaze3d.*;
+import com.mojang.blaze3d.pipeline.*;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.platform.*;
 import com.mojang.blaze3d.platform.cursor.*;
 
 import com.mojang.authlib.*;
 import com.mojang.authlib.services.*;
-import com.mojang.authlib.yggdrasil.*;
 import com.mojang.authlib.minecraft.*;
 import org.lwjgl.*;
 import org.lwjgl.sdl.*;
-import org.lwjgl.glfw.*;
 
 import it.unimi.dsi.fastutil.*;
 import it.unimi.dsi.fastutil.longs.*;
@@ -66,6 +66,7 @@ import net.minecraft.client.renderer.chunk.*;
 import net.minecraft.client.renderer.state.*;
 import net.minecraft.client.renderer.feature.*;
 import net.minecraft.client.renderer.texture.*;
+import net.minecraft.client.renderer.extract.*;
 import net.minecraft.client.renderer.blockentity.*;
 import net.minecraft.client.model.*;
 import net.minecraft.client.input.*;
@@ -450,7 +451,7 @@ public final class Vanilla
         mc.gui.setScreen(screen);
     }
 
-    public staticOverlay overlay()
+    public static Overlay overlay()
     {
         return mc.gui.overlay();
     }
