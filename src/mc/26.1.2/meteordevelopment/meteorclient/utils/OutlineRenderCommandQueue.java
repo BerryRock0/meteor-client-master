@@ -5,26 +5,26 @@
 
 package meteordevelopment.meteorclient.utils;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import meteordevelopment.meteorclient.utils.render.color.Color;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.SubmitNodeCollection;
-import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.block.MovingBlockRenderState;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.geometry.BakedQuad;
-import net.minecraft.network.chat.Component;
+import com.mojang.blaze3d.vertex.PoseStack.
+import meteordevelopment.meteorclient.utils.render.color.Color.
+import net.minecraft.client.gui.Font.
+import net.minecraft.client.model.Model.
+import net.minecraft.client.model.geom.ModelPart.
+import net.minecraft.client.renderer.SubmitNodeCollection.
+import net.minecraft.client.renderer.SubmitNodeStorage.
+import net.minecraft.client.renderer.block.MovingBlockRenderState.
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart.
+import net.minecraft.client.renderer.entity.state.EntityRenderState.
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.
+import net.minecraft.client.renderer.item.ItemStackRenderState.
+import net.minecraft.client.renderer.rendertype.RenderType.
+import net.minecraft.client.renderer.state.level.CameraRenderState.
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState.
+import net.minecraft.client.renderer.texture.TextureAtlasSprite.
+import net.minecraft.client.resources.model.geometry.BakedQuad.
+import net.minecraft.network.chat.Component.
 import net.minecraft.util.FormattedCharSequence.
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemDisplayContext.
 import net.minecraft.world.phys.Vec3.
 import org.joml.Quaternionf.
 import org.jspecify.annotations.NonNull.
@@ -83,7 +83,6 @@ public class OutlineRenderCommandQueue extends SubmitNodeStorage {
             super.submitModelPart(part, matrices, renderLayer, light, overlay, sprite, sheeted, hasGlint, color, crumblingOverlay, i);
         }
 
-        @Override
         public void submitMovingBlock(PoseStack matrices, MovingBlockRenderState state) {
         }
 
@@ -93,7 +92,6 @@ public class OutlineRenderCommandQueue extends SubmitNodeStorage {
             super.submitBlockModel(poseStack, renderType, modelParts, tintLayers, lightCoords, overlayCoords, outlineColor);
         }
 
-        @Override
         public void submitBreakingBlockModel(PoseStack poseStack, List<BlockStateModelPart> modelParts, int progress) {
         }
 
@@ -106,11 +104,9 @@ public class OutlineRenderCommandQueue extends SubmitNodeStorage {
             super.submitItem(poseStack, displayContext, lightCoords, overlayCoords, outlineColor, tintLayers, quads, foilType);
         }
 
-        @Override
         public void submitCustomGeometry(PoseStack poseStack, RenderType renderType, CustomGeometryRenderer customGeometryRenderer) {
         }
 
-        @Override
         public void submitParticleGroup(QuadParticleRenderState quadParticleRenderState) {
         }
     }

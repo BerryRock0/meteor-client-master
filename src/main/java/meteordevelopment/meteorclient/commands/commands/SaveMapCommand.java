@@ -81,15 +81,9 @@ public class SaveMapCommand extends Command {
             else {
                 int width = mapImage.getWidth();
                 int height = mapImage.getHeight();
-                ByteBuffer pixels = mapImage.getPixels();
+                int[] pixels = mapImage.getPixels();
                 int[] data = new int[width * height];
-                for (int i = 0; i < data.length; i++) {
-                    int r = pixels.get(i * 4) & 0xFF;
-                    int g = pixels.get(i * 4 + 1) & 0xFF;
-                    int b = pixels.get(i * 4 + 2) & 0xFF;
-                    int a = pixels.get(i * 4 + 3) & 0xFF;
-                    data[i] = (a << 24) | (r << 16) | (g << 8) | b;
-                }
+                System.arraycopy(pixels, 0, data, 0, data.length);
                 BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
                 image.setRGB(0, 0, image.getWidth(), image.getHeight(), data, 0, width);
 
