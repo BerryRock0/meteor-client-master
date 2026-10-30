@@ -9,6 +9,7 @@ import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.gui.utils.Cell;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.gui.widgets.containers.WContainer;
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.renderer.MeshBuilder;
 import meteordevelopment.meteorclient.renderer.MeshRenderer;
 import meteordevelopment.meteorclient.renderer.MeteorRenderPipelines;
@@ -30,7 +31,7 @@ public class GuiDebugRenderer {
         mesh.end();
 
         MeshRenderer.begin()
-            .attachments(Minecraft.getInstance().gameRenderer.mainRenderTarget())
+            .attachments(Vanilla.mainRenderTarget())
             .pipeline(MeteorRenderPipelines.WORLD_COLORED_LINES)
             .mesh(mesh)
             .end();
