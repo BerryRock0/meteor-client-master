@@ -81,6 +81,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screens.*;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.gui.screens.inventory.tooltip.*;
+import net.minecraft.server.*;
 import net.minecraft.server.level.*;
 
 import meteordevelopment.meteorclient.mixin.*;
@@ -245,7 +246,7 @@ public final class Vanilla
     }
 
 
-    public static ClientLevel createClientLevel(ClientPacketListener listener, ClientLevel.ClientLevelData data, ResourceKey<Level> dimension, Holder<dimension.DimensionType> dimensionType, int x, int z, LevelRenderer extractor, boolean isClientSide, int seaLevel)
+    public static ClientLevel createClientLevel(ClientPacketListener listener, ClientLevel.ClientLevelData data, ResourceKey<Level> dimension, Holder<DimensionType> dimensionType, int x, int z, LevelRenderer extractor, boolean isClientSide, int seaLevel)
     {
         return new ClientLevel(listener, data, dimension, dimensionType, x, z, extractor, isClientSide, 0L, seaLevel);
     }
