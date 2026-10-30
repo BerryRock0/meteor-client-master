@@ -26,7 +26,6 @@ import com.mojang.authlib.*;
 import com.mojang.authlib.yggdrasil.*;
 import com.mojang.authlib.minecraft.*;
 import org.lwjgl.*;
-import org.lwjgl.sdl.*;
 import org.lwjgl.glfw.*;
 
 import it.unimi.dsi.fastutil.*;
@@ -227,12 +226,12 @@ public final class Vanilla
     // Entities
     public static boolean isEnderman(Entity entity)
     {
-        return entity instanceof monster.EnderMan;
+        return entity instanceof EnderMan;
     }
 
     public static boolean isCreepy(Entity entity)
     {
-        return ((monster.EnderMan) entity).isCreepy();
+        return ((EnderMan) entity).isCreepy();
     }
 
     public static void tooltip(GuiGraphicsExtractor graphics, Font font, List<ClientTooltipComponent> components, int x, int y, ItemStack stack)
