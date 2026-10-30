@@ -8,6 +8,7 @@ package meteordevelopment.meteorclient.renderer;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.render.color.Color;
 import net.fabricmc.loader.api.FabricLoader;
@@ -40,22 +41,16 @@ public class MeshBuilder {
     private double cameraX, cameraZ;
 
     public MeshBuilder(RenderPipeline pipeline) {
-        this(
-            Objects.requireNonNull(
-                pipeline.getVertexFormatBinding(0),
-                () -> "RenderPipeline " + pipeline.getLocation() + " has no vertex format binding"
-            ),
-            pipeline.getPrimitiveTopology()
-        );
+        this(pipeline.getVertexFormat(), pipeline.getVertexFormatMode());
     }
 
-    public MeshBuilder(VertexFormat format, PrimitiveTopology drawMode) {
+    public MeshBuilder(VertexFormat format, VertexFormat.Mode drawMode) {
         this.format = format;
         primitiveVerticesSize = format.getVertexSize();
         primitiveIndicesCount = drawMode.primitiveLength;
     }
 
-    public MeshBuilder(VertexFormat format, PrimitiveTopology drawMode, int vertexCount, int indexCount) {
+    public MeshBuilder(VertexFormat format, VertexFormat.Mode drawMode, int vertexCount, int indexCount) {
         this(format, drawMode);
         allocateBuffers(vertexCount, indexCount);
     }

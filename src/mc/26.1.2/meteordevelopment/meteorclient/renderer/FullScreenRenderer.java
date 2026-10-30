@@ -5,7 +5,6 @@
 
 package meteordevelopment.meteorclient.renderer;
 
-import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import meteordevelopment.meteorclient.utils.PreInit;
 
@@ -25,7 +24,7 @@ public class FullScreenRenderer {
 
     @PreInit
     public static void init() {
-        mesh = new MeshBuilder(MeteorVertexFormats.POS2, PrimitiveTopology.TRIANGLES, 4, 6);
+        mesh = new MeshBuilder(MeteorVertexFormats.POS2, VertexFormat.Mode.TRIANGLES, 4, 6);
 
         mesh.begin();
 
