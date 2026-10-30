@@ -425,8 +425,6 @@ public class ServerClone
         Entity target = player.level().getEntity(clientTarget.getUUID());
         if (!(target instanceof LivingEntity serverTarget) || !serverTarget.isAlive())
 			return;
-        if (player.distanceToSqr(serverTarget) > 16)
-			return;
 
         // player.attack() applies weapon damage, enchantments and critical hits - now that the
         // clone ticks (see #tick), its attack cooldown reaches max and damage is full strength.
@@ -436,8 +434,10 @@ public class ServerClone
     /** Breaks a block through the clone's own game mode: real break, real drops, real tool wear. */
     public void breakBlock(BlockPos pos)
     {
-        if (player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 36) return;
-        if (player.level().getBlockState(pos).isAir()) return;
+        if (player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 36)
+			return;
+        if (player.level().getBlockState(pos).isAir())
+			return;
 
         player.gameMode.destroyBlock(pos);
     }
@@ -468,7 +468,8 @@ public class ServerClone
 
     private void applySlot(EquipmentSlot slot, ItemStack stack, List<Pair<EquipmentSlot, ItemStack>> changed)
     {
-        if (ItemStack.matches(player.getItemBySlot(slot), stack)) return;
+        if (ItemStack.matches(player.getItemBySlot(slot), stack))
+			return;
 
         player.setItemSlot(slot, stack);
         changed.add(Pair.of(slot, stack.copy()));

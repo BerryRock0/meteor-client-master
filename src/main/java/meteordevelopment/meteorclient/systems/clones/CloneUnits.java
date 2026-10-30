@@ -46,24 +46,24 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
 
     public void add(CloneUnit unit)
     {
-        if(!units.contains(unit))
-            units.add(unit);
+		if(!units.contains(unit))
+			units.add(unit);
 
         save();
     }
 
     public void remove(CloneUnit unit)
     {
-        if (units.contains(unit))
-            units.remove(unit);
+		if(units.contains(unit))
+			units.remove(unit);
 
 		save();
     }
 
     public void removeAll(Collection<CloneUnit> c)
     {
-        if (units.containsAll(c))
-            units.removeAll(c);    
+		if(units.containsAll(c))
+			units.removeAll(c);
 
 		save();
     }
@@ -71,12 +71,6 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
     public boolean isEmpty()
     {
         return units.isEmpty();
-    }
-
-    @Override
-    public @NotNull Iterator<CloneUnit> iterator()
-    {
-        return new CloneIterator();
     }
 
     @EventHandler
@@ -101,6 +95,12 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
     }
 
     @Override
+    public @NotNull Iterator<CloneUnit> iterator()
+    {
+        return new CloneIterator();
+    }
+
+    @Override
     public CompoundTag toTag()
     {
         CompoundTag tag = new CompoundTag();
@@ -108,17 +108,9 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
         return tag;
     }
 
-    @Override
-    public CloneUnits fromTag(CompoundTag tag)
-    {
-        units.clear();
-
-        for (Tag unitTag : tag.getListOrEmpty("units"))
-            units.add(new CloneUnit(unitTag));
-
-        return this;
-    }
-
+    /**
+     * Iterator over the units whose {@link #remove()} also persists the change to disk.
+     */
     private final class CloneIterator implements Iterator<CloneUnit>
     {
         private final Iterator<CloneUnit> it = units.iterator();
@@ -141,5 +133,17 @@ public class CloneUnits extends System<CloneUnits> implements Iterable<CloneUnit
             it.remove();
             save();
         }
-    }    
+    }
+    
+
+    @Override
+    public CloneUnits fromTag(CompoundTag tag)
+    {
+        units.clear();
+
+        for (Tag unitTag : tag.getListOrEmpty("units"))
+            units.add(new CloneUnit(unitTag));
+
+        return this;
+    }
 }

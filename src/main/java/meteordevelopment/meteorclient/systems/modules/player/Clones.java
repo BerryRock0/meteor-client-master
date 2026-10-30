@@ -5,12 +5,14 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.screens.EditSystemScreen;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.gui.widgets.containers.WTable;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
 import meteordevelopment.meteorclient.mc.Vanilla;
+import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.clones.CloneUnit;
 import meteordevelopment.meteorclient.systems.clones.CloneUnits;
 import meteordevelopment.meteorclient.systems.friends.Friends;
@@ -43,7 +45,7 @@ import static meteordevelopment.meteorclient.MeteorClient.mc;
  * position. Disabling the module despawns every clone.
  */
 public class Clones extends Module
-{
+{	
     public Clones()
     {
         super(Categories.Player, "clones", "Manages character clones as worker-style units: each unit describes one clone and is saved per world. Enable the module to run the units.");
@@ -68,8 +70,7 @@ public class Clones extends Module
     /** Nearest resource block within {@code range} of {@code origin}, or null. */
     public static BlockPos findNearestResource(Vec3 origin, double range)
     {
-        if (MeteorClient.mc.level == null)
-            return null;
+        if (MeteorClient.mc.level == null) return null;
 
         BlockPos best = null;
         double bestDist = range * range;

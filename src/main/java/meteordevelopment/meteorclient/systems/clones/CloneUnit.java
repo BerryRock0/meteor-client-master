@@ -227,9 +227,7 @@ public class CloneUnit implements ISerializable<CloneUnit>
         if (o == null || getClass() != o.getClass())
 			return false;
 
-        CloneUnit that = (CloneUnit) o;
-
-        return Objects.equals(uuid, that.uuid);
+        return Objects.equals(uuid, ((CloneUnit) o).uuid);
     }
 
     @Override
