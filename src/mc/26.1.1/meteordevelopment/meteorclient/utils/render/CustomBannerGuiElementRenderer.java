@@ -26,10 +26,10 @@ public class CustomBannerGuiElementRenderer extends PictureInPictureRenderer<Cus
         return CustomBannerGuiElementRenderState.class;
     }
 
-    protected void renderToTexture(CustomBannerGuiElementRenderState state, PoseStack matrixStack) {
+    protected void renderToTexture(CustomBannerGuiElementRenderState state, PoseStack matrixStack, SubmitNodeCollector collector) {
         Vanilla.lighting().setupFor(Lighting.Entry.ITEMS_FLAT);
         matrixStack.translate(0.0F, 0.25F, 0.0F);
-        Vanilla.submitBannerPatterns(this.sprites, matrixStack, 15728880, OverlayTexture.NO_OVERLAY, state.flag(), 0.0F, true, state.baseColor(), state.resultBannerPatterns());
+        Vanilla.submitBannerPatterns(this.sprites, matrixStack, collector, 15728880, OverlayTexture.NO_OVERLAY, state.flag(), 0.0F, true, state.baseColor(), state.resultBannerPatterns());
     }
 
     @Override
