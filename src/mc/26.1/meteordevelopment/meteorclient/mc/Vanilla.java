@@ -53,10 +53,12 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.saveddata.maps.*;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.item.*;
 import net.minecraft.client.renderer.feature.*;
 import net.minecraft.client.renderer.chunk.*;
 import net.minecraft.client.renderer.state.*;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.*;
 import net.minecraft.client.input.*;
 import net.minecraft.client.player.*;
@@ -74,7 +76,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screens.*;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.gui.screens.inventory.tooltip.*;
-import net.minecraft.client.renderer.texture.*;
+
 import net.minecraft.server.level.*;
 
 import meteordevelopment.meteorclient.mixin.*;
