@@ -9,6 +9,7 @@ import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.AtlasManager;
@@ -17,8 +18,29 @@ import org.jspecify.annotations.NonNull;
 public class CustomBannerGuiElementRenderer extends PictureInPictureRenderer<CustomBannerGuiElementRenderState> {
     private final SpriteGetter sprites;
 
-    public CustomBannerGuiElementRenderer(AtlasManager atlasManager) {
-        this.sprites = atlasManager.getBannerSpriteGetter();
+    public CustomBannerGuiElementRenderer(Object atlasManager) {
+        this.sprites = getBannerSpriteGetter(atlasManager);
+    }
+
+    private SpriteGetter getBannerSpriteGetter(Object atlasManager) {
+        if (atlasManager instanceof SpriteGetter) {
+            return (SpriteGetter) atlasManager;
+        }
+        try {
+            // Try AtlasManager.getBannerSpriteGetter()
+            var method = atlasManager.getClass().getMethod("getBannerSpriteGetter");
+            return (SpriteGetter) method.invoke(atlasManager);
+        } catch (Exception e) {
+            // Fallback: try to get from model manager
+            try {
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                var modelManager = mc.getModelManager();
+                var method = modelManager.getClass().getMethod("getBannerSpriteGetter");
+                return (SpriteGetter) method.invoke(modelManager);
+            } catch (Exception ex) {
+                throw new RuntimeException("Failed to get banner sprite getter", ex);
+            }
+        }
     }
 
     @Override
@@ -26,10 +48,10 @@ public class CustomBannerGuiElementRenderer extends PictureInPictureRenderer<Cus
         return CustomBannerGuiElementRenderState.class;
     }
 
-    protected void renderToTexture(CustomBannerGuiElementRenderState state, PoseStack matrixStack) {
+    protected void renderToTexture(CustomBannerGuiElementRenderState state, PoseStack matrixStack, SubmitNodeCollector collector) {
         Vanilla.lighting().setupFor(Lighting.Entry.ITEMS_FLAT);
         matrixStack.translate(0.0F, 0.25F, 0.0F);
-        Vanilla.submitBannerPatterns(this.sprites, matrixStack, 15728880, OverlayTexture.NO_OVERLAY, state.flag(), 0.0F, true, state.baseColor(), state.resultBannerPatterns());
+        Vanilla.submitBannerPatterns(this.sprites, matrixStack, collector, 15728880, OverlayTexture.NO_OVERLAY, state.flag(), 0.0F, true, state.baseColor(), state.resultBannerPatterns());
     }
 
     @Override

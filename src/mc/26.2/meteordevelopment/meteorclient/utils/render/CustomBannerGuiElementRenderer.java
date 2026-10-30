@@ -17,8 +17,29 @@ import org.jspecify.annotations.NonNull;
 public class CustomBannerGuiElementRenderer extends PictureInPictureRenderer<CustomBannerGuiElementRenderState> {
     private final SpriteGetter sprites;
 
-    public CustomBannerGuiElementRenderer(SpriteGetter sprites) {
-        this.sprites = sprites;
+    public CustomBannerGuiElementRenderer(Object atlasManager) {
+        this.sprites = getBannerSpriteGetter(atlasManager);
+    }
+
+    private SpriteGetter getBannerSpriteGetter(Object atlasManager) {
+        if (atlasManager instanceof SpriteGetter) {
+            return (SpriteGetter) atlasManager;
+        }
+        try {
+            // Try AtlasManager.getBannerSpriteGetter()
+            var method = atlasManager.getClass().getMethod("getBannerSpriteGetter");
+            return (SpriteGetter) method.invoke(atlasManager);
+        } catch (Exception e) {
+            // Fallback: try to get from model manager
+            try {
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                var modelManager = mc.getModelManager();
+                var method = modelManager.getClass().getMethod("getBannerSpriteGetter");
+                return (SpriteGetter) method.invoke(modelManager);
+            } catch (Exception ex) {
+                throw new RuntimeException("Failed to get banner sprite getter", ex);
+            }
+        }
     }
 
     @Override
