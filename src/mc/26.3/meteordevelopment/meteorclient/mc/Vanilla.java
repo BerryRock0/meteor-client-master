@@ -270,7 +270,7 @@ public final class Vanilla
         return dye.getTextureDiffuseColor();
     }
 
-    public static List<ItemStack> containerItemsDataComponentMap components)
+    public static List<ItemStack> containerItems(DataComponentMap components)
     {
         return components.get(DataComponents.CONTAINER).itemCopies().toList();
     }
