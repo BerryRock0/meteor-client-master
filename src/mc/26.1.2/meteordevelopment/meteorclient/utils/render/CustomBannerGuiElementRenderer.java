@@ -75,15 +75,7 @@ public class CustomBannerGuiElementRenderer extends PictureInPictureRenderer<Cus
                 var method = gameRenderer.getClass().getMethod("getCollector");
                 return (SubmitNodeCollector) method.invoke(gameRenderer);
             } catch (Exception ex) {
-                // Fallback: try to get from renderBuffers
-                try {
-                    var mc = net.minecraft.client.Minecraft.getInstance();
-                    var renderBuffers = mc.getRenderBuffers();
-                    var method = renderBuffers.getClass().getMethod("getCollector");
-                    return (SubmitNodeCollector) method.invoke(renderBuffers);
-                } catch (Exception ex2) {
-                    return null;
-                }
+                return null;
             }
         }
     }

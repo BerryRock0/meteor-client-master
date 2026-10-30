@@ -6,6 +6,7 @@
 package meteordevelopment.meteorclient.renderer;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import meteordevelopment.meteorclient.utils.PreInit;
 
 public class FullScreenRenderer {

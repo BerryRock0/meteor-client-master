@@ -76,7 +76,6 @@ public abstract class ClientLevelMixin extends Level {
         }
     }
 
-    @Override
     public int getNextEntityId() {
         int id;
 
