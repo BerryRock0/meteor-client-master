@@ -2,7 +2,7 @@ package meteordevelopment.meteorclient.utils.render.postprocess;
 
 import meteordevelopment.meteorclient.mc.Vanilla;
 
-import com.mojang.blaze3d.GpuFormat;
+import com.mojang.blaze3d.textures.TextureFormat;
 import com.mojang.blaze3d.buffers.Std140Builder;
 import com.mojang.blaze3d.buffers.Std140SizeCalculator;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -27,7 +27,7 @@ public abstract class PostProcessShader {
     protected PostProcessShader(RenderPipeline pipeline) {
         this.pipeline = pipeline;
         this.framebuffer = new TextureTarget(MeteorClient.NAME + " PostProcessShader " + this.getClass().getSimpleName(), mc.getWindow().getWidth(), mc.getWindow().getHeight(), true,
-            GpuFormat.RGBA8_UNORM);
+            TextureFormat.RGBA8);
     }
 
     protected abstract boolean shouldDraw();

@@ -7,7 +7,7 @@ package meteordevelopment.meteorclient.systems.modules.render;
 
 import meteordevelopment.meteorclient.mc.Vanilla;
 
-import com.mojang.blaze3d.GpuFormat;
+import com.mojang.blaze3d.textures.TextureFormat;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.buffers.Std140Builder;
 import com.mojang.blaze3d.buffers.Std140SizeCalculator;
@@ -154,7 +154,7 @@ public class Blur extends Module {
         int width = (int) (mc.getWindow().getWidth() * scale);
         int height = (int) (mc.getWindow().getHeight() * scale);
 
-        return RenderSystem.getDevice().createTextureView(RenderSystem.getDevice().createTexture("Blur - " + i, 15, GpuFormat.RGBA8_UNORM, width, height, 1, 1));
+        return RenderSystem.getDevice().createTextureView(RenderSystem.getDevice().createTexture("Blur - " + i, 15, TextureFormat.RGBA8, width, height, 1, 1));
     }
 
     private void onRenderAfterWorld() {
