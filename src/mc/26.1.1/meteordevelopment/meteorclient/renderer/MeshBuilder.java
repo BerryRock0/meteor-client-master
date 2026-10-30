@@ -268,16 +268,6 @@ public class MeshBuilder {
         return indices;
     }
 
-    public GpuBufferSlice uploadVertexBuffer(CommandEncoder encoder) {
-        vertices.limit(getVerticesOffset());
-        return encoder.transientMemory().uploadGpu(vertices, primitiveVerticesSize, GpuBuffer.USAGE_VERTEX);
-    }
-
-    public GpuBufferSlice uploadIndexBuffer(CommandEncoder encoder) {
-        indices.limit(indicesCount * 4);
-        return encoder.transientMemory().uploadGpu(indices, 4, GpuBuffer.USAGE_INDEX);
-    }
-
     public GpuBuffer getVertexBuffer() {
         vertices.limit(getVerticesOffset());
         return RenderSystem.getDevice().createBuffer(() -> "Meteor MeshBuilder Vertex Buffer", GpuBuffer.USAGE_VERTEX, vertices);
