@@ -5,32 +5,92 @@
 
 package meteordevelopment.meteorclient.mc;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Window;
-import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.network.chat.LastSeenMessages;
-import net.minecraft.network.chat.MessageSignature;
-import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
-import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
-import net.minecraft.network.protocol.game.ServerboundChatPacket;
-import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
-import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.attribute.BedRule;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.component.SwingAnimation;
-import net.minecraft.world.level.block.entity.SignTextSlot;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
+import java.net.URI;
+import java.time.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.nio.*;
+import java.nio.file.*;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
+import com.google.common.collect.*;
+
+import com.mojang.math.*;
+import com.mojang.blaze3d.*;
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.platform.*;
+import com.mojang.blaze3d.platform.cursor.*;
+
+import com.mojang.authlib.*;
+import com.mojang.authlib.services.*;
+import com.mojang.authlib.yggdrasil.*;
+import com.mojang.authlib.minecraft.*;
+import org.lwjgl.*;
+import org.lwjgl.sdl.*;
+import org.lwjgl.glfw.*;
+
+import it.unimi.dsi.fastutil.*;
+import it.unimi.dsi.fastutil.longs.*;
+import it.unimi.dsi.fastutil.ints.*;
+
+import net.minecraft.resources.*;
+import net.minecraft.util.*;
+import net.minecraft.nbt.*;
+import net.minecraft.core.*;
+import net.minecraft.core.component.*;
+import net.minecraft.data.registries.*;
+import net.minecraft.network.chat.*;
+import net.minecraft.network.protocol.*;
+import net.minecraft.network.protocol.game.*;
+import net.minecraft.world.*;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.*;
+import net.minecraft.world.attribute.*;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.player.*;
+import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.phys.*;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.material.*;
+import net.minecraft.world.level.dimension.*;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.block.state.*;
+import net.minecraft.world.level.saveddata.maps.*;
+import net.minecraft.client.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.item.*;
+import net.minecraft.client.renderer.chunk.*;
+import net.minecraft.client.renderer.state.*;
+import net.minecraft.client.renderer.feature.*;
+import net.minecraft.client.renderer.texture.*;
+import net.minecraft.client.renderer.blockentity.*;
+import net.minecraft.client.model.*;
+import net.minecraft.client.input.*;
+import net.minecraft.client.player.*;
+import net.minecraft.client.multiplayer.*;
+import net.minecraft.client.multiplayer.chat.*;
+import net.minecraft.client.multiplayer.chat.report.*;
+import net.minecraft.client.resources.*;
+import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.sprite.*;
+import net.minecraft.client.resources.model.geometry.*;
+import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.components.toasts.*;
+import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.screens.*;
+import net.minecraft.client.gui.screens.social.*;
+import net.minecraft.client.gui.screens.inventory.*;
+import net.minecraft.client.gui.screens.inventory.tooltip.*;
+import net.minecraft.server.*;
+import net.minecraft.server.level.*;
+
+import meteordevelopment.meteorclient.mixin.*;
+import meteordevelopment.meteorclient.renderer.*;
+import meteordevelopment.meteorclient.mixininterface.*;
+
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
@@ -41,66 +101,59 @@ import static meteordevelopment.meteorclient.MeteorClient.mc;
  * behaviour in all of them, so the shared code in {@code src/main/java} can use it without
  * knowing which Minecraft version it is running on. See COMPAT.md.
  */
-public final class Vanilla {
-    private Vanilla() {}
+public final class Vanilla
+{
+    private Vanilla()
+    {}
 
     // Player actions
-
-    public static void swing(Player player, InteractionHand hand) {
+    public static void swing(Player player, InteractionHand hand)
+    {
         player.swing(hand, SwingAnimation.DEFAULT, false);
     }
 
     /** Swings for a real server-side player (singleplayer clone): broadcast to trackers happens inside swing(). */
-    public static void swingClone(net.minecraft.server.level.ServerPlayer player) {
+    public static void swingClone(ServerPlayer player)
+    {
         player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
     }
 
     /** Whether the player is mid-swing (the swing state API differs between versions). */
-    public static boolean isSwinging(Player player) {
+    public static boolean isSwinging(Player player)
+    {
         return player.isSwinging();
     }
 
     // Blocks
-
-    public static BlockPos copy(BlockPos pos) {
+    public static BlockPos copy(BlockPos pos)
+    {
         return pos.immutable();
     }
 
-    public static boolean bedDestroysOnUse(BedRule rule) {
+    public static boolean bedDestroysOnUse(BedRule rule)
+    {
         return rule.destroyOnUse();
     }
 
-
     // Collision
-
-    public static boolean blocksMotion(net.minecraft.world.level.block.state.BlockState state) {
+    public static boolean blocksMotion(BlockState state)
+    {
         return state.isSolid();
     }
 
-    public static java.util.Collection<net.minecraft.world.phys.EntityHitResult> getManyEntityHitResult(
-        net.minecraft.world.level.Level level,
-        net.minecraft.world.entity.Entity entity,
-        net.minecraft.world.phys.Vec3 from,
-        net.minecraft.world.phys.Vec3 to,
-        net.minecraft.world.phys.AABB box,
-        java.util.function.Predicate<net.minecraft.world.entity.Entity> predicate,
-        float tolerance,
-        net.minecraft.world.level.ClipContext.Block block,
-        boolean onlyBlocks,
-        boolean extra
-    ) {
-        return net.minecraft.world.entity.projectile.ProjectileUtil.getManyEntityHitResult(level, entity, from, to, box, predicate, tolerance, block, onlyBlocks, extra);
+    public static Collection<EntityHitResult> getManyEntityHitResult(Level level, Entity entity, Vec3 from, Vec3 to, AABB box, Predicate<Entity> predicate, float tolerance, ClipContext.Block block, boolean onlyBlocks, boolean extra)
+    {
+        return ProjectileUtil.getManyEntityHitResult(level, entity, from, to, box, predicate, tolerance, block, onlyBlocks, extra);
     }
 
-    public static java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> quads(
-        net.minecraft.client.renderer.item.ItemStackRenderState.LayerRenderState layer
-    ) {
-        return ((meteordevelopment.meteorclient.mixin.LayerRenderStateAccessor) layer).meteor$getQuads().all();
+    public static List<BakedQuad> quads(ItemStackRenderState.LayerRenderState layer)
+    {
+        return ((LayerRenderStateAccessor) layer).meteor$getQuads().all();
     }
 
     // Registries
-
-    public static HolderLookup.Provider worldLookup() {
+    public static HolderLookup.Provider worldLookup()
+    {
         return VanillaRegistries.createWorldLookup();
     }
 
@@ -110,356 +163,335 @@ public final class Vanilla {
      * <p>26.2 could send a swing packet; 26.3 removed the packet, so the closest equivalent
      * is the local swing.
      */
-    public static void swingPacket(net.minecraft.client.player.LocalPlayer player, net.minecraft.world.InteractionHand hand) {
-        player.swing(hand, net.minecraft.world.item.component.SwingAnimation.DEFAULT, false);
+    public static void swingPacket(LocalPlayer player, InteractionHand hand)
+    {
+        player.swing(hand, SwingAnimation.DEFAULT, false);
     }
 
-    public static void dropMainHand(net.minecraft.client.player.LocalPlayer player) {
-        player.drop(player.getMainHandItem(), true, net.minecraft.util.Prediction.PREDICTED);
+    public static void dropMainHand(LocalPlayer player)
+    {
+        player.drop(player.getMainHandItem(), true, Prediction.PREDICTED);
     }
 
-    public static void registerSwingPacket(com.google.common.collect.ImmutableMap.Builder<String, net.minecraft.network.protocol.PacketType<? extends net.minecraft.network.protocol.Packet<?>>> builder) {
+    public static void registerSwingPacket(ImmutableMap.Builder<String, PacketType<? extends Packet<?>>> builder)
+    {
         // 26.3 removed the swing packet: the client can no longer tell the server about a swing.
     }
 
     // Items
-
-    public static boolean isFuel(Item item) {
-        return item.components().get(net.minecraft.core.component.DataComponents.COOKING_FUEL) != null;
+    public static boolean isFuel(Item item)
+    {
+        return item.components().get(DataComponents.COOKING_FUEL) != null;
     }
 
     // Input
-
     public static final InputConstants.Type KEY_TYPE = InputConstants.Type.KEYBOARD;
 
     public static final int SUPER_KEY_LEFT = InputConstants.KEY_LGUI;
 
     public static final int SUPER_KEY_RIGHT = InputConstants.KEY_RGUI;
 
-    public static int scancode(net.minecraft.client.input.KeyEvent event) {
+    public static int scancode(net.minecraft.client.input.KeyEvent event)
+    {
         return event.keycode();
     }
 
-    public static void startTextInput(Object owner) {
+    public static void startTextInput(Object owner)
+    {
         mc.textInputManager().startTextInput(owner);
     }
 
-    public static void stopTextInput(Object owner) {
+    public static void stopTextInput(Object owner)
+    {
         mc.textInputManager().stopTextInput(owner);
     }
 
-    public static void selectCursor(com.mojang.blaze3d.platform.cursor.CursorType cursor) {
+    public static void selectCursor(CursorType cursor)
+    {
         cursor.select();
     }
 
-    public static void releaseMouse(Window window, double x, double y) {
+    public static void releaseMouse(Window window, double x, double y)
+    {
         InputConstants.releaseMouse(window, x, y);
     }
 
-
     // Transforms
-
-    public static void rotate(com.mojang.blaze3d.vertex.PoseStack poseStack, com.mojang.math.Axis axis, float degrees) {
+    public static void rotate(PoseStack poseStack, Axis axis, float degrees)
+    {
         poseStack.mulPose(axis.rotateDegrees(new org.joml.Matrix4f(), degrees));
     }
 
     // Entities
-
-    public static boolean isEnderman(net.minecraft.world.entity.Entity entity) {
-        return entity instanceof net.minecraft.world.entity.monster.Enderman;
+    public static boolean isEnderman(Entity entity)
+    {
+        return entity instanceof Enderman;
     }
 
-    public static boolean isCreepy(net.minecraft.world.entity.Entity entity) {
-        return ((net.minecraft.world.entity.monster.Enderman) entity).isCreepy();
+    public static boolean isCreepy(Entity entity)
+    {
+        return ((Enderman) entity).isCreepy();
     }
 
-
-    public static void tooltip(net.minecraft.client.gui.GuiGraphicsExtractor graphics,
-                               net.minecraft.client.gui.Font font,
-                               java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> components,
-                               int x, int y, net.minecraft.world.item.ItemStack stack) {
-        graphics.tooltip(font, components, x, y, net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner.INSTANCE, stack.get(net.minecraft.core.component.DataComponents.TOOLTIP_STYLE), false);
+    public static void tooltip(GuiGraphicsExtractor graphics, Font font, List<ClientTooltipComponent> components, int x, int y, ItemStack stack)
+    {
+        graphics.tooltip(font, components, x, y, DefaultTooltipPositioner.INSTANCE, stack.get(DataComponents.TOOLTIP_STYLE), false);
     }
 
-
-    public static boolean isSameFluid(net.minecraft.world.level.material.Fluid a, net.minecraft.world.level.material.Fluid b) {
+    public static boolean isSameFluid(Fluid a, Fluid b)
+    {
         return a.isSame(b);
     }
 
-
-    public static net.minecraft.client.multiplayer.ClientLevel createClientLevel(
-        net.minecraft.client.multiplayer.ClientPacketListener listener,
-        net.minecraft.client.multiplayer.ClientLevel.ClientLevelData data,
-        net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension,
-        net.minecraft.core.Holder<net.minecraft.world.level.dimension.DimensionType> dimensionType,
-        int x, int z,
-        net.minecraft.client.renderer.extract.LevelExtractor extractor,
-        boolean isClientSide,
-        int seaLevel
-    ) {
-        return new net.minecraft.client.multiplayer.ClientLevel(listener, data, dimension, dimensionType, x, z, extractor, isClientSide, 0L, seaLevel);
+    public static ClientLevel createClientLevel(ClientPacketListener listener, ClientLevel.ClientLevelData data, ResourceKey<Level> dimension, Holder<DimensionType> dimensionType, int x, int z, LevelExtractor extractor, boolean isClientSide, int seaLevel)
+    {
+        return new ClientLevel(listener, data, dimension, dimensionType, x, z, extractor, isClientSide, 0L, seaLevel);
     }
-
 
     // Textures
-
-    public static meteordevelopment.meteorclient.renderer.McTexture createTexture(java.util.function.Supplier<String> name, com.mojang.blaze3d.platform.NativeImage image) {
-        return new meteordevelopment.meteorclient.renderer.McTexture(new net.minecraft.client.renderer.texture.DynamicTexture(name, image));
+    public static McTexture createTexture(Supplier<String> name, NativeImage image)
+    {
+        return new McTexture(new DynamicTexture(name, image));
     }
 
-    public static void registerTexture(net.minecraft.resources.Identifier id, meteordevelopment.meteorclient.renderer.McTexture texture) {
-        mc.getTextureManager().register(id, (net.minecraft.client.renderer.texture.DynamicTexture) texture.handle());
+    public static void registerTexture(Identifier id, McTexture texture)
+    {
+        mc.getTextureManager().register(id, (DynamicTexture) texture.handle());
     }
 
-    public static void renderTexture(meteordevelopment.meteorclient.renderer.Renderer2D renderer, meteordevelopment.meteorclient.renderer.McTexture texture) {
-        net.minecraft.client.renderer.texture.AbstractTexture t = (net.minecraft.client.renderer.texture.AbstractTexture) texture.handle();
+    public static void renderTexture(Renderer2D renderer, McTexture texture)
+    {
+        AbstractTexture t = (AbstractTexture) texture.handle();
         renderer.render(t.getTextureView(), t.getSampler());
     }
 
-
-    public static int dyeDiffuseColor(net.minecraft.world.item.DyeColor dye) {
+    public static int dyeDiffuseColor(DyeColor dye)
+    {
         return dye.getTextureDiffuseColor();
     }
 
-
-    public static java.util.List<net.minecraft.world.item.ItemStack> containerItems(net.minecraft.core.component.DataComponentMap components) {
-        return components.get(net.minecraft.core.component.DataComponents.CONTAINER).itemCopies().toList();
+    public static List<ItemStack> containerItemsDataComponentMap components)
+    {
+        return components.get(DataComponents.CONTAINER).itemCopies().toList();
     }
 
-
-    public static com.mojang.blaze3d.platform.NativeImage mapImage(
-        meteordevelopment.meteorclient.mixin.MapTextureManagerAccessor accessor,
-        net.minecraft.world.level.saveddata.maps.MapId id,
-        net.minecraft.world.level.saveddata.maps.MapItemSavedData state
-    ) {
+    public static NativeImage mapImage(MapTextureManagerAccessor accessor, MapId id, MapItemSavedData state)
+    {
         return accessor.meteor$invokeGetOrCreateMapInstance(id, state).texture.getPixels();
     }
 
     /** 26.2 and 26.3 hand out the image of the map texture, which owns it. */
-    public static void closeMapImage(com.mojang.blaze3d.platform.NativeImage image) {
-    }
-
+    public static void closeMapImage(NativeImage image)
+    {}
 
     // Keyboard
+    public static final int MENU_KEY = SDLScancode.SDL_SCANCODE_MENU;
 
-    public static final int MENU_KEY = org.lwjgl.sdl.SDLScancode.SDL_SCANCODE_MENU;
+    public static final int WORLD_2_KEY = SDLScancode.SDL_SCANCODE_INTERNATIONAL2;
 
-    public static final int WORLD_2_KEY = org.lwjgl.sdl.SDLScancode.SDL_SCANCODE_INTERNATIONAL2;
-
-    public static boolean matchesKey(int input, int scancode, boolean key, com.mojang.blaze3d.platform.InputConstants.Key inputKey) {
-        boolean isKey = inputKey.getType() != com.mojang.blaze3d.platform.InputConstants.Type.MOUSE;
+    public static boolean matchesKey(int input, int scancode, boolean key, InputConstants.Key inputKey)
+    {
+        boolean isKey = inputKey.getType() != InputConstants.Type.MOUSE;
         return isKey == key && input == inputKey.getValue();
     }
 
-    public static boolean isKeyDown(int key) {
-        return com.mojang.blaze3d.platform.InputConstants.isKeyDown(key);
+    public static boolean isKeyDown(int key)
+    {
+        return InputConstants.isKeyDown(key);
     }
 
-    public static boolean isMouseButtonKey(int key) {
+    public static boolean isMouseButtonKey(int key)
+    {
         return key >= 1 && key <= 8;
     }
 
-    public static boolean isMouseButtonPressed(int button) {
+    public static boolean isMouseButtonPressed(int button)
+    {
         if (button < 1 || button > 8) return false;
-        int state = org.lwjgl.sdl.SDLMouse.SDL_GetMouseState(org.lwjgl.BufferUtils.createFloatBuffer(1), org.lwjgl.BufferUtils.createFloatBuffer(1));
+        int state = SDLMouse.SDL_GetMouseState(BufferUtils.createFloatBuffer(1), BufferUtils.createFloatBuffer(1));
         return (state & (1 << (button - 1))) != 0;
     }
 
-
-    public static net.minecraft.client.resources.model.geometry.BakedQuad.MaterialInfo translucentMaterialInfo(
-        net.minecraft.client.resources.model.geometry.BakedQuad.MaterialInfo info
-    ) {
-        return new net.minecraft.client.resources.model.geometry.BakedQuad.MaterialInfo(
-            info.sprite(),
-            net.minecraft.client.renderer.chunk.ChunkSectionLayer.TRANSLUCENT,
-            info.itemRenderType(),
-            info.itemGlintRenderType(),
-            info.itemGlintSpecialRenderType(),
-            info.tintIndex(),
-            info.shadeDirectionOverride(),
-            info.flags()
-        );
+    public static BakedQuad.MaterialInfo translucentMaterialInfo(BakedQuad.MaterialInfo info)
+    {
+        return new BakedQuad.MaterialInfo(info.sprite(), ChunkSectionLayer.TRANSLUCENT, info.itemRenderType(), info.itemGlintRenderType(), info.itemGlintSpecialRenderType(), info.tintIndex(), info.shadeDirectionOverride(), info.flags());
     }
 
-
-    public static <S> void submitBannerPatterns(
-        net.minecraft.client.resources.model.sprite.SpriteGetter sprites,
-        com.mojang.blaze3d.vertex.PoseStack poseStack,
-        net.minecraft.client.renderer.SubmitNodeCollector collector,
-        int light, int overlay,
-        net.minecraft.client.model.Model<S> model, S state,
-        boolean renderOverlay,
-        net.minecraft.world.item.DyeColor color,
-        net.minecraft.world.level.block.entity.BannerPatternLayers patterns
-    ) {
-        net.minecraft.client.renderer.blockentity.BannerRenderer.submitPatterns(sprites, poseStack, collector, light, overlay, model, state, renderOverlay, color, patterns);
+    public static <S> void submitBannerPatterns(SpriteGetter sprites, PoseStack poseStack, SubmitNodeCollector collector, int light, int overlay,Model<S> model, S state, boolean renderOverlay, DyeColor color, BannerPatternLayers patterns)
+    {
+        BannerRenderer.submitPatterns(sprites, poseStack, collector, light, overlay, model, state, renderOverlay, color, patterns);
     }
 
-    public static <S> void submitBannerModel(
-        net.minecraft.client.renderer.SubmitNodeCollector collector,
-        net.minecraft.client.model.Model<? super S> model, S state,
-        com.mojang.blaze3d.vertex.PoseStack poseStack,
-        int light, int overlay, int outlineColor,
-        net.minecraft.client.resources.model.sprite.SpriteId sprite,
-        net.minecraft.client.resources.model.sprite.SpriteGetter sprites,
-        int color,
-        Object crumblingOverlay
-    ) {
+    public static <S> void submitBannerModel(SubmitNodeCollector collector, Model<? super S> model, S state, PoseStack poseStack, int light, int overlay, int outlineColor, SpriteId sprite, SpriteGetter sprites, int color, Object crumblingOverlay)
+    {
         collector.submitModel(model, state, poseStack, light, overlay, outlineColor, sprite, sprites, color);
     }
-
 
     /**
      * 26.3 removed the swing packet, so a critical only holds back the attack.
      */
-    public static boolean requiresSwingPacket() {
+    public static boolean requiresSwingPacket()
+    {
         return false;
     }
 
-    public static boolean isSwingPacket(Object packet) {
+    public static boolean isSwingPacket(Object packet)
+    {
         return false;
     }
 
-    public static void sendSwingPacket(Object packet) {
-    }
-
+    public static void sendSwingPacket(Object packet)
+    {}
 
     // Authentication (authlib 10)
-
-    public static Object createAuthService() {
-        return com.mojang.authlib.services.MinecraftServicesDiscoveryService.create(mc.getProxy(), false);
+    public static Object createAuthService()
+    {
+        return MinecraftServicesDiscoveryService.create(mc.getProxy(), false);
     }
 
-    public static void applyLoginEnvironment(Object authService) {
-        com.mojang.authlib.services.MinecraftServicesDiscoveryService service =
-            (com.mojang.authlib.services.MinecraftServicesDiscoveryService) authService;
-        meteordevelopment.meteorclient.mixin.MinecraftAccessor mca = (meteordevelopment.meteorclient.mixin.MinecraftAccessor) mc;
-        net.minecraft.util.SignatureValidator.from(service.getServicesKeySet(), com.mojang.authlib.services.ServicesKeyType.PROFILE_KEY);
-        net.minecraft.client.resources.SkinManager.TextureCache skinCache =
-            ((meteordevelopment.meteorclient.mixin.SkinManagerAccessor) mc.getSkinManager()).meteor$getSkinTextures();
-        java.nio.file.Path skinCachePath =
-            ((meteordevelopment.meteorclient.mixin.FileCacheAccessor) skinCache).meteor$getRoot();
-        mca.meteor$setServices(net.minecraft.server.Services.create(service, mc.gameDirectory));
-        mca.meteor$setSkinManager(new net.minecraft.client.resources.SkinManager(skinCachePath, mc.services(),
-            new net.minecraft.client.renderer.texture.SkinTextureDownloader(mc.getProxy(), mc.getTextureManager(), mc), mc));
+    public static void applyLoginEnvironment(Object authService)
+    {
+        MinecraftServicesDiscoveryService service = (MinecraftServicesDiscoveryService) authService;
+        MinecraftAccessor mca = (MinecraftAccessor) mc;
+        SignatureValidator.from(service.getServicesKeySet(), ServicesKeyType.PROFILE_KEY);
+        SkinManager.TextureCache skinCache = ((SkinManagerAccessor) mc.getSkinManager()).meteor$getSkinTextures();
+        Path skinCachePath = ((FileCacheAccessor) skinCache).meteor$getRoot();
+        mca.meteor$setServices(Services.create(service, mc.gameDirectory));
+        mca.meteor$setSkinManager(new SkinManager(skinCachePath, mc.services(), new SkinTextureDownloader(mc.getProxy(), mc.getTextureManager(), mc), mc));
     }
 
-    public static void setSession(net.minecraft.client.User session) {
-        meteordevelopment.meteorclient.mixin.MinecraftAccessor mca = (meteordevelopment.meteorclient.mixin.MinecraftAccessor) mc;
+    public static void setSession(User session)
+    {
+        MinecraftAccessor mca = (MinecraftAccessor) mc;
         mca.meteor$setUser(session);
 
-        com.mojang.authlib.services.MinecraftServicesDiscoveryService service =
-            com.mojang.authlib.services.MinecraftServicesDiscoveryService.create(mc.getProxy(), false);
+       MinecraftServicesDiscoveryService service = MinecraftServicesDiscoveryService.create(mc.getProxy(), false);
 
-        com.mojang.authlib.minecraft.UserApiService apiService = service.createUserApiService(session.getAccessToken());
-        com.mojang.authlib.services.FriendsService friendsService = service.createFriendsService(session.getAccessToken());
-        net.minecraft.client.gui.screens.social.RemoteFriendListUpdateHandler handler =
-            new net.minecraft.client.gui.screens.social.RemoteFriendListUpdateHandler(friendsService, mc);
-        mca.meteor$setUserApiService(apiService);
-        mca.meteor$setPlayerSocialManager(new net.minecraft.client.gui.screens.social.PlayerSocialManager(mc, apiService, friendsService, handler));
-        mca.meteor$setProfileKeyPairManager(net.minecraft.client.multiplayer.ProfileKeyPairManager.create(apiService, session, mc.gameDirectory.toPath()));
-        mca.meteor$setReportingContext(net.minecraft.client.multiplayer.chat.report.ReportingContext.create(net.minecraft.client.multiplayer.chat.report.ReportEnvironment.local(), apiService));
-        mca.meteor$setProfileFuture(java.util.concurrent.CompletableFuture.supplyAsync(
-            () -> mc.services().sessionService().fetchProfile(mc.getUser().getProfileId(), true), net.minecraft.util.Util.ioPool()));
+       UserApiService apiService = service.createUserApiService(session.getAccessToken());
+       FriendsService friendsService = service.createFriendsService(session.getAccessToken());
+       RemoteFriendListUpdateHandler handler = new RemoteFriendListUpdateHandler(friendsService, mc);
+       mca.meteor$setUserApiService(apiService);
+       mca.meteor$setPlayerSocialManager(new PlayerSocialManager(mc, apiService, friendsService, handler));
+       mca.meteor$setProfileKeyPairManager(ProfileKeyPairManager.create(apiService, session, mc.gameDirectory.toPath()));
+       mca.meteor$setReportingContext(ReportingContext.create(ReportEnvironment.local(), apiService));
+       mca.meteor$setProfileFuture(CompletableFuture.supplyAsync(() -> mc.services().sessionService().fetchProfile(mc.getUser().getProfileId(), true), Util.ioPool()));
     }
 
-    public static Object createAlteningEnvironment() {
+    public static Object createAlteningEnvironment()
+    {
         return new com.mojang.authlib.Environment("https://authserver.thealtening.com", "The Altening");
     }
 
-    public static Object createAlteningService(Object environment) {
-        return com.mojang.authlib.services.MinecraftServicesDiscoveryService.create(mc.getProxy(), false, (com.mojang.authlib.Environment) environment);
+    public static Object createAlteningService(Object environment)
+    {
+        return MinecraftServicesDiscoveryService.create(mc.getProxy(), false, (com.mojang.authlib.Environment) environment);
     }
 
-    public static String alteningAuthUrl(Object environment) {
-        return ((com.mojang.authlib.Environment) environment).discoveryUrl() + "/authenticate";
+    public static String alteningAuthUrl(Object environment)
+    {
+        return ((Environment) environment).discoveryUrl() + "/authenticate";
     }
 
     // Packets
-
-    public static ServerboundChatPacket chat(String message, Instant instant, long seen, MessageSignature signature, LastSeenMessages.Update update) {
+    public static ServerboundChatPacket chat(String message, Instant instant, long seen, MessageSignature signature, LastSeenMessages.Update update)
+    {
         return new ServerboundChatPacket(message, instant, seen, Optional.ofNullable(signature), update);
     }
 
-    public static ServerboundSignUpdatePacket signUpdate(BlockPos pos, String[] lines) {
+    public static ServerboundSignUpdatePacket signUpdate(BlockPos pos, String[] lines)
+    {
         return new ServerboundSignUpdatePacket(pos, List.of(lines), SignTextSlot.FRONT);
     }
 
-    public static String[] signLines(ServerboundSignUpdatePacket packet) {
+    public static String[] signLines(ServerboundSignUpdatePacket packet)
+    {
         return packet.lines().toArray(String[]::new);
     }
 
-    public static int chunkX(ClientboundLevelChunkWithLightPacket packet) {
+    public static int chunkX(ClientboundLevelChunkWithLightPacket packet)
+    {
         return packet.x();
     }
 
-    public static int chunkZ(ClientboundLevelChunkWithLightPacket packet) {
+    public static int chunkZ(ClientboundLevelChunkWithLightPacket packet)
+    {
         return packet.z();
     }
 
-    public static IntList removeEntityIds(ClientboundRemoveEntitiesPacket packet) {
+    public static IntList removeEntityIds(ClientboundRemoveEntitiesPacket packet)
+    {
         return packet.entityIds();
     }
 
-    public static Vec3 movingPosition(ServerboundMoveVehiclePacket packet) {
+    public static Vec3 movingPosition(ServerboundMoveVehiclePacket packet)
+    {
         return packet.movingTo().position();
     }
 
-    public static BlockHitResult hitResult(ServerboundUseItemOnPacket packet) {
+    public static BlockHitResult hitResult(ServerboundUseItemOnPacket packet)
+    {
         return packet.hitResult();
     }
 
     // Misc
-
-    public static void openUri(String url) {
-        com.mojang.blaze3d.Blaze3D.openUri(java.net.URI.create(url));
+    public static void openUri(String url)
+    {
+        Blaze3D.openUri(java.net.URI.create(url));
     }
+ 
     // Gui / screens (26.2 moved screen management onto the gui manager)
-
-    public static net.minecraft.client.gui.screens.Screen screen() {
+    public static Screen screen()
+    {
         return mc.gui.screen();
     }
 
-    public static void setScreen(net.minecraft.client.gui.screens.Screen screen) {
+    public static void setScreen(Screen screen)
+    {
         mc.gui.setScreen(screen);
     }
 
-    public static net.minecraft.client.gui.screens.Overlay overlay() {
+    public staticOverlay overlay()
+    {
         return mc.gui.overlay();
     }
 
-    public static net.minecraft.client.gui.components.toasts.ToastManager toastManager() {
+    public static ToastManager toastManager()
+    {
         return mc.gui.toastManager();
     }
 
-    public static net.minecraft.client.gui.components.ChatComponent chatComponent() {
+    public static ChatComponent chatComponent()
+    {
         return mc.gui.hud.getChat();
     }
 
     // Game renderer
-
-    public static com.mojang.blaze3d.pipeline.RenderTarget mainRenderTarget() {
+    public static RenderTarget mainRenderTarget()
+    {
         return mc.gameRenderer.mainRenderTarget();
     }
 
-    public static net.minecraft.client.renderer.state.GameRenderState gameRenderState() {
+    public static GameRenderState gameRenderState()
+    {
         return mc.gameRenderer.gameRenderState();
     }
 
-    public static net.minecraft.client.Camera mainCamera() {
+    public static net.minecraft.client.Camera mainCamera()
+    {
         return mc.gameRenderer.mainCamera();
     }
 
-    public static com.mojang.blaze3d.platform.Lighting lighting() {
+    public static Lighting lighting()
+    {
         return mc.gameRenderer.lighting();
     }
 
     // Items
+    public static boolean isShulker(Item item)
+    {
+        if (item == Items.SHULKER_BOX) return true;
 
-    public static boolean isShulker(Item item) {
-        if (item == net.minecraft.world.item.Items.SHULKER_BOX) return true;
-
-        net.minecraft.world.level.block.ColorCollection<Item> dyed = net.minecraft.world.item.Items.DYED_SHULKER_BOX;
+        ColorCollection<Item> dyed = Items.DYED_SHULKER_BOX;
         return item == dyed.white()
             || item == dyed.orange()
             || item == dyed.magenta()
@@ -479,56 +511,62 @@ public final class Vanilla {
     }
 
     // Packets
-
-    public static void registerSpectatorActionPacket(com.google.common.collect.ImmutableMap.Builder<String, net.minecraft.network.protocol.PacketType<? extends net.minecraft.network.protocol.Packet<?>>> builder) {
-        builder.put("ServerboundSpectatorActionPacket", net.minecraft.network.protocol.game.GamePacketTypes.SERVERBOUND_SPECTATOR_ACTION);
+    public static void registerSpectatorActionPacket(ImmutableMap.Builder<String, PacketType<? extends Packet<?>>> builder)
+    {
+        builder.put("ServerboundSpectatorActionPacket", GamePacketTypes.SERVERBOUND_SPECTATOR_ACTION);
     }
+ 
     // Chat
-
-    public static net.minecraft.client.multiplayer.chat.ChatListener chatListener() {
+    public static ChatListener chatListener()
+    {
         return mc.gui.chatListener();
     }
 
     // Block breaking progress
-
-    public static void loadFromBucketTag(net.minecraft.world.entity.LivingEntity entity, net.minecraft.nbt.CompoundTag tag) {
-        ((net.minecraft.world.entity.Bucketable) entity).loadFromBucketTag(tag);
+    public static void loadFromBucketTag(LivingEntity entity, CompoundTag tag)
+    {
+        ((Bucketable) entity).loadFromBucketTag(tag);
     }
 
     // Chunk rebuilds
-
-    public static void allChanged() {
+    public static void allChanged()
+    {
         mc.levelExtractor.allChanged();
     }
 
-    public static it.unimi.dsi.fastutil.longs.Long2ObjectMap<java.util.SortedSet<net.minecraft.server.level.BlockDestructionProgress>> destructionProgress() {
+    public static Long2ObjectMap<SortedSet<BlockDestructionProgress>> destructionProgress()
+    {
         return mc.level.destructionProgress();
     }
 
-
     // Weathered copper lookups (26.2+ exposes the oxidation families as collections)
-
-    public static net.minecraft.world.level.block.Block oxidizedCopper() {
-        return net.minecraft.world.level.block.Blocks.COPPER_BLOCK.weathering().oxidized();
+    public static Block oxidizedCopper()
+    {
+        return Blocks.COPPER_BLOCK.weathering().oxidized();
     }
 
-    public static net.minecraft.world.level.block.Block oxidizedCutCopper() {
-        return net.minecraft.world.level.block.Blocks.CUT_COPPER.weathering().oxidized();
+    public static Block oxidizedCutCopper()
+    {
+        return Blocks.CUT_COPPER.weathering().oxidized();
     }
 
-    public static net.minecraft.world.level.block.Block waxedUnaffectedCopper() {
-        return net.minecraft.world.level.block.Blocks.COPPER_BLOCK.waxed().unaffected();
+    public static Block waxedUnaffectedCopper()
+    {
+        return Blocks.COPPER_BLOCK.waxed().unaffected();
     }
 
-    public static net.minecraft.world.level.block.Block waxedOxidizedCopper() {
-        return net.minecraft.world.level.block.Blocks.COPPER_BLOCK.waxed().oxidized();
+    public static Block waxedOxidizedCopper()
+    {
+        return Blocks.COPPER_BLOCK.waxed().oxidized();
     }
 
-    public static net.minecraft.world.level.block.Block waxedOxidizedCutCopper() {
-        return net.minecraft.world.level.block.Blocks.CUT_COPPER.waxed().oxidized();
+    public static Block waxedOxidizedCutCopper()
+    {
+        return Blocks.CUT_COPPER.waxed().oxidized();
     }
 
-    public static net.minecraft.world.level.block.Block waxedUnaffectedCopperBulb() {
-        return net.minecraft.world.level.block.Blocks.COPPER_BULB.waxed().unaffected();
+    public static Block waxedUnaffectedCopperBulb()
+    {
+        return Blocks.COPPER_BULB.waxed().unaffected();
     }
 }
