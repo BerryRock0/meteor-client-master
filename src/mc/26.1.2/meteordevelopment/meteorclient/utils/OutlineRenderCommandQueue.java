@@ -5,34 +5,34 @@
 
 package meteordevelopment.meteorclient.utils;
 
-import com.mojang.blaze3d.vertex.PoseStack.
-import meteordevelopment.meteorclient.utils.render.color.Color.
-import net.minecraft.client.gui.Font.
-import net.minecraft.client.model.Model.
-import net.minecraft.client.model.geom.ModelPart.
-import net.minecraft.client.renderer.SubmitNodeCollection.
-import net.minecraft.client.renderer.SubmitNodeStorage.
-import net.minecraft.client.renderer.block.MovingBlockRenderState.
-import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart.
-import net.minecraft.client.renderer.entity.state.EntityRenderState.
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer.
-import net.minecraft.client.renderer.item.ItemStackRenderState.
-import net.minecraft.client.renderer.rendertype.RenderType.
-import net.minecraft.client.renderer.state.level.CameraRenderState.
-import net.minecraft.client.renderer.state.level.QuadParticleRenderState.
-import net.minecraft.client.renderer.texture.TextureAtlasSprite.
-import net.minecraft.client.resources.model.geometry.BakedQuad.
-import net.minecraft.network.chat.Component.
-import net.minecraft.util.FormattedCharSequence.
-import net.minecraft.world.item.ItemDisplayContext.
-import net.minecraft.world.phys.Vec3.
-import org.joml.Quaternionf.
-import org.jspecify.annotations.NonNull.
-import org.jspecify.annotations.NullMarked.
-import org.jspecify.annotations.Nullable.
+import com.mojang.blaze3d.vertex.PoseStack;
+import meteordevelopment.meteorclient.utils.render.color.Color;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.SubmitNodeCollection;
+import net.minecraft.client.renderer.SubmitNodeStorage;
+import net.minecraft.client.renderer.block.MovingBlockRenderState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays.
-import java.util.List.
+import java.util.Arrays;
+import java.util.List;
 
 public class OutlineRenderCommandQueue extends SubmitNodeStorage {
     private int color;

@@ -18,21 +18,21 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.state.level.CameraRenderState.
-import net.minecraft.client.renderer.state.level.QuadParticleRenderState.
-import net.minecraft.client.renderer.texture.TextureAtlasSprite.
-import net.minecraft.client.resources.model.geometry.BakedQuad.
-import net.minecraft.network.chat.Component.
-import net.minecraft.util.FormattedCharSequence.
-import net.minecraft.world.item.ItemDisplayContext.
-import net.minecraft.world.phys.Vec3.
-import org.joml.Quaternionf.
-import org.jspecify.annotations.NonNull.
-import org.jspecify.annotations.NullMarked.
-import org.jspecify.annotations.Nullable.
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays.
-import java.util.List.
+import java.util.Arrays;
+import java.util.List;
 
 public class OutlineRenderCommandQueue extends SubmitNodeStorage {
     private int color;
