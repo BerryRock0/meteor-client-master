@@ -330,12 +330,14 @@ public final class Vanilla {
         com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService service =
             (com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService) authService;
         meteordevelopment.meteorclient.mixin.MinecraftAccessor mca = (meteordevelopment.meteorclient.mixin.MinecraftAccessor) mc;
-        mca.meteor$setUserApiService(service.createUserApiService(((net.minecraft.client.User) mca.meteor$getUser()).getAccessToken()));
-        mca.meteor$setPlayerSocialManager(new net.minecraft.client.gui.screens.social.PlayerSocialManager(mc, (net.minecraft.client.multiplayer.chat.report.ReportEnvironment) null, null, null));
-        mca.meteor$setProfileKeyPairManager(net.minecraft.client.multiplayer.ProfileKeyPairManager.create(apiService, session, mc.gameDirectory.toPath()));
-        mca.meteor$setReportingContext(net.minecraft.client.multiplayer.chat.report.ReportingContext.create(net.minecraft.client.multiplayer.chat.report.ReportEnvironment.local(), apiService));
-        mca.meteor$setProfileFuture(java.util.concurrent.CompletableFuture.supplyAsync(
-            () -> mc.services().sessionService().fetchProfile(mc.getUser().getProfileId(), true), net.minecraft.util.Util.ioPool()));
+        net.minecraft.util.SignatureValidator.from(service.getServicesKeySet(), com.mojang.authlib.yggdrasil.ServicesKeyType.PROFILE_KEY);
+        net.minecraft.client.resources.SkinManager.TextureCache skinCache =
+            ((meteordevelopment.meteorclient.mixin.SkinManagerAccessor) mc.getSkinManager()).meteor$getSkinTextures();
+        java.nio.file.Path skinCachePath =
+            ((meteordevelopment.meteorclient.mixin.FileCacheAccessor) skinCache).meteor$getRoot();
+        mca.meteor$setServices(net.minecraft.server.Services.create(service, mc.gameDirectory));
+        mca.meteor$setSkinManager(new net.minecraft.client.resources.SkinManager(skinCachePath, mc.services(),
+            new net.minecraft.client.renderer.texture.SkinTextureDownloader(mc.getProxy(), mc.getTextureManager(), mc), mc));
     }
 
     public static void setSession(net.minecraft.client.User session) {
