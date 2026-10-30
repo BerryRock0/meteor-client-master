@@ -5,9 +5,38 @@
 
 package meteordevelopment.meteorclient.mc;
 
+import com.mojang.authlib.Environment;
+import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.platform.cursor.CursorType;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import it.unimi.dsi.fastutil.ints.IntList;
+import meteordevelopment.meteorclient.MeteorClient;
+import meteordevelopment.meteorclient.mixin.FileCacheAccessor;
+import meteordevelopment.meteorclient.mixin.MinecraftAccessor;
+import meteordevelopment.meteorclient.mixin.SkinManagerAccessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.network.chat.LastSeenMessages;
+import net.minecraft.network.chat.MessageSignature;
+import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.network.protocol.game.ServerboundChatPacket;
+import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
+import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
+import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
+import net.minecraft.network.protocol.game.ServerboundSwingPacket;
+import net.minecraft.util.Util;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -67,7 +96,6 @@ public final class Vanilla {
         return rule.explodes();
     }
 
-
     // Collision
 
     public static boolean blocksMotion(net.minecraft.world.level.block.state.BlockState state) {
@@ -86,7 +114,7 @@ public final class Vanilla {
         boolean onlyBlocks,
         boolean extra
     ) {
-        return net.minecraft.world.entity.projectile.ProjectileUtil.getManyEntityHitResult(level, entity, from, to, box, predicate, tolerance, block, onlyBlocks);
+        return net.minecraft.world.entity.projectile.ProjectileUtil.getManyEntityHitResult(level, entity, from, to, box, predicate, tolerance, block, onlyBlocks, extra);
     }
 
     public static java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> quads(
@@ -155,7 +183,6 @@ public final class Vanilla {
         InputConstants.grabOrReleaseMouse(window, InputConstants.CURSOR_NORMAL, x, y);
     }
 
-
     // Transforms
 
     public static void rotate(com.mojang.blaze3d.vertex.PoseStack poseStack, com.mojang.math.Axis axis, float degrees) {
@@ -172,7 +199,6 @@ public final class Vanilla {
         return ((net.minecraft.world.entity.monster.EnderMan) entity).isCreepy();
     }
 
-
     public static void tooltip(net.minecraft.client.gui.GuiGraphicsExtractor graphics,
                                net.minecraft.client.gui.Font font,
                                java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> components,
@@ -180,11 +206,9 @@ public final class Vanilla {
         graphics.tooltip(font, components, x, y, net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner.INSTANCE, stack.get(net.minecraft.core.component.DataComponents.TOOLTIP_STYLE));
     }
 
-
     public static boolean isSameFluid(net.minecraft.world.level.material.Fluid a, net.minecraft.world.level.material.Fluid b) {
         return a.isSame(b);
     }
-
 
     public static net.minecraft.client.multiplayer.ClientLevel createClientLevel(
         net.minecraft.client.multiplayer.ClientPacketListener listener,
@@ -198,7 +222,6 @@ public final class Vanilla {
     ) {
         return new net.minecraft.client.multiplayer.ClientLevel(listener, data, dimension, dimensionType, x, z, extractor, isClientSide, 0L, seaLevel);
     }
-
 
     // Textures
 
@@ -215,16 +238,13 @@ public final class Vanilla {
         renderer.render(t.getTextureView(), t.getSampler());
     }
 
-
     public static int dyeDiffuseColor(net.minecraft.world.item.DyeColor dye) {
         return dye.getTextureDiffuseColor();
     }
 
-
     public static java.util.List<net.minecraft.world.item.ItemStack> containerItems(net.minecraft.core.component.DataComponentMap components) {
         return components.get(net.minecraft.core.component.DataComponents.CONTAINER).allItemsCopyStream().toList();
     }
-
 
     public static com.mojang.blaze3d.platform.NativeImage mapImage(
         meteordevelopment.meteorclient.mixin.MapTextureManagerAccessor accessor,
@@ -237,7 +257,6 @@ public final class Vanilla {
     /** 26.2 and 26.3 hand out the image of the map texture, which owns it. */
     public static void closeMapImage(com.mojang.blaze3d.platform.NativeImage image) {
     }
-
 
     // Keyboard
 
@@ -262,7 +281,6 @@ public final class Vanilla {
         return org.lwjgl.glfw.GLFW.glfwGetMouseButton(mc.getWindow().handle(), button) != com.mojang.blaze3d.platform.InputConstants.RELEASE;
     }
 
-
     public static net.minecraft.client.resources.model.geometry.BakedQuad.MaterialInfo translucentMaterialInfo(
         net.minecraft.client.resources.model.geometry.BakedQuad.MaterialInfo info
     ) {
@@ -275,7 +293,6 @@ public final class Vanilla {
             info.lightEmission()
         );
     }
-
 
     public static <S> void submitBannerPatterns(
         net.minecraft.client.resources.model.sprite.SpriteGetter sprites,
@@ -303,7 +320,6 @@ public final class Vanilla {
         collector.submitModel(model, state, poseStack, light, overlay, outlineColor, sprite, sprites, color, (net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay) crumblingOverlay);
     }
 
-
     /**
      * 26.2 still had a swing packet, so a critical had to hold it back together with the attack.
      */
@@ -318,7 +334,6 @@ public final class Vanilla {
     public static void sendSwingPacket(Object packet) {
         mc.getConnection().send((net.minecraft.network.protocol.game.ServerboundSwingPacket) packet);
     }
-
 
     // Authentication (authlib 9)
 
