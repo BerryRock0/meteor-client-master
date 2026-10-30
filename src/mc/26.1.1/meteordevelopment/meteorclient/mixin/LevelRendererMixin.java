@@ -83,9 +83,12 @@ public abstract class LevelRendererMixin implements ILevelRenderer {
     private void onSubmitEntities(PoseStack poseStack, LevelRenderState levelRenderState, SubmitNodeCollector output, CallbackInfo ci) {
         if (renderDispatcher == null) {
             renderDispatcher = new FeatureRenderDispatcher(
-                renderBuffers,
+                new SubmitNodeStorage(),
                 mc.getModelManager(),
+                mc.renderBuffers().bufferSource(),
                 mc.getAtlasManager(),
+                mc.renderBuffers().outlineBufferSource(),
+                mc.renderBuffers().crumblingBufferSource(),
                 mc.font,
                 Vanilla.gameRenderState()
             );
@@ -126,9 +129,7 @@ public abstract class LevelRendererMixin implements ILevelRenderer {
 
         meteor$pushEntityOutlineFramebuffer(shader.framebuffer);
         try {
-            try (var frame = renderDispatcher.prepareFrame(outlineRenderCommandQueue)) {
-                frame.executeOutline();
-            }
+            renderDispatcher.renderAllFeatures();
         } finally {
             outlineRenderCommandQueue.submitsPerOrder.clear();
             meteor$popEntityOutlineFramebuffer();

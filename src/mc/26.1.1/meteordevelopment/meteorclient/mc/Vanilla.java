@@ -348,11 +348,7 @@ public final class Vanilla {
             new com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService(mc.getProxy());
 
         com.mojang.authlib.minecraft.UserApiService apiService = service.createUserApiService(session.getAccessToken());
-        com.mojang.authlib.yggdrasil.FriendsService friendsService = service.createFriendsService(session.getAccessToken());
-        net.minecraft.client.gui.screens.social.RemoteFriendListUpdateHandler handler =
-            new net.minecraft.client.gui.screens.social.RemoteFriendListUpdateHandler(friendsService, mc);
         mca.meteor$setUserApiService(apiService);
-        mca.meteor$setPlayerSocialManager(new net.minecraft.client.gui.screens.social.PlayerSocialManager(mc, apiService, friendsService, handler));
         mca.meteor$setProfileKeyPairManager(net.minecraft.client.multiplayer.ProfileKeyPairManager.create(apiService, session, mc.gameDirectory.toPath()));
         mca.meteor$setReportingContext(net.minecraft.client.multiplayer.chat.report.ReportingContext.create(net.minecraft.client.multiplayer.chat.report.ReportEnvironment.local(), apiService));
         mca.meteor$setProfileFuture(java.util.concurrent.CompletableFuture.supplyAsync(
@@ -447,7 +443,7 @@ public final class Vanilla {
     }
 
     public static com.mojang.blaze3d.platform.Lighting lighting() {
-        return mc.gameRenderer.lighting;
+        return mc.gameRenderer.getLighting();
     }
 
     // Items

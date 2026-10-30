@@ -29,8 +29,7 @@ public class FixedUniformStorage<T extends DynamicUniformStorage.DynamicUniform>
 
     public FixedUniformStorage(String name, int blockSize, int capacity) {
         GpuDevice gpuDevice = RenderSystem.getDevice();
-        int uniformAlignment = gpuDevice.getDeviceInfo().limits().minUniformOffsetAlignment();
-        this.blockSize = Mth.roundToward(blockSize, uniformAlignment);
+        this.blockSize = Mth.roundToward(blockSize, gpuDevice.getUniformOffsetAlignment());
         this.capacity = capacity;
         int alignedCapacity = Mth.smallestEncompassingPowerOfTwo(capacity);
         this.size = 0;
@@ -44,7 +43,9 @@ public class FixedUniformStorage<T extends DynamicUniformStorage.DynamicUniform>
             int i = this.size * this.blockSize;
             GpuBufferSlice slice = this.buffer.currentBuffer().slice(i, this.blockSize);
 
-            try (GpuBufferSlice.MappedView mappedView = slice.map(false, true)) {
+            try (GpuBuffer.MappedView mappedView = RenderSystem.getDevice()
+                .createCommandEncoder()
+                .mapBuffer(slice, false, true)) {
                 value.write(mappedView.data());
             }
 
@@ -62,9 +63,10 @@ public class FixedUniformStorage<T extends DynamicUniformStorage.DynamicUniform>
             int i = this.size * this.blockSize;
             GpuBufferSlice[] gpuBufferSlices = new GpuBufferSlice[values.length];
             GpuBuffer ubo = this.buffer.currentBuffer();
-            GpuBufferSlice slice = ubo.slice(i, values.length * this.blockSize);
 
-            try (GpuBufferSlice.MappedView mappedView = slice.map(false, true)) {
+            try (GpuBuffer.MappedView mappedView = RenderSystem.getDevice()
+                .createCommandEncoder()
+                .mapBuffer(ubo.slice(i, values.length * this.blockSize), false, true)) {
                 ByteBuffer byteBuffer = mappedView.data();
 
                 for (int j = 0; j < values.length; j++) {

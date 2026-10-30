@@ -107,7 +107,7 @@ public abstract class LevelExtractorMixin {
     )
     private void extractLevel$cloudColor(DeltaTracker deltaTracker, Camera camera, float deltaPartialTick, CallbackInfo ci) {
         Ambience ambience = Modules.get().get(Ambience.class);
-        LevelRenderState levelRenderState = Minecraft.getInstance().gameRenderer.gameRenderState().levelRenderState;
+        LevelRenderState levelRenderState = Vanilla.gameRenderState().levelRenderState;
         if (ambience.isActive() && ambience.customCloudColor.get()) {
             levelRenderState.cloudColor = ambience.cloudColor.get().getPacked();
         }
