@@ -169,7 +169,7 @@ public final class Vanilla {
     }
 
     public static void registerSwingPacket(ImmutableMap.Builder<String, PacketType<? extends Packet<?>>> builder) {
-        builder.put("ServerboundSwingPacket", .GamePacketTypes.SERVERBOUND_SWING);
+        builder.put("ServerboundSwingPacket", GamePacketTypes.SERVERBOUND_SWING);
     }
 
     // Items
