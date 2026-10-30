@@ -26,6 +26,7 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.ByteBuffer;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -78,9 +79,19 @@ public class SaveMapCommand extends Command {
         try {
             if (scale == 128) mapImage.writeToFile(path);
             else {
-                int[] data = mapImage.makePixelArray();
-                BufferedImage image = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
-                image.setRGB(0, 0, image.getWidth(), image.getHeight(), data, 0, 128);
+                int width = mapImage.getWidth();
+                int height = mapImage.getHeight();
+                ByteBuffer pixels = mapImage.getPixels();
+                int[] data = new int[width * height];
+                for (int i = 0; i < data.length; i++) {
+                    int r = pixels.get(i * 4) & 0xFF;
+                    int g = pixels.get(i * 4 + 1) & 0xFF;
+                    int b = pixels.get(i * 4 + 2) & 0xFF;
+                    int a = pixels.get(i * 4 + 3) & 0xFF;
+                    data[i] = (a << 24) | (r << 16) | (g << 8) | b;
+                }
+                BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                image.setRGB(0, 0, image.getWidth(), image.getHeight(), data, 0, width);
 
                 BufferedImage scaledImage = new BufferedImage(scale, scale, 2);
                 scaledImage.createGraphics().drawImage(image, 0, 0, scale, scale, null);
