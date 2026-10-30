@@ -49,6 +49,9 @@ public class OutlineRenderCommandQueue extends SubmitNodeStorage {
 
     @NullMarked
     private class OutlineBatchingRenderCommandQueue extends SubmitNodeCollection {
+        public OutlineBatchingRenderCommandQueue() {
+            super(OutlineRenderCommandQueue.this);
+        }
         @Override
         public void submitShadow(PoseStack poseStack, float shadowRadius, List<EntityRenderState.ShadowPiece> shadowPieces) {
         }
@@ -76,7 +79,7 @@ public class OutlineRenderCommandQueue extends SubmitNodeStorage {
 
         @Override
         public void submitModelPart(ModelPart part, PoseStack poseStack, RenderType renderType, int lightCoords, int overlayCoords, @Nullable TextureAtlasSprite sprite, int tintedColor, ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay, int outlineColor) {
-            super.submitModelPart(part, poseStack, renderType, lightCoords, overlayCoords, sprite, color, crumblingOverlay, color);
+            super.submitModelPart(part, poseStack, renderType, lightCoords, overlayCoords, sprite, tintedColor, crumblingOverlay, outlineColor);
         }
 
         @Override

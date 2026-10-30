@@ -9,16 +9,17 @@ import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.AtlasManager;
+import net.minecraft.client.renderer.MultiBufferSource;
 import org.jspecify.annotations.NonNull;
 
 public class CustomBannerGuiElementRenderer extends PictureInPictureRenderer<CustomBannerGuiElementRenderState> {
     private final SpriteGetter sprites;
 
-    public CustomBannerGuiElementRenderer(SpriteGetter sprites) {
-        this.sprites = sprites;
+    public CustomBannerGuiElementRenderer(MultiBufferSource.BufferSource bufferSource, AtlasManager atlasManager) {
+        this.sprites = atlasManager.getBannerSpriteGetter();
     }
 
     @Override
@@ -26,10 +27,10 @@ public class CustomBannerGuiElementRenderer extends PictureInPictureRenderer<Cus
         return CustomBannerGuiElementRenderState.class;
     }
 
-    protected void renderToTexture(CustomBannerGuiElementRenderState state, PoseStack matrixStack, SubmitNodeCollector collector) {
+    protected void renderToTexture(CustomBannerGuiElementRenderState state, PoseStack matrixStack) {
         Vanilla.lighting().setupFor(Lighting.Entry.ITEMS_FLAT);
         matrixStack.translate(0.0F, 0.25F, 0.0F);
-        Vanilla.submitBannerPatterns(this.sprites, matrixStack, collector, 15728880, OverlayTexture.NO_OVERLAY, state.flag(), 0.0F, true, state.baseColor(), state.resultBannerPatterns());
+        Vanilla.submitBannerPatterns(this.sprites, matrixStack, 15728880, OverlayTexture.NO_OVERLAY, state.flag(), 0.0F, true, state.baseColor(), state.resultBannerPatterns());
     }
 
     @Override

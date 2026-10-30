@@ -6,7 +6,10 @@
 package meteordevelopment.meteorclient.renderer;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.systems.CommandEncoder;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.utils.Utils;
@@ -265,26 +268,24 @@ public class MeshBuilder {
         return indices;
     }
 
-    public GpuBuffer uploadVertexBuffer(CommandEncoder encoder) {
-        GpuBuffer buffer = RenderSystem.getDevice().createBuffer(() -> "Meteor MeshBuilder Vertex Buffer", primitiveVerticesSize * vertexI, GpuBuffer.Usage.VERTEX | GpuBuffer.Usage.DYNAMIC);
-        encoder.writeToBuffer(buffer, 0, vertices);
-        return buffer;
+    public GpuBufferSlice uploadVertexBuffer(CommandEncoder encoder) {
+        vertices.limit(getVerticesOffset());
+        return encoder.transientMemory().uploadGpu(vertices, primitiveVerticesSize, GpuBuffer.USAGE_VERTEX);
     }
 
-    public GpuBuffer uploadIndexBuffer(CommandEncoder encoder) {
-        GpuBuffer buffer = RenderSystem.getDevice().createBuffer(() -> "Meteor MeshBuilder Index Buffer", 4 * indicesCount, GpuBuffer.Usage.INDEX | GpuBuffer.Usage.DYNAMIC);
-        encoder.writeToBuffer(buffer, 0, indices);
-        return buffer;
+    public GpuBufferSlice uploadIndexBuffer(CommandEncoder encoder) {
+        indices.limit(indicesCount * 4);
+        return encoder.transientMemory().uploadGpu(indices, 4, GpuBuffer.USAGE_INDEX);
     }
 
     public GpuBuffer getVertexBuffer() {
         vertices.limit(getVerticesOffset());
-        return RenderSystem.getDevice().createBuffer(() -> "Meteor MeshBuilder Vertex Buffer", GpuBuffer.Usage.VERTEX, vertices);
+        return RenderSystem.getDevice().createBuffer(() -> "Meteor MeshBuilder Vertex Buffer", GpuBuffer.USAGE_VERTEX, vertices);
     }
 
     public GpuBuffer getIndexBuffer() {
         indices.limit(indicesCount * 4);
-        return RenderSystem.getDevice().createBuffer(() -> "Meteor MeshBuilder Index Buffer", GpuBuffer.Usage.INDEX, indices);
+        return RenderSystem.getDevice().createBuffer(() -> "Meteor MeshBuilder Index Buffer", GpuBuffer.USAGE_INDEX, indices);
     }
 
     private int getVerticesOffset() {

@@ -55,7 +55,7 @@ public abstract class SimpleBlockRenderer {
         }
     };
 
-    private static final SubmitNodeCollection MESH_NODES = new SubmitNodeCollection() {
+    private static final SubmitNodeCollection MESH_NODES = new SubmitNodeCollection(SUBMIT_NODES) {
         @Override
         public <S> void submitModel(Model<? super S> model, S state, PoseStack poseStack, RenderType renderType, int lightCoords, int overlayCoords, int tintedColor, @Nullable TextureAtlasSprite sprite, int outlineColor, ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay) {
             if (CONSUMER.isBound()) {
