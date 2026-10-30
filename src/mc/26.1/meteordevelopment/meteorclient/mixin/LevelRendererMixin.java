@@ -86,7 +86,7 @@ public abstract class LevelRendererMixin implements ILevelRenderer {
                 new SubmitNodeStorage(),
                 mc.getModelManager(),
                 mc.renderBuffers().bufferSource(),
-                Vanilla.atlasManager(),
+                mc.getAtlasManager(),
                 mc.renderBuffers().outlineBufferSource(),
                 mc.renderBuffers().crumblingBufferSource(),
                 mc.font,
