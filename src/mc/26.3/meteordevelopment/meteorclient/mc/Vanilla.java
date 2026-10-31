@@ -13,6 +13,8 @@ import java.util.function.*;
 import java.nio.*;
 import java.nio.file.*;
 
+import org.joml.Matrix4f;
+
 import com.google.common.collect.*;
 
 import com.mojang.math.*;
@@ -220,7 +222,7 @@ public final class Vanilla
     // Transforms
     public static void rotate(PoseStack poseStack, Axis axis, float degrees)
     {
-        poseStack.mulPose(axis.rotateDegrees(new org.joml.Matrix4f(), degrees));
+        poseStack.mulPose(axis.rotateDegrees(new Matrix4f(), degrees));
     }
 
     // Entities
