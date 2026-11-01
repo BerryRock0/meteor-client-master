@@ -39,6 +39,7 @@ import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -90,17 +91,20 @@ public abstract class ConnectionMixin {
 
     // Uses the protocol version from the compatibility layer (see Compat#setProtocolVersion) instead
     // of the one baked into the running Minecraft version whenever a connection is initiated.
-    @ModifyArgs(
-        method = "sendPacket",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;doSendPacket(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;Z)V")
-    )
-    private void onSendPacketProtocolVersion(Args args) {
-        Packet<?> packet = args.get(0);
+    //
+    // The replacement happens at the head of Connection#doSendPacket rather than at the call site in
+    // Connection#sendPacket: sendPacket either invokes doSendPacket directly (when already on the
+    // event loop) or defers the very same invocation to the event loop via a lambda. Handshakes are
+    // sent off the event loop, so only hooking doSendPacket guarantees the overridden version
+    // actually reaches the wire on both paths.
+    @ModifyVariable(method = "doSendPacket", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    private Packet<?> onSendPacketProtocolVersion(Packet<?> packet) {
         if (packet instanceof ClientIntentionPacket intention) {
             int version = Compat.getProtocolVersion();
             MeteorClient.LOG.info("Protocol version override: sending ClientIntentionPacket with version {}", version);
-            args.set(0, new ClientIntentionPacket(version, intention.hostName(), intention.port(), intention.intention()));
+            return new ClientIntentionPacket(version, intention.hostName(), intention.port(), intention.intention());
         }
+        return packet;
     }
 
     // Replaces the outbound protocol info with one that carries the protocol version from the
