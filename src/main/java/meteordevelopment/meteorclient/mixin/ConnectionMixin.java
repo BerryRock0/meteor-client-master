@@ -20,15 +20,21 @@ import meteordevelopment.meteorclient.systems.modules.world.HighwayBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.BandwidthDebugMonitor;
 import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.PacketListener;
+import net.minecraft.network.ProtocolInfo;
 import net.minecraft.network.SkipPacketEncoderException;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.BundlerInfo;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBundlePacket;
 import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
 import net.minecraft.server.network.EventLoopGroupHolder;
+import io.netty.buffer.ByteBuf;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -93,6 +99,37 @@ public abstract class ConnectionMixin {
         if (packet instanceof ClientIntentionPacket intention) {
             args.set(0, new ClientIntentionPacket(Compat.getProtocolVersion(), intention.hostName(), intention.port(), intention.intention()));
         }
+    }
+
+    // Replaces the outbound protocol info with one that carries the protocol version from the
+    // compatibility layer (see Compat#setProtocolVersion), so that the connection itself is bound to
+    // the overridden protocol version and not only the sent ClientIntentionPacket.
+    @ModifyArgs(
+        method = "lambda$initiateServerboundConnection$0",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;setupOutboundProtocol(Lnet/minecraft/network/ProtocolInfo;)V")
+    )
+    private void onSetupOutboundProtocolVersion(Args args) {
+        ProtocolInfo<?> protocolInfo = args.get(0);
+        if (protocolInfo == null) {
+            return;
+        }
+        args.set(0, protocolInfoForVersion(protocolInfo));
+    }
+
+    private ProtocolInfo<PacketListener> protocolInfoForVersion(ProtocolInfo<?> original) {
+        return new ProtocolInfo<PacketListener>() {
+            @Override
+            public ConnectionProtocol id() { return original.id(); }
+
+            @Override
+            public PacketFlow flow() { return original.flow(); }
+
+            @Override
+            public StreamCodec<ByteBuf, Packet<? super PacketListener>> codec() { return (StreamCodec<ByteBuf, Packet<? super PacketListener>>) (Object) original.codec(); }
+
+            @Override
+            public BundlerInfo bundlerInfo() { return original.bundlerInfo(); }
+        };
     }
 
     @Inject(method = "exceptionCaught", at = @At("HEAD"), cancellable = true)
