@@ -97,7 +97,9 @@ public abstract class ConnectionMixin {
     private void onSendPacketProtocolVersion(Args args) {
         Packet<?> packet = args.get(0);
         if (packet instanceof ClientIntentionPacket intention) {
-            args.set(0, new ClientIntentionPacket(Compat.getProtocolVersion(), intention.hostName(), intention.port(), intention.intention()));
+            int version = Compat.getProtocolVersion();
+            MeteorClient.LOG.info("Protocol version override: sending ClientIntentionPacket with version {}", version);
+            args.set(0, new ClientIntentionPacket(version, intention.hostName(), intention.port(), intention.intention()));
         }
     }
 
