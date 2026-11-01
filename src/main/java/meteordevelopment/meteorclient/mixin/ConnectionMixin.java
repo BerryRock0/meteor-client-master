@@ -85,11 +85,14 @@ public abstract class ConnectionMixin {
     // Uses the protocol version from the compatibility layer (see Compat#setProtocolVersion) instead
     // of the one baked into the running Minecraft version whenever a connection is initiated.
     @ModifyArgs(
-        method = "initiateServerboundPlayConnection(Ljava/lang/String;ILnet/minecraft/network/protocol/login/ClientLoginPacketListener;)V",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;initiateServerboundConnection:(Ljava/lang/String;ILnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/ClientboundPacketListener;Lnet/minecraft/network/protocol/handshake/ClientIntent;)V")
+        method = "sendPacket",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;doSendPacket(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;Z)V")
     )
-    private void onModifyProtocolVersion(Args args) {
-        args.set(1, Compat.getProtocolVersion());
+    private void onSendPacketProtocolVersion(Args args) {
+        Packet<?> packet = args.get(0);
+        if (packet instanceof ClientIntentionPacket intention) {
+            args.set(0, new ClientIntentionPacket(Compat.getProtocolVersion(), intention.hostName(), intention.port(), intention.intention()));
+        }
     }
 
     @Inject(method = "exceptionCaught", at = @At("HEAD"), cancellable = true)
