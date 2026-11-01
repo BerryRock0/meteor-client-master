@@ -36,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.net.InetSocketAddress;
 import java.util.Iterator;
@@ -84,11 +85,11 @@ public abstract class ConnectionMixin {
     // Uses the protocol version from the compatibility layer (see Compat#setProtocolVersion) instead
     // of the one baked into the running Minecraft version whenever a connection is initiated.
     @ModifyArgs(
-        method = "initiateServerboundPlayConnection",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;initiateServerboundConnection:(Ljava/lang/String;ILnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/PacketListener;Ljava/lang/String;ILnet/minecraft/network/protocol/handshake/ClientIntent;)V")
+        method = "initiateServerboundPlayConnection(Ljava/lang/String;ILnet/minecraft/network/protocol/login/ClientLoginPacketListener;)V",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;initiateServerboundConnection:(Ljava/lang/String;ILnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/ClientboundPacketListener;Lnet/minecraft/network/protocol/handshake/ClientIntent;)V")
     )
-    private int onModifyProtocolVersion(int index, CallbackInfo ci) {
-        return Compat.getProtocolVersion();
+    private void onModifyProtocolVersion(Args args) {
+        args.set(1, Compat.getProtocolVersion());
     }
 
     @Inject(method = "exceptionCaught", at = @At("HEAD"), cancellable = true)
