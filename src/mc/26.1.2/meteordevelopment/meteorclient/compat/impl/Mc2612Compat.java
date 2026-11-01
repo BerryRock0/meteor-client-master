@@ -54,6 +54,11 @@ public final class Mc2612Compat implements ICompat {
     }
 
     @Override
+    public int protocolVersion() {
+        return SharedConstants.getProtocolVersion();
+    }
+
+    @Override
     public int getWindowWidth() {
         return MeteorClient.mc.getWindow().getWidth();
     }

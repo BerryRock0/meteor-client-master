@@ -50,6 +50,21 @@ public final class Compat {
         return impl;
     }
 
+    private static Integer protocolVersionOverride;
+
+    /**
+     * Overrides the protocol version used for new connections. {@code null} means "use the
+     * protocol version of the running Minecraft version".
+     */
+    public static void setProtocolVersion(int protocolVersion) {
+        protocolVersionOverride = protocolVersion;
+    }
+
+    /** The protocol version used for new connections; defaults to the running version's. */
+    public static int getProtocolVersion() {
+        return protocolVersionOverride != null ? protocolVersionOverride : get().protocolVersion();
+    }
+
     private static String resolveImplClassName() {
         String property = System.getProperty("meteor.compat.impl");
         if (property != null && !property.isBlank()) return property;

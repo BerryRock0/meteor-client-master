@@ -11,6 +11,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.timeout.TimeoutException;
 import meteordevelopment.meteorclient.MeteorClient;
+import meteordevelopment.meteorclient.compat.Compat;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.ServerConnectEndEvent;
 import meteordevelopment.meteorclient.systems.modules.Modules;
@@ -26,10 +27,12 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBundlePacket;
+import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
 import net.minecraft.server.network.EventLoopGroupHolder;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -76,6 +79,16 @@ public abstract class ConnectionMixin {
     @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;)V", at = @At("TAIL"))
     private void onSendPacketTail(Packet<?> packet, @Nullable ChannelFutureListener listener, CallbackInfo ci) {
         MeteorClient.EVENT_BUS.post(new PacketEvent.Sent(packet, (Connection) (Object) this));
+    }
+
+    // Uses the protocol version from the compatibility layer (see Compat#setProtocolVersion) instead
+    // of the one baked into the running Minecraft version whenever a connection is initiated.
+    @ModifyArgs(
+        method = "initiateServerboundPlayConnection",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;initiateServerboundConnection:(Ljava/lang/String;ILnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/PacketListener;Ljava/lang/String;ILnet/minecraft/network/protocol/handshake/ClientIntent;)V")
+    )
+    private int onModifyProtocolVersion(int index, CallbackInfo ci) {
+        return Compat.getProtocolVersion();
     }
 
     @Inject(method = "exceptionCaught", at = @At("HEAD"), cancellable = true)

@@ -26,6 +26,15 @@ public interface ICompat {
     /** The raw version name, e.g. {@code 26.2}. */
     String versionName();
 
+    /**
+     * The protocol version used when opening new connections.
+     *
+     * <p>Defaults to the protocol version of the running Minecraft version; it can be overridden
+     * at runtime via {@link Compat#setProtocolVersion(int)} to connect to servers running a
+     * different protocol version.</p>
+     */
+    int protocolVersion();
+
     int getWindowWidth();
 
     int getWindowHeight();

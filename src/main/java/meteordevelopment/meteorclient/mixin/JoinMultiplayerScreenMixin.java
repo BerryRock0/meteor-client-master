@@ -8,6 +8,7 @@ package meteordevelopment.meteorclient.mixin;
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.gui.GuiThemes;
+import meteordevelopment.meteorclient.gui.screens.ProtocolVersionScreen;
 import meteordevelopment.meteorclient.systems.config.Config;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.player.NameProtect;
@@ -40,6 +41,9 @@ public abstract class JoinMultiplayerScreenMixin extends Screen {
 
     @Unique
     private Button accounts;
+
+    @Unique
+    private Button protocolVersion;
 
     @Unique
     private static final int BUTTON_WIDTH = 75;
@@ -76,6 +80,16 @@ public abstract class JoinMultiplayerScreenMixin extends Screen {
         ((AbstractWidgetAccessor) accounts).meteor$setVisible(accountsVisible);
 
         positionButton(accounts, accountPos);
+
+        if (protocolVersion == null) {
+            protocolVersion = addRenderableWidget(
+                Button.builder(Component.literal("Protocol"), _ -> Vanilla.setScreen(new ProtocolVersionScreen(GuiThemes.get(), this)))
+                    .size(BUTTON_WIDTH, BUTTON_HEIGHT)
+                    .build()
+            );
+        }
+
+        positionButton(protocolVersion, Config.ButtonPosition.BottomLeft);
     }
 
     @Unique

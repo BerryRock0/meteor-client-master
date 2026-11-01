@@ -10,12 +10,10 @@ import meteordevelopment.meteorclient.mc.EntityTypes;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.mc.Vanilla;
-import meteordevelopment.meteorclient.pathing.PathManagers;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.friends.Friends;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.utils.entity.EntityAgeTest;
 import meteordevelopment.meteorclient.utils.entity.EntityUtils;
 import meteordevelopment.meteorclient.utils.entity.SortPriority;
@@ -95,39 +93,6 @@ public class KillAura extends Module {
         .build()
     );
 
-    private final Setting<ShieldMode> shieldMode = sgGeneral.add(new EnumSetting.Builder<ShieldMode>()
-        .name("shield-mode")
-        .description("""
-                What to do when your target is blocking with a shield:
-                - Ignore:   Don't attack them if they are blocking
-                - Break:    Swap to an axe to disable the shield (Only if Auto Switch is enabled)
-                - None:     Attack them as normal
-            """)
-        .defaultValue(ShieldMode.None)
-        .build()
-    );
-
-    private final Setting<Boolean> onlyOnClick = sgGeneral.add(new BoolSetting.Builder()
-        .name("only-on-click")
-        .description("Only attacks when holding left click.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> onlyOnLook = sgGeneral.add(new BoolSetting.Builder()
-        .name("only-on-look")
-        .description("Only attacks when looking at an entity.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> pauseOnCombat = sgGeneral.add(new BoolSetting.Builder()
-        .name("pause-pathing")
-        .description("Freezes pathing temporarily until you are finished attacking the entity.")
-        .defaultValue(true)
-        .build()
-    );
-
     // Targeting
 
     private final Setting<Set<EntityType<?>>> entities = sgTargeting.add(new EntityTypeListSetting.Builder()
@@ -151,7 +116,6 @@ public class KillAura extends Module {
         .defaultValue(1)
         .min(1)
         .sliderRange(1, 5)
-        .visible(() -> !onlyOnLook.get())
         .build()
     );
 
@@ -210,27 +174,6 @@ public class KillAura extends Module {
 
     // Timing
 
-    private final Setting<Boolean> pauseOnLag = sgTiming.add(new BoolSetting.Builder()
-        .name("pause-on-lag")
-        .description("Pauses if the server is lagging.")
-        .defaultValue(true)
-        .build()
-    );
-
-    private final Setting<Boolean> pauseOnUse = sgTiming.add(new BoolSetting.Builder()
-        .name("pause-on-use")
-        .description("Does not attack while using an item.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> pauseOnCA = sgTiming.add(new BoolSetting.Builder()
-        .name("pause-on-CA")
-        .description("Does not attack while CA is placing.")
-        .defaultValue(true)
-        .build()
-    );
-
     private final Setting<Boolean> tpsSync = sgTiming.add(new BoolSetting.Builder()
         .name("TPS-sync")
         .description("Tries to sync attack delay with the server's TPS.")
@@ -267,7 +210,6 @@ public class KillAura extends Module {
     private final static Set<Item> FILTER = Set.of(Items.DIAMOND_SWORD, Items.DIAMOND_AXE, Items.DIAMOND_PICKAXE, Items.DIAMOND_SHOVEL, Items.DIAMOND_HOE, Items.MACE, Items.DIAMOND_SPEAR, Items.TRIDENT);
     private final List<Entity> targets = new ArrayList<>();
     private int switchTimer, hitTimer;
-    private boolean wasPathing = false;
     public boolean attacking, swapped;
     public static int previousSlot;
 
@@ -293,36 +235,9 @@ public class KillAura extends Module {
             stopAttacking();
             return;
         }
-        if (pauseOnUse.get() && (mc.gameMode.isDestroying() || mc.player.isUsingItem())) {
-            stopAttacking();
-            return;
-        }
-        if (onlyOnClick.get() && !mc.options.keyAttack.isDown()) {
-            stopAttacking();
-            return;
-        }
-        if (TickRate.INSTANCE.getTimeSinceLastTick() >= 1f && pauseOnLag.get()) {
-            stopAttacking();
-            return;
-        }
-        if (pauseOnCA.get() && Modules.get().get(CrystalAura.class).isActive() && Modules.get().get(CrystalAura.class).kaTimer > 0) {
-            stopAttacking();
-            return;
-        }
-        if (onlyOnLook.get()) {
-            Entity targeted = mc.crosshairPickEntity;
 
-            if (targeted == null || !entityCheck(targeted)) {
-                stopAttacking();
-                return;
-            }
-
-            targets.clear();
-            targets.add(mc.crosshairPickEntity);
-        } else {
-            targets.clear();
-            TargetUtils.getList(targets, this::entityCheck, priority.get(), maxTargets.get());
-        }
+        targets.clear();
+        TargetUtils.getList(targets, this::entityCheck, priority.get(), maxTargets.get());
 
         if (targets.isEmpty()) {
             stopAttacking();
@@ -335,11 +250,6 @@ public class KillAura extends Module {
             FindItemResult weaponResult = new FindItemResult(mc.player.getInventory().getSelectedSlot(), -1);
             if (attackWhenHolding.get() == AttackItems.Weapons)
                 weaponResult = InvUtils.find(this::acceptableWeapon, 0, 8);
-
-            if (shouldShieldBreak()) {
-                FindItemResult axeResult = InvUtils.find(itemStack -> itemStack.is(ItemTags.AXES), 0, 8);
-                if (axeResult.found()) weaponResult = axeResult;
-            }
 
             if (!swapped) {
                 previousSlot = mc.player.getInventory().getSelectedSlot();
@@ -357,10 +267,6 @@ public class KillAura extends Module {
         attacking = true;
         if (rotation.get() == RotationMode.Always)
             Rotations.rotate(Rotations.getYaw(primary), Rotations.getPitch(primary, Target.Body));
-        if (pauseOnCombat.get() && PathManagers.get().isPathing() && !wasPathing) {
-            PathManagers.get().pause();
-            wasPathing = true;
-        }
 
         if (delayCheck()) targets.forEach(this::attack);
     }
@@ -376,26 +282,10 @@ public class KillAura extends Module {
         if (!attacking) return;
 
         attacking = false;
-        if (wasPathing) {
-            PathManagers.get().resume();
-            wasPathing = false;
-        }
         if (swapBack.get() && swapped) {
             InvUtils.swap(previousSlot, false);
             swapped = false;
         }
-    }
-
-    private boolean shouldShieldBreak() {
-        for (Entity target : targets) {
-            if (target instanceof Player player) {
-                if (player.isBlocking() && shieldMode.get() == ShieldMode.Break) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     private boolean entityCheck(Entity entity) {
@@ -428,7 +318,6 @@ public class KillAura extends Module {
         if (entity instanceof Player player) {
             if (player.isCreative()) return false;
             if (!Friends.get().shouldAttack(player)) return false;
-            if (shieldMode.get() == ShieldMode.Ignore && player.isBlocking()) return false;
             if (player instanceof CloneEntity clone && clone.noHit) return false;
         }
         if (entity instanceof LivingEntity livingEntity) {
@@ -458,8 +347,11 @@ public class KillAura extends Module {
             if (hitTimer < delay) {
                 hitTimer++;
                 return false;
-            } else return true;
-        } else return mc.player.getAttackStrengthScale(delay) >= 1;
+            }
+            return true;
+        }
+
+        return mc.player.getAttackStrengthScale(delay) >= 1;
     }
 
     private void attack(Entity target) {
@@ -473,7 +365,6 @@ public class KillAura extends Module {
     }
 
     private boolean acceptableWeapon(ItemStack stack) {
-        if (shouldShieldBreak()) return stack.is(ItemTags.AXES);
         if (attackWhenHolding.get() == AttackItems.All) return true;
 
         if (weapons.get().contains(Items.DIAMOND_SWORD) && stack.is(ItemTags.SWORDS)) return true;
@@ -507,11 +398,4 @@ public class KillAura extends Module {
         OnHit,
         None
     }
-
-    public enum ShieldMode {
-        Ignore,
-        Break,
-        None
-    }
-
 }
