@@ -83,6 +83,12 @@ val launcher = sourceSets.create("launcher") {
 sourceSets.named("main") {
     java.srcDir("src/mc/$mcVersion")
 
+    // Vendored, Minecraft-independent third-party sources (ViaVersion engine, ViaNBT,
+    // snakeyaml). Kept in their own source root so the translated code stays isolated
+    // from Meteor's own sources and can be updated independently.
+    java.srcDir("src/via/java")
+    resources.srcDir("src/via/resources")
+
     // The version tree is a source root of the java sources only. Registering the same directory
     // as a resources root as well would make every file of it appear twice in the source set, and
     // a task that merges the sources would then fail with a duplicate entry. Resources that are

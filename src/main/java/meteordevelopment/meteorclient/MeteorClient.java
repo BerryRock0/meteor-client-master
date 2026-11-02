@@ -95,6 +95,9 @@ public class MeteorClient implements ClientModInitializer {
         // Load the Minecraft version compatibility layer
         Compat.init();
 
+        // Boot the vendored ViaVersion engine for cross-version server connections
+        meteordevelopment.meteorclient.mcintegration.MeteorVia.init();
+
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             LOG.info("Force loading mixins");
             MixinEnvironment.getCurrentEnvironment().audit();

@@ -1,0 +1,40 @@
+package com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_7;
+
+import com.viaversion.viaversion.libs.mcstructs.snbt.SNbt;
+import com.viaversion.viaversion.libs.mcstructs.text.TextComponent;
+import com.viaversion.viaversion.libs.mcstructs.text.events.click.ClickEvent;
+import com.viaversion.viaversion.libs.mcstructs.text.events.click.ClickEventAction;
+import com.viaversion.viaversion.libs.mcstructs.text.events.hover.HoverEvent;
+import com.viaversion.viaversion.libs.mcstructs.text.events.hover.HoverEventAction;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.legacy.ClickEventSerializer;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.legacy.EventSerializersBase;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.legacy.HoverEventSerializer;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.legacy.SerializerMap;
+
+public class EventSerializers_v1_7 extends EventSerializersBase {
+
+    public EventSerializers_v1_7(final SNbt<?> sNbt) {
+        super(sNbt);
+    }
+
+    @Override
+    protected SerializerMap<ClickEvent, ClickEventAction, String> createClickEventSerializer(SerializerMap.Builder<ClickEvent, ClickEventAction, String> builder) {
+        return builder
+                .add(ClickEventSerializer.OPEN_URL)
+                .add(ClickEventSerializer.OPEN_FILE)
+                .add(ClickEventSerializer.RUN_COMMAND)
+                .add(ClickEventSerializer.SUGGEST_COMMAND)
+                .add(ClickEventSerializer.CHANGE_PAGE)
+                .finalize(ClickEvent::getAction);
+    }
+
+    @Override
+    protected SerializerMap<HoverEvent, HoverEventAction, TextComponent> createHoverEventSerializer(SerializerMap.Builder<HoverEvent, HoverEventAction, TextComponent> builder) {
+        return builder
+                .add(HoverEventSerializer.TEXT)
+                .add(HoverEventSerializer.ACHIEVEMENT)
+                .add(HoverEventSerializer.LEGACY_ITEM)
+                .finalize(HoverEvent::getAction);
+    }
+
+}

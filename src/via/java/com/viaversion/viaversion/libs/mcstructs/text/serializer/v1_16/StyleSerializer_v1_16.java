@@ -1,0 +1,74 @@
+package com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_16;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.viaversion.viaversion.libs.mcstructs.text.Style;
+import com.viaversion.viaversion.libs.mcstructs.text.events.click.ClickEvent;
+import com.viaversion.viaversion.libs.mcstructs.text.events.click.types.*;
+import com.viaversion.viaversion.libs.mcstructs.text.events.hover.HoverEvent;
+import com.viaversion.viaversion.libs.mcstructs.text.font.ResourceFont;
+
+import java.lang.reflect.Type;
+
+public class StyleSerializer_v1_16 implements JsonSerializer<Style> {
+
+    private final JsonSerializer<HoverEvent> hoverEventSerializer;
+
+    public StyleSerializer_v1_16() {
+        this((src, typeOfSrc, context) -> context.serialize(src));
+    }
+
+    public StyleSerializer_v1_16(final JsonSerializer<HoverEvent> hoverEventSerializer) {
+        this.hoverEventSerializer = hoverEventSerializer;
+    }
+
+    @Override
+    public JsonElement serialize(Style src, Type typeOfSrc, JsonSerializationContext context) {
+        if (src.isEmpty()) return null;
+        JsonObject serializedStyle = new JsonObject();
+
+        if (src.getBold() != null) serializedStyle.addProperty("bold", src.isBold());
+        if (src.getItalic() != null) serializedStyle.addProperty("italic", src.isItalic());
+        if (src.getUnderlined() != null) serializedStyle.addProperty("underlined", src.isUnderlined());
+        if (src.getStrikethrough() != null) serializedStyle.addProperty("strikethrough", src.isStrikethrough());
+        if (src.getObfuscated() != null) serializedStyle.addProperty("obfuscated", src.isObfuscated());
+        if (src.getColor() != null) serializedStyle.addProperty("color", src.getColor().serialize());
+        if (src.getInsertion() != null) serializedStyle.addProperty("insertion", src.getInsertion());
+        if (src.getClickEvent() != null) {
+            JsonObject clickEvent = new JsonObject();
+            clickEvent.addProperty("action", src.getClickEvent().getAction().getName());
+            clickEvent.addProperty("value", this.serializeClickEvent(src.getClickEvent()));
+            serializedStyle.add("clickEvent", clickEvent);
+        }
+        if (src.getHoverEvent() != null) serializedStyle.add("hoverEvent", this.hoverEventSerializer.serialize(src.getHoverEvent(), HoverEvent.class, context));
+        if (src.getFont() != null) {
+            if (src.getFont() instanceof ResourceFont) {
+                serializedStyle.addProperty("font", ((ResourceFont) src.getFont()).getId().get());
+            } else {
+                throw new IllegalStateException("Unsupported font type: " + src.getFont().getClass().getName());
+            }
+        }
+
+        return serializedStyle;
+    }
+
+    private String serializeClickEvent(final ClickEvent clickEvent) {
+        if (clickEvent instanceof OpenUrlClickEvent) {
+            return ((OpenUrlClickEvent) clickEvent).asString();
+        } else if (clickEvent instanceof OpenFileClickEvent) {
+            return ((OpenFileClickEvent) clickEvent).getPath();
+        } else if (clickEvent instanceof RunCommandClickEvent) {
+            return ((RunCommandClickEvent) clickEvent).getCommand();
+        } else if (clickEvent instanceof SuggestCommandClickEvent) {
+            return ((SuggestCommandClickEvent) clickEvent).getCommand();
+        } else if (clickEvent instanceof ChangePageClickEvent) {
+            return ((ChangePageClickEvent) clickEvent).asString();
+        } else if (clickEvent instanceof CopyToClipboardClickEvent) {
+            return ((CopyToClipboardClickEvent) clickEvent).getValue();
+        }
+        throw new IllegalArgumentException("Unknown click event type: " + clickEvent.getClass().getName());
+    }
+
+}

@@ -1,0 +1,418 @@
+package com.viaversion.viaversion.libs.mcstructs.text.serializer;
+
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.viaversion.viaversion.libs.mcstructs.snbt.SNbt;
+import com.viaversion.viaversion.libs.mcstructs.text.TextComponent;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_12.StyleDeserializer_v1_12;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_12.StyleSerializer_v1_12;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_12.TextDeserializer_v1_12;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_12.TextSerializer_v1_12;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_14.TextDeserializer_v1_14;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_14.TextSerializer_v1_14;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_15.TextDeserializer_v1_15;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_15.TextSerializer_v1_15;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_16.*;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_17.TextDeserializer_v1_17;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_17.TextSerializer_v1_17;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_18.HoverEventDeserializer_v1_18;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_19_4.TextDeserializer_v1_19_4;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_19_4.TextSerializer_v1_19_4;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_6.TextDeserializer_v1_6;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_6.TextSerializer_v1_6;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_7.StyleDeserializer_v1_7;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_7.StyleSerializer_v1_7;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_7.TextDeserializer_v1_7;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_7.TextSerializer_v1_7;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_8.StyleDeserializer_v1_8;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_8.StyleSerializer_v1_8;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_8.TextDeserializer_v1_8;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_8.TextSerializer_v1_8;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_9.StyleDeserializer_v1_9;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_9.StyleSerializer_v1_9;
+import com.viaversion.viaversion.libs.mcstructs.text.serializer.v1_9.TextSerializer_v1_9;
+import com.viaversion.viaversion.libs.mcstructs.text.utils.LegacyGson;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.function.Supplier;
+
+/**
+ * The text component serializer and deserializer wrapper class.<br>
+ * Use the static default fields for a specific minecraft version or create your own serializer/deserializer.
+ */
+public class TextComponentSerializer implements com.viaversion.viaversion.libs.mcstructs.converter.ConsumerTracking {
+
+    private java.util.function.Consumer<String> stringConsumer;
+    private boolean isDefault = true;
+    @Override
+    @Nullable
+    public java.util.function.Consumer<String> currentConsumer() {
+        return this.stringConsumer;
+    }
+    @Override
+    public void setCurrentConsumer(java.util.function.Consumer<String> consumer) {
+        this.stringConsumer = consumer;
+    }
+    @Override
+    public TextComponentSerializer forkIfDefault() {
+        return isDefault ? new TextComponentSerializer(this.parentCodec, this.gsonSupplier, this.legacyGson) : this;
+    }
+    private TextComponentSerializer(final TextComponentCodec parentCodec, final Supplier<Gson> gsonSupplier, final boolean legacyGson) {
+        this.parentCodec = parentCodec;
+        this.gsonSupplier = gsonSupplier;
+        this.legacyGson = legacyGson;
+        this.isDefault = false;
+    }
+
+    /**
+     * The text component serializer for 1.6.<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_6 = new TextComponentSerializer(() -> new GsonBuilder()
+            .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_6())
+            .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_6())
+            .create(), true);
+    /**
+     * The text component serializer for 1.7.<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_7 = new TextComponentSerializer(() -> {
+        StyleSerializer_v1_7 styleSerializer = new StyleSerializer_v1_7(SNbt.V1_7);
+        StyleDeserializer_v1_7 styleDeserializer = new StyleDeserializer_v1_7(SNbt.V1_7);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_7(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_7(styleDeserializer))
+                .create();
+    }, true);
+    /**
+     * The text component serializer for 1.8.<br>
+     * Use the {@link #deserialize(String)} and {@link #deserialize(JsonElement)} methods for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_8 = new TextComponentSerializer(() -> {
+        StyleSerializer_v1_8 styleSerializer = new StyleSerializer_v1_8(SNbt.V1_8);
+        StyleDeserializer_v1_8 styleDeserializer = new StyleDeserializer_v1_8(SNbt.V1_8);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_8(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_8(styleDeserializer))
+                .create();
+    }, true);
+    /**
+     * The text component serializer for 1.9 - 1.11.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_9 = new TextComponentSerializer(() -> {
+        StyleSerializer_v1_9 styleSerializer = new StyleSerializer_v1_9(SNbt.V1_8);
+        StyleDeserializer_v1_9 styleDeserializer = new StyleDeserializer_v1_9(SNbt.V1_8);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_9(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_8(styleDeserializer))
+                .create();
+    }, true);
+    /**
+     * The text component serializer for 1.12 - 1.13.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_12 = new TextComponentSerializer(() -> {
+        StyleSerializer_v1_12 styleSerializer = new StyleSerializer_v1_12(SNbt.V1_12);
+        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_12);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_12(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_12(styleDeserializer))
+                .create();
+    });
+    /**
+     * The text component serializer for 1.14.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_14 = new TextComponentSerializer(() -> {
+        StyleSerializer_v1_12 styleSerializer = new StyleSerializer_v1_12(SNbt.V1_14);
+        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_14);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_14(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_14(styleDeserializer))
+                .disableHtmlEscaping()
+                .create();
+    });
+    /**
+     * The text component serializer for 1.15.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_15 = new TextComponentSerializer(() -> {
+        StyleSerializer_v1_12 styleSerializer = new StyleSerializer_v1_12(SNbt.V1_14);
+        StyleDeserializer_v1_12 styleDeserializer = new StyleDeserializer_v1_12(SNbt.V1_14);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_15(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_15(styleDeserializer))
+                .disableHtmlEscaping()
+                .create();
+    });
+    /**
+     * The text component serializer for 1.16.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_16 = new TextComponentSerializer(() -> {
+        HoverEventSerializer_v1_16 hoverEventSerializer = new HoverEventSerializer_v1_16(TextComponentSerializer.V1_16, SNbt.V1_14);
+        StyleSerializer_v1_16 styleSerializer = new StyleSerializer_v1_16(hoverEventSerializer);
+        HoverEventDeserializer_v1_16 hoverEventDeserializer = new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_16, SNbt.V1_14);
+        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_16(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_16(styleDeserializer))
+                .disableHtmlEscaping()
+                .create();
+    });
+    /**
+     * The text component serializer for 1.17.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_17 = new TextComponentSerializer(() -> {
+        HoverEventSerializer_v1_16 hoverEventSerializer = new HoverEventSerializer_v1_16(TextComponentSerializer.V1_17, SNbt.V1_14);
+        StyleSerializer_v1_16 styleSerializer = new StyleSerializer_v1_16(hoverEventSerializer);
+        HoverEventDeserializer_v1_16 hoverEventDeserializer = new HoverEventDeserializer_v1_16(TextComponentSerializer.V1_17, SNbt.V1_14);
+        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_17(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_17(styleDeserializer))
+                .disableHtmlEscaping()
+                .create();
+    });
+    /**
+     * The text component serializer for 1.18 - 1.19.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_18 = new TextComponentSerializer(() -> {
+        HoverEventSerializer_v1_16 hoverEventSerializer = new HoverEventSerializer_v1_16(TextComponentSerializer.V1_18, SNbt.V1_14);
+        StyleSerializer_v1_16 styleSerializer = new StyleSerializer_v1_16(hoverEventSerializer);
+        HoverEventDeserializer_v1_18 hoverEventDeserializer = new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_18, SNbt.V1_14);
+        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_17(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_17(styleDeserializer))
+                .disableHtmlEscaping()
+                .create();
+    });
+    /**
+     * The text component serializer for 1.19.4.<br>
+     * Use the {@link #deserializeReader(String)} method for vanilla like deserialization.
+     */
+    public static final TextComponentSerializer V1_19_4 = new TextComponentSerializer(() -> {
+        HoverEventSerializer_v1_16 hoverEventSerializer = new HoverEventSerializer_v1_16(TextComponentSerializer.V1_19_4, SNbt.V1_14);
+        StyleSerializer_v1_16 styleSerializer = new StyleSerializer_v1_16(hoverEventSerializer);
+        HoverEventDeserializer_v1_18 hoverEventDeserializer = new HoverEventDeserializer_v1_18(TextComponentSerializer.V1_19_4, SNbt.V1_14);
+        StyleDeserializer_v1_16 styleDeserializer = new StyleDeserializer_v1_16(hoverEventDeserializer);
+        return new GsonBuilder()
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextSerializer_v1_19_4(styleSerializer))
+                .registerTypeHierarchyAdapter(TextComponent.class, new TextDeserializer_v1_19_4(styleDeserializer))
+                .disableHtmlEscaping()
+                .create();
+    });
+    /**
+     * The text component serializer for 1.20.3.
+     */
+    public static final TextComponentSerializer V1_20_3 = TextComponentCodec.V1_20_3.asSerializer();
+    /**
+     * The text component serializer for 1.20.5.
+     */
+    public static final TextComponentSerializer V1_20_5 = TextComponentCodec.V1_20_5.asSerializer();
+    /**
+     * The text component serializer for 1.21.2.
+     */
+    public static final TextComponentSerializer V1_21_2 = TextComponentCodec.V1_21_2.asSerializer();
+    /**
+     * The text component serializer for 1.21.4.
+     */
+    public static final TextComponentSerializer V1_21_4 = TextComponentCodec.V1_21_4.asSerializer();
+    /**
+     * The text component serializer for 1.21.5.
+     */
+    public static final TextComponentSerializer V1_21_5 = TextComponentCodec.V1_21_5.asSerializer();
+    /**
+     * The text component serializer for 1.21.6.
+     */
+    public static final TextComponentSerializer V1_21_6 = TextComponentCodec.V1_21_6.asSerializer();
+    /**
+     * The text component serializer for 1.21.6.
+     */
+    public static final TextComponentSerializer V1_21_9 = TextComponentCodec.V1_21_9.asSerializer();
+    /**
+     * The text component serializer for 26.1.
+     */
+    public static final TextComponentSerializer V26_1 = TextComponentCodec.V26_1.asSerializer();
+    /**
+     * The text component serializer for 26.2.
+     */
+    public static final TextComponentSerializer V26_2 = TextComponentCodec.V26_2.asSerializer();
+    /**
+     * The latest text component serializer.
+     */
+    public static final TextComponentSerializer LATEST = V26_2;
+
+
+    private final TextComponentCodec parentCodec;
+    private final Supplier<Gson> gsonSupplier;
+    private final boolean legacyGson;
+    private Gson gson;
+
+    public TextComponentSerializer(final Supplier<Gson> gsonSupplier) {
+        this(gsonSupplier, false);
+    }
+
+    public TextComponentSerializer(final Supplier<Gson> gsonSupplier, final boolean legacyGson) {
+        this.parentCodec = null;
+        this.gsonSupplier = gsonSupplier;
+        this.legacyGson = legacyGson;
+    }
+
+    public TextComponentSerializer(final TextComponentCodec parentCodec, final Supplier<Gson> gsonSupplier) {
+        this.parentCodec = parentCodec;
+        this.gsonSupplier = gsonSupplier;
+        this.legacyGson = false;
+    }
+
+    /**
+     * @return The parent codec of this serializer if it was created using {@link TextComponentCodec#asSerializer()}
+     */
+    @Nullable
+    public TextComponentCodec getParentCodec() {
+        return this.parentCodec;
+    }
+
+    /**
+     * @return If this serializer has a parent codec
+     */
+    public boolean isCodec() {
+        return this.parentCodec != null;
+    }
+
+    /**
+     * @return The used gson instance
+     */
+    public Gson getGson() {
+        if (this.gson == null) this.gson = this.gsonSupplier.get();
+        return this.gson;
+    }
+
+    /**
+     * Serialize a text component to a json string.
+     *
+     * @param component The component to serialize
+     * @return The json string
+     */
+    public String serialize(final TextComponent component) {
+        return this.getGson().toJson(component);
+    }
+
+    /**
+     * Serialize a text component to a {@link JsonElement}.
+     *
+     * @param component The component to serialize
+     * @return The json element
+     */
+    public JsonElement serializeJson(final TextComponent component) {
+        return this.getGson().toJsonTree(component);
+    }
+
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is used by minecraft versions 1.6 - 1.8.<br>
+     * It can deserialize components with comments which newer versions did not support.<br>
+     * <br>
+     * <b>Example:</b><br>
+     * <code>{"text":/*comment*{@literal /}"Hello World"}</code>
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
+    public TextComponent deserialize(String json) {
+        if (this.legacyGson) {
+            LegacyGson.checkStartingType(json, true);
+            json = LegacyGson.fixInvalidEscapes(json);
+        }
+        return this.getGson().fromJson(json, TextComponent.class);
+    }
+
+    /**
+     * Deserialize a text component from a {@link JsonElement}.<br>
+     * This method is used by minecraft versions 1.6 - 1.8.
+     *
+     * @param element The json element
+     * @return The deserialized text component
+     */
+    public TextComponent deserialize(final JsonElement element) {
+        return this.getGson().fromJson(element, TextComponent.class);
+    }
+
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is used by minecraft versions 1.9 - 1.20.2.<br>
+     * It can not deserialize components with comments which older versions did support.
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
+    public TextComponent deserializeReader(final String json) {
+        return this.deserializeReader(json, false);
+    }
+
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is used by minecraft versions 1.20.3+.
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
+    public TextComponent deserializeParser(String json) {
+        if (this.legacyGson) {
+            LegacyGson.checkStartingType(json, true);
+            json = LegacyGson.fixInvalidEscapes(json);
+        }
+        if (this.parentCodec != null) return this.parentCodec.deserializeJson(json);
+        else return this.getGson().fromJson(JsonParser.parseString(json), TextComponent.class);
+    }
+
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is available in minecraft versions 1.9+ but not used for text components.<br>
+     * It can deserialize components with comments and trailing data.<br>
+     * <br>
+     * <b>Example:</b><br>
+     * <code>{"text":/*comment*{@literal /}"Hello World"}</code><br>
+     * <code>{"text":"Hello World"}trailing data</code>
+     *
+     * @param json The json string
+     * @return The deserialized text component
+     */
+    public TextComponent deserializeLenientReader(final String json) {
+        if (this.parentCodec != null) return this.parentCodec.deserializeLenientJson(json);
+        else return this.deserializeReader(json, true);
+    }
+
+    /**
+     * Deserialize a text component from a json string.<br>
+     * This method is available in minecraft versions 1.9+ but is only used with {@code lenient} being false.
+     *
+     * @param json    The json string
+     * @param lenient Whether to use a lenient json reader
+     * @return The deserialized text component
+     */
+    public TextComponent deserializeReader(String json, final boolean lenient) {
+        if (this.legacyGson) {
+            LegacyGson.checkStartingType(json, lenient);
+            json = LegacyGson.fixInvalidEscapes(json);
+        }
+        if (this.parentCodec != null) {
+            if (lenient) return this.parentCodec.deserializeLenientJson(json);
+            else return this.parentCodec.deserializeJsonReader(json);
+        }
+        try {
+            JsonReader reader = new JsonReader(new StringReader(json));
+            reader.setLenient(lenient);
+            return this.getGson().getAdapter(TextComponent.class).read(reader);
+        } catch (IOException e) {
+            throw new JsonParseException("Failed to parse json", e);
+        }
+    }
+
+}
