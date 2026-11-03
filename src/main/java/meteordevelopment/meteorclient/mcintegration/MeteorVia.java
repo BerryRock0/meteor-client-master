@@ -60,7 +60,13 @@ public final class MeteorVia {
 
             // Sets Via.getManager(); must happen before manager.init().
             Via.init(manager);
+
+            // Load the ViaVersion config (populates all fields, incl. packetTrackerConfig).
+            // Without this the config fields stay null and packet tracking NPEs.
+            Via.getManager().getPlatform().getConf().reload();
+
             manager.init();
+            manager.onServerLoaded();
 
             // manager.init() registered ViaVersion's default VersionProvider (from the initial base
             // protocol). Replace it with ours, which honours the Protocol screen override.
