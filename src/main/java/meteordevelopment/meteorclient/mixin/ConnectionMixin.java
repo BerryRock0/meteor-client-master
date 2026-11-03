@@ -14,6 +14,7 @@ import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.compat.Compat;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.ServerConnectEndEvent;
+import meteordevelopment.meteorclient.mcintegration.MeteorVia;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.misc.AntiPacketKick;
 import meteordevelopment.meteorclient.systems.modules.world.HighwayBuilder;
@@ -50,6 +51,11 @@ import java.util.Iterator;
 
 @Mixin(Connection.class)
 public abstract class ConnectionMixin {
+    @Inject(method = "configureSerialization(Lio/netty/channel/ChannelPipeline;Lnet/minecraft/network/protocol/PacketFlow;ZLnet/minecraft/network/BandwidthDebugMonitor;)V", at = @At("RETURN"))
+    private static void onConfigureSerialization(ChannelPipeline pipeline, PacketFlow side, boolean local, BandwidthDebugMonitor monitor, CallbackInfo ci) {
+        MeteorVia.injectPipeline(pipeline, side);
+    }
+
     @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;genericsFtw(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;)V", shift = At.Shift.BEFORE), cancellable = true)
     private void onHandlePacket(ChannelHandlerContext ctx, Packet<?> packet, CallbackInfo ci) {
