@@ -453,6 +453,7 @@ public class Modules extends System<Modules> {
         add(new NoInteract());
         add(new NoRotate());
         add(new NoStatusEffects());
+        add(new PlayerAttributes());
         add(new Portals());
         add(new PotionSaver());
         add(new Reach());
