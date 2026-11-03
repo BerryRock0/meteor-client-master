@@ -10,7 +10,6 @@ import com.viaversion.viaversion.ViaManagerImpl;
 import com.viaversion.viaversion.api.connection.UserConnection;
 import com.viaversion.viaversion.api.platform.ViaPlatformLoader;
 import com.viaversion.viaversion.api.platform.providers.ViaProviders;
-import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import com.viaversion.viaversion.api.protocol.version.VersionProvider;
 import com.viaversion.viaversion.connection.UserConnectionImpl;
 import com.viaversion.viaversion.platform.NoopInjector;
@@ -20,14 +19,11 @@ import com.viaversion.viaversion.platform.ViaEncodeHandler;
 import com.viaversion.viaversion.protocol.ProtocolPipelineImpl;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSortedSet;
 import meteordevelopment.meteorclient.MeteorClient;
 import net.minecraft.network.HandlerNames;
 import net.minecraft.network.protocol.PacketFlow;
 
 import java.io.File;
-import java.util.SortedSet;
 import java.util.logging.Logger;
 
 /**
@@ -54,7 +50,7 @@ public final class MeteorVia {
         try {
             ViaManagerImpl manager = ViaManagerImpl.builder()
                 .platform(new Platform())
-                .injector(new Injector())
+                .injector(new NoopInjector())
                 .loader(ViaPlatformLoader.NOOP)
                 .build();
 
@@ -129,16 +125,6 @@ public final class MeteorVia {
         @Override
         public String getPlatformVersion() {
             return MeteorClient.VERSION.toString();
-        }
-    }
-
-    /** On the client any server version is reachable, so report the full registered set. */
-    private static final class Injector extends NoopInjector {
-        @Override
-        public SortedSet<ProtocolVersion> getServerProtocolVersions() {
-            ObjectSortedSet<ProtocolVersion> versions = new ObjectLinkedOpenHashSet<>();
-            versions.addAll(ProtocolVersion.getProtocols());
-            return versions;
         }
     }
 }
