@@ -332,7 +332,9 @@ public class ESP extends Module {
     }
 
     public boolean forceRender() {
-        return isActive() && (mode.get() == Mode.Shader || mode.get() == Mode.Glow);
+        // Shader/glow/box modes render entities through walls, so the entity texture
+        // (model) is drawn even when another texture (block) is in the way.
+        return isActive() && (mode.get() == Mode.Shader || mode.get() == Mode.Glow || mode.get() == Mode.Box);
     }
 
     private boolean checkCorner(double x, double y, double z, Vector3d min, Vector3d max) {
