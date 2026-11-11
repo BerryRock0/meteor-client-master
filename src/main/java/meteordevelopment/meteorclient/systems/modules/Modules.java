@@ -532,6 +532,7 @@ public class Modules extends System<Modules> {
         add(new WallHack());
         add(new WaypointsModule());
         add(new WeatherChanger());
+        add(new Wireframe());
         add(new Xray());
         add(new Zoom());
     }
