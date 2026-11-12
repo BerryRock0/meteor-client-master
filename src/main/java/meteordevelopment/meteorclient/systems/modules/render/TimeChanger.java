@@ -26,7 +26,16 @@ public class TimeChanger extends Module {
         .build()
     );
 
+    private final Setting<Double> timeScale = sgGeneral.add(new DoubleSetting.Builder()
+        .name("time-scale")
+        .description("Multiplier of the world time. Values below 1 slow down the world time, values above 1 speed it up.")
+        .defaultValue(1)
+        .range(0, 10)
+        .build()
+    );
+
     long oldTime;
+    private long lastTime;
 
     public TimeChanger() {
         super(Categories.Render, "time-changer", "Makes you able to set a custom time.");
@@ -35,6 +44,7 @@ public class TimeChanger extends Module {
     @Override
     public void onActivate() {
         oldTime = mc.level.getGameTime();
+        lastTime = mc.level.getGameTime();
     }
 
     @Override
@@ -52,6 +62,13 @@ public class TimeChanger extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Post event) {
-        mc.level.getLevelData().setGameTime(time.get().longValue());
+        if (timeScale.get() == 1) {
+            mc.level.getLevelData().setGameTime(time.get().longValue());
+        } else {
+            long currentTime = mc.level.getGameTime();
+            long delta = currentTime - lastTime;
+            lastTime = currentTime;
+            mc.level.getLevelData().setGameTime(lastTime + Math.round(delta * timeScale.get()));
+        }
     }
 }
