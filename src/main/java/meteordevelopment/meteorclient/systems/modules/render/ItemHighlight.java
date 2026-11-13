@@ -20,13 +20,17 @@ import java.util.List;
 public class ItemHighlight extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<List<Item>> items = sgGeneral.add(new ItemListSetting.Builder()
+    // General
+
+    public final Setting<List<Item>> items = sgGeneral.add(new ItemListSetting.Builder()
         .name("items")
         .description("Items to highlight.")
         .build()
     );
 
-    private final Setting<SettingColor> color = sgGeneral.add(new ColorSetting.Builder()
+    // Colors
+
+    public final Setting<SettingColor> color = sgGeneral.add(new ColorSetting.Builder()
         .name("color")
         .description("The color to highlight the items with.")
         .defaultValue(new SettingColor(225, 25, 255, 50))
@@ -37,8 +41,11 @@ public class ItemHighlight extends Module {
         super(Categories.Render, "item-highlight", "Highlights selected items when in guis");
     }
 
+    public boolean shouldHighlight(ItemStack stack) {
+        return stack != null && items.get().contains(stack.getItem()) && isActive();
+    }
+
     public int getColor(ItemStack stack) {
-        if (stack != null && items.get().contains(stack.getItem()) && isActive()) return color.get().getPacked();
-        return -1;
+        return shouldHighlight(stack) ? color.get().getPacked() : -1;
     }
 }
