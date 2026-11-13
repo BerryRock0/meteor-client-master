@@ -1,12 +1,10 @@
-package meteordevelopment.meteorclient.systems.minerplacers;
+package meteordevelopment.meteorclient.systems.templates.minerplacers;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.Objects;
 
 import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.settings.Setting;
-import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.utils.player.Rotations;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;

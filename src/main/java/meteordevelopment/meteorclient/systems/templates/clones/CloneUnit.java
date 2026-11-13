@@ -3,7 +3,7 @@
  * Copyright (c) Meteor Development.
  */
 
-package meteordevelopment.meteorclient.systems.clones;
+package meteordevelopment.meteorclient.systems.templates.clones;
 
 import java.util.Objects;
 import java.util.UUID;
