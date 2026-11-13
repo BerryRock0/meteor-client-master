@@ -17,8 +17,8 @@ import meteordevelopment.meteorclient.gui.widgets.pressable.WButton;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacer;
-import meteordevelopment.meteorclient.systems.minerplacers.MinerPlacers;
+import meteordevelopment.meteorclient.systems.templates.minerplacers.MinerPlacer;
+import meteordevelopment.meteorclient.systems.templates.minerplacers.MinerPlacers;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
@@ -236,7 +236,8 @@ public class WorkersModule extends Module
 	
 	 private static class EditMinerPlacerScreen extends EditSystemScreen<MinerPlacer>
 	 {
-        public EditMinerPlacerScreen(GuiTheme theme, MinerPlacer value, Runnable reload) {
+        public EditMinerPlacerScreen(GuiTheme theme, MinerPlacer value, Runnable reload)
+        {
             super(theme, value, reload);
         }
 
