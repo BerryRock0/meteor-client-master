@@ -16,7 +16,7 @@ import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.util.ReferenceCountUtil;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.mc.Vanilla;
-import meteordevelopment.meteorclient.systems.clones.CloneUnit;
+import meteordevelopment.meteorclient.systems.templates.clones.CloneUnit;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

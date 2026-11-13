@@ -36,7 +36,6 @@ import meteordevelopment.meteorclient.systems.modules.render.*;
 import meteordevelopment.meteorclient.systems.modules.render.blockesp.BlockESP;
 import meteordevelopment.meteorclient.systems.modules.render.marker.Marker;
 import meteordevelopment.meteorclient.systems.modules.world.*;
-import meteordevelopment.meteorclient.systems.modules.world.Timer;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.misc.Keybind;
 import meteordevelopment.meteorclient.utils.misc.ValueComparableMap;
@@ -560,7 +559,7 @@ public class Modules extends System<Modules> {
         add(new StashFinder());
         add(new Telekinesis());
         add(new SpawnProofer());
-        add(new Timer());
+        add(new meteordevelopment.meteorclient.systems.modules.world.Timer());
         add(new VeinMiner());
         add(new WorkersModule());
     }
