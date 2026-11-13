@@ -236,7 +236,8 @@ public class WorkersModule extends Module
 	
 	 private static class EditMinerPlacerScreen extends EditSystemScreen<MinerPlacer>
 	 {
-        public EditMinerPlacerScreen(GuiTheme theme, MinerPlacer value, Runnable reload) {
+        public EditMinerPlacerScreen(GuiTheme theme, MinerPlacer value, Runnable reload)
+        {
             super(theme, value, reload);
         }
 

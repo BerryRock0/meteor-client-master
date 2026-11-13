@@ -28,48 +28,53 @@ import java.util.List;
  *
  * @param <T> type of the stored units
  */
-public abstract class Units<T> extends System<Units<T>> implements Iterable<T> {
+public abstract class Units<T> extends System<Units<T>> implements Iterable<T>
+{
     public final List<T> units = new ArrayList<>();
 
-    public Units() {
+    public Units()
+    {
         super(null);
     }
 
-    public void add(T unit) {
-        if (units.contains(unit)) {
-            save();
-            return;
-        }
+    public void add(T unit)
+    {
+        if (!units.contains(unit))
+			units.add(unit);
 
-        units.add(unit);
         save();
     }
 
-    public void remove(T unit) {
-        boolean removed = units.remove(unit);
-        if (removed) {
-            save();
-        }
+    public void remove(T unit)
+    {   
+        if (units.contains(unit))
+			units.remove(unit);
+        
+        save();
     }
 
-    public void removeAll(Collection<T> c) {
-        boolean removed = units.removeAll(c);
-        if (removed) {
-            save();
-        }
+    public void removeAll(Collection<T> c)
+    {
+        if (units.containsAll(c))
+			units.removeAll(c);
+
+        save();
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return units.isEmpty();
     }
 
     @EventHandler
-    private void onGameJoined(GameJoinedEvent event) {
+    private void onGameJoined(GameJoinedEvent event)
+    {
         load();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onGameDisconnected(GameLeftEvent event) {
+    private void onGameDisconnected(GameLeftEvent event)
+    {
         units.clear();
     }
 
@@ -80,25 +85,30 @@ public abstract class Units<T> extends System<Units<T>> implements Iterable<T> {
     public abstract Units<T> fromTag(CompoundTag tag);
 
     @Override
-    public @NotNull Iterator<T> iterator() {
+    public @NotNull Iterator<T> iterator()
+    {
         return new UnitsIterator();
     }
 
-    private final class UnitsIterator implements Iterator<T> {
+    private final class UnitsIterator implements Iterator<T>
+    {
         private final Iterator<T> it = units.iterator();
 
         @Override
-        public boolean hasNext() {
+        public boolean hasNext()
+        {
             return it.hasNext();
         }
 
         @Override
-        public T next() {
+        public T next()
+        {
             return it.next();
         }
 
         @Override
-        public void remove() {
+        public void remove()
+        {
             it.remove();
             save();
         }
