@@ -3,7 +3,7 @@
  * Copyright (c) Meteor Development.
  */
 
-package meteordevelopment.meteorclient.systems.clones;
+package meteordevelopment.meteorclient.systems.templates.clones;
 
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.systems.Units;
@@ -23,18 +23,23 @@ import java.io.File;
  * and are loaded when a world is joined; the {@link meteordevelopment.meteorclient.systems.modules.player.Clones}
  * module turns them into live clones while it is enabled.
  */
-public class CloneUnits extends Units<CloneUnit> {
-    public CloneUnits() {
+public class CloneUnits extends Units<CloneUnit>
+{
+    public CloneUnits()
+    {
         super();
     }
 
-    public static CloneUnits get() {
+    public static CloneUnits get()
+    {
         return Systems.get(CloneUnits.class);
     }
 
     @Override
-    public File getFile() {
-        if (!Utils.canUpdate()) {
+    public File getFile()
+    {
+        if (!Utils.canUpdate())
+        {
             return null;
         }
 
@@ -42,17 +47,20 @@ public class CloneUnits extends Units<CloneUnit> {
     }
 
     @Override
-    public CompoundTag toTag() {
+    public CompoundTag toTag()
+    {
         CompoundTag tag = new CompoundTag();
         tag.put("units", NbtUtils.listToTag(units));
         return tag;
     }
 
     @Override
-    public CloneUnits fromTag(CompoundTag tag) {
+    public CloneUnits fromTag(CompoundTag tag)
+    {
         units.clear();
 
-        for (Tag unitTag : tag.getListOrEmpty("units")) {
+        for (Tag unitTag : tag.getListOrEmpty("units"))
+        {
             units.add(new CloneUnit(unitTag));
         }
 
