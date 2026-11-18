@@ -428,7 +428,6 @@ public class Modules extends System<Modules> {
         add(new AirPlace());
         add(new AntiAFK());
         add(new AntiHunger());
-        add(new Attributes());
         add(new AutoEat());
         add(new AutoClicker());
         add(new AutoFish());
@@ -448,6 +447,7 @@ public class Modules extends System<Modules> {
         add(new InstantRebreak());
         add(new LiquidInteract());
         add(new MiddleClickExtra());
+        add(new Modifier());
         add(new Multitask());
         add(new NameProtect());
         add(new NoInteract());
