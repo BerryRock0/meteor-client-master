@@ -9,36 +9,44 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
-public class Category {
+public class Category
+{
     public final String name;
     public final Supplier<ItemStack> icon;
     private final int nameHash;
 
-    public Category(String name, Supplier<ItemStack> icon) {
+    public Category(String name, Supplier<ItemStack> icon)
+    {
         this.name = name;
         this.nameHash = name.hashCode();
         this.icon = icon == null ? () -> ItemStack.EMPTY : icon;
     }
 
-    public Category(String name) {
+    public Category(String name)
+    {
         this(name, null);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Category category = (Category) o;
         return nameHash == category.nameHash;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return nameHash;
     }
 }
