@@ -428,6 +428,7 @@ public class Modules extends System<Modules> {
         add(new AirPlace());
         add(new AntiAFK());
         add(new AntiHunger());
+        add(new Attributes());
         add(new AutoEat());
         add(new AutoClicker());
         add(new AutoFish());
@@ -452,7 +453,6 @@ public class Modules extends System<Modules> {
         add(new NoInteract());
         add(new NoRotate());
         add(new NoStatusEffects());
-        add(new PlayerAttributes());
         add(new Portals());
         add(new PotionSaver());
         add(new Reach());
