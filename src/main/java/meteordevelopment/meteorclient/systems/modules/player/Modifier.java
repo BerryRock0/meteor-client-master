@@ -18,7 +18,7 @@ import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 
-public class Attributes extends Module
+public class Modifier extends Module
 {
     private final SettingGroup sgAttributes = settings.createGroup("Attributes");
 
@@ -60,9 +60,9 @@ public class Attributes extends Module
 
     private final Map<Holder<Attribute>, Double> originalAttributeValues = new HashMap<>();
 
-    public Attributes()
+    public Modifier()
     {
-        super(Categories.Player, "attributes", "Changes attributes of the local player.");
+        super(Categories.Player, "modifier", "Changes attributes of the local player.");
     }
 
     @Override
