@@ -10,7 +10,8 @@ import meteordevelopment.meteorclient.addons.MeteorAddon;
 import meteordevelopment.meteorclient.utils.render.DisplayItemUtils;
 import net.minecraft.world.item.Items;
 
-public class Categories {
+public class Categories
+{
     public static final Category Combat = new Category("Combat", () -> DisplayItemUtils.toStack(Items.GOLDEN_SWORD));
     public static final Category Player = new Category("Player", () -> DisplayItemUtils.toStack(Items.ARMOR_STAND));
     public static final Category Movement = new Category("Movement", () -> DisplayItemUtils.toStack(Items.DIAMOND_BOOTS));
@@ -20,7 +21,8 @@ public class Categories {
 
     public static boolean REGISTERING;
 
-    public static void init() {
+    public static void init()
+    {
         REGISTERING = true;
 
         // Meteor
