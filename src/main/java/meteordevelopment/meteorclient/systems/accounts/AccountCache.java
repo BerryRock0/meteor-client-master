@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.accounts;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import com.mojang.util.UndashedUuid;
 import meteordevelopment.meteorclient.utils.misc.ISerializable;
 import meteordevelopment.meteorclient.utils.misc.NbtException;
@@ -62,10 +64,10 @@ public class AccountCache implements ISerializable<AccountCache> {
 
     @Override
     public AccountCache fromTag(CompoundTag tag) {
-        if (tag.getString("username").isEmpty() || tag.getString("uuid").isEmpty()) throw new NbtException();
+        if (Nbt.string(tag, "username").isEmpty() || Nbt.string(tag, "uuid").isEmpty()) throw new NbtException();
 
-        username = tag.getString("username").get();
-        uuid = tag.getString("uuid").get();
+        username = Nbt.string(tag, "username").get();
+        uuid = Nbt.string(tag, "uuid").get();
         loadHead();
 
         return this;

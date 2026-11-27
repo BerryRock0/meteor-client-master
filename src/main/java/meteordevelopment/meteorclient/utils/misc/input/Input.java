@@ -18,10 +18,10 @@ public class Input {
     private static final boolean[] keys = new boolean[512];
     private static final boolean[] buttons = new boolean[16];
 
-    private static final int MOD_KEYS = InputConstants.MOD_SHIFT
-        | InputConstants.MOD_CONTROL
-        | InputConstants.MOD_ALT
-        | InputConstants.MOD_SUPER;
+    private static final int MOD_KEYS = Vanilla.MOD_SHIFT
+        | Vanilla.MOD_CONTROL
+        | Vanilla.MOD_ALT
+        | Vanilla.MOD_SUPER;
 
     private static CursorStyle lastCursorStyle = CursorStyle.Default;
 
@@ -71,7 +71,7 @@ public class Input {
         }
 
         // nothing extra is held, discounting capslock & numlock
-        return (currentMods & MOD_KEYS & ~desiredMask) == 0;
+        return (currentMods & Vanilla.modifierMask() & ~desiredMask) == 0;
     }
 
     public static void setCursorStyle(CursorStyle style) {
@@ -83,10 +83,10 @@ public class Input {
 
     public static int getModifier(int key) {
         return switch (key) {
-            case InputConstants.KEY_LSHIFT, InputConstants.KEY_RSHIFT -> InputConstants.MOD_SHIFT;
-            case InputConstants.KEY_LCONTROL, InputConstants.KEY_RCONTROL -> InputConstants.MOD_CONTROL;
-            case InputConstants.KEY_LALT, InputConstants.KEY_RALT -> InputConstants.MOD_ALT;
-            case Vanilla.SUPER_KEY_LEFT, Vanilla.SUPER_KEY_RIGHT -> InputConstants.MOD_SUPER;
+            case InputConstants.KEY_LSHIFT, InputConstants.KEY_RSHIFT -> Vanilla.MOD_SHIFT;
+            case InputConstants.KEY_LCONTROL, InputConstants.KEY_RCONTROL -> Vanilla.MOD_CONTROL;
+            case InputConstants.KEY_LALT, InputConstants.KEY_RALT -> Vanilla.MOD_ALT;
+            case Vanilla.SUPER_KEY_LEFT, Vanilla.SUPER_KEY_RIGHT -> Vanilla.MOD_SUPER;
             default -> 0;
         };
     }

@@ -104,7 +104,7 @@ public class AutoBreed extends Module {
 
             Rotations.rotate(Rotations.getYaw(entity), Rotations.getPitch(entity), -100, () -> {
                 EntityHitResult location = new EntityHitResult(animal, animal.getBoundingBox().getCenter());
-                mc.gameMode.interact(mc.player, animal, location, hand.get());
+                Vanilla.interactWithHit(mc.gameMode, mc.player, animal, location, hand.get());
                 Vanilla.swing(mc.player, hand.get());
                 animalsFed.putLast(animal, tickCounter);
             });

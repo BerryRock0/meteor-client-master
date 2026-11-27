@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -97,19 +99,19 @@ public class Fullbright extends Module {
     @EventHandler
     private void onTick(TickEvent.Post event) {
         if (mc.player == null || !mode.get().equals(Mode.Potion)) return;
-        if (mc.player.hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffects.NIGHT_VISION.value()))) {
-            MobEffectInstance instance = mc.player.getEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffects.NIGHT_VISION.value()));
+        if (mc.player.hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffectUtils.get("NIGHT_VISION").value()))) {
+            MobEffectInstance instance = mc.player.getEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffectUtils.get("NIGHT_VISION").value()));
             if (instance != null && instance.getDuration() < 420)
                 ((MobEffectInstanceAccessor) instance).meteor$setDuration(420);
         } else {
-            mc.player.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffects.NIGHT_VISION.value()), 420, 0));
+            mc.player.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffectUtils.get("NIGHT_VISION").value()), 420, 0));
         }
     }
 
     private void disableNightVision() {
         if (mc.player == null) return;
-        if (mc.player.hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffects.NIGHT_VISION.value()))) {
-            mc.player.removeEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffects.NIGHT_VISION.value()));
+        if (mc.player.hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffectUtils.get("NIGHT_VISION").value()))) {
+            mc.player.removeEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(MobEffectUtils.get("NIGHT_VISION").value()));
         }
     }
 

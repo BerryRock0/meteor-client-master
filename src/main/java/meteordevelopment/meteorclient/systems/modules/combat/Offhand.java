@@ -21,7 +21,7 @@ import meteordevelopment.meteorclient.utils.player.PlayerUtils;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 import static meteordevelopment.orbit.EventPriority.HIGHEST;
 import static com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_RIGHT;

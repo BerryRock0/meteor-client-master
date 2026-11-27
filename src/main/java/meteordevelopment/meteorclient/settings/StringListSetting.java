@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.renderer.GuiRenderer;
 import meteordevelopment.meteorclient.gui.utils.CharFilter;
@@ -58,9 +60,9 @@ public class StringListSetting extends Setting<List<String>> {
     public List<String> load(CompoundTag tag) {
         get().clear();
 
-        ListTag valueTag = tag.getListOrEmpty("value");
+        ListTag valueTag = Nbt.getListOrEmpty(tag, "value");
         for (Tag tagI : valueTag) {
-            get().add(tagI.asString().orElse(""));
+            get().add(Nbt.asString(tagI).orElse(""));
         }
 
         return get();

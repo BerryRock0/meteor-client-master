@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.systems.accounts.types;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import com.mojang.util.UndashedUuid;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.systems.accounts.Account;
@@ -28,7 +32,7 @@ public class SessionAccount extends Account<SessionAccount> implements TokenAcco
     public SessionAccount fromTag(CompoundTag tag) {
         super.fromTag(tag);
 
-        accessToken = tag.getStringOr("token", "");
+        accessToken = Nbt.getStringOr(tag, "token", "");
         return this;
     }
 
@@ -67,7 +71,7 @@ public class SessionAccount extends Account<SessionAccount> implements TokenAcco
 
         super.login();
 
-        setSession(new User(cache.username, UndashedUuid.fromStringLenient(cache.uuid), accessToken, Optional.empty(), Optional.empty()));
+        setSession(Vanilla.createUser(cache.username, UndashedUuid.fromStringLenient(cache.uuid), accessToken));
         return true;
     }
 

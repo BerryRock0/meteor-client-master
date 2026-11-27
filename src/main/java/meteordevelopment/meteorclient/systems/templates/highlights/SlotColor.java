@@ -1,5 +1,7 @@
 package meteordevelopment.meteorclient.systems.templates.highlights;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -43,7 +45,7 @@ public class SlotColor implements ISerializable<SlotColor>
     public SlotColor(Tag tag)
     {
 	    CompoundTag nbt = (CompoundTag) tag;
-        uuid = nbt.read("uuid", UUIDUtil.CODEC).orElse(UUID.randomUUID());
+        uuid = Nbt.read(nbt, "uuid", UUIDUtil.CODEC).orElse(UUID.randomUUID());
         fromTag(nbt);
 	}
 
@@ -60,7 +62,7 @@ public class SlotColor implements ISerializable<SlotColor>
     {
         CompoundTag tag = new CompoundTag();
 
-        tag.store("uuid", UUIDUtil.CODEC, uuid);
+        Nbt.store(tag, "uuid", UUIDUtil.CODEC, uuid);
         tag.put("settings", settings.toTag());
 
         return tag;
@@ -70,7 +72,7 @@ public class SlotColor implements ISerializable<SlotColor>
     public SlotColor fromTag(CompoundTag tag)
     {
         if (tag.contains("settings"))
-            settings.fromTag(tag.getCompoundOrEmpty("settings"));
+            settings.fromTag(Nbt.getCompoundOrEmpty(tag, "settings"));
 
         return this;
     }

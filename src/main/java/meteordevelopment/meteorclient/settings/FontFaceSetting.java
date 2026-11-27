@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.renderer.Fonts;
 import meteordevelopment.meteorclient.renderer.text.FontFace;
 import meteordevelopment.meteorclient.renderer.text.FontFamily;
@@ -65,11 +67,11 @@ public class FontFaceSetting extends Setting<FontFace> {
 
     @Override
     protected FontFace load(CompoundTag tag) {
-        String family = tag.getStringOr("family", "");
+        String family = Nbt.getStringOr(tag, "family", "");
         FontInfo.Type type;
 
         try {
-            type = FontInfo.Type.valueOf(tag.getStringOr("type", ""));
+            type = FontInfo.Type.valueOf(Nbt.getStringOr(tag, "type", ""));
         } catch (IllegalArgumentException _) {
             set(Fonts.DEFAULT_FONT);
             return get();

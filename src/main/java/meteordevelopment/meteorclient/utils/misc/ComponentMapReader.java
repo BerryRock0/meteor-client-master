@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.utils.misc;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
@@ -142,10 +143,10 @@ public class ComponentMapReader {
 
         private CompletableFuture<Suggestions> suggestComponentType(SuggestionsBuilder builder) {
             String string = builder.getRemaining().toLowerCase(Locale.ROOT);
-            SharedSuggestionProvider.filterResources(BuiltInRegistries.DATA_COMPONENT_TYPE.entrySet(), string, entry -> entry.getKey().identifier(), entry -> {
+            SharedSuggestionProvider.filterResources(BuiltInRegistries.DATA_COMPONENT_TYPE.entrySet(), string, entry -> Vanilla.identifier(entry.getKey()), entry -> {
                 DataComponentType<?> dataComponentType = entry.getValue();
                 if (dataComponentType.codec() != null) {
-                    Identifier identifier = entry.getKey().identifier();
+                    Identifier identifier = Vanilla.identifier(entry.getKey());
                     builder.suggest(identifier + "=");
                 }
             });

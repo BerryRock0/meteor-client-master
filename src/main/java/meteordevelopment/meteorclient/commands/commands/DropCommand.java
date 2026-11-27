@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 public class DropCommand extends Command {
     private static final SimpleCommandExceptionType NOT_SPECTATOR = new SimpleCommandExceptionType(Component.literal("Can't drop items while in spectator."));
@@ -83,7 +83,7 @@ public class DropCommand extends Command {
     }
 
     private void dropItem(LocalPlayer player, CommandContext<ClientSuggestionProvider> context, int amount) throws CommandSyntaxException {
-        ItemStack stack = ItemArgument.getItem(context, "item").createItemStack(1);
+        ItemStack stack = Vanilla.createItemStack(ItemArgument.getItem(context, "item"), 1, false);
         if (stack == null || stack.getItem() == Items.AIR) throw NO_SUCH_ITEM.create();
 
         for (int i = 0; i < player.getInventory().getContainerSize() && amount > 0; i++) {

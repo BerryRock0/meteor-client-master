@@ -41,10 +41,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.phys.Vec3;
 
@@ -194,8 +194,8 @@ public class StashFinder extends Module {
     @EventHandler
     private void onChunkData(ChunkDataEvent event) {
         // Check the distance.
-        double chunkXAbs = Math.abs(event.chunk().getPos().x() * 16);
-        double chunkZAbs = Math.abs(event.chunk().getPos().z() * 16);
+        double chunkXAbs = Math.abs(Vanilla.chunkX(event.chunk().getPos()) * 16);
+        double chunkZAbs = Math.abs(Vanilla.chunkZ(event.chunk().getPos()) * 16);
         if (Math.sqrt(chunkXAbs * chunkXAbs + chunkZAbs * chunkZAbs) < minimumDistance.get()) return;
 
         Chunk chunk = new Chunk(event.chunk().getPos());
@@ -494,8 +494,8 @@ public class StashFinder extends Module {
         }
 
         public void calculatePos() {
-            x = chunkPos.x() * 16 + 8;
-            z = chunkPos.z() * 16 + 8;
+            x = Vanilla.chunkX(chunkPos) * 16 + 8;
+            z = Vanilla.chunkZ(chunkPos) * 16 + 8;
         }
 
         public int getTotal() {

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import net.minecraft.nbt.CompoundTag;
@@ -73,9 +75,9 @@ public class ModuleListSetting extends Setting<List<Module>> {
     public List<Module> load(CompoundTag tag) {
         get().clear();
 
-        ListTag valueTag = tag.getListOrEmpty("modules");
+        ListTag valueTag = Nbt.getListOrEmpty(tag, "modules");
         for (Tag tagI : valueTag) {
-            Module module = Modules.get().get(tagI.asString().orElse(""));
+            Module module = Modules.get().get(Nbt.asString(tagI).orElse(""));
             if (module != null) get().add(module);
         }
 

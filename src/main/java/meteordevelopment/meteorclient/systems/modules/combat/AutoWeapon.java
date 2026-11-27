@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.combat;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.events.entity.player.AttackEntityEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
@@ -52,8 +54,8 @@ public class AutoWeapon extends Module {
     }
 
     private int getBestWeapon(LivingEntity target) {
-        int slotS = mc.player.getInventory().getSelectedSlot();
-        int slotA = mc.player.getInventory().getSelectedSlot();
+        int slotS = InventoryUtils.getSelectedSlot(mc.player.getInventory());
+        int slotA = InventoryUtils.getSelectedSlot(mc.player.getInventory());
         double damageS = 0;
         double damageA = 0;
         double currentDamageS;
@@ -80,7 +82,7 @@ public class AutoWeapon extends Module {
         else if (weapon.get() == Weapon.Axe && threshold.get() > damageS - damageA) return slotA;
         else if (weapon.get() == Weapon.Sword && threshold.get() < damageA - damageS) return slotA;
         else if (weapon.get() == Weapon.Axe && threshold.get() < damageS - damageA) return slotS;
-        else return mc.player.getInventory().getSelectedSlot();
+        else return InventoryUtils.getSelectedSlot(mc.player.getInventory());
     }
 
     public enum Weapon {

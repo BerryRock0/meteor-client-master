@@ -5,13 +5,14 @@
 
 package meteordevelopment.meteorclient.utils.render;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.level.block.Block;
 
 /**
@@ -39,9 +40,9 @@ public class DisplayItemUtils {
     private static Holder<Item> directHolder(Item item) {
         DataComponentMap components = DataComponentMap.builder()
             .addAll(DataComponents.COMMON_ITEM_COMPONENTS)
-            .set(DataComponents.ITEM_MODEL, item.builtInRegistryHolder().key().identifier())
+            .set(DataComponents.ITEM_MODEL, Vanilla.identifier(item.builtInRegistryHolder().key()))
             .set(DataComponents.ITEM_NAME, Component.translatable(item.getDescriptionId()))
             .build();
-        return Holder.direct(item, components);
+        return Vanilla.directHolder(item, components);
     }
 }

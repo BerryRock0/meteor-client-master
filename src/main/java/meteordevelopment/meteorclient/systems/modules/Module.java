@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.addons.AddonManager;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
@@ -171,16 +173,16 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
     @Override
     public Module fromTag(CompoundTag tag) {
         // General
-        keybind.fromTag(tag.getCompoundOrEmpty("keybind"));
-        toggleOnBindRelease = tag.getBooleanOr("toggleOnKeyRelease", false);
-        chatFeedback = !tag.contains("chatFeedback") || tag.getBooleanOr("chatFeedback", false);
-        favorite = tag.getBooleanOr("favorite", false);
+        keybind.fromTag(Nbt.getCompoundOrEmpty(tag, "keybind"));
+        toggleOnBindRelease = Nbt.getBooleanOr(tag, "toggleOnKeyRelease", false);
+        chatFeedback = !tag.contains("chatFeedback") || Nbt.getBooleanOr(tag, "chatFeedback", false);
+        favorite = Nbt.getBooleanOr(tag, "favorite", false);
 
         // Settings
         Tag settingsTag = tag.get("settings");
         if (settingsTag instanceof CompoundTag compoundTag) settings.fromTag(compoundTag);
 
-        boolean active = tag.getBooleanOr("active", false);
+        boolean active = Nbt.getBooleanOr(tag, "active", false);
         if (active != isActive()) toggle();
 
         return this;

@@ -19,7 +19,7 @@ import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 public class AutoTotem extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();

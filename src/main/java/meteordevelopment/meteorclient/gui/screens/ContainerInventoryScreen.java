@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.gui.screens;
 
+import meteordevelopment.meteorclient.mc.PoseStack2D;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.BetterTooltips;
 import meteordevelopment.meteorclient.utils.Utils;
@@ -53,8 +56,8 @@ public class ContainerInventoryScreen extends Screen {
         if (containerItem.getItem() instanceof BundleItem) {
             BundleContents bundleContents = containerItem.get(DataComponents.BUNDLE_CONTENTS);
             if (bundleContents != null) {
-                for (var template : bundleContents.items()) {
-                    containerItems.add(template.create());
+                for (net.minecraft.world.item.ItemStack itemStack : Vanilla.bundleItems(bundleContents)) {
+                    containerItems.add(itemStack);
                 }
             }
         } else {
@@ -66,16 +69,14 @@ public class ContainerInventoryScreen extends Screen {
         this.containerRows = Math.max(1, Mth.positiveCeilDiv(containerItems.size(), 9));
     }
 
-    @Override
     protected void init() {
         super.init();
         this.x = (this.width - SCREEN_WIDTH) / 2;
         this.y = (this.height - (114 + containerRows * SLOT_SIZE + 20)) / 2;
     }
 
-    @Override
     public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        super.extractRenderState(graphics, mouseX, mouseY, delta);
+        Vanilla.screenExtractRenderState(this, graphics, mouseX, mouseY, delta);
 
         baseX = x + 8;
         baseY = y + 18;
@@ -115,13 +116,13 @@ public class ContainerInventoryScreen extends Screen {
         }
 
         // drawing title headers
-        graphics.pose().pushMatrix();
-        graphics.pose().translate((float) x, (float) y);
+        PoseStack2D.of(graphics).push();
+        PoseStack2D.of(graphics).translate((float) x, (float) y);
         if (font != null) {
             graphics.text(font, title, 8, 6, -12566464, false);
             graphics.text(font, playerInventory.getDisplayName(), 8, 18 + containerRows * SLOT_SIZE + 10, -12566464, false);
         }
-        graphics.pose().popMatrix();
+        PoseStack2D.of(graphics).pop();
 
         // drawing the tooltip
         ItemStack item = getSelectedItem(mouseX, mouseY);
@@ -130,7 +131,6 @@ public class ContainerInventoryScreen extends Screen {
         }
     }
 
-    @Override
     public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
         BetterTooltips tooltips = Modules.get().get(BetterTooltips.class);
 
@@ -142,7 +142,6 @@ public class ContainerInventoryScreen extends Screen {
         return false;
     }
 
-    @Override
     public boolean keyPressed(@NonNull KeyEvent input) {
         BetterTooltips tooltips = Modules.get().get(BetterTooltips.class);
 
@@ -151,7 +150,7 @@ public class ContainerInventoryScreen extends Screen {
             return tooltips.openContent(stack);
         }
 
-        if (input.key() == InputConstants.KEY_ESCAPE || mc.options.keyInventory.matches(input)) {
+        if (input.key() == InputConstants.KEY_ESCAPE || Vanilla.matchesKey(mc.options.keyInventory, input)) {
             onClose();
             return true;
         }

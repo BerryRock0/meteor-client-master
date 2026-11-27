@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.movement;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
@@ -72,7 +73,7 @@ public class Blink extends Module {
         if (!Utils.canUpdate()) return;
 
         if (renderOriginal.get()) {
-            model = new CloneEntity(mc.player, mc.player.getGameProfile().name(), 20, 0);
+            model = new CloneEntity(mc.player, Vanilla.gameProfileName(mc.player.getGameProfile()), 20, 0);
             model.doNotPush = true;
             model.hideWhenInsideCamera = true;
             model.noHit = true;

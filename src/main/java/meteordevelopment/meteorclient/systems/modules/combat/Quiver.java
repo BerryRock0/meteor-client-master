@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.systems.modules.combat;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -26,9 +30,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashSet;
@@ -44,7 +48,7 @@ public class Quiver extends Module {
     private final Setting<List<MobEffect>> effects = sgGeneral.add(new StatusEffectListSetting.Builder()
         .name("effects")
         .description("Which effects to shoot you with.")
-        .defaultValue(MobEffects.STRENGTH.value())
+        .defaultValue(MobEffectUtils.get("STRENGTH").value())
         .build()
     );
 
@@ -127,14 +131,14 @@ public class Quiver extends Module {
 
         if (!bow.isMainHand()) {
             if (wasHotbar) InvUtils.swap(bow.slot(), true);
-            else InvUtils.move().from(mc.player.getInventory().getSelectedSlot()).to(prevSlot);
+            else InvUtils.move().from(InventoryUtils.getSelectedSlot(mc.player.getInventory())).to(prevSlot);
         } else wasMainhand = true;
 
         arrowSlots.clear();
         Set<MobEffect> usedEffects = new HashSet<>();
 
         for (int i = mc.player.getInventory().getContainerSize(); i > 0; i--) {
-            if (i == mc.player.getInventory().getSelectedSlot()) continue;
+            if (i == InventoryUtils.getSelectedSlot(mc.player.getInventory())) continue;
 
             ItemStack item = mc.player.getInventory().getItem(i);
 
@@ -159,7 +163,7 @@ public class Quiver extends Module {
     public void onDeactivate() {
         if (!wasMainhand) {
             if (wasHotbar) InvUtils.swapBack();
-            else InvUtils.move().from(mc.player.getInventory().getSelectedSlot()).to(prevSlot);
+            else InvUtils.move().from(InventoryUtils.getSelectedSlot(mc.player.getInventory())).to(prevSlot);
         }
     }
 

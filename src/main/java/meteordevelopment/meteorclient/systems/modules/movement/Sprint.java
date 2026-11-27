@@ -107,9 +107,9 @@ public class Sprint extends Module {
             if (mode.get() == Mode.Strict || !permaSprint.get()) return false;
         }
 
-        boolean strictSprint = !(mc.player.isInShallowWater())
-            && !mc.player.isMobilityRestricted()
-            && mc.player.isPassenger() ? (mc.player.getVehicle().canSprint() && mc.player.getVehicle().isLocalInstanceAuthoritative()) : mc.player.getFoodData().hasEnoughFood()
+        boolean strictSprint = !Vanilla.inShallowWater(mc.player)
+            && !Vanilla.mobilityRestricted(mc.player)
+            && mc.player.isPassenger() ? (mc.player.getVehicle().canSprint() && mc.player.getVehicle().isLocalInstanceAuthoritative()) : Vanilla.enoughFood(mc.player)
                                                                                                                                          && (!mc.player.horizontalCollision || mc.player.minorHorizontalCollision);
 
         return isActive() && (mode.get() == Mode.Rage || strictSprint);

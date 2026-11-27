@@ -44,22 +44,8 @@ public class FakeClientPlayer {
         if (player == null || (!id.equals(lastId))) {
             if (world == null) {
                 world = Vanilla.createClientLevel(
-                    new ClientPacketListener(mc, new Connection(PacketFlow.CLIENTBOUND), new CommonListenerCookie(
-                        null,
-                        new GameProfile(mc.getUser().getProfileId(), mc.getUser().getName()),
-                        null,
-                        null,
-                        null,
-                        null,
-                        mc.getCurrentServer(),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        false)
-                    ),
+                    Vanilla.createClientPacketListener(mc, new Connection(PacketFlow.CLIENTBOUND),
+                        new GameProfile(mc.getUser().getProfileId(), mc.getUser().getName())),
                     new ClientLevel.ClientLevelData(Difficulty.NORMAL, false, false),
                     world.dimension(),
                     world.dimensionTypeRegistration(),

@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.hud.elements;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.hud.Hud;
 import meteordevelopment.meteorclient.systems.hud.HudElement;
@@ -23,7 +24,7 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jspecify.annotations.Nullable;
-import org.joml.Matrix3x2fStack;
+import meteordevelopment.meteorclient.mc.PoseStack2D;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
@@ -150,13 +151,13 @@ public class MapHud extends HudElement {
         renderer.post(() -> {
             mc.getMapRenderer().extractRenderState(mapComponent, mapState, renderState);
 
-            Matrix3x2fStack matrices = renderer.graphics.pose();
-            matrices.pushMatrix();
-            matrices.scale(1f / mc.getWindow().getGuiScale());
+            PoseStack2D matrices = PoseStack2D.of(renderer.graphics);
+            matrices.push();
+            matrices.scale((float) (1f / mc.getWindow().getGuiScale()));
             matrices.translate(this.x, this.y);
             matrices.scale(scale.get().floatValue());
             renderer.graphics.map(renderState);
-            matrices.popMatrix();
+            matrices.pop();
         });
     }
 

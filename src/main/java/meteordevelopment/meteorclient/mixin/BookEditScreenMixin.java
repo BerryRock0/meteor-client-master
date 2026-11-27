@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.mixin;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import meteordevelopment.meteorclient.MeteorClient;
@@ -94,18 +96,18 @@ public abstract class BookEditScreenMixin extends Screen {
                 try {
                     CompoundTag tag = NbtIo.readCompressed(in, NbtAccounter.unlimitedHeap());
 
-                    ListTag listTag = tag.getListOrEmpty("pages").copy();
+                    ListTag listTag = Nbt.getListOrEmpty(tag, "pages").copy();
 
                     pages.clear();
                     for (int i = 0; i < listTag.size(); ++i) {
-                        pages.add(listTag.getStringOr(i, ""));
+                        pages.add(Nbt.listString(listTag, i));
                     }
 
                     if (pages.isEmpty()) {
                         pages.add("");
                     }
 
-                    currentPage = tag.getIntOr("currentPage", 0);
+                    currentPage = Nbt.getIntOr(tag, "currentPage", 0);
 
                     updatePageContent();
                 } catch (IOException e) {

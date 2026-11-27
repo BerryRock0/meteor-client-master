@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.gui.tabs.builtin;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.MeteorClient;
@@ -140,7 +142,7 @@ public class ProfilesTab extends Tab {
             if (nbt == null) return null;
 
             Profile p = new Profile();
-            Optional<String> parsedName = nbt.getString("name").filter(n -> !n.isEmpty());
+            Optional<String> parsedName = Nbt.string(nbt, "name").filter(n -> !n.isEmpty());
 
             if (parsedName.filter(p.name::set).isEmpty() && !p.name.set(FilenameUtils.removeExtension(profileFile.getName()))) {
                 throw new IllegalStateException("Imported profile does not have a valid name.");

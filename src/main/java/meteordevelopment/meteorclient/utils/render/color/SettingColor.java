@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.render.color;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Style;
@@ -95,7 +97,7 @@ public class SettingColor extends Color {
     @Override
     public SettingColor fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        rainbow = tag.getBooleanOr("rainbow", false);
+        rainbow = Nbt.getBooleanOr(tag, "rainbow", false);
         return this;
     }
 

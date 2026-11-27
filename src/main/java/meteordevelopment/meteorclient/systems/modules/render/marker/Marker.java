@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.render.marker;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
@@ -72,12 +74,12 @@ public class Marker extends Module {
         super.fromTag(tag);
 
         markers.clear();
-        ListTag list = tag.getListOrEmpty("markers");
+        ListTag list = Nbt.getListOrEmpty(tag, "markers");
 
         for (Tag tagII : list) {
             CompoundTag tagI = (CompoundTag) tagII;
 
-            String type = tagI.getStringOr("type", "");
+            String type = Nbt.getStringOr(tagI, "type", "");
             BaseMarker marker = factory.createMarker(type);
 
             if (marker != null) {

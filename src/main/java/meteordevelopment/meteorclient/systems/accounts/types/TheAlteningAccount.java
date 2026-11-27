@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.accounts.types;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import com.mojang.authlib.Environment;
 import com.mojang.util.UndashedUuid;
 import meteordevelopment.meteorclient.MeteorClient;
@@ -60,7 +62,7 @@ public class TheAlteningAccount extends Account<TheAlteningAccount> implements T
         applyLoginEnvironment(SERVICE);
 
         try {
-            setSession(new User(cache.username, UndashedUuid.fromStringLenient(cache.uuid), accessToken, Optional.empty(), Optional.empty()));
+            setSession(Vanilla.createUser(cache.username, UndashedUuid.fromStringLenient(cache.uuid), accessToken));
             return true;
         } catch (Exception _) {
             MeteorClient.LOG.error("Failed to login with TheAltening.");
@@ -93,12 +95,12 @@ public class TheAlteningAccount extends Account<TheAlteningAccount> implements T
 
     @Override
     public TheAlteningAccount fromTag(CompoundTag tag) {
-        if (tag.getString("name").isEmpty() || tag.getCompound("cache").isEmpty() || tag.getString("token").isEmpty())
+        if (Nbt.string(tag, "name").isEmpty() || Nbt.compound(tag, "cache").isEmpty() || Nbt.string(tag, "token").isEmpty())
             throw new NbtException();
 
-        name = tag.getString("name").get();
-        token = tag.getString("token").get();
-        cache.fromTag(tag.getCompound("cache").get());
+        name = Nbt.string(tag, "name").get();
+        token = Nbt.string(tag, "token").get();
+        cache.fromTag(Nbt.compound(tag, "cache").get());
 
         return this;
     }

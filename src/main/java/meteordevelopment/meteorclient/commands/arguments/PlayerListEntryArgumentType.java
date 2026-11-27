@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.commands.arguments;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -45,7 +46,7 @@ public class PlayerListEntryArgumentType implements ArgumentType<PlayerInfo> {
         PlayerInfo playerListEntry = null;
 
         for (PlayerInfo p : mc.getConnection().getOnlinePlayers()) {
-            if (p.getProfile().name().equalsIgnoreCase(argument)) {
+            if (Vanilla.gameProfileName(p.getProfile()).equalsIgnoreCase(argument)) {
                 playerListEntry = p;
                 break;
             }
@@ -57,7 +58,7 @@ public class PlayerListEntryArgumentType implements ArgumentType<PlayerInfo> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(mc.getConnection().getOnlinePlayers().stream().map(playerListEntry -> playerListEntry.getProfile().name()), builder);
+        return SharedSuggestionProvider.suggest(mc.getConnection().getOnlinePlayers().stream().map(playerListEntry -> Vanilla.gameProfileName(playerListEntry.getProfile())), builder);
     }
 
     @Override

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.world;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
@@ -59,10 +61,12 @@ import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.*;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -1108,7 +1112,7 @@ public class HighwayBuilder extends Module {
             protected void start(HighwayBuilder b) {
                 int biggestCount = 0;
 
-                for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+                for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                     ItemStack itemStack = b.mc.player.getInventory().getItem(i);
 
                     if (itemStack.getItem() instanceof BlockItem && b.trashItems.get().contains(itemStack.getItem()) && itemStack.getCount() > biggestCount) {
@@ -1147,7 +1151,7 @@ public class HighwayBuilder extends Module {
                     return;
                 }
 
-                for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+                for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                     if (i == skipSlot) continue;
 
                     ItemStack itemStack = b.mc.player.getInventory().getItem(i);
@@ -1227,7 +1231,7 @@ public class HighwayBuilder extends Module {
                 }
 
                 int emptySlots = 0;
-                for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+                for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                     if (b.mc.player.getInventory().getItem(i).isEmpty()) emptySlots++;
                 }
 
@@ -1275,7 +1279,7 @@ public class HighwayBuilder extends Module {
                     }
                 }
 
-                for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+                for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                     ItemStack itemStack = b.mc.player.getInventory().getItem(i);
                     if (itemStack.getItem() == Items.OBSIDIAN) obsidianCount += itemStack.getCount();
                 }
@@ -1464,7 +1468,7 @@ public class HighwayBuilder extends Module {
                 }
 
                 int restockSlots = -b.minEmpty.get();
-                for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+                for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                     if (b.mc.player.getInventory().getItem(i).isEmpty()) restockSlots++;
                 }
 
@@ -1707,7 +1711,7 @@ public class HighwayBuilder extends Module {
 
             private int countSlots(HighwayBuilder b, Predicate<ItemStack> predicate) {
                 int count = 0;
-                for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+                for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                     ItemStack stack = b.mc.player.getInventory().getItem(i);
                     if (predicate.test(stack)) count++;
                 }
@@ -2020,7 +2024,7 @@ public class HighwayBuilder extends Module {
         }
 
         private int findSlot(HighwayBuilder b, Predicate<ItemStack> predicate, boolean hotbar) {
-            for (int i = hotbar ? 0 : 9; i < (hotbar ? 9 : b.mc.player.getInventory().getNonEquipmentItems().size()); i++) {
+            for (int i = hotbar ? 0 : 9; i < (hotbar ? 9 : InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size()); i++) {
                 if (predicate.test(b.mc.player.getInventory().getItem(i))) return i;
             }
 
@@ -2069,7 +2073,7 @@ public class HighwayBuilder extends Module {
         }
 
         protected boolean hasItem(HighwayBuilder b, Predicate<ItemStack> predicate) {
-            for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+            for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                 if (predicate.test(b.mc.player.getInventory().getItem(i))) return true;
             }
 
@@ -2078,7 +2082,7 @@ public class HighwayBuilder extends Module {
 
         protected int countItem(HighwayBuilder b, Predicate<ItemStack> predicate) {
             int count = 0;
-            for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+            for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                 ItemStack stack = b.mc.player.getInventory().getItem(i);
                 if (predicate.test(stack)) count += stack.getCount();
             }
@@ -2110,13 +2114,13 @@ public class HighwayBuilder extends Module {
 
         protected int findAndMoveBestToolToHotbar(HighwayBuilder b, BlockState blockState, boolean noSilkTouch) {
             // Check for creative
-            if (b.mc.player.isCreative()) return b.mc.player.getInventory().getSelectedSlot();
+            if (b.mc.player.isCreative()) return InventoryUtils.getSelectedSlot(b.mc.player.getInventory());
 
             // Find best tool
             double bestScore = -1;
             int bestSlot = -1;
 
-            for (int i = 0; i < b.mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+            for (int i = 0; i < InventoryUtils.getNonEquipmentItems(b.mc.player.getInventory()).size(); i++) {
                 double score = AutoTool.getScore(b.mc.player.getInventory().getItem(i), blockState, false, false, AutoTool.EnchantPreference.None, itemStack -> {
                     if (noSilkTouch && Utils.hasEnchantment(itemStack, Enchantments.SILK_TOUCH)) return false;
                     return !b.dontBreakTools.get() || itemStack.getMaxDamage() - itemStack.getDamageValue() > (itemStack.getMaxDamage() * (b.breakDurability.get() / 100));
@@ -2128,7 +2132,7 @@ public class HighwayBuilder extends Module {
                 }
             }
 
-            if (bestSlot == -1) return b.mc.player.getInventory().getSelectedSlot();
+            if (bestSlot == -1) return InventoryUtils.getSelectedSlot(b.mc.player.getInventory());
 
             ItemStack bestStack = b.mc.player.getInventory().getItem(bestSlot);
             if (bestStack.is(ItemTags.PICKAXES)) {
@@ -2864,7 +2868,7 @@ public class HighwayBuilder extends Module {
         }
 
         public double progress() {
-            int slot = b.mc.player.getInventory().getSelectedSlot();
+            int slot = InventoryUtils.getSelectedSlot(b.mc.player.getInventory());
             return BlockUtils.getBreakDelta(slot, blockState) * ((b.mc.player.tickCount - (packet ? packetStartTime : normalStartTime)) + 1);
         }
 

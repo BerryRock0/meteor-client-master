@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.utils.render.color.Color;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import net.minecraft.nbt.CompoundTag;
@@ -56,7 +58,7 @@ public class ColorSetting extends Setting<SettingColor> {
 
     @Override
     public SettingColor load(CompoundTag tag) {
-        get().fromTag(tag.getCompoundOrEmpty("value"));
+        get().fromTag(Nbt.getCompoundOrEmpty(tag, "value"));
 
         return get();
     }

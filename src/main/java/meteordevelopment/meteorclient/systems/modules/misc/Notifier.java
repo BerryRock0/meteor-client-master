@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.misc;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -341,7 +342,7 @@ public class Notifier extends Module {
             while (timer >= notificationDelay.get() && !messageQueue.isEmpty()) {
                 timer = 0;
                 if (simpleNotifications.get()) {
-                    mc.player.sendSystemMessage(messageQueue.removeFirst());
+                    Vanilla.sendSystemMessage(mc.player, messageQueue.removeFirst());
                 } else {
                     ChatUtils.sendMsg(messageQueue.removeFirst());
                 }
@@ -376,12 +377,12 @@ public class Notifier extends Module {
                     ChatFormatting.GRAY + "["
                         + ChatFormatting.GREEN + "+"
                         + ChatFormatting.GRAY + "] "
-                        + entry.profile().name()
+                        + Vanilla.gameProfileName(entry.profile())
                 ));
             } else {
                 messageQueue.addLast(Component.literal(
                     ChatFormatting.WHITE
-                        + entry.profile().name()
+                        + Vanilla.gameProfileName(entry.profile())
                         + ChatFormatting.GRAY + " joined."
                 ));
             }
@@ -400,12 +401,12 @@ public class Notifier extends Module {
                     ChatFormatting.GRAY + "["
                         + ChatFormatting.RED + "-"
                         + ChatFormatting.GRAY + "] "
-                        + toRemove.getProfile().name()
+                        + Vanilla.gameProfileName(toRemove.getProfile())
                 ));
             } else {
                 messageQueue.addLast(Component.literal(
                     ChatFormatting.WHITE
-                        + toRemove.getProfile().name()
+                        + Vanilla.gameProfileName(toRemove.getProfile())
                         + ChatFormatting.GRAY + " left."
                 ));
             }

@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.commands.commands;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.commands.Command;
@@ -24,14 +27,14 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import meteordevelopment.meteorclient.mc.EntityTypes;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.item.component.MapDecorations;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -75,7 +78,7 @@ public class LocateCommand extends Command {
         // Overworld structures
 
         builder.then(literal("buried_treasure").executes(_ -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
             if (stack.getItem() != Items.FILLED_MAP
                 || stack.get(DataComponents.ITEM_NAME) == null
                 || !stack.get(DataComponents.ITEM_NAME).getString().equals(Component.translatable("filled_map.buried_treasure").getString())) {
@@ -105,7 +108,7 @@ public class LocateCommand extends Command {
         }));
 
         builder.then(literal("mansion").executes(_ -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
             if (stack.getItem() != Items.FILLED_MAP
                 || stack.get(DataComponents.ITEM_NAME) == null
                 || !stack.get(DataComponents.ITEM_NAME).getString().equals(Component.translatable("filled_map.mansion").getString())) {
@@ -135,7 +138,7 @@ public class LocateCommand extends Command {
         }));
 
         builder.then(literal("monument").executes(_ -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
             if (stack.getItem() == Items.FILLED_MAP
                 && stack.get(DataComponents.ITEM_NAME) != null
                 && stack.get(DataComponents.ITEM_NAME).getString().equals(Component.translatable("filled_map.monument").getString())) {
@@ -248,7 +251,7 @@ public class LocateCommand extends Command {
         // Misc structures
 
         builder.then(literal("lodestone").executes(_ -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
             if (stack.getItem() != Items.COMPASS) {
                 error("You need to hold a (highlight)lodestone(default) compass!");
                 return SINGLE_SUCCESS;

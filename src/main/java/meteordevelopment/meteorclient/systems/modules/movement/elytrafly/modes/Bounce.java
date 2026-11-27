@@ -9,6 +9,10 @@
 
 package meteordevelopment.meteorclient.systems.modules.movement.elytrafly.modes;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.systems.modules.movement.elytrafly.ElytraFlightMode;
@@ -106,8 +110,8 @@ public class Bounce extends ElytraFlightMode {
 
     public static boolean checkConditions(LocalPlayer player) {
         BlockState blockState = player.getInBlockState();
-        boolean isClimbing = (blockState.is(BlockTags.CLIMBABLE) && !blockState.is(BlockTags.CAN_GLIDE_THROUGH));
-        return (!player.getAbilities().flying && !player.isPassenger() && !isClimbing && !player.isInWater() && !player.hasEffect(MobEffects.LEVITATION));
+        boolean isClimbing = (blockState.is(BlockTags.CLIMBABLE) && !Vanilla.canGlideThrough(blockState));
+        return (!player.getAbilities().flying && !player.isPassenger() && !isClimbing && !player.isInWater() && !player.hasEffect(MobEffectUtils.get("LEVITATION")));
     }
 
     private static boolean startGliding(LocalPlayer player) {

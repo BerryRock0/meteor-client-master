@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.commands.commands;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import meteordevelopment.meteorclient.commands.Command;
@@ -27,7 +28,7 @@ public class FriendsCommand extends Command {
             .then(argument("player", PlayerListEntryArgumentType.create())
                 .executes(context -> {
                     GameProfile profile = PlayerListEntryArgumentType.get(context).getProfile();
-                    Friend friend = new Friend(profile.name(), profile.id());
+                    Friend friend = new Friend(Vanilla.gameProfileName(profile), Vanilla.gameProfileId(profile));
 
                     if (Friends.get().add(friend)) {
                         ChatUtils.sendMsg(friend.hashCode(), ChatFormatting.GRAY, "Added (highlight)%s (default)to friends.".formatted(friend.getName()));

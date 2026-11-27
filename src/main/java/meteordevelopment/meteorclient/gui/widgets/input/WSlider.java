@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.gui.widgets.input;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.utils.misc.MathUtils;
 import net.minecraft.client.input.MouseButtonEvent;

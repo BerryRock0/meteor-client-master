@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.misc;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
@@ -86,7 +87,7 @@ public class ServerSpoof extends Module {
         if (!isActive()) return;
 
         if (event.packet instanceof ServerboundCustomPayloadPacket(CustomPacketPayload payload)) {
-            Identifier id = payload.type().id();
+            Identifier id = Vanilla.identifier(payload.type().id());
 
             if (blockChannels.get()) {
                 for (String channel : channels.get()) {

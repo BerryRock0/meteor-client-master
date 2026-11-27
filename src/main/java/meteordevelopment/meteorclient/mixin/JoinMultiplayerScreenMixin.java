@@ -103,7 +103,6 @@ public abstract class JoinMultiplayerScreenMixin extends Screen {
         }
     }
 
-    @Override
     public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
 

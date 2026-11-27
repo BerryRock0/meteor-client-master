@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.EnumSetting;
 import meteordevelopment.meteorclient.settings.Setting;
@@ -18,7 +20,7 @@ import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 public class ChestSwap extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -75,8 +77,8 @@ public class ChestSwap extends Module {
         int bestSlot = -1;
         boolean breakLoop = false;
 
-        for (int i = 0; i < mc.player.getInventory().getNonEquipmentItems().size(); i++) {
-            Item item = mc.player.getInventory().getNonEquipmentItems().get(i).getItem();
+        for (int i = 0; i < InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).size(); i++) {
+            Item item = InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).get(i).getItem();
 
             switch (chestplate.get()) {
                 case Diamond:
@@ -117,8 +119,8 @@ public class ChestSwap extends Module {
     }
 
     private void equipElytra() {
-        for (int i = 0; i < mc.player.getInventory().getNonEquipmentItems().size(); i++) {
-            ItemStack item = mc.player.getInventory().getNonEquipmentItems().get(i);
+        for (int i = 0; i < InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).size(); i++) {
+            ItemStack item = InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).get(i);
 
             if (item.has(DataComponents.GLIDER)) {
                 equip(i);

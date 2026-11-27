@@ -33,7 +33,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -193,7 +193,7 @@ public abstract class EntityMixin {
             ci.cancel();
         } else if (Modules.get().isActive(HighwayBuilder.class)) {
             Camera camera = Vanilla.mainCamera();
-            ((ICamera) camera).meteor$setRot(camera.yRot() + xo * 0.15, camera.xRot() + yo * 0.15);
+            ((ICamera) camera).meteor$setRot(Vanilla.cameraYRot(camera) + xo * 0.15, Vanilla.cameraXRot(camera) + yo * 0.15);
             ci.cancel();
         } else if (freeLook.cameraMode()) {
             freeLook.cameraYaw += (float) (xo / freeLook.sensitivity.get().floatValue());

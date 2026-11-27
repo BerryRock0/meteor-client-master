@@ -21,9 +21,10 @@ if [ ${#versions[@]} -eq 0 ]; then
 fi
 
 status=0
+GRADLE_TIMEOUT="${GRADLE_TIMEOUT:-600}"
 for version in "${versions[@]}"; do
   echo "=== Building for Minecraft $version ==="
-  if ./gradlew build -PminecraftVersion="$version"; then
+  if timeout "$GRADLE_TIMEOUT" ./gradlew build -PminecraftVersion="$version" --no-daemon --no-parallel -Dorg.gradle.jvmargs="-Xmx6G"; then
     echo "--- OK: $version"
   else
     echo "--- FAILED: $version" >&2

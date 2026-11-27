@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.waypoints;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import com.mojang.blaze3d.platform.NativeImage;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
@@ -183,7 +185,7 @@ public class Waypoints extends System<Waypoints> implements Iterable<Waypoint> {
     public Waypoints fromTag(CompoundTag tag) {
         waypoints.clear();
 
-        for (Tag waypointTag : tag.getListOrEmpty("waypoints")) {
+        for (Tag waypointTag : Nbt.getListOrEmpty(tag, "waypoints")) {
             waypoints.add(new Waypoint(waypointTag));
         }
 

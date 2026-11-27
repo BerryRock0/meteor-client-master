@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.render.color;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.utils.misc.ICopyable;
 import meteordevelopment.meteorclient.utils.misc.ISerializable;
 import net.minecraft.ChatFormatting;
@@ -338,10 +340,10 @@ public class Color implements ICopyable<Color>, ISerializable<Color> {
 
     @Override
     public Color fromTag(CompoundTag tag) {
-        r = tag.getIntOr("r", 0);
-        g = tag.getIntOr("g", 0);
-        b = tag.getIntOr("b", 0);
-        a = tag.getIntOr("a", 0);
+        r = Nbt.getIntOr(tag, "r", 0);
+        g = Nbt.getIntOr(tag, "g", 0);
+        b = Nbt.getIntOr(tag, "b", 0);
+        a = Nbt.getIntOr(tag, "a", 0);
 
         validate();
         return this;

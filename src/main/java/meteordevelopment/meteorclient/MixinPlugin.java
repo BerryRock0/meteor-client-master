@@ -46,7 +46,6 @@ public class MixinPlugin implements IMixinConfigPlugin {
             return isIndigoPresent;
         }
 
-
         return true;
     }
 

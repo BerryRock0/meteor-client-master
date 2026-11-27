@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import meteordevelopment.meteorclient.events.entity.player.ItemUseCrosshairTargetEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -29,7 +33,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 import java.util.List;
 import java.util.Map;
@@ -194,7 +198,7 @@ public class AutoGap extends Module {
     }
 
     private void startEating() {
-        prevSlot = mc.player.getInventory().getSelectedSlot();
+        prevSlot = InventoryUtils.getSelectedSlot(mc.player.getInventory());
         eat();
 
         // Pause auras
@@ -269,13 +273,13 @@ public class AutoGap extends Module {
 
         // Regeneration
         if (potionsRegeneration.get()) {
-            MobEffectInstance effect = effects.get(MobEffects.REGENERATION);
+            MobEffectInstance effect = effects.get(MobEffectUtils.get("REGENERATION"));
             if (effect == null || (beforeExpiry.get() && effect.getDuration() <= expiryThreshold.get())) return true;
         }
 
         // Fire resistance
         if (potionsFireResistance.get()) {
-            MobEffectInstance effect = effects.get(MobEffects.FIRE_RESISTANCE);
+            MobEffectInstance effect = effects.get(MobEffectUtils.get("FIRE_RESISTANCE"));
             if (effect == null || (beforeExpiry.get() && effect.getDuration() <= expiryThreshold.get())) {
                 requiresEGap = true;
                 return true;
@@ -284,7 +288,7 @@ public class AutoGap extends Module {
 
         // Absorption
         if (potionsAbsorption.get()) {
-            MobEffectInstance effect = effects.get(MobEffects.ABSORPTION);
+            MobEffectInstance effect = effects.get(MobEffectUtils.get("ABSORPTION"));
             if (effect == null || (beforeExpiry.get() && effect.getDuration() <= expiryThreshold.get())) {
                 requiresEGap = true;
                 return true;

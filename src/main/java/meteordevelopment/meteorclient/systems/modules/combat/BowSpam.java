@@ -19,7 +19,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 public class BowSpam extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();

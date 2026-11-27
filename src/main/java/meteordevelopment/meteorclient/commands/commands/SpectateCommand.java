@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.commands.commands;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.commands.Command;
@@ -33,7 +35,7 @@ public class SpectateCommand extends Command {
 
         builder.then(argument("player", PlayerArgumentType.create()).executes(context -> {
             mc.setCameraEntity(PlayerArgumentType.get(context));
-            mc.player.sendSystemMessage(Component.literal("Sneak to un-spectate."));
+            Vanilla.sendSystemMessage(mc.player, Component.literal("Sneak to un-spectate."));
             MeteorClient.EVENT_BUS.subscribe(shiftListener);
             return SINGLE_SUCCESS;
         }));

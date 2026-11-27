@@ -30,14 +30,13 @@ import meteordevelopment.orbit.EventHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MaceItem;
+import meteordevelopment.meteorclient.mc.Items;
+import meteordevelopment.meteorclient.mc.Vanilla;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
@@ -114,7 +113,7 @@ public class NoFall extends Module {
     @EventHandler
     private void onSendPacket(PacketEvent.Send event) {
         if (mc.player == null) return;
-        if (pauseOnMace.get() && mc.player.getMainHandItem().getItem() instanceof MaceItem) return;
+        if (pauseOnMace.get() && Vanilla.isMace(mc.player.getMainHandItem())) return;
         if (mc.player.getAbilities().instabuild
             || !(event.packet instanceof ServerboundMovePlayerPacket)
             || mode.get() != Mode.Packet
@@ -140,7 +139,7 @@ public class NoFall extends Module {
         }
 
         if (mc.player.getAbilities().instabuild) return;
-        if (pauseOnMace.get() && mc.player.getMainHandItem().getItem() instanceof MaceItem) return;
+        if (pauseOnMace.get() && Vanilla.isMace(mc.player.getMainHandItem())) return;
 
         // Airplace mode
         if (mode.get() == Mode.AirPlace) {
@@ -162,7 +161,7 @@ public class NoFall extends Module {
 
         // Bucket mode
         else if (mode.get() == Mode.Place) {
-            PlacedItem placedItem1 = mc.level.environmentAttributes().getDimensionValue(EnvironmentAttributes.WATER_EVAPORATES) && placedItem.get() == PlacedItem.Bucket ? PlacedItem.PowderSnow : placedItem.get();
+            PlacedItem placedItem1 = Vanilla.waterEvaporates(mc.level) && placedItem.get() == PlacedItem.Bucket ? PlacedItem.PowderSnow : placedItem.get();
             if (mc.player.fallDistance > 3 && !EntityUtils.isAboveWater(mc.player)) {
                 Item item = placedItem1.item;
 

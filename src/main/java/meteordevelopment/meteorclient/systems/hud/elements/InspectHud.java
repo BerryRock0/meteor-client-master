@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.hud.elements;
 
+import meteordevelopment.meteorclient.mc.NbtUtils;
+
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.ColorSetting;
 import meteordevelopment.meteorclient.settings.DoubleSetting;
@@ -25,7 +27,6 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -225,10 +226,7 @@ public class InspectHud extends HudElement {
 
         BlockEntity blockEntity = mc.level.getBlockEntity(pos);
         if (blockEntity != null) {
-            TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, mc.level.registryAccess());
-            blockEntity.saveWithFullMetadata(output);
-
-            CompoundTag blockEntityData = output.buildResult();
+            CompoundTag blockEntityData = NbtUtils.save(blockEntity, mc.level.registryAccess());
             for (Map.Entry<String, Tag> entry : blockEntityData.entrySet()) {
                 data.put(entry.getKey(), entry.getValue());
             }
@@ -239,10 +237,7 @@ public class InspectHud extends HudElement {
 
     /** The data the server sent for the entity. */
     private CompoundTag entityData(Entity entity) {
-        TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, mc.level.registryAccess());
-        entity.saveWithoutId(output);
-
-        CompoundTag data = output.buildResult();
+        CompoundTag data = NbtUtils.save(entity, mc.level.registryAccess());
         data.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString());
 
         return data;

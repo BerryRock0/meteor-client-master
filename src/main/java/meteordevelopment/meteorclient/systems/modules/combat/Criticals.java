@@ -21,7 +21,6 @@ import net.minecraft.network.protocol.game.ServerboundAttackPacket;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.MaceItem;
 
 public class Criticals extends Module {
 
@@ -84,7 +83,7 @@ public class Criticals extends Module {
     @EventHandler
     private void onSendPacket(PacketEvent.Send event) {
         if (event.packet instanceof ServerboundAttackPacket(int entityId)) {
-            if (mace.get() && mc.player.getMainHandItem().getItem() instanceof MaceItem) {
+            if (mace.get() && Vanilla.isMace(mc.player.getMainHandItem())) {
                 if (mc.player.isFallFlying()) return;
 
                 sendPacket(0);

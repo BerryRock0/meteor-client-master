@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.commands.commands;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import meteordevelopment.meteorclient.commands.Command;
 import meteordevelopment.meteorclient.commands.arguments.PlayerListEntryArgumentType;
@@ -35,7 +36,7 @@ public class NameHistoryCommand extends Command {
         builder.then(argument("player", PlayerListEntryArgumentType.create()).executes(context -> {
             MeteorExecutor.execute(() -> {
                 PlayerInfo lookUpTarget = PlayerListEntryArgumentType.get(context);
-                UUID uuid = lookUpTarget.getProfile().id();
+                UUID uuid = Vanilla.gameProfileId(lookUpTarget.getProfile());
 
                 NameHistory history = Http.get("https://laby.net/api/v2/user/" + uuid + "/get-profile")
                     .exceptionHandler(_ -> error("There was an error fetching that users name history."))
@@ -47,7 +48,7 @@ public class NameHistoryCommand extends Command {
                     error("There was an error fetching that users name history.");
                 }
 
-                String name = lookUpTarget.getProfile().name();
+                String name = Vanilla.gameProfileName(lookUpTarget.getProfile());
                 MutableComponent initial = Component.literal(name);
                 initial.append(Component.literal(name.endsWith("s") ? "'" : "'s"));
 

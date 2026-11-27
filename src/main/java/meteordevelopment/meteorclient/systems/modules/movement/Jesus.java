@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.movement;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
 import com.mojang.datafixers.util.Pair;
 import meteordevelopment.meteorclient.events.entity.player.CanWalkOnFluidEvent;
 import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
@@ -30,7 +32,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
@@ -327,7 +329,7 @@ public class Jesus extends Module {
 
     private boolean isLavaDangerous() {
         if (!dipIfFireResistant.get()) return true;
-        return !mc.player.hasEffect(MobEffects.FIRE_RESISTANCE) || (mc.player.getEffect(MobEffects.FIRE_RESISTANCE).getDuration() <= (15 * 20 * mc.player.getAttributeValue(Attributes.BURNING_TIME)));
+        return !mc.player.hasEffect(MobEffectUtils.get("FIRE_RESISTANCE")) || (mc.player.getEffect(MobEffectUtils.get("FIRE_RESISTANCE")).getDuration() <= (15 * 20 * mc.player.getAttributeValue(Attributes.BURNING_TIME)));
     }
 
     private Pair<Boolean, Boolean> isOverLiquid() {

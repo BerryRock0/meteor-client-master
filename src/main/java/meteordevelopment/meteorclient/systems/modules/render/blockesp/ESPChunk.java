@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.render.blockesp;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
@@ -87,7 +88,7 @@ public class ESPChunk {
 
 
     public static ESPChunk searchChunk(ChunkAccess chunk, List<Block> blocks) {
-        ESPChunk schunk = new ESPChunk(chunk.getPos().x(), chunk.getPos().z());
+        ESPChunk schunk = new ESPChunk(Vanilla.chunkX(chunk.getPos()), Vanilla.chunkZ(chunk.getPos()));
         if (schunk.shouldBeDeleted()) return schunk;
 
         BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();

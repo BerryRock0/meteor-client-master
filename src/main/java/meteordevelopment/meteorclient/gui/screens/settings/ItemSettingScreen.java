@@ -16,7 +16,7 @@ import meteordevelopment.meteorclient.utils.misc.Names;
 import meteordevelopment.meteorclient.utils.render.DisplayItemUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import org.apache.commons.lang3.Strings;
 
 public class ItemSettingScreen extends WindowScreen {

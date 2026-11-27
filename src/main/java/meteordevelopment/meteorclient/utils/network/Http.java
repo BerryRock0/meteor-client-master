@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.utils.network;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import meteordevelopment.meteorclient.utils.other.JsonDateDeserializer;

@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.world;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -21,7 +22,7 @@ import meteordevelopment.orbit.EventHandler;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.phys.EntityHitResult;
 
 import java.util.Iterator;
@@ -129,7 +130,7 @@ public class AutoNametag extends Module {
     private void interact() {
         InteractionHand hand = offHand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         EntityHitResult location = new EntityHitResult(target, target.getBoundingBox().getCenter());
-        mc.gameMode.interact(mc.player, target, location, hand);
+        Vanilla.interact(mc.player, target, hand);
         InvUtils.swapBack();
 
         entityCooldowns.put(target, 20);

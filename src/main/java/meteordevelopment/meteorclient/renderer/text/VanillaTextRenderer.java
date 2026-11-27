@@ -7,7 +7,7 @@ package meteordevelopment.meteorclient.renderer.text;
 
 import meteordevelopment.meteorclient.utils.render.color.Color;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import org.joml.Matrix3x2fStack;
+import meteordevelopment.meteorclient.mc.PoseStack2D;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
@@ -62,15 +62,15 @@ public class VanillaTextRenderer implements TextRenderer {
         int preA = color.a;
         color.a = (int) (((double) color.a / 255 * alpha) * 255);
 
-        Matrix3x2fStack matrices = graphics.pose();
-        matrices.pushMatrix();
+        PoseStack2D matrices = PoseStack2D.of(graphics);
+        matrices.push();
 
         matrices.scale((float) scale, (float) scale);
 
         graphics.text(mc.font, text, (int) (x / scale), (int) (y / scale), color.getPacked());
         double x2 = (x / scale) + mc.font.width(text);
 
-        matrices.popMatrix();
+        matrices.pop();
 
         color.a = preA;
 

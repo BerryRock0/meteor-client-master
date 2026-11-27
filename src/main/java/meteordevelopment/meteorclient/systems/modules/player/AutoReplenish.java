@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -153,8 +155,8 @@ public class AutoReplenish extends Module {
         }
 
         // eliminate occasional loops when moving items from hotbar to itself
-        if (fromSlot == mc.player.getInventory().getSelectedSlot() || fromSlot == SlotUtils.OFFHAND) return;
-        if (fromSlot < 9 && fromSlot < slot && slot != mc.player.getInventory().getSelectedSlot() && slot != SlotUtils.OFFHAND)
+        if (fromSlot == InventoryUtils.getSelectedSlot(mc.player.getInventory()) || fromSlot == SlotUtils.OFFHAND) return;
+        if (fromSlot < 9 && fromSlot < slot && slot != InventoryUtils.getSelectedSlot(mc.player.getInventory()) && slot != SlotUtils.OFFHAND)
             return;
 
         InvUtils.move().from(fromSlot).to(slot);

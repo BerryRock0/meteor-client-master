@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.utils.misc.ISerializable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -74,13 +76,13 @@ public class SettingGroup implements ISerializable<SettingGroup>, Iterable<Setti
 
     @Override
     public SettingGroup fromTag(CompoundTag tag) {
-        sectionExpanded = tag.getBooleanOr("sectionExpanded", false);
+        sectionExpanded = Nbt.getBooleanOr(tag, "sectionExpanded", false);
 
-        ListTag settingsTag = tag.getListOrEmpty("settings");
+        ListTag settingsTag = Nbt.getListOrEmpty(tag, "settings");
         for (Tag t : settingsTag) {
             CompoundTag settingTag = (CompoundTag) t;
 
-            Setting<?> setting = get(settingTag.getStringOr("name", ""));
+            Setting<?> setting = get(Nbt.getStringOr(settingTag, "name", ""));
             if (setting != null) setting.fromTag(settingTag);
         }
 

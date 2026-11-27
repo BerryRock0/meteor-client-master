@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.render.blockesp;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
@@ -125,17 +126,17 @@ public class BlockESP extends Module {
     }
 
     private void updateChunk(int x, int z) {
-        ESPChunk chunk = chunks.get(ChunkPos.pack(x, z));
+        ESPChunk chunk = chunks.get(Vanilla.chunkKey(x, z));
         if (chunk != null) chunk.update();
     }
 
     private void updateBlock(int x, int y, int z) {
-        ESPChunk chunk = chunks.get(ChunkPos.pack(x >> 4, z >> 4));
+        ESPChunk chunk = chunks.get(Vanilla.chunkKey(x >> 4, z >> 4));
         if (chunk != null) chunk.update(x, y, z);
     }
 
     public ESPBlock getBlock(int x, int y, int z) {
-        ESPChunk chunk = chunks.get(ChunkPos.pack(x >> 4, z >> 4));
+        ESPChunk chunk = chunks.get(Vanilla.chunkKey(x >> 4, z >> 4));
         return chunk == null ? null : chunk.get(x, y, z);
     }
 
@@ -165,14 +166,14 @@ public class BlockESP extends Module {
 
             if (schunk.size() > 0) {
                 synchronized (chunks) {
-                    chunks.put(chunk.getPos().pack(), schunk);
+                    chunks.put(Vanilla.chunkKey(Vanilla.chunkX(chunk.getPos()), Vanilla.chunkZ(chunk.getPos())), schunk);
                     schunk.update();
 
                     // Update neighbour chunks
-                    updateChunk(chunk.getPos().x() - 1, chunk.getPos().z());
-                    updateChunk(chunk.getPos().x() + 1, chunk.getPos().z());
-                    updateChunk(chunk.getPos().x(), chunk.getPos().z() - 1);
-                    updateChunk(chunk.getPos().x(), chunk.getPos().z() + 1);
+                    updateChunk(Vanilla.chunkX(chunk.getPos()) - 1, Vanilla.chunkZ(chunk.getPos()));
+                    updateChunk(Vanilla.chunkX(chunk.getPos()) + 1, Vanilla.chunkZ(chunk.getPos()));
+                    updateChunk(Vanilla.chunkX(chunk.getPos()), Vanilla.chunkZ(chunk.getPos()) - 1);
+                    updateChunk(Vanilla.chunkX(chunk.getPos()), Vanilla.chunkZ(chunk.getPos()) + 1);
                 }
             }
         });
@@ -187,7 +188,7 @@ public class BlockESP extends Module {
 
         int chunkX = bx >> 4;
         int chunkZ = bz >> 4;
-        long key = ChunkPos.pack(chunkX, chunkZ);
+        long key = Vanilla.chunkKey(chunkX, chunkZ);
 
         boolean added = blocks.get().contains(event.newState.getBlock()) && !blocks.get().contains(event.oldState.getBlock());
         boolean removed = !added && !blocks.get().contains(event.newState.getBlock()) && blocks.get().contains(event.oldState.getBlock());

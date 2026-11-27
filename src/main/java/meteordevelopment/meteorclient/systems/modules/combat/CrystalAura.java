@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.systems.modules.combat;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.mc.EntityTypes;
 
 import com.google.common.util.concurrent.AtomicDouble;
@@ -54,9 +58,9 @@ import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -817,8 +821,8 @@ public class CrystalAura extends Module {
     private void doBreak(Entity crystal) {
         // Anti weakness
         if (antiWeakness.get()) {
-            MobEffectInstance weakness = mc.player.getEffect(MobEffects.WEAKNESS);
-            MobEffectInstance strength = mc.player.getEffect(MobEffects.STRENGTH);
+            MobEffectInstance weakness = mc.player.getEffect(MobEffectUtils.get("WEAKNESS"));
+            MobEffectInstance strength = mc.player.getEffect(MobEffectUtils.get("STRENGTH"));
 
             // Check for strength
             if (weakness != null && (strength == null || strength.getAmplifier() <= weakness.getAmplifier())) {
@@ -1028,7 +1032,7 @@ public class CrystalAura extends Module {
         FindItemResult item = InvUtils.findInHotbar(targetItem);
         if (!item.found()) return;
 
-        int prevSlot = mc.player.getInventory().getSelectedSlot();
+        int prevSlot = InventoryUtils.getSelectedSlot(mc.player.getInventory());
 
         if (autoSwitch.get() != AutoSwitchMode.None && !item.isOffhand()) InvUtils.swap(item.slot(), false);
 

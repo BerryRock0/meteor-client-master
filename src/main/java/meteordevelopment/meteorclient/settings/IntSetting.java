@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.function.Consumer;
@@ -47,7 +49,7 @@ public class IntSetting extends Setting<Integer> {
 
     @Override
     public Integer load(CompoundTag tag) {
-        set(tag.getIntOr("value", 0));
+        set(Nbt.getIntOr(tag, "value", 0));
 
         return get();
     }

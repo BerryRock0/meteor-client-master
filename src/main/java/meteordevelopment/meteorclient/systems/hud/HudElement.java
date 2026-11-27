@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.hud;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.settings.Settings;
@@ -132,12 +134,12 @@ public abstract class HudElement implements Snapper.Element, ISerializable<HudEl
     public HudElement fromTag(CompoundTag tag) {
         settings.reset();
 
-        tag.getBoolean("active").ifPresent(active1 -> active = active1);
+        Nbt.bool(tag, "active").ifPresent(active1 -> active = active1);
 
-        settings.fromTag(tag.getCompoundOrEmpty("settings"));
-        box.fromTag(tag.getCompoundOrEmpty("box"));
+        settings.fromTag(Nbt.getCompoundOrEmpty(tag, "settings"));
+        box.fromTag(Nbt.getCompoundOrEmpty(tag, "box"));
 
-        tag.getBoolean("autoAnchors").ifPresent(autoAnchors1 -> autoAnchors = autoAnchors1);
+        Nbt.bool(tag, "autoAnchors").ifPresent(autoAnchors1 -> autoAnchors = autoAnchors1);
 
         x = box.getRenderX();
         y = box.getRenderY();

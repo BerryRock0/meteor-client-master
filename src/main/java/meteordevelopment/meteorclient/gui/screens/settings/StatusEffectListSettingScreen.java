@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.gui.screens.settings;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.screens.settings.base.CollectionListSettingScreen;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
@@ -15,7 +16,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 
 import java.util.List;

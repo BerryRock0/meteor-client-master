@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.systems.modules.movement;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
+import meteordevelopment.meteorclient.mc.CameraUtils;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -35,23 +39,23 @@ public class ClickTP extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Post event) {
-        if (mc.player.getInventory().getSelectedItem().getUseAnimation() != ItemUseAnimation.NONE) return;
+        if (InventoryUtils.getSelectedItem(mc.player.getInventory()).getUseAnimation() != ItemUseAnimation.NONE) return;
         if (!mc.options.keyUse.isDown()) return;
 
         if (mc.hitResult != null) {
-            if (mc.hitResult.getType() == HitResult.Type.ENTITY && mc.player.interactOn(((EntityHitResult) mc.hitResult).getEntity(), InteractionHand.MAIN_HAND, mc.hitResult.getLocation()) != InteractionResult.PASS)
+            if (mc.hitResult.getType() == HitResult.Type.ENTITY && Vanilla.interactOn(mc.player, ((EntityHitResult) mc.hitResult).getEntity(), InteractionHand.MAIN_HAND, mc.hitResult.getLocation()) != InteractionResult.PASS)
                 return;
             if (mc.hitResult.getType() == HitResult.Type.BLOCK && mc.player.getMainHandItem().getItem() instanceof BlockItem)
                 return;
         }
 
         Camera camera = Vanilla.mainCamera();
-        Vec3 cameraPos = camera.position();
+        Vec3 cameraPos = CameraUtils.position(camera);
 
         // Calculate the direction the camera is looking based on its pitch and yaw, and extend this direction 210 units away from the camera position
         // 210 is used here as the maximum distance for this exploit is 200 blocks
         // This is done to be able to click tp while in freecam
-        Vec3 direction = Vec3.directionFromRotation(camera.xRot(), camera.yRot()).scale(210);
+        Vec3 direction = Vec3.directionFromRotation(Vanilla.cameraXRot(camera), Vanilla.cameraYRot(camera)).scale(210);
         Vec3 targetPos = cameraPos.add(direction);
 
         ClipContext context = new ClipContext(

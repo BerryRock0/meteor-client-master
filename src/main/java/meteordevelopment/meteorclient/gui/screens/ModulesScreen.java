@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.gui.screens;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import com.mojang.blaze3d.platform.MacosUtil;
 import com.mojang.datafixers.util.Pair;
 import meteordevelopment.meteorclient.gui.GuiTheme;
@@ -23,7 +25,7 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.utils.misc.NbtUtils;
 import meteordevelopment.meteorclient.utils.render.DisplayItemUtils;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
@@ -155,7 +157,7 @@ public class ModulesScreen extends TabScreen {
     public boolean keyPressed(@NonNull KeyEvent value) {
         if (locked) return false;
 
-        boolean cntrl = MacosUtil.IS_MACOS ? value.modifiers() == MOD_SUPER : value.modifiers() == MOD_CONTROL;
+        boolean cntrl = MacosUtil.IS_MACOS ? value.modifiers() == Vanilla.MOD_SUPER : value.modifiers() == Vanilla.MOD_CONTROL;
 
         if (cntrl && value.key() == KEY_F) {
             if (searchWindow != null) searchWindow.setExpanded(true);

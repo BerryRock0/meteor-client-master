@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.gui.screens.settings;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.screens.settings.base.CollectionListSettingScreen;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
@@ -14,7 +15,7 @@ import meteordevelopment.meteorclient.utils.render.DisplayItemUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 
 import java.util.function.Predicate;
 
@@ -25,7 +26,7 @@ public class BlockListSettingScreen extends CollectionListSettingScreen<Block> {
 
     @Override
     protected boolean includeValue(Block value) {
-        if (BuiltInRegistries.BLOCK.getKey(value).getPath().endsWith("_wall_banner")) {
+        if (BuiltInRegistries.BLOCK.getKey(value).getPath().endsWith("_wall_banner") ) {
             return false;
         }
 

@@ -39,7 +39,7 @@ import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -781,7 +781,7 @@ public class Notebot extends Module {
                     if (blockState.getBlock() != Blocks.NOTE_BLOCK) continue;
 
                     // Copied from ServerPlayNetworkHandler#onPlayerInteractBlock
-                    if (!mc.player.isWithinBlockInteractionRange(pos, 1)) continue;
+                    if (!Vanilla.withinBlockInteractionRange(mc.player, pos, 1)) continue;
 
                     if (!isValidScanSpot(pos)) continue;
 

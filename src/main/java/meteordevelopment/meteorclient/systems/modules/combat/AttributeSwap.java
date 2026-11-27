@@ -5,6 +5,11 @@
 
 package meteordevelopment.meteorclient.systems.modules.combat;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.events.entity.player.AttackEntityEvent;
 import meteordevelopment.meteorclient.events.entity.player.DoAttackEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -24,7 +29,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.phys.AABB;
@@ -369,7 +373,7 @@ public class AttributeSwap extends Module {
         if (awaitingBack) return;
 
         if (slotIndex < 0 || slotIndex > 8) return;
-        if (slotIndex == mc.player.getInventory().getSelectedSlot()) return;
+        if (slotIndex == InventoryUtils.getSelectedSlot(mc.player.getInventory())) return;
 
         if (!InvUtils.swap(slotIndex, swapBack.get())) return;
 
@@ -393,7 +397,7 @@ public class AttributeSwap extends Module {
                 (pickaxe.get() && item.is(ItemTags.PICKAXES)) ||
                 (shovel.get() && item.is(ItemTags.SHOVELS)) ||
                 (hoe.get() && item.is(ItemTags.HOES)) ||
-                (mace.get() && item.getItem() instanceof MaceItem) ||
+                (mace.get() && meteordevelopment.meteorclient.mc.Vanilla.isMace(item)) ||
                 (trident.get() && item.getItem() instanceof TridentItem)
         );
     }
@@ -413,10 +417,10 @@ public class AttributeSwap extends Module {
         boolean isLiving = target instanceof LivingEntity;
         boolean isPlayer = target instanceof Player;
         boolean isOnFire = target != null && target.isOnFire();
-        boolean isUndead = target != null && target.typeHolder().is(EntityTypeTags.SENSITIVE_TO_SMITE);
-        boolean isArthropod = target != null && target.typeHolder().is(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS);
-        boolean isAquatic = target != null && target.typeHolder().is(EntityTypeTags.SENSITIVE_TO_IMPALING);
-        boolean hasFireResistance = isLiving && (((LivingEntity) target).hasEffect(MobEffects.FIRE_RESISTANCE) || hasFireProtectionArmor((LivingEntity) target));
+        boolean isUndead = target != null && Vanilla.typeHolder(target).is(EntityTypeTags.SENSITIVE_TO_SMITE);
+        boolean isArthropod = target != null && Vanilla.typeHolder(target).is(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS);
+        boolean isAquatic = target != null && Vanilla.typeHolder(target).is(EntityTypeTags.SENSITIVE_TO_IMPALING);
+        boolean hasFireResistance = isLiving && (((LivingEntity) target).hasEffect(MobEffectUtils.get("FIRE_RESISTANCE")) || hasFireProtectionArmor((LivingEntity) target));
         double armor = isLiving ? ((LivingEntity) target).getAttributeValue(Attributes.ARMOR) : 0;
         float health = isLiving ? ((LivingEntity) target).getHealth() : 0;
 
@@ -424,7 +428,7 @@ public class AttributeSwap extends Module {
         double bestScore = getItemScore(currentStack, isFalling, durability, isLiving, isPlayer, isOnFire, hasFireResistance, isUndead, isArthropod, isAquatic, armor, health);
 
         for (int i = 0; i < 9; i++) {
-            if (i == mc.player.getInventory().getSelectedSlot()) continue;
+            if (i == InventoryUtils.getSelectedSlot(mc.player.getInventory())) continue;
 
             ItemStack stack = mc.player.getInventory().getItem(i);
             if (stack.isEmpty() && !durability) continue;
@@ -441,11 +445,11 @@ public class AttributeSwap extends Module {
 
     private int getSmartSpearSlot(boolean requireLunge) {
         for (int i = 0; i < 9; i++) {
-            if (i == mc.player.getInventory().getSelectedSlot()) continue;
+            if (i == InventoryUtils.getSelectedSlot(mc.player.getInventory())) continue;
             ItemStack stack = mc.player.getInventory().getItem(i);
-            if (!stack.is(ItemTags.SPEARS)) continue;
+            if (!Vanilla.isSpear(stack)) continue;
 
-            boolean hasLunge = Utils.getEnchantmentLevel(stack, Enchantments.LUNGE) > 0;
+            boolean hasLunge = Utils.getEnchantmentLevel(stack, Vanilla.lungeEnchantment()) > 0;
             if (requireLunge && !hasLunge) continue;
             if (!requireLunge && excludeLungeFromHitbox.get() && hasLunge) continue;
 
@@ -619,7 +623,7 @@ public class AttributeSwap extends Module {
 
     private double getMaceScore(ItemStack stack, boolean isFalling) {
         if (!regularMace.get() || !isFalling) return 0;
-        if (stack.getItem() instanceof MaceItem) return 40;
+        if (meteordevelopment.meteorclient.mc.Vanilla.isMace(stack)) return 40;
         return 0;
     }
 

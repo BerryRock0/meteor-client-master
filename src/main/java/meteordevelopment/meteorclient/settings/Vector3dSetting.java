@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import net.minecraft.nbt.CompoundTag;
 import org.joml.Vector3d;
 
@@ -69,11 +71,11 @@ public class Vector3dSetting extends Setting<Vector3d> {
 
     @Override
     protected Vector3d load(CompoundTag tag) {
-        if (tag.getCompound("value").isEmpty()) return get();
+        if (Nbt.compound(tag, "value").isEmpty()) return get();
 
-        CompoundTag valueTag = tag.getCompound("value").get();
+        CompoundTag valueTag = Nbt.compound(tag, "value").get();
 
-        set(valueTag.getDoubleOr("x", 0.0), valueTag.getDoubleOr("y", 0.0), valueTag.getDoubleOr("z", 0.0));
+        set(Nbt.getDoubleOr(valueTag, "x", 0.0), Nbt.getDoubleOr(valueTag, "y", 0.0), Nbt.getDoubleOr(valueTag, "z", 0.0));
 
         return get();
     }

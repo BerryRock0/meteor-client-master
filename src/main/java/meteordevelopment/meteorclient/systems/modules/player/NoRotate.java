@@ -6,7 +6,6 @@
 package meteordevelopment.meteorclient.systems.modules.player;
 
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
-import meteordevelopment.meteorclient.mixin.ClientPacketListenerMixin;
 import meteordevelopment.meteorclient.systems.modules.Categories;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;

@@ -159,21 +159,21 @@ public class AutoWalk extends Module {
     }
 
     private boolean isMovementKey(KeyEvent input) {
-        return mc.options.keyUp.matches(input)
-            || mc.options.keyDown.matches(input)
-            || mc.options.keyLeft.matches(input)
-            || mc.options.keyRight.matches(input)
-            || mc.options.keyShift.matches(input)
-            || mc.options.keyJump.matches(input);
+        return Vanilla.matchesKey(mc.options.keyUp, input)
+            || Vanilla.matchesKey(mc.options.keyDown, input)
+            || Vanilla.matchesKey(mc.options.keyLeft, input)
+            || Vanilla.matchesKey(mc.options.keyRight, input)
+            || Vanilla.matchesKey(mc.options.keyShift, input)
+            || Vanilla.matchesKey(mc.options.keyJump, input);
     }
 
     private boolean isMovementButton(MouseButtonEvent click) {
-        return mc.options.keyUp.matchesMouse(click)
-            || mc.options.keyDown.matchesMouse(click)
-            || mc.options.keyLeft.matchesMouse(click)
-            || mc.options.keyRight.matchesMouse(click)
-            || mc.options.keyShift.matchesMouse(click)
-            || mc.options.keyJump.matchesMouse(click);
+        return Vanilla.matchesMouse(mc.options.keyUp, click)
+            || Vanilla.matchesMouse(mc.options.keyDown, click)
+            || Vanilla.matchesMouse(mc.options.keyLeft, click)
+            || Vanilla.matchesMouse(mc.options.keyRight, click)
+            || Vanilla.matchesMouse(mc.options.keyShift, click)
+            || Vanilla.matchesMouse(mc.options.keyJump, click);
     }
 
     private void createGoal() {

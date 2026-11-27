@@ -161,20 +161,20 @@ public class MeteorClient implements ClientModInitializer {
     @EventHandler
     private void onTick(TickEvent.Post event) {
         if (Compat.get().currentScreenKind() == ScreenKind.NONE && Vanilla.overlay() == null && KeyBinds.OPEN_COMMANDS.consumeClick()) {
-            Vanilla.setScreen(new ChatScreen(Config.get().prefix.get(), true));
+            Vanilla.setScreen(Vanilla.chatScreen(Config.get().prefix.get(), true));
         }
     }
 
     @EventHandler
     private void onKey(KeyInputEvent event) {
-        if (event.action == KeyAction.Press && KeyBinds.OPEN_GUI.matches(event.input)) {
+        if (event.action == KeyAction.Press && Vanilla.matchesKey(KeyBinds.OPEN_GUI, event.input)) {
             toggleGui();
         }
     }
 
     @EventHandler
     private void onMouseClick(MouseClickEvent event) {
-        if (event.action == KeyAction.Press && KeyBinds.OPEN_GUI.matchesMouse(event.click)) {
+        if (event.action == KeyAction.Press && Vanilla.matchesMouse(KeyBinds.OPEN_GUI, event.click)) {
             toggleGui();
         }
     }

@@ -22,7 +22,7 @@ import meteordevelopment.meteorclient.utils.misc.Names;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import org.jspecify.annotations.Nullable;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.entity;
 
+import meteordevelopment.meteorclient.mc.CameraUtils;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import it.unimi.dsi.fastutil.longs.LongSortedSet;
@@ -19,11 +21,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import meteordevelopment.meteorclient.mc.EntityTypes;
+import meteordevelopment.meteorclient.mc.TypeIds;
+import meteordevelopment.meteorclient.utils.entity.TypeMatch;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,45 +50,11 @@ public class EntityUtils {
     }
 
     public static boolean isAttackable(EntityType<?> type) {
-        return type != EntityTypes.AREA_EFFECT_CLOUD && type != EntityTypes.ARROW && type != EntityTypes.FALLING_BLOCK && type != EntityTypes.FIREWORK_ROCKET && type != EntityTypes.ITEM && type != EntityTypes.LLAMA_SPIT && type != EntityTypes.SPECTRAL_ARROW && type != EntityTypes.ENDER_PEARL && type != EntityTypes.EXPERIENCE_BOTTLE && type != EntityTypes.SPLASH_POTION && type != EntityTypes.LINGERING_POTION && type != EntityTypes.TRIDENT && type != EntityTypes.LIGHTNING_BOLT && type != EntityTypes.FISHING_BOBBER && type != EntityTypes.EXPERIENCE_ORB && type != EntityTypes.EGG;
+        return !TypeMatch.isIn(TypeIds.ATTACKABLE_BLACKLIST, type);
     }
 
     public static boolean isRideable(EntityType<?> type) {
-        return type == EntityTypes.PIG ||
-            type == EntityTypes.STRIDER ||
-            type == EntityTypes.HORSE ||
-            type == EntityTypes.DONKEY ||
-            type == EntityTypes.MULE ||
-            type == EntityTypes.SKELETON_HORSE ||
-            type == EntityTypes.ZOMBIE_HORSE ||
-            type == EntityTypes.LLAMA ||
-            type == EntityTypes.TRADER_LLAMA ||
-            type == EntityTypes.CAMEL ||
-            type == EntityTypes.CAMEL_HUSK ||
-            type == EntityTypes.MINECART ||
-            type == EntityTypes.OAK_BOAT ||
-            type == EntityTypes.SPRUCE_BOAT ||
-            type == EntityTypes.BIRCH_BOAT ||
-            type == EntityTypes.JUNGLE_BOAT ||
-            type == EntityTypes.ACACIA_BOAT ||
-            type == EntityTypes.CHERRY_BOAT ||
-            type == EntityTypes.DARK_OAK_BOAT ||
-            type == EntityTypes.PALE_OAK_BOAT ||
-            type == EntityTypes.MANGROVE_BOAT ||
-            type == EntityTypes.BAMBOO_RAFT ||
-            type == EntityTypes.ACACIA_CHEST_BOAT ||
-            type == EntityTypes.BIRCH_CHEST_BOAT ||
-            type == EntityTypes.CHERRY_CHEST_BOAT ||
-            type == EntityTypes.DARK_OAK_CHEST_BOAT ||
-            type == EntityTypes.JUNGLE_CHEST_BOAT ||
-            type == EntityTypes.MANGROVE_CHEST_BOAT ||
-            type == EntityTypes.OAK_CHEST_BOAT ||
-            type == EntityTypes.PALE_OAK_CHEST_BOAT ||
-            type == EntityTypes.SPRUCE_CHEST_BOAT ||
-            type == EntityTypes.BAMBOO_CHEST_RAFT ||
-            type == EntityTypes.NAUTILUS ||
-            type == EntityTypes.ZOMBIE_NAUTILUS ||
-            type == EntityTypes.HAPPY_GHAST;
+        return TypeMatch.isIn(TypeIds.RIDEABLE, type);
     }
 
     public static float getTotalHealth(LivingEntity target) {
@@ -147,8 +116,8 @@ public class EntityUtils {
     }
 
     public static boolean isInRenderDistance(double posX, double posZ) {
-        double x = Math.abs(Vanilla.mainCamera().position().x - posX);
-        double z = Math.abs(Vanilla.mainCamera().position().z - posZ);
+        double x = Math.abs(CameraUtils.position(Vanilla.mainCamera()).x - posX);
+        double z = Math.abs(CameraUtils.position(Vanilla.mainCamera()).z - posZ);
         double d = (mc.options.renderDistance().get() + 1) * 16;
 
         return x < d && z < d;
@@ -299,5 +268,14 @@ public class EntityUtils {
     // Copied from ServerPlayNetworkHandler#isEntityOnAir
     public static boolean isOnAir(Entity entity) {
         return entity.level().getBlockStates(entity.getBoundingBox().inflate(0.0625).expandTowards(0.0, -0.55, 0.0)).allMatch(BlockBehaviour.BlockStateBase::isAir);
+    }
+
+    /** {@code isFlyingVehicle()} was added in 26.x; older versions treat every mount as grounded. */
+    public static boolean isFlyingVehicle(Entity entity) {
+        try {
+            return (boolean) entity.getClass().getMethod("isFlyingVehicle").invoke(entity);
+        } catch (ReflectiveOperationException e) {
+            return false;
+        }
     }
 }

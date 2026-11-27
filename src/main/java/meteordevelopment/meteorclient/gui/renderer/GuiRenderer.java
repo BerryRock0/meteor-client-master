@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.gui.renderer;
 
+import meteordevelopment.meteorclient.mc.PoseStack2D;
 import it.unimi.dsi.fastutil.Stack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import meteordevelopment.meteorclient.MeteorClient;
@@ -85,9 +86,9 @@ public class GuiRenderer {
         this.graphics = graphics;
         this.graphics.nextStratum();
 
-        var matrices = graphics.pose();
-        matrices.pushMatrix();
-        matrices.scale(1.0f / mc.getWindow().getGuiScale());
+        PoseStack2D matrices = PoseStack2D.of(graphics);
+        matrices.push();
+        matrices.scale((float) (1.0f / mc.getWindow().getGuiScale()));
 
         scissorStart(0, 0, getWindowWidth(), getWindowHeight());
     }
@@ -98,7 +99,7 @@ public class GuiRenderer {
         for (Runnable task : postTasks) task.run();
         postTasks.clear();
 
-        graphics.pose().popMatrix();
+        PoseStack2D.of(graphics).pop();
         graphics.nextStratum();
     }
 

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.combat;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.mc.EntityTypes;
 
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
@@ -41,6 +43,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import meteordevelopment.meteorclient.mc.Items;
+import meteordevelopment.meteorclient.mc.TypeIds;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.AABB;
 
@@ -207,7 +211,7 @@ public class KillAura extends Module {
         .build()
     );
 
-    private final static Set<Item> FILTER = Set.of(Items.DIAMOND_SWORD, Items.DIAMOND_AXE, Items.DIAMOND_PICKAXE, Items.DIAMOND_SHOVEL, Items.DIAMOND_HOE, Items.MACE, Items.DIAMOND_SPEAR, Items.TRIDENT);
+    private final static Set<Item> FILTER = Vanilla.resolveItems(TypeIds.WEAPONS);
     private final List<Entity> targets = new ArrayList<>();
     private int switchTimer, hitTimer;
     public boolean attacking, swapped;
@@ -247,12 +251,12 @@ public class KillAura extends Module {
         Entity primary = targets.getFirst();
 
         if (autoSwitch.get()) {
-            FindItemResult weaponResult = new FindItemResult(mc.player.getInventory().getSelectedSlot(), -1);
+            FindItemResult weaponResult = new FindItemResult(InventoryUtils.getSelectedSlot(mc.player.getInventory()), -1);
             if (attackWhenHolding.get() == AttackItems.Weapons)
                 weaponResult = InvUtils.find(this::acceptableWeapon, 0, 8);
 
             if (!swapped) {
-                previousSlot = mc.player.getInventory().getSelectedSlot();
+                previousSlot = InventoryUtils.getSelectedSlot(mc.player.getInventory());
                 swapped = true;
             }
 
@@ -372,8 +376,8 @@ public class KillAura extends Module {
         if (weapons.get().contains(Items.DIAMOND_PICKAXE) && stack.is(ItemTags.PICKAXES)) return true;
         if (weapons.get().contains(Items.DIAMOND_SHOVEL) && stack.is(ItemTags.SHOVELS)) return true;
         if (weapons.get().contains(Items.DIAMOND_HOE) && stack.is(ItemTags.HOES)) return true;
-        if (weapons.get().contains(Items.MACE) && stack.getItem() instanceof MaceItem) return true;
-        if (weapons.get().contains(Items.DIAMOND_SPEAR) && stack.is(ItemTags.SPEARS)) return true;
+        if (Vanilla.isMace(stack)) return true;
+        if (weapons.get().contains(Items.DIAMOND_SPEAR) && Vanilla.isSpear(stack)) return true;
         return weapons.get().contains(Items.TRIDENT) && stack.getItem() instanceof TridentItem;
     }
 

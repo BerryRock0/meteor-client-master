@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.waypoints;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.renderer.McTexture;
@@ -129,7 +131,7 @@ public class Waypoint implements ISerializable<Waypoint> {
     public Waypoint(Tag tag) {
         CompoundTag nbt = (CompoundTag) tag;
 
-        uuid = nbt.read("uuid", UUIDUtil.CODEC).orElse(UUID.randomUUID());
+        uuid = Nbt.read(nbt, "uuid", UUIDUtil.CODEC).orElse(UUID.randomUUID());
         createdAt = System.currentTimeMillis();
 
         fromTag(nbt);
@@ -220,7 +222,7 @@ public class Waypoint implements ISerializable<Waypoint> {
     public CompoundTag toTag() {
         CompoundTag tag = new CompoundTag();
 
-        tag.store("uuid", UUIDUtil.CODEC, uuid);
+        Nbt.store(tag, "uuid", UUIDUtil.CODEC, uuid);
         tag.put("settings", settings.toTag());
 
         return tag;
@@ -229,7 +231,7 @@ public class Waypoint implements ISerializable<Waypoint> {
     @Override
     public Waypoint fromTag(CompoundTag tag) {
         if (tag.contains("settings")) {
-            settings.fromTag(tag.getCompoundOrEmpty("settings"));
+            settings.fromTag(Nbt.getCompoundOrEmpty(tag, "settings"));
         }
 
         return this;
