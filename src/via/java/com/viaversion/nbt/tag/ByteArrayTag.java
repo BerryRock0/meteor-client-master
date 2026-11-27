@@ -10,7 +10,8 @@ import java.util.Arrays;
 /**
  * A tag containing a byte array.
  */
-public final class ByteArrayTag implements NumberArrayTag {
+public final class ByteArrayTag implements NumberArrayTag
+{
     public static final int ID = 7;
     private static final byte[] EMPTY_ARRAY = new byte[0];
     private byte[] value;
@@ -18,7 +19,8 @@ public final class ByteArrayTag implements NumberArrayTag {
     /**
      * Creates a tag.
      */
-    public ByteArrayTag() {
+    public ByteArrayTag()
+    {
         this(EMPTY_ARRAY);
     }
 
@@ -27,14 +29,16 @@ public final class ByteArrayTag implements NumberArrayTag {
      *
      * @param value The value of the tag.
      */
-    public ByteArrayTag(byte[] value) {
-        if (value == null) {
+    public ByteArrayTag(byte[] value)
+    {
+        if (value == null)
             throw new NullPointerException("value cannot be null");
-        }
+
         this.value = value;
     }
 
-    public static ByteArrayTag read(DataInput in, TagLimiter tagLimiter) throws IOException {
+    public static ByteArrayTag read(DataInput in, TagLimiter tagLimiter) throws IOException
+    {
         tagLimiter.countInt();
         final int length = in.readInt();
         tagLimiter.countBytes(length);
@@ -45,12 +49,14 @@ public final class ByteArrayTag implements NumberArrayTag {
     }
 
     @Override
-    public byte[] getValue() {
+    public byte[] getValue()
+    {
         return this.value;
     }
 
     @Override
-    public String asRawString() {
+    public String asRawString()
+    {
         return Arrays.toString(this.value);
     }
 
@@ -59,10 +65,10 @@ public final class ByteArrayTag implements NumberArrayTag {
      *
      * @param value New value of this tag.
      */
-    public void setValue(byte[] value) {
-        if (value == null) {
+    public void setValue(byte[] value)
+    {
+        if (value == null)
             return;
-        }
 
         this.value = value;
     }
@@ -73,7 +79,8 @@ public final class ByteArrayTag implements NumberArrayTag {
      * @param index Index of the value.
      * @return The value at the given index.
      */
-    public byte get(int index) {
+    public byte get(int index)
+    {
         return this.value[index];
     }
 
@@ -83,7 +90,8 @@ public final class ByteArrayTag implements NumberArrayTag {
      * @param index Index of the value.
      * @param value Value to set.
      */
-    public void set(int index, byte value) {
+    public void set(int index, byte value)
+    {
         this.value[index] = value;
     }
 
@@ -93,45 +101,54 @@ public final class ByteArrayTag implements NumberArrayTag {
     }
 
     @Override
-    public ListTag<ByteTag> toListTag() {
+    public ListTag<ByteTag> toListTag()
+    {
         final ListTag<ByteTag> list = new ListTag<>(ByteTag.class);
-        for (final byte b : this.value) {
+        for (final byte b : this.value)
             list.add(new ByteTag(b));
-        }
+
         return list;
     }
 
     @Override
-    public void write(DataOutput out) throws IOException {
+    public void write(DataOutput out) throws IOException
+    {
         out.writeInt(this.value.length);
         out.write(this.value);
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ByteArrayTag that = (ByteArrayTag) o;
         return Arrays.equals(this.value, that.value);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Arrays.hashCode(this.value);
     }
 
     @Override
-    public ByteArrayTag copy() {
+    public ByteArrayTag copy()
+    {
         return new ByteArrayTag(this.value.clone());
     }
 
     @Override
-    public int getTagId() {
+    public int getTagId()
+    {
         return ID;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return SNBT.serialize(this);
     }
 }

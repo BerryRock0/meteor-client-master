@@ -28,7 +28,8 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
-public abstract class Module implements ISerializable<Module>, Comparable<Module> {
+public abstract class Module implements ISerializable<Module>, Comparable<Module>
+{
     protected final Minecraft mc;
 
     public final Category category;
@@ -52,7 +53,8 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
     public boolean chatFeedback = true;
     public boolean favorite = false;
 
-    public Module(Category category, String name, String description, String... aliases) {
+    public Module(Category category, String name, String description, String... aliases)
+    {
         if (name.contains(" "))
             MeteorClient.LOG.warn("Module '{}' contains invalid characters in its name making it incompatible with Meteor Client commands.", name);
 
@@ -65,44 +67,54 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
         this.color = Color.fromHsv(Utils.random(0.0, 360.0), 0.35, 1);
 
         String classname = this.getClass().getName();
-        for (MeteorAddon addon : AddonManager.ADDONS) {
-            if (classname.startsWith(addon.getPackage())) {
-                this.addon = addon;
-                return;
-            }
+        for (MeteorAddon addon : AddonManager.ADDONS)
+        if (classname.startsWith(addon.getPackage()))
+        {
+            this.addon = addon;
+            return;
         }
 
         this.addon = null;
     }
 
-    public Module(Category category, String name, String desc) {
+    public Module(Category category, String name, String desc)
+    {
         this(category, name, desc, new String[0]);
     }
 
-    public WWidget getWidget(GuiTheme theme) {
+    public WWidget getWidget(GuiTheme theme)
+    {
         return null;
     }
 
-    public void onActivate() {
-    }
+    public void onActivate()
+    {}
 
-    public void onDeactivate() {
-    }
+    public void onDeactivate()
+    {}
 
-    public void toggle() {
-        if (!active) {
+    public void toggle()
+    {
+        if (!active)
+        {
             active = true;
             Modules.get().addActive(this);
 
             settings.onActivated();
 
-            if (runInMainMenu || Utils.canUpdate()) {
-                if (autoSubscribe) MeteorClient.EVENT_BUS.subscribe(this);
+            if (runInMainMenu || Utils.canUpdate())
+            {
+                if (autoSubscribe)
+                    MeteorClient.EVENT_BUS.subscribe(this);
                 onActivate();
             }
-        } else {
-            if (runInMainMenu || Utils.canUpdate()) {
-                if (autoSubscribe) MeteorClient.EVENT_BUS.unsubscribe(this);
+        }
+        else
+        {
+            if (runInMainMenu || Utils.canUpdate())
+            {
+                if (autoSubscribe)
+                    MeteorClient.EVENT_BUS.unsubscribe(this);
                 onDeactivate();
             }
 
@@ -111,52 +123,66 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
         }
     }
 
-    public void enable() {
-        if (!isActive()) toggle();
+    public void enable()
+    {
+        if (!isActive())
+            toggle();
     }
 
-    public void disable() {
-        if (isActive()) toggle();
+    public void disable()
+    {
+        if (isActive())
+            toggle();
     }
 
-    public void sendToggledMsg() {
-        if (Config.get().chatFeedback.get() && chatFeedback) {
+    public void sendToggledMsg()
+    {
+        if (Config.get().chatFeedback.get() && chatFeedback)
+        {
             ChatUtils.forceNextPrefixClass(getClass());
             ChatUtils.sendMsg(this.hashCode(), ChatFormatting.GRAY, "Toggled (highlight)%s(default) %s(default).", title, isActive() ? ChatFormatting.GREEN + "on" : ChatFormatting.RED + "off");
         }
     }
 
-    public void info(Component message) {
+    public void info(Component message)
+    {
         ChatUtils.forceNextPrefixClass(getClass());
         ChatUtils.sendMsg(title, message);
     }
 
-    public void info(String message, Object... args) {
+    public void info(String message, Object... args)
+    {
         ChatUtils.forceNextPrefixClass(getClass());
         ChatUtils.infoPrefix(title, message, args);
     }
 
-    public void warning(String message, Object... args) {
+    public void warning(String message, Object... args)
+    {
         ChatUtils.forceNextPrefixClass(getClass());
         ChatUtils.warningPrefix(title, message, args);
     }
 
-    public void error(String message, Object... args) {
+    public void error(String message, Object... args)
+    {
         ChatUtils.forceNextPrefixClass(getClass());
         ChatUtils.errorPrefix(title, message, args);
     }
 
-    public boolean isActive() {
+    public boolean isActive()
+    {
         return active;
     }
 
-    public String getInfoString() {
+    public String getInfoString()
+    {
         return null;
     }
 
     @Override
-    public CompoundTag toTag() {
-        if (!serialize) return null;
+    public CompoundTag toTag()
+    {
+        if (!serialize)
+            return null;
         CompoundTag tag = new CompoundTag();
 
         tag.putString("name", name);
@@ -171,7 +197,8 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
     }
 
     @Override
-    public Module fromTag(CompoundTag tag) {
+    public Module fromTag(CompoundTag tag)
+    {
         // General
         keybind.fromTag(Nbt.getCompoundOrEmpty(tag, "keybind"));
         toggleOnBindRelease = Nbt.getBooleanOr(tag, "toggleOnKeyRelease", false);
@@ -180,7 +207,8 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
 
         // Settings
         Tag settingsTag = tag.get("settings");
-        if (settingsTag instanceof CompoundTag compoundTag) settings.fromTag(compoundTag);
+        if (settingsTag instanceof CompoundTag compoundTag)
+            settings.fromTag(compoundTag);
 
         boolean active = Nbt.getBooleanOr(tag, "active", false);
         if (active != isActive()) toggle();
@@ -189,20 +217,25 @@ public abstract class Module implements ISerializable<Module>, Comparable<Module
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Module module = (Module) o;
         return Objects.equals(name, module.name);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(name);
     }
 
     @Override
-    public int compareTo(@NonNull Module o) {
+    public int compareTo(@NonNull Module o)
+    {
         return name.compareTo(o.name);
     }
 }
