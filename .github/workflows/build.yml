@@ -55,6 +55,8 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          # Legacy snapshots are extracted from historical commits with git archive.
+          fetch-depth: 0
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5

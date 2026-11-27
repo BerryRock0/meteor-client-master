@@ -86,17 +86,22 @@ val legacySourceDir = if (legacySourceCommit != null) {
     if (!File(dir, "src/main/java").isDirectory || !File(dir, "gradle.properties").isFile) {
         dir.mkdirs()
         val archive = File(dir, "snapshot.tar")
-        ProcessBuilder("git", "archive", legacySourceCommit, "src/main/java", "src/main/resources", "gradle.properties")
+        val archiveStatus = ProcessBuilder("git", "archive", legacySourceCommit, "src/main/java", "src/main/resources", "gradle.properties")
             .directory(rootDir).redirectOutput(archive).redirectErrorStream(true).start().waitFor()
-        ProcessBuilder("tar", "-xf", archive.name).directory(dir).start().waitFor()
+        check(archiveStatus == 0) {
+            "Failed to extract legacy snapshot $legacySourceCommit. Ensure the full Git history is available (fetch-depth: 0 in CI)."
+        }
+        val extractStatus = ProcessBuilder("tar", "-xf", archive.name).directory(dir).start().waitFor()
+        check(extractStatus == 0) { "Failed to unpack legacy snapshot $legacySourceCommit." }
         archive.delete()
 
         // Historical snapshots predate Meteor's access widener. Use an empty named-space
         // widener so Loom's validation does not reject the shared 26.x file on these versions.
         if (!File(mcVersionsDir, "$mcVersion.classtweaker").isFile &&
             !File(dir, "src/main/resources/meteor-client.accesswidener").isFile) {
-            File(dir, "src/main/resources/meteor-client.accesswidener")
-                .writeText("accessWidener\tv2\tnamed\n")
+            val widener = File(dir, "src/main/resources/meteor-client.accesswidener")
+            widener.parentFile.mkdirs()
+            widener.writeText("accessWidener\tv2\tnamed\n")
         }
 
         val legacyYarnVersion = File(dir, "gradle.properties").readLines().firstNotNullOfOrNull { line ->
@@ -391,8 +396,9 @@ java {
     }
 
     if (System.getenv("CI")?.toBoolean() == true) {
+        // Version-specific source trees are not Javadoc-clean (they intentionally reference
+        // APIs from a single Minecraft release), so only publish sources in CI builds.
         withSourcesJar()
-        withJavadocJar()
     }
 }
 
@@ -634,6 +640,10 @@ tasks {
         options.compilerArgs.addAll(listOf("-Xmaxerrs", maxErrs))
     }
 
+    named<Jar>("sourcesJar") {
+        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+    }
+
     javadoc {
         with(options as StandardJavadocDocletOptions) {
             addStringOption("Xdoclint:none", "-quiet")
@@ -642,11 +652,6 @@ tasks {
         }
     }
 
-    build {
-        if (System.getenv("CI")?.toBoolean() == true) {
-            dependsOn("javadocJar")
-        }
-    }
 }
 
 publishing {
