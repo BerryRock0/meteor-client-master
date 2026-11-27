@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.world;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.events.entity.player.StartBreakingBlockEvent;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -140,7 +142,7 @@ public class PacketMine extends Module {
         blocks.clear();
 
         if (shouldUpdateSlot) {
-            mc.player.connection.send(new ServerboundSetCarriedItemPacket(mc.player.getInventory().getSelectedSlot()));
+            mc.player.connection.send(new ServerboundSetCarriedItemPacket(InventoryUtils.getSelectedSlot(mc.player.getInventory())));
             shouldUpdateSlot = false;
         }
     }
@@ -170,7 +172,7 @@ public class PacketMine extends Module {
         blocks.removeIf(MyBlock::shouldRemove);
 
         if (shouldUpdateSlot) {
-            mc.player.connection.send(new ServerboundSetCarriedItemPacket(mc.player.getInventory().getSelectedSlot()));
+            mc.player.connection.send(new ServerboundSetCarriedItemPacket(InventoryUtils.getSelectedSlot(mc.player.getInventory())));
             shouldUpdateSlot = false;
             swapped = false;
         }
@@ -181,7 +183,7 @@ public class PacketMine extends Module {
 
             if (block.isReady() && !swapped && autoSwitch.get() && (!mc.player.isUsingItem() || !notOnUse.get())) {
                 FindItemResult slot = InvUtils.findFastestTool(block.blockState);
-                if (!slot.found() || mc.player.getInventory().getSelectedSlot() == slot.slot()) return;
+                if (!slot.found() || InventoryUtils.getSelectedSlot(mc.player.getInventory()) == slot.slot()) return;
                 mc.player.connection.send(new ServerboundSetCarriedItemPacket(slot.slot()));
                 swapped = true;
                 shouldUpdateSlot = true;
@@ -237,7 +239,7 @@ public class PacketMine extends Module {
             if (!mining) return 0;
 
             FindItemResult fir = InvUtils.findFastestTool(blockState);
-            return BlockUtils.getBreakDelta(fir.found() ? fir.slot() : mc.player.getInventory().getSelectedSlot(), blockState) * ((mc.player.tickCount - startTime) + 1);
+            return BlockUtils.getBreakDelta(fir.found() ? fir.slot() : InventoryUtils.getSelectedSlot(mc.player.getInventory()), blockState) * ((mc.player.tickCount - startTime) + 1);
         }
 
         public void mine() {

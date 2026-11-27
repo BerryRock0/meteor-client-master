@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.utils.player;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.entity.player.SendMovementPacketsEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;

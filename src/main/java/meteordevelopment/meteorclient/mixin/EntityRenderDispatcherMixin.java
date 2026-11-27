@@ -7,6 +7,7 @@ package meteordevelopment.meteorclient.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
+import meteordevelopment.meteorclient.mc.CameraUtils;
 import meteordevelopment.meteorclient.mixininterface.IEntityRenderState;
 import meteordevelopment.meteorclient.utils.entity.clone.CloneEntity;
 import net.minecraft.client.Camera;
@@ -32,9 +33,9 @@ public abstract class EntityRenderDispatcherMixin {
         var entity = ((IEntityRenderState) renderState).meteor$getEntity();
 
         if (entity instanceof CloneEntity player && player.hideWhenInsideCamera) {
-            int cX = Mth.floor(this.camera.position().x);
-            int cY = Mth.floor(this.camera.position().y);
-            int cZ = Mth.floor(this.camera.position().z);
+            int cX = Mth.floor(CameraUtils.position(this.camera).x);
+            int cY = Mth.floor(CameraUtils.position(this.camera).y);
+            int cZ = Mth.floor(CameraUtils.position(this.camera).z);
 
             if (cX == entity.getBlockX() && cZ == entity.getBlockZ() && (cY == entity.getBlockY() || cY == entity.getBlockY() + 1))
                 ci.cancel();

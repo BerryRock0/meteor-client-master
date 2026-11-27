@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.commands.commands;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -58,7 +61,7 @@ public class NbtCommand extends Command {
     @Override
     public void build(LiteralArgumentBuilder<ClientSuggestionProvider> builder) {
         builder.then(literal("add").then(argument("component", ComponentMapArgumentType.componentMap(REGISTRY_ACCESS)).executes(ctx -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
 
             if (validBasic(stack)) {
                 DataComponentMap itemComponents = stack.getComponents();
@@ -79,7 +82,7 @@ public class NbtCommand extends Command {
         })));
 
         builder.then(literal("set").then(argument("component", ComponentMapArgumentType.componentMap(REGISTRY_ACCESS)).executes(ctx -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
 
             if (validBasic(stack)) {
                 DataComponentMap components = ComponentMapArgumentType.getComponentMap(ctx, "component");
@@ -113,7 +116,7 @@ public class NbtCommand extends Command {
         })));
 
         builder.then(literal("remove").then(argument("component", ResourceKeyArgument.key(Registries.DATA_COMPONENT_TYPE)).executes(ctx -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
 
             if (validBasic(stack)) {
                 @SuppressWarnings("unchecked")
@@ -129,19 +132,19 @@ public class NbtCommand extends Command {
 
             return SINGLE_SUCCESS;
         }).suggests((_, suggestionsBuilder) -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
             if (stack != ItemStack.EMPTY) {
                 DataComponentMap components = stack.getComponents();
                 String remaining = suggestionsBuilder.getRemaining().toLowerCase(Locale.ROOT);
 
                 SharedSuggestionProvider.filterResources(components.keySet().stream().map(BuiltInRegistries.DATA_COMPONENT_TYPE::wrapAsHolder).toList(), remaining, entry -> {
-                    if (entry.unwrapKey().isPresent()) return entry.unwrapKey().get().identifier();
+                    if (entry.unwrapKey().isPresent()) return Vanilla.identifier(entry.unwrapKey().get());
                     return null;
                 }, entry -> {
                     DataComponentType<?> dataComponentType = entry.value();
                     if (dataComponentType.codec() != null) {
                         if (entry.unwrapKey().isPresent()) {
-                            suggestionsBuilder.suggest(entry.unwrapKey().get().identifier().toString());
+                            suggestionsBuilder.suggest(Vanilla.identifier(entry.unwrapKey().get()).toString());
                         }
                     }
                 });
@@ -196,7 +199,7 @@ public class NbtCommand extends Command {
         }));
 
         builder.then(literal("count").then(argument("count", IntegerArgumentType.integer(-127, 127)).executes(context -> {
-            ItemStack stack = mc.player.getInventory().getSelectedItem();
+            ItemStack stack = InventoryUtils.getSelectedItem(mc.player.getInventory());
 
             if (validBasic(stack)) {
                 int count = IntegerArgumentType.getInteger(context, "count");
@@ -210,7 +213,7 @@ public class NbtCommand extends Command {
     }
 
     private void setStack(ItemStack stack) {
-        mc.player.connection.send(new ServerboundSetCreativeModeSlotPacket(36 + mc.player.getInventory().getSelectedSlot(), stack));
+        mc.player.connection.send(new ServerboundSetCreativeModeSlotPacket(36 + InventoryUtils.getSelectedSlot(mc.player.getInventory()), stack));
     }
 
     private boolean validBasic(ItemStack stack) {

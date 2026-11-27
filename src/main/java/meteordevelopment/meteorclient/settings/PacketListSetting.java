@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import meteordevelopment.meteorclient.utils.network.PacketUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -80,7 +82,7 @@ public class PacketListSetting extends Setting<Set<PacketType<? extends @NonNull
         Tag valueTag = tag.get("value");
         if (valueTag instanceof ListTag listTag) {
             for (Tag t : listTag) {
-                PacketType<? extends @NonNull Packet<?>> packet = PacketUtils.getPacket(t.asString().orElse(""));
+                PacketType<? extends @NonNull Packet<?>> packet = PacketUtils.getPacket(Nbt.asString(t).orElse(""));
                 if (packet != null && (filter == null || filter.test(packet))) get().add(packet);
             }
         }

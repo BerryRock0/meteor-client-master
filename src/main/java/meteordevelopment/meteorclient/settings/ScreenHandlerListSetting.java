@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -51,14 +55,14 @@ public class ScreenHandlerListSetting extends Setting<List<MenuType<?>>> {
 
     @Override
     public Iterable<Identifier> getIdentifierSuggestions() {
-        return BuiltInRegistries.MENU.keySet();
+        return Vanilla.identifiers(BuiltInRegistries.MENU.keySet());
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
         ListTag valueTag = new ListTag();
         for (MenuType<?> type : get()) {
-            Identifier id = BuiltInRegistries.MENU.getKey(type);
+            Identifier id = Vanilla.identifier(BuiltInRegistries.MENU.getKey(type));
             if (id != null) valueTag.add(StringTag.valueOf(id.toString()));
         }
         tag.put("value", valueTag);
@@ -70,9 +74,9 @@ public class ScreenHandlerListSetting extends Setting<List<MenuType<?>>> {
     public List<MenuType<?>> load(CompoundTag tag) {
         get().clear();
 
-        ListTag valueTag = tag.getListOrEmpty("value");
+        ListTag valueTag = Nbt.getListOrEmpty(tag, "value");
         for (Tag tagI : valueTag) {
-            MenuType<?> type = BuiltInRegistries.MENU.getValue(Identifier.parse(tagI.asString().orElse("")));
+            MenuType<?> type = BuiltInRegistries.MENU.getValue(Identifier.parse(Nbt.asString(tagI).orElse("")));
             if (type != null) get().add(type);
         }
 

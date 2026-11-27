@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
@@ -73,7 +75,7 @@ public class Breadcrumbs extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Post event) {
-        if (!mc.getConnection().hasClientLoaded()) return;
+        if (!Vanilla.clientLoaded(mc.getConnection())) return;
 
         if (lastDimension != mc.level.dimensionType()) {
             sectionPool.freeAll(sections);

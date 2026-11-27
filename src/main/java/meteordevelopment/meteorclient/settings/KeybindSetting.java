@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.meteor.KeyInputEvent;
 import meteordevelopment.meteorclient.events.meteor.MouseClickEvent;
@@ -88,7 +90,7 @@ public class KeybindSetting extends Setting<Keybind> {
 
     @Override
     public Keybind load(CompoundTag tag) {
-        get().fromTag(tag.getCompoundOrEmpty("value"));
+        get().fromTag(Nbt.getCompoundOrEmpty(tag, "value"));
 
         return get();
     }

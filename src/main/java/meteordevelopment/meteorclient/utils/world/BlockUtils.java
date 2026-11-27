@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.utils.world;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.mc.Vanilla;
@@ -32,6 +36,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.*;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
@@ -80,7 +85,7 @@ public class BlockUtils {
 
     public static boolean place(BlockPos blockPos, FindItemResult findItemResult, boolean rotate, int rotationPriority, boolean swingHand, boolean checkEntities, boolean swapBack) {
         if (findItemResult.isOffhand()) {
-            return place(blockPos, InteractionHand.OFF_HAND, mc.player.getInventory().getSelectedSlot(), rotate, rotationPriority, swingHand, checkEntities, swapBack);
+            return place(blockPos, InteractionHand.OFF_HAND, InventoryUtils.getSelectedSlot(mc.player.getInventory()), rotate, rotationPriority, swingHand, checkEntities, swapBack);
         } else if (findItemResult.isHotbar()) {
             return place(blockPos, InteractionHand.MAIN_HAND, findItemResult.slot(), rotate, rotationPriority, swingHand, checkEntities, swapBack);
         }
@@ -379,7 +384,7 @@ public class BlockUtils {
         float hardness = state.getDestroySpeed(null, null);
         if (hardness == -1) return 0;
         else {
-            return getDestroySpeed(slot, state) / hardness / (!state.requiresCorrectToolForDrops() || mc.player.getInventory().getNonEquipmentItems().get(slot).isCorrectToolForDrops(state) ? 30 : 100);
+            return getDestroySpeed(slot, state) / hardness / (!state.requiresCorrectToolForDrops() || InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).get(slot).isCorrectToolForDrops(state) ? 30 : 100);
         }
     }
 
@@ -387,7 +392,7 @@ public class BlockUtils {
      * @see net.minecraft.world.entity.player.Player#getDestroySpeed(BlockState)
      */
     private static double getDestroySpeed(int slot, BlockState block) {
-        double speed = mc.player.getInventory().getNonEquipmentItems().get(slot).getDestroySpeed(block);
+        double speed = InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).get(slot).getDestroySpeed(block);
 
         if (speed > 1) {
             ItemStack tool = mc.player.getInventory().getItem(slot);
@@ -401,8 +406,8 @@ public class BlockUtils {
             speed *= 1 + (MobEffectUtil.getDigSpeedAmplification(mc.player) + 1) * 0.2F;
         }
 
-        if (mc.player.hasEffect(MobEffects.MINING_FATIGUE)) {
-            float k = switch (mc.player.getEffect(MobEffects.MINING_FATIGUE).getAmplifier()) {
+        if (mc.player.hasEffect(MobEffectUtils.get("MINING_FATIGUE"))) {
+            float k = switch (mc.player.getEffect(MobEffectUtils.get("MINING_FATIGUE")).getAmplifier()) {
                 case 0 -> 0.3F;
                 case 1 -> 0.09F;
                 case 2 -> 0.0027F;

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.entity.clone;
 
+import meteordevelopment.meteorclient.mc.AttributeUtils;
+
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.PropertyMap;
 import com.google.common.collect.HashMultimap;
@@ -303,7 +305,7 @@ public class ServerClone
         set(player, Attributes.BLOCK_BREAK_SPEED, blockBreakSpeed);
         set(player, Attributes.BLOCK_INTERACTION_RANGE, blockInteractionRange);
         set(player, Attributes.BURNING_TIME, burningTime);
-        set(player, Attributes.CAMERA_DISTANCE, cameraDistance);
+        set(player, AttributeUtils.get("CAMERA_DISTANCE"), cameraDistance);
         set(player, Attributes.ENTITY_INTERACTION_RANGE, entityInteractionRange);
         set(player, Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, explosionKnockbackResistance);
         set(player, Attributes.FALL_DAMAGE_MULTIPLIER, fallDamageMultiplier);
@@ -328,13 +330,14 @@ public class ServerClone
         set(player, Attributes.SWEEPING_DAMAGE_RATIO, sweepingDamageRatio);
         set(player, Attributes.TEMPT_RANGE, temptRange);
         set(player, Attributes.WATER_MOVEMENT_EFFICIENCY, waterMovementEfficiency);
-        set(player, Attributes.WAYPOINT_RECEIVE_RANGE, waypointReceiveRange);
-        set(player, Attributes.WAYPOINT_TRANSMIT_RANGE, waypointTransmitRange);
+        set(player, AttributeUtils.get("WAYPOINT_RECEIVE_RANGE"), waypointReceiveRange);
+        set(player, AttributeUtils.get("WAYPOINT_TRANSMIT_RANGE"), waypointTransmitRange);
     }
 
     /** Null-safe base-value set: a player does not carry every registered attribute (tempt range, spawn reinforcements, ...). */
     private static void set(ServerPlayer player, Holder<Attribute> attribute, float value)
     {
+        if (attribute == null) return;
         AttributeInstance instance = player.getAttribute(attribute);
         if (instance != null)
             instance.setBaseValue(value);
@@ -345,10 +348,7 @@ public class ServerClone
     {
         // GameProfile.properties() forwards an immutable multimap, so copy your textures into a
         // mutable one before handing it to the new profile.
-        PropertyMap original = mc.player.getGameProfile().properties();
-        PropertyMap copy = new PropertyMap(HashMultimap.create(original));
-
-        return new GameProfile(UUID.randomUUID(), name, copy);
+        return new GameProfile(UUID.randomUUID(), name);
     }
 
     public UUID getUuid()
@@ -422,7 +422,7 @@ public class ServerClone
     {
         // The client-known entity id is client-local: the server twin has a different id. Match
         // by UUID instead.
-        Entity target = player.level().getEntity(clientTarget.getUUID());
+        Entity target = Vanilla.getEntity(player.level(), clientTarget.getUUID());
         if (!(target instanceof LivingEntity serverTarget) || !serverTarget.isAlive())
 			return;
 
@@ -463,7 +463,7 @@ public class ServerClone
         applySlot(EquipmentSlot.FEET, CloneManager.itemStackFromId(unit.boots.get()), changed);
 
         if (!changed.isEmpty())
-            level.getChunkSource().sendToTrackingPlayers(player, new ClientboundSetEquipmentPacket(player.getId(), changed));
+            Vanilla.sendToTrackingPlayers(level.getChunkSource(), player, new ClientboundSetEquipmentPacket(player.getId(), changed));
     }
 
     private void applySlot(EquipmentSlot slot, ItemStack stack, List<Pair<EquipmentSlot, ItemStack>> changed)

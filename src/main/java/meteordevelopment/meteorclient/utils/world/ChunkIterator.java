@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.utils.world;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.mixin.ClientChunkCacheAccessor;
 import meteordevelopment.meteorclient.mixin.ClientChunkMapAccessor;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -39,8 +40,8 @@ public class ChunkIterator implements Iterator<ChunkAccess> {
     }
 
     private boolean isInRadius(ChunkAccess chunk) {
-        int x = chunk.getPos().x();
-        int z = chunk.getPos().z();
+        int x = Vanilla.chunkX(chunk.getPos());
+        int z = Vanilla.chunkZ(chunk.getPos());
 
         return mc.level.getChunkSource().hasChunk(x + 1, z) && mc.level.getChunkSource().hasChunk(x - 1, z) && mc.level.getChunkSource().hasChunk(x, z + 1) && mc.level.getChunkSource().hasChunk(x, z - 1);
     }

@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.gui.screens.settings;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.screens.settings.base.CollectionListSettingScreen;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;

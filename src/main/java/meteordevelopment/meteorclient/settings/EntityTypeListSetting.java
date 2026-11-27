@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import meteordevelopment.meteorclient.utils.entity.EntityUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -116,9 +118,9 @@ public class EntityTypeListSetting extends Setting<Set<EntityType<?>>> {
     public Set<EntityType<?>> load(CompoundTag tag) {
         get().clear();
 
-        ListTag valueTag = tag.getListOrEmpty("value");
+        ListTag valueTag = Nbt.getListOrEmpty(tag, "value");
         for (Tag tagI : valueTag) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(tagI.asString().orElse("")));
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(Nbt.asString(tagI).orElse("")));
             if (filter == null || filter.test(type)) get().add(type);
         }
 

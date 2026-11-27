@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.profiles;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
 import meteordevelopment.meteorclient.systems.System;
@@ -90,7 +92,7 @@ public class Profiles extends System<Profiles> implements Iterable<Profile> {
 
     @Override
     public Profiles fromTag(CompoundTag tag) {
-        profiles = NbtUtils.listFromTag(tag.getListOrEmpty("profiles"), Profile::new);
+        profiles = NbtUtils.listFromTag(Nbt.getListOrEmpty(tag, "profiles"), Profile::new);
 
         for (File file : FOLDER.listFiles()) {
             if (file.isDirectory() && get(file.getName()) == null) {

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.profiles;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.hud.Hud;
@@ -119,7 +121,7 @@ public class Profile implements ISerializable<Profile> {
     @Override
     public Profile fromTag(CompoundTag tag) {
         if (tag.contains("settings")) {
-            settings.fromTag(tag.getCompoundOrEmpty("settings"));
+            settings.fromTag(Nbt.getCompoundOrEmpty(tag, "settings"));
         }
 
         return this;

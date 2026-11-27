@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.world;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 //Created by squidoodly 16/07/2020
 
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -88,6 +89,6 @@ public class AutoMount extends Module {
 
     private void interact(Entity entity) {
         EntityHitResult location = new EntityHitResult(entity, entity.getBoundingBox().getCenter());
-        mc.gameMode.interact(mc.player, entity, location, InteractionHand.MAIN_HAND);
+        Vanilla.interact(mc.player, entity, InteractionHand.MAIN_HAND);
     }
 }

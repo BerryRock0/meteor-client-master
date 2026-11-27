@@ -17,7 +17,7 @@ import meteordevelopment.meteorclient.utils.render.color.Color;
 import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 

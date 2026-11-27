@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -51,14 +55,14 @@ public class SoundEventListSetting extends Setting<List<SoundEvent>> {
 
     @Override
     public Iterable<Identifier> getIdentifierSuggestions() {
-        return BuiltInRegistries.SOUND_EVENT.keySet();
+        return Vanilla.identifiers(BuiltInRegistries.SOUND_EVENT.keySet());
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
         ListTag valueTag = new ListTag();
         for (SoundEvent sound : get()) {
-            Identifier id = BuiltInRegistries.SOUND_EVENT.getKey(sound);
+            Identifier id = Vanilla.identifier(BuiltInRegistries.SOUND_EVENT.getKey(sound));
             if (id != null) valueTag.add(StringTag.valueOf(id.toString()));
         }
         tag.put("value", valueTag);
@@ -70,8 +74,8 @@ public class SoundEventListSetting extends Setting<List<SoundEvent>> {
     public List<SoundEvent> load(CompoundTag tag) {
         get().clear();
 
-        for (Tag tagI : tag.getListOrEmpty("value")) {
-            SoundEvent soundEvent = BuiltInRegistries.SOUND_EVENT.getValue(Identifier.parse(tagI.asString().orElse("")));
+        for (Tag tagI : Nbt.getListOrEmpty(tag, "value")) {
+            SoundEvent soundEvent = BuiltInRegistries.SOUND_EVENT.getValue(Identifier.parse(Nbt.asString(tagI).orElse("")));
             if (soundEvent != null) get().add(soundEvent);
         }
 

@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.utils.player;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.datafixers.util.Pair;
 import meteordevelopment.meteorclient.mixininterface.ISlot;
 import meteordevelopment.meteorclient.utils.render.PeekScreen;

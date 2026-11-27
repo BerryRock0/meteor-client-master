@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.misc;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.utils.misc.input.Input;
@@ -22,12 +24,12 @@ import java.util.Set;
 
 public class Keybind implements ISerializable<Keybind>, ICopyable<Keybind> {
     public enum Modifier {
-        SHIFT(InputConstants.MOD_SHIFT),
-        CONTROL(InputConstants.MOD_CONTROL),
-        ALT(InputConstants.MOD_ALT),
-        SUPER(InputConstants.MOD_SUPER),
-        CAPS_LOCK(InputConstants.MOD_CAPS_LOCK),
-        NUM_LOCK(InputConstants.MOD_NUM_LOCK),
+        SHIFT(Vanilla.MOD_SHIFT),
+        CONTROL(Vanilla.MOD_CONTROL),
+        ALT(Vanilla.MOD_ALT),
+        SUPER(Vanilla.MOD_SUPER),
+        CAPS_LOCK(Vanilla.MOD_CAPS_LOCK),
+        NUM_LOCK(Vanilla.MOD_NUM_LOCK),
         ;
 
         private static final Modifier[] VALUES = values();
@@ -159,7 +161,7 @@ public class Keybind implements ISerializable<Keybind>, ICopyable<Keybind> {
     }
 
     public boolean matches(KeyEvent input) {
-        return matches(InputConstants.getKey(input), Modifier.fromRawValue(input.modifiers()));
+        return matches(true, Vanilla.keyEventCode(input), input.modifiers());
     }
 
     public boolean matches(MouseButtonInfo input) {
@@ -244,23 +246,23 @@ public class Keybind implements ISerializable<Keybind>, ICopyable<Keybind> {
         if (tag.contains("key")) {
             // New format: key name + modifier enum names
             try {
-                key = InputConstants.getKey(tag.getStringOr("key", ""));
+                key = InputConstants.getKey(Nbt.getStringOr(tag, "key", ""));
             } catch (IllegalArgumentException e) {
                 key = InputConstants.UNKNOWN;
             }
 
             modifiers.clear();
-            ListTag modifiersTag = tag.getListOrEmpty("modifiers");
+            ListTag modifiersTag = Nbt.getListOrEmpty(tag, "modifiers");
             for (int i = 0; i < modifiersTag.size(); i++) {
                 try {
-                    modifiers.add(Modifier.valueOf(modifiersTag.getStringOr(i, "")));
+                    modifiers.add(Modifier.valueOf(Nbt.listString(modifiersTag, i)));
                 } catch (IllegalArgumentException ignored) {}
             }
         } else {
             // Legacy format: raw ints (GLFW)
-            boolean isKey = tag.getBooleanOr("isKey", true);
-            int value = tag.getIntOr("value", InputConstants.UNKNOWN.getValue());
-            int mods = tag.getIntOr("modifiers", 0);
+            boolean isKey = Nbt.getBooleanOr(tag, "isKey", true);
+            int value = Nbt.getIntOr(tag, "value", InputConstants.UNKNOWN.getValue());
+            int mods = Nbt.getIntOr(tag, "modifiers", 0);
 
             set(isKey ? keyboard(value) : mouse(value), isKey ? Modifier.fromRawValue(mods) : Set.of());
         }

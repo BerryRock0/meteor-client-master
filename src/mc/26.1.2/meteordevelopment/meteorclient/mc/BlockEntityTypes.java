@@ -8,26 +8,43 @@ package meteordevelopment.meteorclient.mc;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 /**
- * Version-neutral access to the block entity type constants: 26.1 keeps them on
- * {@code BlockEntityType}, 26.2 moved them to {@code BlockEntityTypes}. Shared code uses
- * this facade instead of either.
+ * Version-neutral access to block entity type constants.
+ *
+ * <p>Constants are resolved reflectively at runtime. A constant that does not exist in the
+ * running version resolves to {@code null} instead of breaking compilation.</p>
  */
 public final class BlockEntityTypes {
     private BlockEntityTypes() {}
-    public static final BlockEntityType<?> BARREL = net.minecraft.world.level.block.entity.BlockEntityType.BARREL;
-    public static final BlockEntityType<?> BLAST_FURNACE = net.minecraft.world.level.block.entity.BlockEntityType.BLAST_FURNACE;
-    public static final BlockEntityType<?> BREWING_STAND = net.minecraft.world.level.block.entity.BlockEntityType.BREWING_STAND;
-    public static final BlockEntityType<?> CAMPFIRE = net.minecraft.world.level.block.entity.BlockEntityType.CAMPFIRE;
-    public static final BlockEntityType<?> CHEST = net.minecraft.world.level.block.entity.BlockEntityType.CHEST;
-    public static final BlockEntityType<?> CHISELED_BOOKSHELF = net.minecraft.world.level.block.entity.BlockEntityType.CHISELED_BOOKSHELF;
-    public static final BlockEntityType<?> CRAFTER = net.minecraft.world.level.block.entity.BlockEntityType.CRAFTER;
-    public static final BlockEntityType<?> DECORATED_POT = net.minecraft.world.level.block.entity.BlockEntityType.DECORATED_POT;
-    public static final BlockEntityType<?> DISPENSER = net.minecraft.world.level.block.entity.BlockEntityType.DISPENSER;
-    public static final BlockEntityType<?> DROPPER = net.minecraft.world.level.block.entity.BlockEntityType.DROPPER;
-    public static final BlockEntityType<?> ENDER_CHEST = net.minecraft.world.level.block.entity.BlockEntityType.ENDER_CHEST;
-    public static final BlockEntityType<?> FURNACE = net.minecraft.world.level.block.entity.BlockEntityType.FURNACE;
-    public static final BlockEntityType<?> HOPPER = net.minecraft.world.level.block.entity.BlockEntityType.HOPPER;
-    public static final BlockEntityType<?> SHULKER_BOX = net.minecraft.world.level.block.entity.BlockEntityType.SHULKER_BOX;
-    public static final BlockEntityType<?> SMOKER = net.minecraft.world.level.block.entity.BlockEntityType.SMOKER;
-    public static final BlockEntityType<?> TRAPPED_CHEST = net.minecraft.world.level.block.entity.BlockEntityType.TRAPPED_CHEST;
+
+    public static final BlockEntityType<?> BARREL = resolve("BARREL");
+    public static final BlockEntityType<?> BLAST_FURNACE = resolve("BLAST_FURNACE");
+    public static final BlockEntityType<?> BREWING_STAND = resolve("BREWING_STAND");
+    public static final BlockEntityType<?> CAMPFIRE = resolve("CAMPFIRE");
+    public static final BlockEntityType<?> CHEST = resolve("CHEST");
+    public static final BlockEntityType<?> CHISELED_BOOKSHELF = resolve("CHISELED_BOOKSHELF");
+    public static final BlockEntityType<?> CRAFTER = resolve("CRAFTER");
+    public static final BlockEntityType<?> DECORATED_POT = resolve("DECORATED_POT");
+    public static final BlockEntityType<?> DISPENSER = resolve("DISPENSER");
+    public static final BlockEntityType<?> DROPPER = resolve("DROPPER");
+    public static final BlockEntityType<?> ENDER_CHEST = resolve("ENDER_CHEST");
+    public static final BlockEntityType<?> FURNACE = resolve("FURNACE");
+    public static final BlockEntityType<?> HOPPER = resolve("HOPPER");
+    public static final BlockEntityType<?> SHULKER_BOX = resolve("SHULKER_BOX");
+    public static final BlockEntityType<?> SMOKER = resolve("SMOKER");
+    public static final BlockEntityType<?> TRAPPED_CHEST = resolve("TRAPPED_CHEST");
+
+    private static BlockEntityType<?> resolve(String name) {
+        try {
+            Class<?> cls;
+            try {
+                cls = Class.forName("net.minecraft.world.level.block.entity.BlockEntityTypes");
+            } catch (ClassNotFoundException e) {
+                cls = BlockEntityType.class;
+            }
+            Object value = cls.getField(name).get(null);
+            return value instanceof BlockEntityType<?> type ? type : null;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
 }

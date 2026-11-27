@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.movement.speed.modes;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
 import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
 import meteordevelopment.meteorclient.mixininterface.IVec3;
 import meteordevelopment.meteorclient.systems.modules.Modules;
@@ -26,8 +28,8 @@ public class Vanilla extends SpeedMode {
         double velX = vel.x();
         double velZ = vel.z();
 
-        if (mc.player.hasEffect(MobEffects.SPEED)) {
-            double value = (mc.player.getEffect(MobEffects.SPEED).getAmplifier() + 1) * 0.205;
+        if (mc.player.hasEffect(MobEffectUtils.get("SPEED"))) {
+            double value = (mc.player.getEffect(MobEffectUtils.get("SPEED")).getAmplifier() + 1) * 0.205;
             velX += velX * value;
             velZ += velZ * value;
         }

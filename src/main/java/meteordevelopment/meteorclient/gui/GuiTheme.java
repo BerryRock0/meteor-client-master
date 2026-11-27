@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.gui;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.gui.renderer.packer.GuiTexture;
 import meteordevelopment.meteorclient.gui.screens.ModuleScreen;
 import meteordevelopment.meteorclient.gui.screens.ModulesScreen;
@@ -368,11 +370,11 @@ public abstract class GuiTheme implements ISerializable<GuiTheme> {
 
     @Override
     public GuiTheme fromTag(CompoundTag tag) {
-        tag.getCompound("settings").ifPresent(settings::fromTag);
+        Nbt.compound(tag, "settings").ifPresent(settings::fromTag);
 
-        tag.getCompound("windowConfigs").ifPresent(configs -> {
-            for (String id : configs.keySet()) {
-                windowConfigs.put(id, new WindowConfig().fromTag(configs.getCompound(id).get()));
+        Nbt.compound(tag, "windowConfigs").ifPresent(configs -> {
+            for (String id : Nbt.keys(configs)) {
+                windowConfigs.put(id, new WindowConfig().fromTag(Nbt.compound(configs, id).get()));
             }
         });
 

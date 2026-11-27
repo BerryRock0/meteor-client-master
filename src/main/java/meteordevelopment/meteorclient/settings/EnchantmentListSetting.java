@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
@@ -60,14 +64,14 @@ public class EnchantmentListSetting extends Setting<Set<ResourceKey<Enchantment>
     public Iterable<Identifier> getIdentifierSuggestions() {
         return Optional.ofNullable(Minecraft.getInstance().getConnection())
             .flatMap(networkHandler -> networkHandler.registryAccess().lookup(Registries.ENCHANTMENT))
-            .map(Registry::keySet).orElse(Set.of());
+            .map(r -> (Iterable<Identifier>) Vanilla.identifiers(r.keySet())).orElse(Set.of());
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
         ListTag valueTag = new ListTag();
         for (ResourceKey<Enchantment> ench : get()) {
-            valueTag.add(StringTag.valueOf(ench.identifier().toString()));
+            valueTag.add(StringTag.valueOf(Vanilla.identifier(ench).toString()));
         }
         tag.put("value", valueTag);
 
@@ -78,8 +82,8 @@ public class EnchantmentListSetting extends Setting<Set<ResourceKey<Enchantment>
     public Set<ResourceKey<Enchantment>> load(CompoundTag tag) {
         get().clear();
 
-        for (Tag tagI : tag.getListOrEmpty("value")) {
-            get().add(ResourceKey.create(Registries.ENCHANTMENT, Identifier.parse(tagI.asString().orElse(""))));
+        for (Tag tagI : Nbt.getListOrEmpty(tag, "value")) {
+            get().add(ResourceKey.create(Registries.ENCHANTMENT, Identifier.parse(Nbt.asString(tagI).orElse(""))));
         }
 
         return get();

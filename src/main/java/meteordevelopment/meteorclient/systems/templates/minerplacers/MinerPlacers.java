@@ -1,5 +1,7 @@
 package meteordevelopment.meteorclient.systems.templates.minerplacers;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.systems.Units;
 import meteordevelopment.meteorclient.systems.Systems;
@@ -46,7 +48,7 @@ public class MinerPlacers extends Units<MinerPlacer>
     {
         units.clear();
 
-        for (Tag minerPlacerTag : tag.getListOrEmpty("minerplacers"))
+        for (Tag minerPlacerTag : Nbt.getListOrEmpty(tag, "minerplacers"))
             units.add(new MinerPlacer(minerPlacerTag));
 
         return this;

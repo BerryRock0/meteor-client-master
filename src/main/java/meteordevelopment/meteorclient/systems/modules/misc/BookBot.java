@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.systems.modules.misc;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
@@ -19,7 +22,7 @@ import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.game.ServerboundEditBookPacket;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.item.component.WrittenBookContent;
 
@@ -157,7 +160,7 @@ public class BookBot extends Module {
 
         // Move the book into hand
         if (!InvUtils.testInMainHand(bookPredicate)) {
-            InvUtils.move().from(writableBook.slot()).toHotbar(mc.player.getInventory().getSelectedSlot());
+            InvUtils.move().from(writableBook.slot()).toHotbar(InventoryUtils.getSelectedSlot(mc.player.getInventory()));
             return;
         }
 
@@ -234,7 +237,7 @@ public class BookBot extends Module {
             }
 
             // Use mc's own word wrapping logic
-            List<FormattedText> wrappedLines = mc.font.splitIgnoringLanguage(Component.literal(text.toString()), 114);
+            List<FormattedText> wrappedLines = Vanilla.fontSplit(mc.font, Component.literal(text.toString()), 114);
             processLinesToPages(wrappedLines, pages, filteredPages, maxPages);
         } else {
             int pageIndex = 0;
@@ -337,10 +340,10 @@ public class BookBot extends Module {
         if (count.get() && bookCount != 0) title += " #" + bookCount;
 
         // Write data to book
-        mc.player.getMainHandItem().set(DataComponents.WRITTEN_BOOK_CONTENT, new WrittenBookContent(Filterable.passThrough(title), mc.player.getGameProfile().name(), 0, filteredPages, true));
+        mc.player.getMainHandItem().set(DataComponents.WRITTEN_BOOK_CONTENT, new WrittenBookContent(Filterable.passThrough(title), Vanilla.gameProfileName(mc.player.getGameProfile()), 0, filteredPages, true));
 
         // Send book update to server
-        mc.player.connection.send(new ServerboundEditBookPacket(mc.player.getInventory().getSelectedSlot(), pages, sign.get() ? Optional.of(title) : Optional.empty()));
+        mc.player.connection.send(new ServerboundEditBookPacket(InventoryUtils.getSelectedSlot(mc.player.getInventory()), pages, sign.get() ? Optional.of(title) : Optional.empty()));
 
         bookCount++;
     }

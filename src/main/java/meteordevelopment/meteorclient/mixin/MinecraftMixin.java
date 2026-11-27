@@ -315,8 +315,8 @@ public abstract class MinecraftMixin implements IMinecraft {
             float lastPitch = cameraE.xRotO;
 
             if (highwayBuilder) {
-                cameraE.setYRot(Vanilla.mainCamera().yRot());
-                cameraE.setXRot(Vanilla.mainCamera().xRot());
+                cameraE.setYRot(Vanilla.cameraYRot(Vanilla.mainCamera()));
+                cameraE.setXRot(Vanilla.cameraXRot(Vanilla.mainCamera()));
             } else {
                 ((IVec3) cameraE.position()).meteor$set(freecam.pos.x, freecam.pos.y - cameraE.getEyeHeight(cameraE.getPose()), freecam.pos.z);
                 cameraE.xo = freecam.prevPos.x;

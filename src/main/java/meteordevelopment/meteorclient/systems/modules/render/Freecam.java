@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+import meteordevelopment.meteorclient.mc.CameraUtils;
+
 
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
 import meteordevelopment.meteorclient.events.game.OpenScreenEvent;
@@ -173,8 +175,8 @@ public class Freecam extends Module {
         perspective = mc.options.getCameraType();
         speedValue = speed.get();
 
-        Utils.set(pos, Vanilla.mainCamera().position());
-        Utils.set(prevPos, Vanilla.mainCamera().position());
+        Utils.set(pos, CameraUtils.position(Vanilla.mainCamera()));
+        Utils.set(prevPos, CameraUtils.position(Vanilla.mainCamera()));
 
         if (mc.options.getCameraType() == CameraType.THIRD_PERSON_FRONT) {
             yaw += 180;
@@ -355,8 +357,8 @@ public class Freecam extends Module {
         if (requireDoubleClick.get() && clickTs - prevClick > 500) return;
 
         Camera cam = Vanilla.mainCamera();
-        Vec3 posVec = cam.position();
-        Vec3 lookVec = Vec3.directionFromRotation(cam.xRot(), cam.yRot());
+        Vec3 posVec = CameraUtils.position(cam);
+        Vec3 lookVec = Vec3.directionFromRotation(Vanilla.cameraXRot(cam), Vanilla.cameraYRot(cam));
         short maxDist = 256;
         Vec3 max = posVec.add(lookVec.scale(maxDist));
 
@@ -374,7 +376,7 @@ public class Freecam extends Module {
     private void onMouseClick(MouseClickEvent event) {
         if (checkGuiMove()) return;
 
-        if (clickToPath.get() && event.action == KeyAction.Press && mc.options.keyAttack.matchesMouse(event.click)) {
+        if (clickToPath.get() && event.action == KeyAction.Press && Vanilla.matchesMouse(mc.options.keyAttack, event.click)) {
             setGoal();
         }
 

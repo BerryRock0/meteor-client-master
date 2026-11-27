@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.misc;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.game.ResourcePacksReloadedEvent;
@@ -88,12 +90,12 @@ public class Names {
         return enchantmentKeyNames.computeIfAbsent(enchantment, enchantment1 -> Optional.ofNullable(Minecraft.getInstance().getConnection())
             .map(ClientPacketListener::registryAccess)
             .flatMap(registryManager -> registryManager.lookup(Registries.ENCHANTMENT))
-            .flatMap(registry -> registry.get(enchantment.identifier()))
+            .flatMap(registry -> registry.get(Vanilla.identifier(enchantment)))
             .map(Names::get)
             .orElseGet(() -> {
-                String key = "enchantment." + enchantment1.identifier().toLanguageKey();
+                String key = "enchantment." + Vanilla.identifier(enchantment1).toLanguageKey();
                 String translated = I18n.get(key);
-                return translated == key ? enchantment1.identifier().toString() : translated;
+                return translated == key ? Vanilla.identifier(enchantment1).toString() : translated;
             }));
     }
 

@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.commands.commands;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -28,10 +29,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundCommandSuggestionsPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket;
-import net.minecraft.server.permissions.PermissionSet;
-import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.dimension.DimensionType;
 import org.apache.commons.lang3.Strings;
 
@@ -153,7 +151,7 @@ public class ServerCommand extends Command {
                 mc.level.getDifficulty(),
                 mc.level.getGameTime(),
                 mc.level.getChunk(mc.player.blockPosition()).getInhabitedTime(),
-                DimensionType.MOON_BRIGHTNESS_PER_PHASE[mc.level.environmentAttributes().getValue(EnvironmentAttributes.MOON_PHASE, mc.player.blockPosition()).index()] // lol
+                Vanilla.moonBrightness()
             ).getDifficulty()
         );
         info("Day: %d", mc.level.getGameTime() / 24000L);
@@ -161,13 +159,7 @@ public class ServerCommand extends Command {
     }
 
     public String formatPerms() {
-        PermissionSet permissions = mc.player.permissions();
-
-        if (permissions.hasPermission(Permissions.COMMANDS_OWNER)) return "4 (Owner)";
-        else if (permissions.hasPermission(Permissions.COMMANDS_ADMIN)) return "3 (Admin)";
-        else if (permissions.hasPermission(Permissions.COMMANDS_GAMEMASTER)) return "2 (Gamemaster)";
-        else if (permissions.hasPermission(Permissions.COMMANDS_MODERATOR)) return "1 (Moderator)";
-        else return "0 (No Perms)";
+        return Vanilla.permissionLevelString();
     }
 
 
@@ -213,9 +205,8 @@ public class ServerCommand extends Command {
 
             // This gets the root node of the command tree. From there, all of its children have to be of type
             // LiteralCommandNode, so we don't need to worry about checking or casting and can just grab the name
-            packet.getRoot(
-                CommandBuildContext.simple(handler.meteor$getRegistryAccess(), handler.meteor$getEnabledFeatures()),
-                ClientPacketListenerAccessor.meteor$getCommandNodeFactory()
+            Vanilla.commandRoot(packet,
+                CommandBuildContext.simple(handler.meteor$getRegistryAccess(), handler.meteor$getEnabledFeatures())
             ).getChildren().forEach(node -> {
                 String[] split = node.getName().split(":");
                 if (split.length > 1) {

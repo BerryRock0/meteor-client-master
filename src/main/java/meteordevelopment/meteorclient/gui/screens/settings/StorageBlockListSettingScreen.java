@@ -11,10 +11,11 @@ import meteordevelopment.meteorclient.gui.screens.settings.base.CollectionListSe
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.StorageBlockListSetting;
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.utils.render.DisplayItemUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import meteordevelopment.meteorclient.mc.BlockEntityTypes;
 
@@ -26,23 +27,27 @@ public class StorageBlockListSettingScreen extends CollectionListSettingScreen<B
     private static final BlockEntityTypeInfo UNKNOWN = new BlockEntityTypeInfo(Items.BARRIER, "Unknown");
 
     static {
-        // Map of storage blocks
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.BARREL, new BlockEntityTypeInfo(Items.BARREL, "Barrel"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.BLAST_FURNACE, new BlockEntityTypeInfo(Items.BLAST_FURNACE, "Blast Furnace"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.BREWING_STAND, new BlockEntityTypeInfo(Items.BREWING_STAND, "Brewing Stand"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.CAMPFIRE, new BlockEntityTypeInfo(Items.CAMPFIRE, "Campfire"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.CHEST, new BlockEntityTypeInfo(Items.CHEST, "Chest"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.CHISELED_BOOKSHELF, new BlockEntityTypeInfo(Items.CHISELED_BOOKSHELF, "Chiseled Bookshelf"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.CRAFTER, new BlockEntityTypeInfo(Items.CRAFTER, "Crafter"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.DISPENSER, new BlockEntityTypeInfo(Items.DISPENSER, "Dispenser"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.DECORATED_POT, new BlockEntityTypeInfo(Items.DECORATED_POT, "Decorated Pot"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.DROPPER, new BlockEntityTypeInfo(Items.DROPPER, "Dropper"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.ENDER_CHEST, new BlockEntityTypeInfo(Items.ENDER_CHEST, "Ender Chest"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.FURNACE, new BlockEntityTypeInfo(Items.FURNACE, "Furnace"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.HOPPER, new BlockEntityTypeInfo(Items.HOPPER, "Hopper"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.SHULKER_BOX, new BlockEntityTypeInfo(Items.SHULKER_BOX, "Shulker Box"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.SMOKER, new BlockEntityTypeInfo(Items.SMOKER, "Smoker"));
-        BLOCK_ENTITY_TYPE_INFO_MAP.put(BlockEntityTypes.TRAPPED_CHEST, new BlockEntityTypeInfo(Items.TRAPPED_CHEST, "Trapped Chest"));
+        // Map of storage blocks. Types and items that do not exist in the running version are null.
+        put(BlockEntityTypes.BARREL, Items.BARREL, "Barrel");
+        put(BlockEntityTypes.BLAST_FURNACE, Items.BLAST_FURNACE, "Blast Furnace");
+        put(BlockEntityTypes.BREWING_STAND, Items.BREWING_STAND, "Brewing Stand");
+        put(BlockEntityTypes.CAMPFIRE, Items.CAMPFIRE, "Campfire");
+        put(BlockEntityTypes.CHEST, Items.CHEST, "Chest");
+        put(BlockEntityTypes.CHISELED_BOOKSHELF, Vanilla.item("chiseled_bookshelf"), "Chiseled Bookshelf");
+        put(BlockEntityTypes.CRAFTER, Vanilla.item("crafter"), "Crafter");
+        put(BlockEntityTypes.DISPENSER, Items.DISPENSER, "Dispenser");
+        put(BlockEntityTypes.DECORATED_POT, Vanilla.item("decorated_pot"), "Decorated Pot");
+        put(BlockEntityTypes.DROPPER, Items.DROPPER, "Dropper");
+        put(BlockEntityTypes.ENDER_CHEST, Items.ENDER_CHEST, "Ender Chest");
+        put(BlockEntityTypes.FURNACE, Items.FURNACE, "Furnace");
+        put(BlockEntityTypes.HOPPER, Items.HOPPER, "Hopper");
+        put(BlockEntityTypes.SHULKER_BOX, Items.SHULKER_BOX, "Shulker Box");
+        put(BlockEntityTypes.SMOKER, Items.SMOKER, "Smoker");
+        put(BlockEntityTypes.TRAPPED_CHEST, Items.TRAPPED_CHEST, "Trapped Chest");
+    }
+
+    private static void put(BlockEntityType<?> type, Item item, String name) {
+        if (type != null && item != null) BLOCK_ENTITY_TYPE_INFO_MAP.put(type, new BlockEntityTypeInfo(item, name));
     }
 
     public StorageBlockListSettingScreen(GuiTheme theme, Setting<List<BlockEntityType<?>>> setting) {

@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.utils.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.mixininterface.IMultiPlayerGameMode;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -93,7 +96,7 @@ public class InvUtils {
         }
 
         if (testInMainHand(isGood)) {
-            return new FindItemResult(mc.player.getInventory().getSelectedSlot(), mc.player.getMainHandItem().getCount());
+            return new FindItemResult(InventoryUtils.getSelectedSlot(mc.player.getInventory()), mc.player.getMainHandItem().getCount());
         }
 
         return find(isGood, 0, 8);
@@ -148,10 +151,10 @@ public class InvUtils {
     public static boolean swap(int slot, boolean swapBack) {
         if (slot == SlotUtils.OFFHAND) return true;
         if (slot < 0 || slot > 8) return false;
-        if (swapBack && previousSlot == -1) previousSlot = mc.player.getInventory().getSelectedSlot();
+        if (swapBack && previousSlot == -1) previousSlot = InventoryUtils.getSelectedSlot(mc.player.getInventory());
         else if (!swapBack) previousSlot = -1;
 
-        mc.player.getInventory().setSelectedSlot(slot);
+        InventoryUtils.setSelectedSlot(mc.player.getInventory(), slot);
         ((IMultiPlayerGameMode) mc.gameMode).meteor$syncSelected();
         return true;
     }
@@ -203,7 +206,7 @@ public class InvUtils {
 
     public static void dropHand() {
         if (!mc.player.containerMenu.getCarried().isEmpty())
-            mc.gameMode.handleContainerInput(mc.player.containerMenu.containerId, AbstractContainerMenu.SLOT_CLICKED_OUTSIDE, 0, ContainerInput.PICKUP, mc.player);
+            Vanilla.handleContainerInput(mc.player.containerMenu.containerId, AbstractContainerMenu.SLOT_CLICKED_OUTSIDE, 0, ContainerInput.PICKUP, mc.player);
     }
 
     public static class Action {
@@ -351,7 +354,7 @@ public class InvUtils {
         }
 
         private void click(int id) {
-            mc.gameMode.handleContainerInput(mc.player.containerMenu.containerId, id, data, type, mc.player);
+            Vanilla.handleContainerInput(mc.player.containerMenu.containerId, id, data, type, mc.player);
         }
     }
 }

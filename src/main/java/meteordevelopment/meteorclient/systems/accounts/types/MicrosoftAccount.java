@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.accounts.types;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import com.mojang.util.UndashedUuid;
 import meteordevelopment.meteorclient.systems.accounts.Account;
 import meteordevelopment.meteorclient.systems.accounts.AccountType;
@@ -33,7 +35,7 @@ public class MicrosoftAccount extends Account<MicrosoftAccount> {
 
         super.login();
 
-        setSession(new User(cache.username, UndashedUuid.fromStringLenient(cache.uuid), token, Optional.empty(), Optional.empty()));
+        setSession(Vanilla.createUser(cache.username, UndashedUuid.fromStringLenient(cache.uuid), token));
         return true;
     }
 

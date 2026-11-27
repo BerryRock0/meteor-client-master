@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.mixin;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;

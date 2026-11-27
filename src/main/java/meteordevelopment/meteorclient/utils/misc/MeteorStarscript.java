@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.misc;
 
+import meteordevelopment.meteorclient.mc.CameraUtils;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.MeteorClient;
@@ -37,7 +39,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -98,14 +100,14 @@ public class MeteorStarscript {
         ss.set("camera", new ValueMap()
             .set("pos", new ValueMap()
                 .set("_toString", () -> posString(false, true))
-                .set("x", () -> Value.number(Vanilla.mainCamera().position().x))
-                .set("y", () -> Value.number(Vanilla.mainCamera().position().y))
-                .set("z", () -> Value.number(Vanilla.mainCamera().position().z))
+                .set("x", () -> Value.number(CameraUtils.position(Vanilla.mainCamera()).x))
+                .set("y", () -> Value.number(CameraUtils.position(Vanilla.mainCamera()).y))
+                .set("z", () -> Value.number(CameraUtils.position(Vanilla.mainCamera()).z))
             )
             .set("opposite_dim_pos", new ValueMap()
                 .set("_toString", () -> posString(true, true))
                 .set("x", () -> oppositeX(true))
-                .set("y", () -> Value.number(Vanilla.mainCamera().position().y))
+                .set("y", () -> Value.number(CameraUtils.position(Vanilla.mainCamera()).y))
                 .set("z", () -> oppositeZ(true))
             )
 
@@ -324,8 +326,8 @@ public class MeteorStarscript {
             case "killed" -> Stats.ENTITY_KILLED.get(BuiltInRegistries.ENTITY_TYPE.getValue(name));
             case "killed_by" -> Stats.ENTITY_KILLED_BY.get(BuiltInRegistries.ENTITY_TYPE.getValue(name));
             case "custom" -> {
-                name = BuiltInRegistries.CUSTOM_STAT.getValue(name);
-                yield name != null ? Stats.CUSTOM.get(name) : null;
+                Identifier statId = Vanilla.identifier(BuiltInRegistries.CUSTOM_STAT.getValue(name));
+                yield statId != null ? Stats.CUSTOM.get(statId) : null;
             }
             default -> null;
         };
@@ -410,7 +412,7 @@ public class MeteorStarscript {
     // Other
 
     private static Value oppositeX(boolean camera) {
-        double x = camera ? Vanilla.mainCamera().position().x : (mc.player != null ? mc.player.getX() : 0);
+        double x = camera ? CameraUtils.position(Vanilla.mainCamera()).x : (mc.player != null ? mc.player.getX() : 0);
         Dimension dimension = PlayerUtils.getDimension();
 
         if (dimension == Dimension.Overworld) x /= 8;
@@ -420,7 +422,7 @@ public class MeteorStarscript {
     }
 
     private static Value oppositeZ(boolean camera) {
-        double z = camera ? Vanilla.mainCamera().position().z : (mc.player != null ? mc.player.getZ() : 0);
+        double z = camera ? CameraUtils.position(Vanilla.mainCamera()).z : (mc.player != null ? mc.player.getZ() : 0);
         Dimension dimension = PlayerUtils.getDimension();
 
         if (dimension == Dimension.Overworld) z /= 8;
@@ -431,7 +433,7 @@ public class MeteorStarscript {
 
     private static Value yaw(boolean camera) {
         float yaw;
-        if (camera) yaw = Vanilla.mainCamera().yRot();
+        if (camera) yaw = Vanilla.cameraYRot(Vanilla.mainCamera());
         else yaw = mc.player != null ? mc.player.getYRot() : 0;
         yaw %= 360;
 
@@ -443,7 +445,7 @@ public class MeteorStarscript {
 
     private static Value pitch(boolean camera) {
         float pitch;
-        if (camera) pitch = Vanilla.mainCamera().xRot();
+        if (camera) pitch = Vanilla.cameraXRot(Vanilla.mainCamera());
         else pitch = mc.player != null ? mc.player.getXRot() : 0;
         pitch %= 360;
 
@@ -455,7 +457,7 @@ public class MeteorStarscript {
 
     private static Value direction(boolean camera) {
         float yaw;
-        if (camera) yaw = Vanilla.mainCamera().yRot();
+        if (camera) yaw = Vanilla.cameraYRot(Vanilla.mainCamera());
         else yaw = mc.player != null ? mc.player.getYRot() : 0;
 
         return wrap(HorizontalDirection.get(yaw));
@@ -467,7 +469,7 @@ public class MeteorStarscript {
         BP.set(mc.player.getX(), mc.player.getY(), mc.player.getZ());
         return mc.level.registryAccess().lookup(Registries.BIOME)
             .map(biomeRegistry -> {
-                Identifier id = biomeRegistry.getKey(mc.level.getBiome(BP).value());
+                Identifier id = Vanilla.identifier(biomeRegistry.getKey(mc.level.getBiome(BP).value()));
                 if (id == null) return Value.string("Unknown");
                 return Value.string(Arrays.stream(id.getPath().split("_")).map(StringUtils::capitalize).collect(Collectors.joining(" ")));
             })
@@ -497,7 +499,7 @@ public class MeteorStarscript {
 
     private static Value posString(boolean opposite, boolean camera) {
         Vec3 pos;
-        if (camera) pos = Vanilla.mainCamera().position();
+        if (camera) pos = CameraUtils.position(Vanilla.mainCamera());
         else pos = mc.player != null ? mc.player.position() : Vec3.ZERO;
 
         double x = pos.x;

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.accounts;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.systems.System;
 import meteordevelopment.meteorclient.systems.Systems;
 import meteordevelopment.meteorclient.systems.accounts.types.CrackedAccount;
@@ -67,11 +69,11 @@ public class Accounts extends System<Accounts> implements Iterable<Account<?>> {
 
     @Override
     public Accounts fromTag(CompoundTag tag) {
-        MeteorExecutor.execute(() -> accounts = NbtUtils.listFromTag(tag.getListOrEmpty("accounts"), tag1 -> {
+        MeteorExecutor.execute(() -> accounts = NbtUtils.listFromTag(Nbt.getListOrEmpty(tag, "accounts"), tag1 -> {
             CompoundTag t = (CompoundTag) tag1;
             if (!t.contains("type")) return null;
 
-            AccountType type = AccountType.valueOf(t.getStringOr("type", ""));
+            AccountType type = AccountType.valueOf(Nbt.getStringOr(t, "type", ""));
 
             try {
                 return switch (type) {

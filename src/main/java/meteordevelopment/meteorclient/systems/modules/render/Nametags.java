@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+import meteordevelopment.meteorclient.mc.CameraUtils;
+
 import meteordevelopment.meteorclient.mc.EntityTypes;
 
 import meteordevelopment.meteorclient.mc.Vanilla;
@@ -335,7 +337,7 @@ public class Nametags extends Module {
 
         boolean freecamNotActive = !Modules.get().isActive(Freecam.class);
         boolean notThirdPerson = mc.options.getCameraType().isFirstPerson();
-        Vec3 cameraPos = Vanilla.mainCamera().position();
+        Vec3 cameraPos = CameraUtils.position(Vanilla.mainCamera());
 
         for (Entity entity : mc.level.entitiesForRendering()) {
             EntityType<?> type = entity.getType();

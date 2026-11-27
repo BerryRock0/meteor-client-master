@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.gui.screens;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.meteor.ActiveModulesChangedEvent;
 import meteordevelopment.meteorclient.events.meteor.ModuleBindChangedEvent;
@@ -171,9 +173,9 @@ public class ModuleScreen extends WindowScreen {
     public boolean fromClipboard() {
         CompoundTag tag = NbtUtils.fromClipboard();
         if (tag == null) return false;
-        if (!tag.getStringOr("name", "").equals(module.name)) return false;
+        if (!Nbt.getStringOr(tag, "name", "").equals(module.name)) return false;
 
-        Optional<CompoundTag> settings = tag.getCompound("settings");
+        Optional<CompoundTag> settings = Nbt.compound(tag, "settings");
 
         if (settings.isPresent()) module.settings.fromTag(settings.get());
         else module.settings.reset();

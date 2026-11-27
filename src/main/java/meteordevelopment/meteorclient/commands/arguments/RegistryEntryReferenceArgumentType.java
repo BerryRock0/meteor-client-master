@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.commands.arguments;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -98,7 +99,7 @@ public class RegistryEntryReferenceArgumentType<T> implements ArgumentType<Holde
         if (registryKey.isFor(registryRef)) {
             return reference;
         } else {
-            throw INVALID_TYPE_EXCEPTION.create(registryKey.identifier(), registryKey.registry(), registryRef.identifier());
+            throw INVALID_TYPE_EXCEPTION.create(Vanilla.identifier(registryKey), registryKey.registry(), Vanilla.identifier(registryRef));
         }
     }
 
@@ -109,12 +110,12 @@ public class RegistryEntryReferenceArgumentType<T> implements ArgumentType<Holde
         return Minecraft.getInstance().getConnection().registryAccess()
             .lookupOrThrow(this.registryRef)
             .get(registryKey)
-            .orElseThrow(() -> NOT_FOUND_EXCEPTION.createWithContext(reader, identifier, this.registryRef.identifier()));
+            .orElseThrow(() -> NOT_FOUND_EXCEPTION.createWithContext(reader, identifier, Vanilla.identifier(registryRef)));
     }
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggestResource(Minecraft.getInstance().getConnection().registryAccess().lookupOrThrow(this.registryRef).listElementIds().map(ResourceKey::identifier), builder);
+        return SharedSuggestionProvider.suggestResource(Minecraft.getInstance().getConnection().registryAccess().lookupOrThrow(this.registryRef).listElementIds().map(key -> Vanilla.identifier(key)), builder);
     }
 
     @Override

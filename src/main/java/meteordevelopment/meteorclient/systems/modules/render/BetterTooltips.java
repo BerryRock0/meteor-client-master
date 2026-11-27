@@ -31,7 +31,6 @@ import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -45,6 +44,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.CustomData;
@@ -386,8 +386,8 @@ public class BetterTooltips extends Module {
                 if (bundleContents != null && !bundleContents.isEmpty()) {
                     ItemStack[] bundleItems = new ItemStack[bundleContents.size()];
                     int index = 0;
-                    for (var template : bundleContents.items()) {
-                        bundleItems[index++] = template.create();
+                    for (net.minecraft.world.item.ItemStack itemStack : Vanilla.bundleItems(bundleContents)) {
+                        bundleItems[index++] = itemStack;
                     }
                     event.tooltipData = new BundleTooltipComponent(bundleItems, bundleContents);
                 }
@@ -481,13 +481,7 @@ public class BetterTooltips extends Module {
     }
 
     private BannerTooltipComponent createBannerFromBannerPatternItem(ItemStack item) {
-        HolderSet<BannerPattern> providedPatterns = item.get(DataComponents.PROVIDES_BANNER_PATTERNS);
-        if (providedPatterns == null || providedPatterns.size() == 0) {
-            return new BannerTooltipComponent(DyeColor.GRAY, BannerPatternLayers.EMPTY);
-        }
-
-        BannerPatternLayers component = new BannerPatternLayers.Builder().add(providedPatterns.get(0), DyeColor.WHITE).build();
-        return new BannerTooltipComponent(DyeColor.GRAY, component);
+        return new BannerTooltipComponent(DyeColor.GRAY, Vanilla.providedBannerPatterns(item));
     }
 
     private BannerTooltipComponent createBannerFromShield(ItemStack shieldItem) {

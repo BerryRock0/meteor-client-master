@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -51,7 +55,7 @@ public class StatusEffectListSetting extends Setting<List<MobEffect>> {
 
     @Override
     public Iterable<Identifier> getIdentifierSuggestions() {
-        return BuiltInRegistries.MOB_EFFECT.keySet();
+        return Vanilla.identifiers(BuiltInRegistries.MOB_EFFECT.keySet());
     }
 
     @Override
@@ -59,7 +63,7 @@ public class StatusEffectListSetting extends Setting<List<MobEffect>> {
         ListTag valueTag = new ListTag();
 
         for (MobEffect effect : get()) {
-            Identifier id = BuiltInRegistries.MOB_EFFECT.getKey(effect);
+            Identifier id = Vanilla.identifier(BuiltInRegistries.MOB_EFFECT.getKey(effect));
             if (id != null) valueTag.add(StringTag.valueOf(id.toString()));
         }
         tag.put("value", valueTag);
@@ -71,8 +75,8 @@ public class StatusEffectListSetting extends Setting<List<MobEffect>> {
     public List<MobEffect> load(CompoundTag tag) {
         get().clear();
 
-        for (Tag tagI : tag.getListOrEmpty("value")) {
-            MobEffect effect = BuiltInRegistries.MOB_EFFECT.getValue(Identifier.parse(tagI.asString().orElse("")));
+        for (Tag tagI : Nbt.getListOrEmpty(tag, "value")) {
+            MobEffect effect = BuiltInRegistries.MOB_EFFECT.getValue(Identifier.parse(Nbt.asString(tagI).orElse("")));
             if (effect != null) get().add(effect);
         }
 

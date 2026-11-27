@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.accounts.types;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import meteordevelopment.meteorclient.systems.accounts.Account;
 import meteordevelopment.meteorclient.systems.accounts.AccountType;
 import net.minecraft.client.User;
@@ -27,7 +29,7 @@ public class CrackedAccount extends Account<CrackedAccount> {
     public boolean login() {
         super.login();
 
-        setSession(new User(name, UUIDUtil.createOfflinePlayerUUID(name), "", Optional.empty(), Optional.empty()));
+        setSession(Vanilla.createUser(name, UUIDUtil.createOfflinePlayerUUID(name), ""));
         return true;
     }
 

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import net.minecraft.nbt.CompoundTag;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
@@ -45,7 +47,7 @@ public class FileSetting extends Setting<File> {
     @Override
     protected File load(CompoundTag tag) {
         if (tag.contains("file")) {
-            set(new File(tag.getStringOr("file", "")));
+            set(new File(Nbt.getStringOr(tag, "file", "")));
         }
 
         return get();

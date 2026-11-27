@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.utils.render;
 
+import meteordevelopment.meteorclient.mc.PoseStack2D;
+import meteordevelopment.meteorclient.mc.CameraUtils;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -36,7 +39,7 @@ public class NametagUtils {
         model.set(modelView);
         NametagUtils.projection.set(RenderUtils.projection);
 
-        Utils.set(camera, Vanilla.mainCamera().position());
+        Utils.set(camera, CameraUtils.position(Vanilla.mainCamera()));
         cameraNegated.set(camera);
         cameraNegated.negate();
 
@@ -90,9 +93,9 @@ public class NametagUtils {
     public static void begin(Vector3d pos, GuiGraphicsExtractor graphics) {
         begin(pos);
 
-        Matrix3x2fStack matrices = graphics.pose();
-        matrices.pushMatrix();
-        matrices.scale(1.0f / mc.getWindow().getGuiScale());
+        PoseStack2D matrices = PoseStack2D.of(graphics);
+        matrices.push();
+        matrices.scale((float) (1.0f / mc.getWindow().getGuiScale()));
         matrices.translate((float) pos.x, (float) pos.y);
         matrices.scale((float) scale, (float) scale);
     }
@@ -109,7 +112,7 @@ public class NametagUtils {
 
     public static void end(GuiGraphicsExtractor graphics) {
         end();
-        graphics.pose().popMatrix();
+        PoseStack2D.of(graphics).pop();
     }
 
     private static double getScale(Vector3d pos) {

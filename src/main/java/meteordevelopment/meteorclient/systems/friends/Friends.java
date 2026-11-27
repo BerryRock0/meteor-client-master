@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.systems.friends;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.util.UndashedUuid;
 import meteordevelopment.meteorclient.systems.System;
 import meteordevelopment.meteorclient.systems.Systems;
@@ -66,7 +69,7 @@ public class Friends extends System<Friends> implements Iterable<Friend> {
     }
 
     public Friend get(PlayerInfo player) {
-        return get(player.getProfile().name());
+        return get(Vanilla.gameProfileName(player.getProfile()));
     }
 
     public boolean isFriend(Player player) {
@@ -107,14 +110,14 @@ public class Friends extends System<Friends> implements Iterable<Friend> {
     public Friends fromTag(CompoundTag tag) {
         friends.clear();
 
-        for (Tag itemTag : tag.getListOrEmpty("friends")) {
+        for (Tag itemTag : Nbt.getListOrEmpty(tag, "friends")) {
             CompoundTag friendTag = (CompoundTag) itemTag;
             if (!friendTag.contains("name")) continue;
 
-            String name = friendTag.getStringOr("name", "");
+            String name = Nbt.getStringOr(friendTag, "name", "");
             if (get(name) != null) continue;
 
-            String uuid = friendTag.getStringOr("id", "");
+            String uuid = Nbt.getStringOr(friendTag, "id", "");
             Friend friend = !uuid.isBlank()
                 ? new Friend(name, UndashedUuid.fromStringLenient(uuid))
                 : new Friend(name);

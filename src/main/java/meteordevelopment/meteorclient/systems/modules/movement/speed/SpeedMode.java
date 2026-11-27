@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.systems.modules.movement.speed;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import net.minecraft.client.Minecraft;
@@ -44,12 +47,12 @@ public class SpeedMode {
 
     protected double getDefaultSpeed() {
         double defaultSpeed = 0.2873;
-        if (mc.player.hasEffect(MobEffects.SPEED)) {
-            int amplifier = mc.player.getEffect(MobEffects.SPEED).getAmplifier();
+        if (mc.player.hasEffect(MobEffectUtils.get("SPEED"))) {
+            int amplifier = mc.player.getEffect(MobEffectUtils.get("SPEED")).getAmplifier();
             defaultSpeed *= 1.0 + 0.2 * (amplifier + 1);
         }
-        if (mc.player.hasEffect(MobEffects.SLOWNESS)) {
-            int amplifier = mc.player.getEffect(MobEffects.SLOWNESS).getAmplifier();
+        if (mc.player.hasEffect(MobEffectUtils.get("SLOWNESS"))) {
+            int amplifier = mc.player.getEffect(MobEffectUtils.get("SLOWNESS")).getAmplifier();
             defaultSpeed /= 1.0 + 0.2 * (amplifier + 1);
         }
         return defaultSpeed;
@@ -62,7 +65,7 @@ public class SpeedMode {
     }
 
     protected double getHop(double height) {
-        MobEffectInstance jumpBoost = mc.player.hasEffect(MobEffects.JUMP_BOOST) ? mc.player.getEffect(MobEffects.JUMP_BOOST) : null;
+        MobEffectInstance jumpBoost = mc.player.hasEffect(MobEffectUtils.get("JUMP_BOOST")) ? mc.player.getEffect(MobEffectUtils.get("JUMP_BOOST")) : null;
         if (jumpBoost != null) height += (jumpBoost.getAmplifier() + 1) * 0.1f;
         return height;
     }

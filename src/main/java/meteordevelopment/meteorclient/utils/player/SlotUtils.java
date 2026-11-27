@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.mixin.AbstractMountInventoryMenuAccessor;
 import meteordevelopment.meteorclient.mixin.CreativeModeInventoryScreenAccessor;
 import meteordevelopment.meteorclient.mixin.CreativeModeTabsAccessor;
@@ -22,7 +24,7 @@ import static meteordevelopment.meteorclient.MeteorClient.mc;
 public class SlotUtils {
     /**
      * These constants refer to the slot index of relevant player slots. They are used when dealing directly with the
-     * player inventory - e.g. {@code mc.player.getInventory().getSelectedSlot()} returns the slot index of your
+     * player inventory - e.g. {@code InventoryUtils.getSelectedSlot(mc.player.getInventory())} returns the slot index of your
      * selected slot (i.e. main hand).
      *
      * @see net.minecraft.world.entity.player.Inventory

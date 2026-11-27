@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.mixin;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.systems.config.Config;
 import meteordevelopment.meteorclient.utils.player.TitleScreenCredits;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

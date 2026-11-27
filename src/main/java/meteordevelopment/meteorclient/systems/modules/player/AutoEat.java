@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import it.unimi.dsi.fastutil.booleans.BooleanBinaryOperator;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import meteordevelopment.meteorclient.events.entity.player.ItemUseCrosshairTargetEvent;
@@ -27,7 +29,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 import java.util.List;
 
@@ -178,7 +180,7 @@ public class AutoEat extends Module {
     }
 
     private void startEating() {
-        prevSlot = mc.player.getInventory().getSelectedSlot();
+        prevSlot = InventoryUtils.getSelectedSlot(mc.player.getInventory());
         eat();
         if (!eating) return;
 

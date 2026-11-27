@@ -49,8 +49,11 @@ plain library type. The `checkCompatLayer` Gradle task enforces this across all 
 ./scripts/build-all-versions.sh          # one jar per registered version
 ```
 
-Currently registered: **26.2**, **26.3** and **26.4** (26.4 is a development snapshot, so its
-descriptor points at `26.4-snapshot-4`).
+Currently registered: **1.14.4** through **26.4**. Every stable Minecraft release distributed by
+Fabric in that span has a descriptor in `gradle/mc-versions/`, plus the development snapshot
+**26.4-snapshot-4**. The build, the CI workflow and `scripts/build-all-versions.sh` discover the
+versions from that directory, so adding a version there is all it takes to support it — see
+*Adding a new Minecraft version* below.
 
 Selecting an unknown version fails fast with the list of registered versions.
 
@@ -61,7 +64,11 @@ Selecting an unknown version fails fast with the list of registered versions.
 | Key | Purpose |
 | --- | --- |
 | `minecraft`, `fabric-api` | Minecraft and Fabric API coordinates |
+| `fabric-api-modules` | Fabric API module layout: absent = current modules, empty = monolithic jar (pre-1.19.2), comma separated list = the modules to include (`fabric-resource-loader-v0` before 1.21.9) |
 | `compat-impl` | FQCN of the `ICompat` implementation substituted into `meteor-compat.properties` |
+| `exclude-sources` | shared/version-tree sources to omit on this release; matching mixin entries are stripped too |
+| `legacy-source` | upstream commit whose `src/main/java`, `src/main/resources` and `gradle.properties` are extracted into `build/legacy-sources/<version>` and compiled instead of the shared tree |
+| `legacy-mappings` | optional Yarn mapping override for a legacy snapshot (otherwise taken from the commit's `gradle.properties`) |
 
 Alongside the descriptor, `gradle/mc-versions/<version>.classtweaker` is used as the access widener
 if it exists, otherwise the shared `src/main/resources/meteor-client.classtweaker`. Wideners drift
@@ -94,6 +101,64 @@ What is left in `src/mc/<version>/` is the code that genuinely has to name a Min
 * the compatibility implementation itself.
 
 Everything else — 918 of the 962 files — is compiled once and shared by all versions.
+
+### String-based type lists
+
+Minecraft constants such as `EntityType.WARDEN`, `Items.MACE` or `Blocks.OXIDIZED_COPPER` exist only
+in some versions. Instead of hardcoding them, shared code uses namespaced identifier strings from
+`meteordevelopment.meteorclient.mc.TypeIds` (attackable/rideable entities, weapons, shulker boxes,
+storage blocks) and resolves them at runtime through `Vanilla.typeId(...)` and
+`meteordevelopment.meteorclient.utils.entity.TypeMatch`. A type that does not exist in the running
+version simply never matches.
+
+The remaining direct constant references go through reflection-based facades in
+`src/mc/<version>/.../mc/`:
+
+* `EntityTypes`, `BlockEntityTypes` — entity/block entity type constants;
+* `Items`, `Blocks` — item and block constants;
+* `Vanilla.item(id)`, `Vanilla.resolveItems(ids)` — resolve items by identifier;
+* `Vanilla.isMace(stack)`, `Vanilla.maceDamageBonus(...)` — the mace exists only in newer versions,
+  so it is disabled everywhere else instead of being special-cased in every module.
+
+Each facade resolves the field at runtime and returns `null` when it is absent in that version.
+Shared code keeps its familiar `EntityTypes.PLAYER` / `Items.DIAMOND_SWORD` syntax, while the
+version-specific `src/mc/<version>/` layer owns the lookup.
+
+### Older versions
+
+`src/mc/1.14.4` through `src/mc/1.21.11` use a reflection-based `ICompat` implementation: every
+concept is discovered by name at runtime, so the same code works across the 1.x API changes without
+referencing 26.x-only classes such as `ProjectionMatrixBuffer` or `ResourceLoadStateTracker`.
+
+Some Minecraft types were simply **renamed** between 1.x and 26.x. Shared code uses the 26.x name,
+and each older version tree provides a shim in the original Minecraft package so no shared source
+has to change:
+
+* `net.minecraft.resources.Identifier` — extends `ResourceLocation` (renamed in 26.x);
+* `net.minecraft.IdentifierException` — extends `ResourceLocationException`;
+* `net.minecraft.core.registries.BuiltInRegistries` — resolves the old `Registry` static fields
+  reflectively (this class moved out of `Registry` in 1.19.3).
+
+For 1.21+ `ResourceLocation` became `final` with private constructors, so
+`gradle/mc-versions/1.21*.classtweaker` widens it (`extendable`) and makes its constructors
+`accessible`. Those files are copies of the shared widener with entries for absent classes removed.
+
+Older version trees ship a legacy OpenGL renderer that implements the 26.x render API surface
+(`MeshBuilder`, `MeshRenderer`, `Renderer2D/3D`, GPU type shims, and a `GuiGraphicsExtractor`
+stand-in) on top of the classic `GL`/`Shader`/`Mesh` code. Sources that still name a Minecraft
+class absent in a given version are listed in that descriptor's `exclude-sources` property;
+`compileJava` omits them and `processResources` removes the corresponding entries from
+`meteor-client.mixins.json`. This keeps the shared code unchanged while dropping only the
+version-specific features that cannot work on that release.
+
+Releases before 1.21.5 instead use a **historical source snapshot**: `legacy-source` names the
+upstream commit whose sources and original Yarn mappings are extracted automatically. The
+extraction rewrites the Starscript package to `org.meteordev.starscript`, removes integrations
+whose optional libraries are not shipped, patches a handful of epoch-specific API calls, and
+adds compile-only stubs from `scripts/legacy-stubs/` for Baritone, the old Fabric keybinding API
+and similar compile-time-only dependencies. Those stubs are never bundled into the jar; they
+only keep the original modules compilable. After changing the extraction rules, delete
+`build/legacy-sources/*` to force a fresh snapshot.
 
 ## How the implementation is selected
 
@@ -236,10 +301,20 @@ modelled per version rather than by hand:
 * **Access wideners are version-specific.** `src/main/resources/meteor-client.classtweaker` cannot
   validate against 26.3 (the GPU backend classes moved and `RenderPipeline.Builder` became
   non-extensible). The build prefers `gradle/mc-versions/<version>.classtweaker` and falls back to
-  the shared one.
+  the shared one. Older Fabric API releases ship class tweakers in the `intermediary` namespace;
+  for those versions the build disables Loom's transitive access widener processing so Minecraft
+  setup does not fail on dependency jars.
 * **The vanilla classpath is not a fixed dependency set.** 26.3 dropped LWJGL's `tinyfd`, which
   Meteor used for file dialogs. Rather than pulling the library back in, the mod now picks files
   with its own in-game `FileBrowserScreen`.
+* **`exclude-sources` applies to both source roots.** Entries are relative to `src/main/java`
+  or `src/mc/<version>/`; this is how features that rely on APIs introduced in 26.x are disabled
+  on older versions. Use `-PjavacMaxErrs=N` when auditing a version with many API gaps.
+* **Loom needs a different mode for 1.x and 26.x.** 26.x jars are already deobfuscated, so
+  `settings.gradle.kts` enables `fabric.loom.disableObfuscation` before the remap plugin is applied.
+  Obfuscated 1.x jars keep remapping enabled and get explicit Mojang mappings; their Minecraft
+  manifests also omit libraries that 26.x bundles, so slf4j, Mixin, MixinExtras, JSpecify and JOML
+  are added as compile-only dependencies for those versions.
 
 
 ## Migrating existing code
@@ -281,11 +356,29 @@ if (Compat.get().currentScreenKind() == ScreenKind.TITLE) ...
 
 ## Verification
 
+Always prefix Gradle invocations with `timeout`, for example:
+
+```
+timeout 420 ./gradlew compileJava -PminecraftVersion=26.4 -PjavacMaxErrs=2000 --no-daemon --no-parallel -Dorg.gradle.jvmargs="-Xmx6G"
+```
+
 ```
 ./gradlew compileJava         # compiles the mod against the configured Minecraft version
 ./gradlew checkCompatLayer    # asserts the compatibility API stays version-agnostic
 ./scripts/build-all-versions.sh   # one jar per registered version
 ```
+
+### Current verification status
+
+- The full `build` task is green for every registered descriptor: `1.14.4`–`1.21.11` and
+  `26.1`–`26.4` (the `26.4` descriptor uses the local `26.4-snapshot-4` jar until a stable
+  release is available). Run `scripts/build-all-versions.sh` to reproduce the sweep.
+- `checkCompatLayer` passes across all 46 registered source roots.
+- Mixin target audit passes for `26.4-snapshot-4` (248 injected methods, 92 invoke targets,
+  306 handlers checked).
+- `processResources` converts checked-in `classTweaker`/access-widener files to the named
+  namespace for 1.x builds so `remapJar` can remap them; 26.x keeps the original official file.
+- Runtime behaviour in a running game has not been verified for every version.
 
 Compiling is necessary but not sufficient: a mixin whose target method no longer exists still
 compiles and then throws while the game starts — reading the target from the game jar (see

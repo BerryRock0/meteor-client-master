@@ -33,7 +33,7 @@ public interface ClientPacketListenerAccessor {
     FeatureFlagSet meteor$getEnabledFeatures();
 
     @Accessor("COMMAND_NODE_BUILDER")
-    static ClientboundCommandsPacket.NodeBuilder<ClientSuggestionProvider> meteor$getCommandNodeFactory() {
+    static Object meteor$getCommandNodeFactory() {
         return null;
     }
 }

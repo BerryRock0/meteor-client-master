@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.config.Config;
 import meteordevelopment.meteorclient.systems.friends.Friend;
@@ -88,9 +89,9 @@ public class BetterTab extends Module {
         Color color = null;
 
         name = playerListEntry.getTabListDisplayName();
-        if (name == null) name = Component.literal(playerListEntry.getProfile().name());
+        if (name == null) name = Component.literal(Vanilla.gameProfileName(playerListEntry.getProfile()));
 
-        if (playerListEntry.getProfile().id().toString().equals(mc.player.getGameProfile().id().toString()) && self.get()) {
+        if (Vanilla.gameProfileId(playerListEntry.getProfile()).toString().equals(Vanilla.gameProfileId(mc.player.getGameProfile()).toString()) && self.get()) {
             color = selfColor.get();
         } else if (friends.get() && Friends.get().isFriend(playerListEntry)) {
             Friend friend = Friends.get().get(playerListEntry);

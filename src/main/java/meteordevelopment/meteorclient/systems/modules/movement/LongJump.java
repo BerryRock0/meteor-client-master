@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.movement;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
 import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -272,8 +274,8 @@ public class LongJump extends Module {
 
     private double getMoveSpeed() {
         double base = 0.2873;
-        if (mc.player.hasEffect(MobEffects.SPEED)) {
-            base *= 1.0 + 0.2 * (mc.player.getEffect(MobEffects.SPEED).getAmplifier() + 1);
+        if (mc.player.hasEffect(MobEffectUtils.get("SPEED"))) {
+            base *= 1.0 + 0.2 * (mc.player.getEffect(MobEffectUtils.get("SPEED")).getAmplifier() + 1);
         }
         return base;
     }

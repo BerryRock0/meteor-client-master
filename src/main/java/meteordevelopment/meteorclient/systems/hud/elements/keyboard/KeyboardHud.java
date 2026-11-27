@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.hud.elements.keyboard;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
@@ -673,13 +675,13 @@ public class KeyboardHud extends HudElement {
         }
 
         public Key(CompoundTag compound) {
-            this.keybind = Keybind.none().fromTag(compound.getCompoundOrEmpty("key"));
-            this.name = compound.getStringOr("name", "");
-            this.x = compound.getDoubleOr("x", 0);
-            this.y = compound.getDoubleOr("y", 0);
-            this.width = compound.getDoubleOr("width", 60);
-            this.height = compound.getDoubleOr("height", 60);
-            this.showCps = compound.getBooleanOr("showCps", false);
+            this.keybind = Keybind.none().fromTag(Nbt.getCompoundOrEmpty(compound, "key"));
+            this.name = Nbt.getStringOr(compound, "name", "");
+            this.x = Nbt.getDoubleOr(compound, "x", 0);
+            this.y = Nbt.getDoubleOr(compound, "y", 0);
+            this.width = Nbt.getDoubleOr(compound, "width", 60);
+            this.height = Nbt.getDoubleOr(compound, "height", 60);
+            this.showCps = Nbt.getBooleanOr(compound, "showCps", false);
         }
 
         Key(KeyMapping binding, String name, double x, double y, double width, double height) {
@@ -883,7 +885,7 @@ public class KeyboardHud extends HudElement {
         protected List<Key> load(CompoundTag tag) {
             get().clear();
 
-            for (Tag tagI : tag.getListOrEmpty("value")) {
+            for (Tag tagI : Nbt.getListOrEmpty(tag, "value")) {
                 tagI.asCompound().ifPresent(CompoundTag -> get().add(new Key(CompoundTag)));
             }
 

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.player;
 
+import meteordevelopment.meteorclient.mc.CameraUtils;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.mixininterface.IVec3;
 import meteordevelopment.meteorclient.pathing.PathManagers;
@@ -24,7 +26,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.util.Mth;
-import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.player.Player;
@@ -207,7 +208,7 @@ public class PlayerUtils {
             }
 
             // Check for beds if in nether
-            if (Vanilla.bedDestroysOnUse(mc.level.environmentAttributes().getDimensionValue(EnvironmentAttributes.BED_RULE))) {
+            if (Vanilla.bedDestroysOnUse()) {
                 BlockPos playerPos = mc.player.blockPosition();
                 int range = 6;
 
@@ -299,7 +300,7 @@ public class PlayerUtils {
     }
 
     public static double squaredDistanceToCamera(double x, double y, double z) {
-        Vec3 cameraPos = Vanilla.mainCamera().position();
+        Vec3 cameraPos = CameraUtils.position(Vanilla.mainCamera());
         return squaredDistance(cameraPos.x, cameraPos.y, cameraPos.z, x, y, z);
     }
 
@@ -342,7 +343,7 @@ public class PlayerUtils {
     public static Dimension getDimension() {
         if (mc.level == null) return Dimension.Overworld;
 
-        return switch (mc.level.dimension().identifier().getPath()) {
+        return switch (Vanilla.identifier(mc.level.dimension()).getPath()) {
             case "the_nether" -> Dimension.Nether;
             case "the_end" -> Dimension.End;
             default -> Dimension.Overworld;

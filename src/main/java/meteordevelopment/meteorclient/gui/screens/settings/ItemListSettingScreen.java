@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.gui.screens.settings;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.screens.settings.base.CollectionListSettingScreen;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
@@ -13,7 +14,7 @@ import meteordevelopment.meteorclient.utils.misc.Names;
 import meteordevelopment.meteorclient.utils.render.DisplayItemUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 import java.util.function.Predicate;
 

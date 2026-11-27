@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import com.mojang.datafixers.util.Pair;
@@ -404,13 +406,11 @@ public class Modules extends System<Modules>
     {
         disableAll();
 
-        ListTag modulesTag = tag.getListOrEmpty("modules");
-        for (Tag moduleTagI : modulesTag)
-        {
+        ListTag modulesTag = Nbt.getListOrEmpty(tag, "modules");
+        for (Tag moduleTagI : modulesTag) {
             CompoundTag moduleTag = (CompoundTag) moduleTagI;
-            Module module = get(moduleTag.getStringOr("name", ""));
-            if (module != null)
-                module.fromTag(moduleTag);
+            Module module = get(Nbt.getStringOr(moduleTag, "name", ""));
+            if (module != null) module.fromTag(moduleTag);
         }
 
         return this;

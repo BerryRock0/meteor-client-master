@@ -8,7 +8,7 @@ package meteordevelopment.meteorclient.systems.modules;
 import meteordevelopment.meteorclient.addons.AddonManager;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
 import meteordevelopment.meteorclient.utils.render.DisplayItemUtils;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 public class Categories
 {

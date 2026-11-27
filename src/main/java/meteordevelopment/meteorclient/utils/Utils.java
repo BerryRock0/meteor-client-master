@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.utils;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.ItemStackUtils;
+
 import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.objects.*;
 import meteordevelopment.meteorclient.MeteorClient;
@@ -36,16 +40,16 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
-import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.*;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -236,25 +240,20 @@ public class Utils {
                 if (i >= 0 && i < items.length) items[i] = stacks.get(i);
             }
         } else if (components.has(DataComponents.BLOCK_ENTITY_DATA)) {
-            TypedEntityData<BlockEntityType<?>> blockEntityData = components.get(DataComponents.BLOCK_ENTITY_DATA);
+            TypedEntityData<BlockEntityType<?>> blockEntityData = (TypedEntityData<BlockEntityType<?>>) (Object) components.get(DataComponents.BLOCK_ENTITY_DATA);
             if (blockEntityData == null) return;
-            ListTag nbt3 = blockEntityData.copyTagWithoutId().getListOrEmpty("Items");
+            ListTag nbt3 = Nbt.getListOrEmpty(blockEntityData.copyTagWithoutId(), "Items");
 
             for (int i = 0; i < nbt3.size(); i++) {
-                Optional<CompoundTag> compound = nbt3.getCompound(i);
+                Optional<CompoundTag> compound = Nbt.listCompound(nbt3, i);
                 if (compound.isEmpty()) continue;
 
-                Optional<Byte> slot = compound.get().getByte("Slot"); // Apparently shulker boxes can store more than 27 items, good job Mojang
+                Optional<Byte> slot = Nbt.byteValue(compound.get(), "Slot"); // Apparently shulker boxes can store more than 27 items, good job Mojang
                 if (slot.isEmpty()) continue;
 
                 // now NPEs when mc.world == null
                 if (slot.get() >= 0 && slot.get() < items.length) {
-                    switch (ItemStackWithSlot.CODEC.parse(mc.player.registryAccess().createSerializationContext(NbtOps.INSTANCE), compound.get())) {
-                        case DataResult.Success<ItemStackWithSlot> success ->
-                            items[slot.get()] = success.value().stack();
-                        case DataResult.Error<ItemStackWithSlot> _ -> items[slot.get()] = ItemStack.EMPTY;
-                        default -> throw new MatchException(null, null);
-                    }
+                    items[slot.get()] = ItemStackUtils.fromTag(compound.get(), mc.player.registryAccess());
                 }
             }
         }
@@ -285,7 +284,7 @@ public class Utils {
             if (items.hasNext()) return true;
         }
 
-        TypedEntityData<BlockEntityType<?>> blockEntityData = itemStack.get(DataComponents.BLOCK_ENTITY_DATA);
+        TypedEntityData<BlockEntityType<?>> blockEntityData = (TypedEntityData<BlockEntityType<?>>) (Object) itemStack.get(DataComponents.BLOCK_ENTITY_DATA);
         return blockEntityData != null && blockEntityData.contains("Items");
     }
 

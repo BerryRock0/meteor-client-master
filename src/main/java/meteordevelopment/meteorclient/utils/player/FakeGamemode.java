@@ -6,12 +6,12 @@
 package meteordevelopment.meteorclient.utils.player;
 
 import meteordevelopment.meteorclient.MeteorClient;
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.utils.entity.EntityUtils;
 import meteordevelopment.orbit.EventHandler;
-import net.minecraft.network.protocol.game.ServerboundChangeGameModePacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerAbilitiesPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -64,7 +64,7 @@ public class FakeGamemode {
         } else {
             // Multiplayer: the real attempt - servers that do not validate this packet
             // grant the mode for real, vanilla servers just ignore it.
-            mc.getConnection().send(new ServerboundChangeGameModePacket(mode));
+            Vanilla.sendGameModePacket(mode);
         }
 
         applyLocal(mode);

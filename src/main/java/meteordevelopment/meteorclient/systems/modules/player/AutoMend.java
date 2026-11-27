@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.ItemListSetting;
@@ -94,7 +96,7 @@ public class AutoMend extends Module {
     }
 
     private int getSlot() {
-        for (int i = 0; i < mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+        for (int i = 0; i < InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).size(); i++) {
             ItemStack itemStack = mc.player.getInventory().getItem(i);
             if (blacklist.get().contains(itemStack.getItem())) continue;
 
@@ -107,7 +109,7 @@ public class AutoMend extends Module {
     }
 
     private int getEmptySlot() {
-        for (int i = 0; i < mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+        for (int i = 0; i < InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).size(); i++) {
             if (mc.player.getInventory().getItem(i).isEmpty()) return i;
         }
 

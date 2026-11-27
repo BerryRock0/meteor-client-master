@@ -15,7 +15,7 @@ import meteordevelopment.meteorclient.utils.player.InvUtils;
 import meteordevelopment.meteorclient.utils.world.BlockUtils;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.SlabBlock;
 
 public class AntiAnchor extends Module {

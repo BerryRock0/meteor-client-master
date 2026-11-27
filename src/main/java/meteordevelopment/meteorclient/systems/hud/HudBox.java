@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.systems.hud;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.misc.ISerializable;
 import net.minecraft.nbt.CompoundTag;
@@ -150,10 +153,10 @@ public class HudBox implements ISerializable<HudBox> {
 
     @Override
     public HudBox fromTag(CompoundTag tag) {
-        if (tag.getString("x-anchor").isPresent()) xAnchor = XAnchor.valueOf(tag.getString("x-anchor").get());
-        if (tag.getString("y-anchor").isPresent()) yAnchor = YAnchor.valueOf(tag.getString("y-anchor").get());
-        if (tag.getInt("x").isPresent()) x = tag.getInt("x").get();
-        if (tag.getInt("y").isPresent()) y = tag.getInt("y").get();
+        if (Nbt.string(tag, "x-anchor").isPresent()) xAnchor = XAnchor.valueOf(Nbt.string(tag, "x-anchor").get());
+        if (Nbt.string(tag, "y-anchor").isPresent()) yAnchor = YAnchor.valueOf(Nbt.string(tag, "y-anchor").get());
+        if (Nbt.integer(tag, "x").isPresent()) x = Nbt.integer(tag, "x").get();
+        if (Nbt.integer(tag, "y").isPresent()) y = Nbt.integer(tag, "y").get();
 
         return this;
     }

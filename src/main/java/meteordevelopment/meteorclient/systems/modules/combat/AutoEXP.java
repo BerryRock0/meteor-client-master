@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.combat;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Categories;
@@ -19,7 +21,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 public class AutoEXP extends Module {
@@ -105,7 +107,7 @@ public class AutoEXP extends Module {
             if (mode.get() != Mode.Armor && repairingI == -1) {
                 for (InteractionHand hand : InteractionHand.values()) {
                     if (needsRepair(mc.player.getItemInHand(hand), minThreshold.get())) {
-                        repairingI = hand == InteractionHand.MAIN_HAND ? mc.player.getInventory().getSelectedSlot() : SlotUtils.OFFHAND;
+                        repairingI = hand == InteractionHand.MAIN_HAND ? InventoryUtils.getSelectedSlot(mc.player.getInventory()) : SlotUtils.OFFHAND;
                         break;
                     }
                 }

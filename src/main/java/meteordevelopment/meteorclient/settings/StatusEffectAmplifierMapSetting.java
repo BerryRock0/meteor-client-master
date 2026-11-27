@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import it.unimi.dsi.fastutil.objects.Reference2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
@@ -56,7 +60,7 @@ public class StatusEffectAmplifierMapSetting extends Setting<Reference2IntMap<Mo
     public CompoundTag save(CompoundTag tag) {
         CompoundTag valueTag = new CompoundTag();
         for (MobEffect statusEffect : get().keySet()) {
-            Identifier id = BuiltInRegistries.MOB_EFFECT.getKey(statusEffect);
+            Identifier id = Vanilla.identifier(BuiltInRegistries.MOB_EFFECT.getKey(statusEffect));
             if (id != null) valueTag.putInt(id.toString(), get().getInt(statusEffect));
         }
         tag.put("value", valueTag);
@@ -76,10 +80,10 @@ public class StatusEffectAmplifierMapSetting extends Setting<Reference2IntMap<Mo
     public Reference2IntMap<MobEffect> load(CompoundTag tag) {
         get().clear();
 
-        CompoundTag valueTag = tag.getCompoundOrEmpty("value");
-        for (String key : valueTag.keySet()) {
+        CompoundTag valueTag = Nbt.getCompoundOrEmpty(tag, "value");
+        for (String key : Nbt.keys(valueTag)) {
             MobEffect statusEffect = BuiltInRegistries.MOB_EFFECT.getValue(Identifier.parse(key));
-            if (statusEffect != null) get().put(statusEffect, valueTag.getIntOr(key, 0));
+            if (statusEffect != null) get().put(statusEffect, Nbt.getIntOr(valueTag, key, 0));
         }
 
         return get();

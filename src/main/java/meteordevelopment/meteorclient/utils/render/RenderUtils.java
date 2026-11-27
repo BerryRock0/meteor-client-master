@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.render;
 
+import meteordevelopment.meteorclient.mc.CameraUtils;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -20,7 +22,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix3x2fStack;
+import meteordevelopment.meteorclient.mc.PoseStack2D;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
 import org.joml.Vector4f;
@@ -51,11 +53,11 @@ public class RenderUtils {
 
     // Items
     public static void drawItem(GuiGraphicsExtractor graphics, ItemStack itemStack, int x, int y, float scale, boolean overlay, String countOverride, boolean disableGuiScale) {
-        Matrix3x2fStack matrices = graphics.pose();
-        matrices.pushMatrix();
+        PoseStack2D matrices = PoseStack2D.of(graphics);
+        matrices.push();
 
         if (disableGuiScale) {
-            matrices.scale(1.0f / mc.getWindow().getGuiScale());
+            matrices.scale((float) (1.0f / mc.getWindow().getGuiScale()));
         }
 
         matrices.scale(scale, scale);
@@ -66,7 +68,7 @@ public class RenderUtils {
         graphics.item(itemStack, scaledX, scaledY);
         if (overlay) graphics.itemDecorations(mc.font, itemStack, scaledX, scaledY, countOverride);
 
-        matrices.popMatrix();
+        matrices.pop();
     }
 
     public static void drawItem(GuiGraphicsExtractor graphics, ItemStack itemStack, int x, int y, float scale, boolean overlay) {
@@ -82,7 +84,7 @@ public class RenderUtils {
         Vector4f center4 = new Vector4f(0, 0, 0, 1).mul(invProjection).mul(invView);
         center4.div(center4.w);
 
-        Vec3 camera = Vanilla.mainCamera().position();
+        Vec3 camera = CameraUtils.position(Vanilla.mainCamera());
         center = new Vec3(camera.x + center4.x, camera.y + center4.y, camera.z + center4.z);
     }
 

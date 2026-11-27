@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.gui.widgets.input;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import com.mojang.blaze3d.platform.MacosUtil;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
@@ -241,8 +242,8 @@ public abstract class WTextBox extends WWidget {
     public boolean onKeyPressed(KeyEvent input) {
         if (!focused) return false;
 
-        boolean control = Input.modsMatch(input.modifiers(), MacosUtil.IS_MACOS ? MOD_SUPER : MOD_CONTROL);
-        boolean controlShift = Input.modsMatch(input.modifiers(), MacosUtil.IS_MACOS ? MOD_SUPER : MOD_CONTROL, MOD_SHIFT);
+        boolean control = Input.modsMatch(input.modifiers(), MacosUtil.IS_MACOS ? Vanilla.MOD_SUPER : Vanilla.MOD_CONTROL);
+        boolean controlShift = Input.modsMatch(input.modifiers(), MacosUtil.IS_MACOS ? Vanilla.MOD_SUPER : Vanilla.MOD_CONTROL, Vanilla.MOD_SHIFT);
 
         if (control && input.key() == KEY_C) {
             if (cursor != selectionStart || cursor != selectionEnd) {
@@ -301,17 +302,17 @@ public abstract class WTextBox extends WWidget {
     public boolean onKeyRepeated(KeyEvent input) {
         if (!focused) return false;
 
-        boolean control = Input.modsMatch(input.modifiers(), MacosUtil.IS_MACOS ? MOD_SUPER : MOD_CONTROL);
-        boolean shift = Input.modsMatch(input.modifiers(), MOD_SHIFT);
+        boolean control = Input.modsMatch(input.modifiers(), MacosUtil.IS_MACOS ? Vanilla.MOD_SUPER : Vanilla.MOD_CONTROL);
+        boolean shift = Input.modsMatch(input.modifiers(), Vanilla.MOD_SHIFT);
 
         // modifier for jumping to the start/end of the text box, and the one for jumping by word
-        int lineMod = SystemUtils.IS_OS_WINDOWS ? MOD_ALT : MacosUtil.IS_MACOS ? MOD_SUPER : MOD_CONTROL;
-        int wordMod = SystemUtils.IS_OS_WINDOWS ? MOD_CONTROL : MOD_ALT;
+        int lineMod = SystemUtils.IS_OS_WINDOWS ? Vanilla.MOD_ALT : MacosUtil.IS_MACOS ? Vanilla.MOD_SUPER : Vanilla.MOD_CONTROL;
+        int wordMod = SystemUtils.IS_OS_WINDOWS ? Vanilla.MOD_CONTROL : Vanilla.MOD_ALT;
 
         boolean line = Input.modsMatch(input.modifiers(), lineMod);
         boolean word = Input.modsMatch(input.modifiers(), wordMod);
-        boolean controlShift = Input.modsMatch(input.modifiers(), lineMod, MOD_SHIFT);
-        boolean altShift = Input.modsMatch(input.modifiers(), wordMod, MOD_SHIFT);
+        boolean controlShift = Input.modsMatch(input.modifiers(), lineMod, Vanilla.MOD_SHIFT);
+        boolean altShift = Input.modsMatch(input.modifiers(), wordMod, Vanilla.MOD_SHIFT);
         boolean noMods = Input.modsMatch(input.modifiers());
 
         if (control && input.key() == KEY_V) {

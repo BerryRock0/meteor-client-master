@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class EnumSetting<T extends Enum<?>> extends Setting<T> {
 
     @Override
     public T load(CompoundTag tag) {
-        parse(tag.getStringOr("value", ""));
+        parse(Nbt.getStringOr(tag, "value", ""));
 
         return get();
     }

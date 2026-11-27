@@ -17,7 +17,7 @@ import meteordevelopment.meteorclient.utils.render.DisplayItemUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import org.apache.commons.lang3.Strings;
 

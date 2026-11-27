@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.utils.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import net.minecraft.world.InteractionHand;
 
 import static meteordevelopment.meteorclient.MeteorClient.mc;
@@ -20,7 +22,7 @@ public record FindItemResult(int slot, int count) {
 
     public InteractionHand getHand() {
         if (slot == SlotUtils.OFFHAND) return InteractionHand.OFF_HAND;
-        if (slot == mc.player.getInventory().getSelectedSlot()) return InteractionHand.MAIN_HAND;
+        if (slot == InventoryUtils.getSelectedSlot(mc.player.getInventory())) return InteractionHand.MAIN_HAND;
         return null;
     }
 

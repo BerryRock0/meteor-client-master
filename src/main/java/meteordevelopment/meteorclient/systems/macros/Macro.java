@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.macros;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.gui.utils.StarscriptTextBoxRenderer;
@@ -98,7 +100,7 @@ public class Macro implements ISerializable<Macro> {
     @Override
     public Macro fromTag(CompoundTag tag) {
         if (tag.contains("settings")) {
-            settings.fromTag(tag.getCompoundOrEmpty("settings"));
+            settings.fromTag(Nbt.getCompoundOrEmpty(tag, "settings"));
         }
 
         return this;

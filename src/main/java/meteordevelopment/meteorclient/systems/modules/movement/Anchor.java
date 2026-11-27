@@ -16,7 +16,7 @@ import meteordevelopment.orbit.EventHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 
 public class Anchor extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();

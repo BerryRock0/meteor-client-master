@@ -19,7 +19,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.BlockDestructionProgress;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 
 import java.util.List;
 import java.util.SortedSet;

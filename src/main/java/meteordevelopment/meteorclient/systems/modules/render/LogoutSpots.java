@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.events.entity.EntityAddedEvent;
 import meteordevelopment.meteorclient.events.render.Render2DEvent;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
@@ -154,7 +155,7 @@ public class LogoutSpots extends Module {
                     continue;
 
                 for (Player player : lastPlayers) {
-                    if (player.getUUID().equals(entry.getProfile().id())) {
+                    if (player.getUUID().equals(Vanilla.gameProfileId(entry.getProfile()))) {
                         add(new Entry(player));
                     }
                 }

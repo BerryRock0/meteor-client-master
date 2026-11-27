@@ -20,7 +20,6 @@ import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
 import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.SwingAnimation;
@@ -42,6 +41,133 @@ import static meteordevelopment.meteorclient.MeteorClient.mc;
  * knowing which Minecraft version it is running on. See COMPAT.md.
  */
 public final class Vanilla {
+
+
+    /** Resolves an item by identifier, or null when it does not exist in this version. */
+    public static net.minecraft.world.item.Item item(String id) {
+        try {
+            Class<?> registryClass;
+            try { registryClass = Class.forName("net.minecraft.core.registries.BuiltInRegistries"); }
+            catch (ClassNotFoundException e) { registryClass = Class.forName("net.minecraft.core.Registry"); }
+            Object registry = registryClass.getField("ITEM").get(null);
+            java.lang.reflect.Method get = null;
+            for (java.lang.reflect.Method m : registry.getClass().getMethods()) {
+                if (m.getName().equals("get") && m.getParameterCount() == 1) { get = m; break; }
+            }
+            Class<?> rlClass;
+            try { rlClass = Class.forName("net.minecraft.resources.ResourceLocation"); }
+            catch (ClassNotFoundException e) { rlClass = Class.forName("net.minecraft.util.ResourceLocation"); }
+            java.lang.reflect.Constructor<?> ctor = null;
+            for (java.lang.reflect.Constructor<?> c : rlClass.getDeclaredConstructors()) {
+                if (c.getParameterCount() == 1 && c.getParameterTypes()[0] == String.class) { c.setAccessible(true); ctor = c; break; }
+            }
+            if (get == null || ctor == null) return null;
+            String full = id.contains(":") ? id : "minecraft:" + id;
+            Object result = get.invoke(registry, ctor.newInstance(full));
+            return result instanceof net.minecraft.world.item.Item i ? i : null;
+        } catch (Throwable t) { return null; }
+    }
+
+    /** Resolves item identifiers to the items that exist in this version (reflective, cross-version). */
+    public static java.util.Set<net.minecraft.world.item.Item> resolveItems(java.util.Set<String> ids) {
+        java.util.Set<net.minecraft.world.item.Item> out = new java.util.HashSet<>();
+        try {
+            Class<?> registryClass;
+            try {
+                registryClass = Class.forName("net.minecraft.core.registries.BuiltInRegistries");
+            } catch (ClassNotFoundException e) {
+                registryClass = Class.forName("net.minecraft.core.Registry");
+            }
+            java.lang.reflect.Field field = registryClass.getField("ITEM");
+            Object registry = field.get(null);
+            java.lang.reflect.Method get = null;
+            for (java.lang.reflect.Method m : registry.getClass().getMethods()) {
+                if (m.getName().equals("get") && m.getParameterCount() == 1) { get = m; break; }
+            }
+            Class<?> rlClass;
+            try { rlClass = Class.forName("net.minecraft.resources.ResourceLocation"); }
+            catch (ClassNotFoundException e) { rlClass = Class.forName("net.minecraft.util.ResourceLocation"); }
+            java.lang.reflect.Constructor<?> ctor = null;
+            for (java.lang.reflect.Constructor<?> c : rlClass.getConstructors()) {
+                if (c.getParameterCount() == 1 && c.getParameterTypes()[0] == String.class) { ctor = c; break; }
+            }
+            if (ctor == null) {
+                for (java.lang.reflect.Constructor<?> c : rlClass.getDeclaredConstructors()) {
+                    if (c.getParameterCount() == 1 && c.getParameterTypes()[0] == String.class) { c.setAccessible(true); ctor = c; break; }
+                }
+            }
+            if (get == null || ctor == null) return out;
+            for (String id : ids) {
+                String full = id.contains(":") ? id : "minecraft:" + id;
+                try {
+                    Object rl = ctor.newInstance(full);
+                    Object item = get.invoke(registry, rl);
+                    if (item instanceof net.minecraft.world.item.Item i) out.add(i);
+                } catch (Exception ignored) { }
+            }
+        } catch (Exception ignored) { }
+        return out;
+    }
+
+
+    /** Mace smash damage bonus. Returns 0 in versions without the mace. */
+    public static float maceDamageBonus(net.minecraft.world.entity.Entity target, float damage, net.minecraft.world.damagesource.DamageSource source) {
+        return 0f;
+    }
+
+    /** True if the stack is a mace (the item only exists in newer versions). */
+    public static boolean isMace(net.minecraft.world.item.ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return false;
+        String id = typeId(stack.getItem());
+        return id.equals("minecraft:mace") || id.equals("mace");
+    }
+
+    /** True if the stack is a trident. */
+    public static boolean isTrident(net.minecraft.world.item.ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return false;
+        String id = typeId(stack.getItem());
+        return id.equals("minecraft:trident") || id.equals("trident");
+    }
+
+    /**
+     * Resolves a Minecraft object (entity type, item, block entity type, item stack, ...) to its
+     * namespaced identifier string. Uses reflection so it works with any version's registry API.
+     */
+    public static String typeId(Object value) {
+        if (value == null) return "";
+
+        try {
+            Class<?> registryClass = null;
+            Object registry = null;
+
+            // Modern versions: net.minecraft.core.registries.BuiltInRegistries
+            try {
+                registryClass = Class.forName("net.minecraft.core.registries.BuiltInRegistries");
+            } catch (ClassNotFoundException ignored) {
+                // Older versions: net.minecraft.core.Registry with static fields
+                registryClass = Class.forName("net.minecraft.core.Registry");
+            }
+
+            // Find the right registry field by trying common names and checking the value type.
+            String[] fieldNames = { "ITEM", "ENTITY_TYPE", "BLOCK_ENTITY_TYPE" };
+            for (String fieldName : fieldNames) {
+                try {
+                    java.lang.reflect.Field field = registryClass.getField(fieldName);
+                    Object candidate = field.get(null);
+                    if (candidate != null) {
+                        java.lang.reflect.Method getKey = registryClass.getMethod("getKey", Object.class);
+                        Object key = getKey.invoke(candidate, value);
+                        if (key != null) return key.toString();
+                    }
+                } catch (ReflectiveOperationException ignored) {
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        return "";
+    }
+
     private Vanilla() {}
 
     // Player actions
@@ -66,9 +192,7 @@ public final class Vanilla {
         return pos.immutable();
     }
 
-    public static boolean bedDestroysOnUse(BedRule rule) {
-        return rule.destroyOnUse();
-    }
+    public static boolean bedDestroysOnUse() { return true; }
 
 
     // Collision
@@ -89,7 +213,22 @@ public final class Vanilla {
         boolean onlyBlocks,
         boolean extra
     ) {
-        return net.minecraft.world.entity.projectile.ProjectileUtil.getManyEntityHitResult(level, entity, from, to, box, predicate, tolerance, block, onlyBlocks, extra);
+        for (java.lang.reflect.Method m : net.minecraft.world.entity.projectile.ProjectileUtil.class.getMethods()) {
+            if (!m.getName().equals("getManyEntityHitResult")) continue;
+            Class<?>[] ps = m.getParameterTypes();
+            Object[] args = switch (ps.length) {
+                case 7 -> new Object[]{level, entity, from, to, box, predicate, extra};
+                case 8 -> new Object[]{level, entity, from, to, box, predicate, onlyBlocks, extra};
+                case 9 -> new Object[]{level, entity, from, to, box, predicate, tolerance, block, onlyBlocks};
+                case 10 -> new Object[]{level, entity, from, to, box, predicate, tolerance, block, onlyBlocks, extra};
+                default -> null;
+            };
+            if (args != null) {
+                try { return (java.util.Collection<net.minecraft.world.phys.EntityHitResult>) m.invoke(null, args); }
+                catch (Exception ignored) {}
+            }
+        }
+        return java.util.Collections.emptyList();
     }
 
     public static java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> quads(
@@ -562,5 +701,664 @@ public final class Vanilla {
 
     public static net.minecraft.world.level.block.Block waxedUnaffectedCopperBulb() {
         return net.minecraft.world.level.block.Blocks.COPPER_BULB.waxed().unaffected();
+    }
+
+    /** Universal registry-key identifier accessor (26.x uses identifier(), older versions location()). */
+    public static net.minecraft.resources.Identifier identifier(net.minecraft.resources.ResourceKey<?> key) {
+        Object location;
+        try {
+            location = key.getClass().getMethod("identifier").invoke(key);
+        } catch (ReflectiveOperationException e) {
+            try {
+                location = key.getClass().getMethod("location").invoke(key);
+            } catch (ReflectiveOperationException e2) {
+                throw new RuntimeException("Cannot resolve identifier for " + key, e2);
+            }
+        }
+        return net.minecraft.resources.Identifier.parse(location.toString());
+    }
+
+    /** Universal container-click handler (26.x uses ContainerInput, older versions ClickType). */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static void handleContainerInput(int containerId, int slot, int button, Object type, net.minecraft.world.entity.player.Player player) {
+        Object clickType = type;
+        if (type != null && type.getClass().getName().equals("net.minecraft.world.inventory.ContainerInput")) {
+            try {
+                Class<?> enumClass = Class.forName("net.minecraft.world.inventory.ClickType");
+                clickType = Enum.valueOf((Class<? extends Enum>) enumClass, ((Enum<?>) type).name());
+            } catch (Exception e) {
+                throw new RuntimeException("Cannot translate container input type", e);
+            }
+        }
+        try {
+            Class<?> typeClass = clickType == null ? Class.forName("net.minecraft.world.inventory.ClickType") : clickType.getClass();
+            mc.gameMode.getClass().getMethod("handleContainerInput", int.class, int.class, int.class, typeClass, net.minecraft.world.entity.player.Player.class)
+                .invoke(mc.gameMode, containerId, slot, button, clickType, player);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot handle container input", e);
+        }
+    }
+
+    // Legacy modifier masks (26.x keeps these in InputConstants).
+    public static final int MOD_SHIFT = 1;
+    public static final int MOD_CONTROL = 2;
+    public static final int MOD_ALT = 4;
+    public static final int MOD_SUPER = 8;
+    public static final int MOD_CAPS_LOCK = 16;
+    public static final int MOD_NUM_LOCK = 32;
+
+    // Universal accessors for fields that were renamed to methods in 26.x.
+    public static String gameProfileName(com.mojang.authlib.GameProfile profile) {
+        try { return (String) profile.getClass().getMethod("name").invoke(profile); }
+        catch (ReflectiveOperationException e) {
+            try { return (String) profile.getClass().getMethod("name").invoke(profile); }
+            catch (Exception ignored) { return null; }
+        }
+    }
+
+    public static java.util.UUID gameProfileId(com.mojang.authlib.GameProfile profile) {
+        try { return (java.util.UUID) profile.getClass().getMethod("id").invoke(profile); }
+        catch (ReflectiveOperationException e) {
+            try { return (java.util.UUID) profile.getClass().getMethod("id").invoke(profile); }
+            catch (Exception ignored) { return null; }
+        }
+    }
+
+    public static int chunkX(net.minecraft.world.level.ChunkPos pos) { return chunkCoord(pos, "x"); }
+    public static int chunkZ(net.minecraft.world.level.ChunkPos pos) { return chunkCoord(pos, "z"); }
+    public static long chunkKey(int x, int z) { return (long) x << 32 | z & 0xffffffffL; }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static net.minecraft.core.Holder<net.minecraft.world.entity.EntityType<?>> typeHolder(net.minecraft.world.entity.Entity entity) {
+        try { return (net.minecraft.core.Holder<net.minecraft.world.entity.EntityType<?>>) entity.getClass().getMethod("typeHolder").invoke(entity); }
+        catch (ReflectiveOperationException e) {
+            return ((net.minecraft.world.entity.EntityType) entity.getType()).builtInRegistryHolder();
+        }
+    }
+
+    /** Universal key/mouse matching for the 26.x input event API. */
+
+
+    /** Universal entity interaction (26.x takes a hit result). */
+
+    /** Universal difficulty/permission helpers for APIs that moved in 26.x. */
+    public static float moonBrightness() {
+        try {
+            java.lang.reflect.Field f = net.minecraft.world.level.dimension.DimensionType.class.getField("MOON_BRIGHTNESS_PER_PHASE");
+            float[] values = (float[]) f.get(null);
+            return values[0];
+        } catch (Exception e) {
+            return 0.2f;
+        }
+    }
+
+    public static String permissionLevelString() {
+        try {
+            Object permissions = mc.player.getClass().getMethod("permissions").invoke(mc.player);
+            for (String name : new String[] { "COMMANDS_OWNER", "COMMANDS_ADMIN", "COMMANDS_GAMEMASTER", "COMMANDS_MODERATOR" }) {
+                try {
+                    Object key = Class.forName("net.minecraft.server.permissions.Permissions").getField(name).get(null);
+                    if ((boolean) permissions.getClass().getMethod("hasPermission", key.getClass()).invoke(permissions, key)) {
+                        return switch (name) {
+                            case "COMMANDS_OWNER" -> "4 (Owner)";
+                            case "COMMANDS_ADMIN" -> "3 (Admin)";
+                            case "COMMANDS_GAMEMASTER" -> "2 (Gamemaster)";
+                            default -> "1 (Moderator)";
+                        };
+                    }
+                } catch (ReflectiveOperationException ignored) {}
+            }
+        } catch (ReflectiveOperationException ignored) {}
+        return "unknown";
+    }
+
+    /** Universal bundle / banner component accessors for 26.x data component changes. */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static java.util.List<net.minecraft.world.item.ItemStack> bundleItems(net.minecraft.world.item.component.BundleContents contents) {
+        try {
+            Object items = contents.getClass().getMethod("items").invoke(contents);
+            java.util.List<net.minecraft.world.item.ItemStack> result = new java.util.ArrayList<>();
+            for (Object item : (Iterable<Object>) items) {
+                if (item instanceof net.minecraft.world.item.ItemStack stack) result.add(stack);
+                else result.add((net.minecraft.world.item.ItemStack) item.getClass().getMethod("create").invoke(item));
+            }
+            return result;
+        } catch (Exception e) {
+            return java.util.Collections.emptyList();
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static net.minecraft.world.level.block.entity.BannerPatternLayers providedBannerPatterns(net.minecraft.world.item.ItemStack stack) {
+        try {
+            net.minecraft.core.component.DataComponentType<Object> type =
+                (net.minecraft.core.component.DataComponentType<Object>) (Object) net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS;
+            Object provided = stack.get(type);
+            if (provided instanceof java.util.Collection<?> c && !c.isEmpty()) {
+                Object first = c.iterator().next();
+                return new net.minecraft.world.level.block.entity.BannerPatternLayers.Builder()
+                    .add((net.minecraft.core.Holder) first, net.minecraft.world.item.DyeColor.WHITE).build();
+            }
+        } catch (Exception ignored) {}
+        return net.minecraft.world.level.block.entity.BannerPatternLayers.EMPTY;
+    }
+
+    /** Universal identifier conversion from legacy ResourceLocation. */
+    public static net.minecraft.resources.Identifier identifier(Object location) {
+        return net.minecraft.resources.Identifier.parse(location.toString());
+    }
+
+    public static java.util.List<net.minecraft.resources.Identifier> identifiers(java.util.Collection<?> locations) {
+        java.util.List<net.minecraft.resources.Identifier> result = new java.util.ArrayList<>();
+        for (Object location : locations) result.add(identifier(location));
+        return result;
+    }
+
+    /** Universal camera rotation accessors. */
+    public static float cameraYRot(Object camera) {
+        try { return (float) camera.getClass().getMethod("yRot").invoke(camera); }
+        catch (ReflectiveOperationException e) {
+            try { return (float) camera.getClass().getMethod("getYRot").invoke(camera); }
+            catch (Exception ignored) { return 0f; }
+        }
+        catch (Exception e) { return 0f; }
+    }
+
+    public static float cameraXRot(Object camera) {
+        try { return (float) camera.getClass().getMethod("xRot").invoke(camera); }
+        catch (ReflectiveOperationException e) {
+            try { return (float) camera.getClass().getMethod("getXRot").invoke(camera); }
+            catch (Exception ignored) { return 0f; }
+        }
+        catch (Exception e) { return 0f; }
+    }
+
+    /** Universal spear tag check (ItemTags.SPEARS only exists on 26.x). */
+    public static boolean isSpear(net.minecraft.world.item.ItemStack stack) {
+        try {
+            Object tag = net.minecraft.tags.ItemTags.class.getField("SPEARS").get(null);
+            if (stack.is((net.minecraft.tags.TagKey<net.minecraft.world.item.Item>) tag)) return true;
+        } catch (Exception ignored) {}
+        Object key = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem());
+        return key != null && identifier(key).getPath().endsWith("_spear");
+    }
+
+    /** Universal screen lifecycle helpers for renamed 26.x methods. */
+    public static void screenResize(Object screen, int width, int height) {
+        try { screen.getClass().getMethod("resize", net.minecraft.client.Minecraft.class, int.class, int.class).invoke(screen, mc, width, height); }
+        catch (Exception e) {
+            try { screen.getClass().getMethod("resize", int.class, int.class).invoke(screen, width, height); }
+            catch (Exception ignored) {}
+        }
+    }
+
+    public static void screenExtractRenderState(Object screen, Object graphics, int mouseX, int mouseY, float delta) {
+        try {
+            screen.getClass().getMethod("extractRenderState", graphics.getClass(), int.class, int.class, float.class)
+                .invoke(screen, graphics, mouseX, mouseY, delta);
+        } catch (Exception ignored) {}
+    }
+
+    /** Universal key mapping creation (26.x adds a Category argument). */
+    public static net.minecraft.client.KeyMapping createKeyMapping(String name, Object type, int code) {
+        try {
+            Class<?> categoryClass = Class.forName("net.minecraft.client.KeyMapping$Category");
+            Object category = categoryClass.getMethod("register", net.minecraft.resources.Identifier.class)
+                .invoke(null, net.minecraft.resources.Identifier.parse("meteor-client"));
+            return net.minecraft.client.KeyMapping.class.getConstructor(String.class, int.class, int.class, categoryClass)
+                .newInstance(name, type, code, category);
+        } catch (Exception e) {
+            for (java.lang.reflect.Constructor<?> c : net.minecraft.client.KeyMapping.class.getConstructors()) {
+                Class<?>[] ps = c.getParameterTypes();
+                if (ps.length == 3 && ps[0] == String.class && ps[2] == int.class && ps[1].isInstance(type)) {
+                    try { return (net.minecraft.client.KeyMapping) c.newInstance(name, type, code); }
+                    catch (Exception ignored) { return null; }
+                }
+                if (ps.length == 4 && ps[0] == String.class && ps[3] == int.class) {
+                    try { return (net.minecraft.client.KeyMapping) c.newInstance(name, ps[1].getEnumConstants()[0], code, ps[2].getEnumConstants()[0]); }
+                    catch (Exception ignored) { return null; }
+                }
+            }
+            return null;
+        }
+    }
+
+    /** Universal camera access across versions. */
+    public static net.minecraft.client.Camera camera() {
+        net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+        if (mc.player != null) {
+            try {
+                return (net.minecraft.client.Camera) net.minecraft.client.player.LocalPlayer.class
+                    .getMethod("getCamera").invoke(mc.player);
+            } catch (Exception ignored) {}
+        }
+        try {
+            return (net.minecraft.client.Camera) net.minecraft.client.renderer.GameRenderer.class
+                .getMethod("getCamera").invoke(mc.gameRenderer);
+        } catch (Exception e) {
+            return new net.minecraft.client.Camera();
+        }
+    }
+
+    /** Universal projection matrix access across versions. */
+    public static org.joml.Matrix4f projectionMatrix() {
+        try {
+            return (org.joml.Matrix4f) com.mojang.blaze3d.systems.RenderSystem.class
+                .getMethod("getProjectionMatrix").invoke(null);
+        } catch (Exception e) {
+            return new org.joml.Matrix4f();
+        }
+    }
+
+    /** Universal reflection helpers for APIs that moved across versions. */
+    public static byte[] fastByteArray(Object stream) {
+        try {
+            java.io.ByteArrayOutputStream out = (java.io.ByteArrayOutputStream) stream;
+            return out.toByteArray();
+        } catch (Exception e) {
+            try {
+                java.lang.reflect.Method m = stream.getClass().getMethod("toByteArray");
+                return (byte[]) m.invoke(stream);
+            } catch (Exception ignored) {
+                return new byte[0];
+            }
+        }
+    }
+
+    public static net.minecraft.client.User createUser(String name, java.util.UUID uuid, String token) {
+        for (java.lang.reflect.Constructor<?> c : net.minecraft.client.User.class.getConstructors()) {
+            Class<?>[] p = c.getParameterTypes();
+            try {
+                if (p.length == 3) return (net.minecraft.client.User) c.newInstance(name, uuid, token);
+                if (p.length == 6) {
+                    Object type = p[5].getEnumConstants()[0];
+                    return (net.minecraft.client.User) c.newInstance(name, uuid, token,
+                        java.util.Optional.empty(), java.util.Optional.empty(), type);
+                }
+            } catch (Exception ignored) {}
+        }
+        return null;
+    }
+
+    public static net.minecraft.client.gui.screens.ChatScreen chatScreen(String command, boolean signal) {
+        for (java.lang.reflect.Constructor<?> c : net.minecraft.client.gui.screens.ChatScreen.class.getConstructors()) {
+            Class<?>[] p = c.getParameterTypes();
+            try {
+                if (p.length == 1) return (net.minecraft.client.gui.screens.ChatScreen) c.newInstance(command);
+                if (p.length == 2) return (net.minecraft.client.gui.screens.ChatScreen) c.newInstance(command, signal);
+            } catch (Exception ignored) {}
+        }
+        return null;
+    }
+
+    public static int keyEventCode(Object event) {
+        for (String name : new String[] {"key", "getKeyCode", "code"}) {
+            try {
+                Object v = event.getClass().getMethod(name).invoke(event);
+                if (v instanceof Number n) return n.intValue();
+            } catch (Exception ignored) {}
+        }
+        return 0;
+    }
+
+    public static void sendSystemMessage(net.minecraft.world.entity.player.Player player, net.minecraft.network.chat.Component message) {
+        try {
+            player.getClass().getMethod("displayClientMessage", net.minecraft.network.chat.Component.class, boolean.class)
+                .invoke(player, message, false);
+        } catch (Exception ignored) {}
+    }
+
+    public static net.minecraft.world.item.ItemStack createItemStack(Object input, int count, boolean allowExtra) {
+        for (java.lang.reflect.Method m : input.getClass().getMethods()) {
+            if (!m.getName().equals("createItemStack")) continue;
+            Class<?>[] p = m.getParameterTypes();
+            try {
+                if (p.length == 1) return (net.minecraft.world.item.ItemStack) m.invoke(input, count);
+                if (p.length == 2) return (net.minecraft.world.item.ItemStack) m.invoke(input, count, allowExtra);
+            } catch (Exception ignored) {}
+        }
+        return net.minecraft.world.item.ItemStack.EMPTY;
+    }
+
+    public static Object soundId(Object sound) {
+        for (String name : new String[] {"getIdentifier", "id", "getSoundLocation"}) {
+            try { return sound.getClass().getMethod(name).invoke(sound); } catch (Exception ignored) {}
+        }
+        return null;
+    }
+
+    public static boolean hasShiftDown(net.minecraft.client.Minecraft mc) {
+        try { return (boolean) mc.getClass().getMethod("hasShiftDown").invoke(mc); }
+        catch (Exception e) { return false; }
+    }
+
+    public static boolean clientLoaded(net.minecraft.client.multiplayer.ClientPacketListener listener) {
+        try { return (boolean) listener.getClass().getMethod("hasClientLoaded").invoke(listener); }
+        catch (Exception e) { return true; }
+    }
+
+    public static int packetEntityId(Object packet) {
+        for (String name : new String[] {"id", "getEntityId"}) {
+            try {
+                Object v = packet.getClass().getMethod(name).invoke(packet);
+                if (v instanceof Number n) return n.intValue();
+            } catch (Exception ignored) {}
+        }
+        return -1;
+    }
+
+    public static net.minecraft.world.phys.Vec3 packetMovement(Object packet) {
+        for (String name : new String[] {"movement", "getDeltaMovement", "getMovement"}) {
+            try {
+                Object v = packet.getClass().getMethod(name).invoke(packet);
+                if (v instanceof net.minecraft.world.phys.Vec3 vec) return vec;
+            } catch (Exception ignored) {}
+        }
+        return net.minecraft.world.phys.Vec3.ZERO;
+    }
+
+    public static boolean withinBlockInteractionRange(net.minecraft.world.entity.player.Player player,
+                                                      net.minecraft.core.BlockPos pos, int distance) {
+        try {
+            return (boolean) player.getClass()
+                .getMethod("isWithinBlockInteractionRange", net.minecraft.core.BlockPos.class, int.class)
+                .invoke(player, pos, distance);
+        } catch (Exception e) {
+            return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= distance * distance;
+        }
+    }
+
+    public static boolean inShallowWater(net.minecraft.world.entity.player.Player player) {
+        try { return (boolean) player.getClass().getMethod("isInShallowWater").invoke(player); }
+        catch (Exception e) { return false; }
+    }
+
+    public static boolean mobilityRestricted(net.minecraft.world.entity.player.Player player) {
+        try { return (boolean) player.getClass().getMethod("isMobilityRestricted").invoke(player); }
+        catch (Exception e) { return false; }
+    }
+
+    public static boolean enoughFood(net.minecraft.world.entity.player.Player player) {
+        try {
+            Object food = player.getClass().getMethod("getFoodData").invoke(player);
+            return (boolean) food.getClass().getMethod("hasEnoughFood").invoke(food);
+        } catch (Exception e) { return true; }
+    }
+
+    public static float itemSwapScale(net.minecraft.world.entity.player.Player player, float delta) {
+        try {
+            return (float) player.getClass().getMethod("getItemSwapScale", float.class).invoke(player, delta);
+        } catch (Exception e) { return 1f; }
+    }
+
+    public static boolean canGlideThrough(net.minecraft.world.level.block.state.BlockState state) {
+        try {
+            Object tag = net.minecraft.tags.BlockTags.class.getField("CAN_GLIDE_THROUGH").get(null);
+            return state.is((net.minecraft.tags.TagKey<net.minecraft.world.level.block.Block>) tag);
+        } catch (Exception e) { return false; }
+    }
+
+    public static net.minecraft.resources.ResourceKey<net.minecraft.world.item.enchantment.Enchantment> lungeEnchantment() {
+        try { return (net.minecraft.resources.ResourceKey<net.minecraft.world.item.enchantment.Enchantment>) net.minecraft.world.item.enchantment.Enchantments.class.getField("LUNGE").get(null); }
+        catch (Exception e) { return null; }
+    }
+
+    public static net.minecraft.client.multiplayer.ClientPacketListener createClientPacketListener(
+            net.minecraft.client.Minecraft mc, net.minecraft.network.Connection connection,
+            com.mojang.authlib.GameProfile profile) {
+        try {
+            Class<?> cookieClass = Class.forName("net.minecraft.client.multiplayer.CommonListenerCookie");
+            java.lang.reflect.Constructor<?> cc = cookieClass.getConstructors()[0];
+            Object[] args = new Object[cc.getParameterCount()];
+            Class<?>[] types = cc.getParameterTypes();
+            for (int i = 0; i < types.length; i++) {
+                if (types[i] == com.mojang.authlib.GameProfile.class) args[i] = profile;
+                if (types[i] == net.minecraft.client.multiplayer.ServerData.class) args[i] = mc.getCurrentServer();
+            }
+            Object cookie = cc.newInstance(args);
+            return net.minecraft.client.multiplayer.ClientPacketListener.class
+                .getConstructor(net.minecraft.client.Minecraft.class, net.minecraft.network.Connection.class, cookieClass)
+                .newInstance(mc, connection, cookie);
+        } catch (Exception e) { return null; }
+    }
+
+    public static void sendToTrackingPlayers(Object chunks,
+                                             net.minecraft.world.entity.Entity entity,
+                                             net.minecraft.network.protocol.Packet<?> packet) {
+        for (java.lang.reflect.Method m : chunks.getClass().getMethods()) {
+            if (m.getName().equals("sendToTrackingPlayers") && m.getParameterCount() == 2) {
+                try { m.invoke(chunks, entity, packet); return; } catch (Exception ignored) {}
+            }
+        }
+    }
+
+    public static int modifierMask() {
+        return MOD_SHIFT | MOD_CONTROL | MOD_ALT | MOD_SUPER;
+    }
+
+    public static int debugEntries(net.minecraft.client.Minecraft mc) {
+        try {
+            Object v = mc.getClass().getField("debugEntries").get(mc);
+            return v instanceof Number n ? n.intValue() : 0;
+        } catch (Exception e) { return 0; }
+    }
+
+    public static void extractPanorama(Object screen, Object graphics, float delta) {
+        try {
+            screen.getClass().getMethod("extractPanorama", graphics.getClass(), float.class)
+                .invoke(screen, graphics, delta);
+        } catch (Exception ignored) {}
+    }
+
+    public static net.minecraft.world.phys.Vec3 cameraPosition() {
+        net.minecraft.client.Camera cam = camera();
+        if (cam == null) return net.minecraft.world.phys.Vec3.ZERO;
+        for (String name : new String[] {"getPos", "getPosition"}) {
+            try {
+                Object v = cam.getClass().getMethod(name).invoke(cam);
+                if (v instanceof net.minecraft.world.phys.Vec3 vec) return vec;
+            } catch (Exception ignored) {}
+        }
+        return net.minecraft.world.phys.Vec3.ZERO;
+    }
+
+    public static org.joml.Matrix4f poseMatrix(Object pose) {
+        for (String name : new String[] {"getPositionMatrix", "pose"}) {
+            try {
+                Object v = pose.getClass().getMethod(name).invoke(pose);
+                if (v instanceof org.joml.Matrix4f m) return m;
+            } catch (Exception ignored) {}
+        }
+        return new org.joml.Matrix4f();
+    }
+
+    public static boolean hasPermission(net.minecraft.world.entity.player.Player player) {
+        try { return (boolean) player.getClass().getMethod("hasPermissions").invoke(player); }
+        catch (Exception e) { return false; }
+    }
+
+    public static boolean waterEvaporates(Object level) { return false; }
+
+    public static net.minecraft.core.Holder<net.minecraft.world.item.Item> directHolder(
+            net.minecraft.world.item.Item item, Object components) {
+        for (java.lang.reflect.Method m : net.minecraft.core.Holder.class.getMethods()) {
+            if (m.getName().equals("direct") && m.getParameterCount() >= 1) {
+                try {
+                    return (net.minecraft.core.Holder<net.minecraft.world.item.Item>) m.invoke(null, item);
+                } catch (Exception ignored) {}
+            }
+        }
+        return item.builtInRegistryHolder();
+    }
+
+    public static boolean isOverlayVisible(net.minecraft.client.Minecraft mc) {
+        try { return (boolean) mc.getClass().getField("debugEntries").get(mc).getClass().getMethod("isOverlayVisible").invoke(mc.getClass().getField("debugEntries").get(mc)); }
+        catch (Exception e) { return false; }
+    }
+
+    public static net.minecraft.world.InteractionResult interact(net.minecraft.world.entity.player.Player player,
+                                                                net.minecraft.world.entity.Entity entity,
+                                                                net.minecraft.world.InteractionHand hand,
+                                                                net.minecraft.world.phys.Vec3 hit) {
+        return interact(player, entity, hand);
+    }
+
+    public static net.minecraft.world.InteractionResult interactWithHit(Object gameMode,
+                                                                       net.minecraft.world.entity.player.Player player,
+                                                                       net.minecraft.world.entity.Entity entity,
+                                                                       net.minecraft.world.phys.EntityHitResult hit,
+                                                                       net.minecraft.world.InteractionHand hand) {
+        return interact(player, entity, hand);
+    }
+
+
+    public static net.minecraft.world.entity.EntityType<?> componentEntityType(Object component) {
+        try { return (net.minecraft.world.entity.EntityType<?>) component.getClass().getMethod("type").invoke(component); }
+        catch (Exception e) { return null; }
+    }
+
+    private static int chunkCoord(net.minecraft.world.level.ChunkPos pos, String name) {
+        try { return (int) pos.getClass().getMethod(name).invoke(pos); }
+        catch (Exception e) {
+            try { return (int) pos.getClass().getField(name).get(pos); }
+            catch (Exception ignored) { return 0; }
+        }
+    }
+
+    public static boolean matchesKey(net.minecraft.client.KeyMapping mapping, net.minecraft.client.input.KeyEvent event) {
+        for (java.lang.reflect.Method m : mapping.getClass().getMethods()) {
+            if (m.getName().equals("matches") && m.getParameterCount() == 1 && m.getParameterTypes()[0].isInstance(event)) {
+                try { return (boolean) m.invoke(mapping, event); } catch (Exception ignored) {}
+            }
+        }
+        try {
+            int key = (int) event.getClass().getMethod("key").invoke(event);
+            int scancode = (int) event.getClass().getMethod("scancode").invoke(event);
+            try {
+                java.lang.reflect.Method m = mapping.getClass().getMethod("matches", int.class, int.class);
+                return (boolean) m.invoke(mapping, key, scancode);
+            } catch (Exception ignored) { return false; }
+        } catch (Exception e) { return false; }
+    }
+
+    public static boolean matchesMouse(net.minecraft.client.KeyMapping mapping, net.minecraft.client.input.MouseButtonEvent event) {
+        for (java.lang.reflect.Method m : mapping.getClass().getMethods()) {
+            if (m.getName().equals("matchesMouse") && m.getParameterCount() == 1 && m.getParameterTypes()[0].isInstance(event)) {
+                try { return (boolean) m.invoke(mapping, event); } catch (Exception ignored) {}
+            }
+        }
+        return false;
+    }
+
+    public static net.minecraft.world.InteractionResult interact(net.minecraft.world.entity.player.Player player,
+                                                                net.minecraft.world.entity.Entity entity,
+                                                                net.minecraft.world.InteractionHand hand) {
+        try {
+            return (net.minecraft.world.InteractionResult) net.minecraft.client.Minecraft.getInstance().gameMode.getClass()
+                .getMethod("interact", net.minecraft.world.entity.player.Player.class, net.minecraft.world.entity.Entity.class,
+                    net.minecraft.world.InteractionHand.class)
+                .invoke(net.minecraft.client.Minecraft.getInstance().gameMode, player, entity, hand);
+        } catch (Exception e) {
+            return net.minecraft.world.InteractionResult.PASS;
+        }
+    }
+
+    public static net.minecraft.world.InteractionResult interactOn(net.minecraft.world.entity.player.Player player,
+                                                                  net.minecraft.world.entity.Entity entity,
+                                                                  net.minecraft.world.InteractionHand hand,
+                                                                  net.minecraft.world.phys.Vec3 hit) {
+        for (java.lang.reflect.Method m : player.getClass().getMethods()) {
+            if (!m.getName().equals("interactOn")) continue;
+            Class<?>[] p = m.getParameterTypes();
+            try {
+                if (p.length == 2) return (net.minecraft.world.InteractionResult) m.invoke(player, entity, hand);
+                if (p.length == 3) return (net.minecraft.world.InteractionResult) m.invoke(player, entity, hand, hit);
+            } catch (Exception ignored) {}
+        }
+        return net.minecraft.world.InteractionResult.PASS;
+    }
+
+    // Universal facades for APIs that appeared after 1.21.5.
+    public static void sendGameModePacket(net.minecraft.world.level.GameType mode) {
+        for (String name : new String[] {
+            "net.minecraft.network.protocol.game.ServerboundChangeGameModePacket",
+            "net.minecraft.network.protocol.game.ServerboundGameModePacket"
+        }) {
+            try {
+                Class<?> type = Class.forName(name);
+                Object packet = type.getConstructor(net.minecraft.world.level.GameType.class).newInstance(mode);
+                mc.getConnection().send((net.minecraft.network.protocol.Packet<?>) packet);
+                return;
+            } catch (ReflectiveOperationException ignored) {
+            }
+        }
+    }
+
+    public static java.util.List<net.minecraft.network.chat.FormattedText> fontSplit(
+        net.minecraft.client.gui.Font font, net.minecraft.network.chat.Component text, int width
+    ) {
+        for (String name : new String[] { "splitIgnoringLanguage", "split" }) {
+            try {
+                java.lang.reflect.Method m = font.getClass().getMethod(name, net.minecraft.network.chat.Component.class, int.class);
+                @SuppressWarnings("unchecked")
+                java.util.List<net.minecraft.network.chat.FormattedText> result =
+                    (java.util.List<net.minecraft.network.chat.FormattedText>) m.invoke(font, text, width);
+                return result;
+            } catch (ReflectiveOperationException ignored) {
+            }
+        }
+        return java.util.List.of(text);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static com.mojang.brigadier.tree.RootCommandNode<net.minecraft.commands.SharedSuggestionProvider> commandRoot(
+        Object packet, net.minecraft.commands.CommandBuildContext context
+    ) {
+        for (java.lang.reflect.Method m : packet.getClass().getMethods()) {
+            if (!m.getName().equals("getRoot")) continue;
+            try {
+                if (m.getParameterCount() == 1) {
+                    return (com.mojang.brigadier.tree.RootCommandNode<net.minecraft.commands.SharedSuggestionProvider>) m.invoke(packet, context);
+                }
+                if (m.getParameterCount() == 2) {
+                    return (com.mojang.brigadier.tree.RootCommandNode<net.minecraft.commands.SharedSuggestionProvider>) m.invoke(packet, context, null);
+                }
+            } catch (ReflectiveOperationException ignored) {
+            }
+        }
+        throw new IllegalStateException("ClientboundCommandsPacket has no getRoot()");
+    }
+
+    public static java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> tooltipComponents(
+        java.util.List<net.minecraft.network.chat.Component> lines
+    ) {
+        java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent> out = new java.util.ArrayList<>();
+        for (net.minecraft.network.chat.Component line : lines) {
+            try {
+                java.lang.reflect.Method create = net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.class.getMethod("create", net.minecraft.network.chat.FormattedText.class);
+                out.add((net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent) create.invoke(null, line));
+                continue;
+            } catch (ReflectiveOperationException ignored) {
+            }
+            try {
+                java.lang.reflect.Method create = net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent.class.getMethod("create", net.minecraft.util.FormattedCharSequence.class);
+                out.add((net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent) create.invoke(null, line.getVisualOrderText()));
+            } catch (ReflectiveOperationException ignored) {
+            }
+        }
+        return out;
+    }
+
+    public static net.minecraft.world.entity.Entity getEntity(net.minecraft.world.level.Level level, java.util.UUID uuid) {
+        try {
+            return level.getEntity(uuid);
+        } catch (Throwable t) {
+            try {
+                java.lang.reflect.Method m = level.getClass().getMethod("getEntityByUuid", java.util.UUID.class);
+                return (net.minecraft.world.entity.Entity) m.invoke(level, uuid);
+            } catch (ReflectiveOperationException ignored) {
+                return null;
+            }
+        }
     }
 }

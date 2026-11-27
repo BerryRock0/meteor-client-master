@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.hud;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.compat.Compat;
 
 import meteordevelopment.meteorclient.mc.Vanilla;
@@ -236,7 +238,7 @@ public class Hud extends System<Hud> implements Iterable<HudElement> {
         if (Utils.isLoading()) return;
 
         if (!(active || HudEditorScreen.isOpen()) || shouldHideHud()) return;
-        if ((Compat.get().isHudHidden() || mc.debugEntries.isOverlayVisible()) && !HudEditorScreen.isOpen())
+        if ((Compat.get().isHudHidden() || Vanilla.isOverlayVisible(mc)) && !HudEditorScreen.isOpen())
             return;
 
         HudRenderer.INSTANCE.begin(event.graphics);
@@ -299,17 +301,17 @@ public class Hud extends System<Hud> implements Iterable<HudElement> {
             return this;
         }
 
-        tag.getBoolean("active").ifPresent(active1 -> active = active1);
-        settings.fromTag(tag.getCompoundOrEmpty("settings"));
+        Nbt.bool(tag, "active").ifPresent(active1 -> active = active1);
+        settings.fromTag(Nbt.getCompoundOrEmpty(tag, "settings"));
 
         // Elements
         elements.clear();
 
-        for (Tag e : tag.getListOrEmpty("elements")) {
+        for (Tag e : Nbt.getListOrEmpty(tag, "elements")) {
             CompoundTag c = (CompoundTag) e;
-            if (c.getString("name").isEmpty()) continue;
+            if (Nbt.string(c, "name").isEmpty()) continue;
 
-            HudElementInfo<?> info = infos.get(c.getString("name").get());
+            HudElementInfo<?> info = infos.get(Nbt.string(c, "name").get());
             if (info != null) {
                 HudElement element = info.create();
                 element.fromTag(c);

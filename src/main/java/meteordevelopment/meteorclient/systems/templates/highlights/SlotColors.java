@@ -1,5 +1,7 @@
 package meteordevelopment.meteorclient.systems.templates.highlights;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.systems.Units;
 import meteordevelopment.meteorclient.systems.Systems;
@@ -46,7 +48,7 @@ public class SlotColors extends Units<SlotColor>
     {
         units.clear();
 
-        for (Tag slotColorTag : tag.getListOrEmpty("slotcolors"))
+        for (Tag slotColorTag : Nbt.getListOrEmpty(tag, "slotcolors"))
             units.add(new SlotColor(slotColorTag));
 
         return this;

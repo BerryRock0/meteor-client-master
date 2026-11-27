@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.combat;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -23,7 +25,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -113,7 +115,7 @@ public class AutoArmor extends Module {
         for (ArmorPiece armorPiece : armorPieces) armorPiece.reset();
 
         // Loop through items in inventory
-        for (int i = 0; i < mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+        for (int i = 0; i < InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).size(); i++) {
             ItemStack itemStack = mc.player.getInventory().getItem(i);
             if (itemStack.isEmpty() || !isArmor(itemStack)) continue;
 
@@ -208,7 +210,7 @@ public class AutoArmor extends Module {
     }
 
     private void moveToEmpty(int armorSlotId) {
-        for (int i = 0; i < mc.player.getInventory().getNonEquipmentItems().size(); i++) {
+        for (int i = 0; i < InventoryUtils.getNonEquipmentItems(mc.player.getInventory()).size(); i++) {
             if (mc.player.getInventory().getItem(i).isEmpty()) {
                 InvUtils.move().fromArmor(armorSlotId).to(i);
 

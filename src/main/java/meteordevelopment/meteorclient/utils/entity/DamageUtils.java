@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.utils.entity;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import meteordevelopment.meteorclient.utils.Utils;
@@ -30,7 +33,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -38,7 +40,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -202,17 +204,17 @@ public class DamageUtils {
         }
 
         int baneOfArthropods = Utils.getEnchantmentLevel(enchantments, Enchantments.BANE_OF_ARTHROPODS);
-        if (baneOfArthropods > 0 && target.typeHolder().is(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)) {
+        if (baneOfArthropods > 0 && Vanilla.typeHolder(target).is(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)) {
             enchantDamage += 2.5f * baneOfArthropods;
         }
 
         int impaling = Utils.getEnchantmentLevel(enchantments, Enchantments.IMPALING);
-        if (impaling > 0 && target.typeHolder().is(EntityTypeTags.SENSITIVE_TO_IMPALING)) {
+        if (impaling > 0 && Vanilla.typeHolder(target).is(EntityTypeTags.SENSITIVE_TO_IMPALING)) {
             enchantDamage += 2.5f * impaling;
         }
 
         int smite = Utils.getEnchantmentLevel(enchantments, Enchantments.SMITE);
-        if (smite > 0 && target.typeHolder().is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
+        if (smite > 0 && Vanilla.typeHolder(target).is(EntityTypeTags.SENSITIVE_TO_SMITE)) {
             enchantDamage += 2.5f * smite;
         }
 
@@ -222,8 +224,8 @@ public class DamageUtils {
             damage *= 0.2f + charge * charge * 0.8f;
             enchantDamage *= charge;
 
-            if (weapon.getItem() instanceof MaceItem item) {
-                float bonusDamage = item.getAttackDamageBonus(target, damage, damageSource);
+            if (meteordevelopment.meteorclient.mc.Vanilla.isMace(weapon)) {
+                float bonusDamage = meteordevelopment.meteorclient.mc.Vanilla.maceDamageBonus(target, damage, damageSource);
                 if (bonusDamage > 0f) {
                     int density = Utils.getEnchantmentLevel(weapon, Enchantments.DENSITY);
                     if (density > 0) bonusDamage += (float) (0.5f * attacker.fallDistance);
@@ -232,7 +234,7 @@ public class DamageUtils {
             }
 
             // Factor critical hit
-            if (charge > 0.9f && attacker.fallDistance > 0f && !attacker.onGround() && !attacker.onClimbable() && !attacker.isInWater() && !attacker.hasEffect(MobEffects.BLINDNESS) && !attacker.isPassenger()) {
+            if (charge > 0.9f && attacker.fallDistance > 0f && !attacker.onGround() && !attacker.onClimbable() && !attacker.isInWater() && !attacker.hasEffect(MobEffectUtils.get("BLINDNESS")) && !attacker.isPassenger()) {
                 damage *= 1.5f;
             }
         }
@@ -247,7 +249,7 @@ public class DamageUtils {
      */
     public static float fallDamage(LivingEntity entity) {
         if (entity instanceof Player player && player.getAbilities().flying) return 0f;
-        if (entity.hasEffect(MobEffects.SLOW_FALLING) || entity.hasEffect(MobEffects.LEVITATION)) return 0f;
+        if (entity.hasEffect(MobEffectUtils.get("SLOW_FALLING")) || entity.hasEffect(MobEffectUtils.get("LEVITATION"))) return 0f;
 
         // Fast path - Above the surface
         int surface = mc.level.getChunkAt(entity.blockPosition()).getOrCreateHeightmapUnprimed(Heightmap.Types.MOTION_BLOCKING).getFirstAvailable(entity.getBlockX() & 15, entity.getBlockZ() & 15);
@@ -262,7 +264,7 @@ public class DamageUtils {
 
     private static float fallDamageReductions(LivingEntity entity, int surface) {
         int fallHeight = (int) (entity.getY() - surface + entity.fallDistance - 3d);
-        MobEffectInstance jumpBoostInstance = entity.getEffect(MobEffects.JUMP_BOOST);
+        MobEffectInstance jumpBoostInstance = entity.getEffect(MobEffectUtils.get("JUMP_BOOST"));
         if (jumpBoostInstance != null) fallHeight -= jumpBoostInstance.getAmplifier() + 1;
 
         return calculateReductions(fallHeight, entity, mc.level.damageSources().fall());
@@ -345,7 +347,7 @@ public class DamageUtils {
      * @see LivingEntity#getDamageAfterMagicAbsorb(DamageSource, float)
      */
     private static float resistanceReduction(LivingEntity player, float damage) {
-        MobEffectInstance resistance = player.getEffect(MobEffects.RESISTANCE);
+        MobEffectInstance resistance = player.getEffect(MobEffectUtils.get("RESISTANCE"));
         if (resistance != null) {
             int lvl = resistance.getAmplifier() + 1;
             damage *= (1 - (lvl * 0.2f));

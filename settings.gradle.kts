@@ -14,3 +14,13 @@ plugins {
 }
 
 rootProject.name = "meteor-client"
+
+// Loom's remap plugin supports both obfuscated (1.x) and unobfuscated (26.x) jars,
+// but the no-remap mode has to be enabled before the plugin is applied.
+val mcVersionForSettings = gradle.startParameter.projectProperties["minecraftVersion"]
+    ?: providers.gradleProperty("minecraftVersion").orNull
+    ?: "26.2"
+val noRemap = !mcVersionForSettings.startsWith("1.")
+gradle.projectsLoaded {
+    rootProject.extra["fabric.loom.disableObfuscation"] = noRemap.toString()
+}

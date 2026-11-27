@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 
 import meteordevelopment.meteorclient.events.entity.player.FinishUsingItemEvent;
@@ -27,7 +29,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.level.GameType;
 
 import static com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_MIDDLE;
@@ -136,7 +138,7 @@ public class MiddleClickExtra extends Module {
             return;
         }
 
-        selectedSlot = mc.player.getInventory().getSelectedSlot();
+        selectedSlot = InventoryUtils.getSelectedSlot(mc.player.getInventory());
         itemSlot = result.slot();
         wasHeld = result.isMainHand();
 

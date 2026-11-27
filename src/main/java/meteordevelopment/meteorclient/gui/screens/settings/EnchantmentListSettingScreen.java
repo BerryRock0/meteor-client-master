@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.gui.screens.settings;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.screens.settings.base.DynamicRegistryListSettingScreen;
 import meteordevelopment.meteorclient.gui.widgets.WWidget;
@@ -30,7 +31,7 @@ public class EnchantmentListSettingScreen extends DynamicRegistryListSettingScre
     protected String[] getValueNames(ResourceKey<Enchantment> value) {
         return new String[]{
             Names.get(value),
-            value.identifier().toString()
+            Vanilla.identifier(value).toString()
         };
     }
 }

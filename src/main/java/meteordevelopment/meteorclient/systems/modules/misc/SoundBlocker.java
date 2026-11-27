@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.misc;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import meteordevelopment.meteorclient.events.world.PlaySoundEvent;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
@@ -34,7 +36,7 @@ public class SoundBlocker extends Module {
     @EventHandler
     private void onPlaySound(PlaySoundEvent event) {
         for (SoundEvent sound : sounds.get()) {
-            if (sound.location().equals(event.sound.getIdentifier())) {
+            if (sound.location().equals(Vanilla.soundId(event.sound))) {
                 event.cancel();
                 break;
             }
@@ -42,6 +44,6 @@ public class SoundBlocker extends Module {
     }
 
     public boolean shouldBlock(SoundInstance soundInstance) {
-        return isActive() && sounds.get().contains(Setting.parseId(BuiltInRegistries.SOUND_EVENT, soundInstance.getIdentifier().getPath()));
+        return isActive() && sounds.get().contains(Setting.parseId(BuiltInRegistries.SOUND_EVENT, Vanilla.identifier(Vanilla.soundId(soundInstance)).getPath()));
     }
 }

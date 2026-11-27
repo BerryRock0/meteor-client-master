@@ -117,7 +117,7 @@ public class BundleTooltipComponent implements ClientTooltipComponent, MeteorToo
 
     private void drawSelectedItemTooltip(Font font, GuiGraphicsExtractor graphics, int x, int y, int width) {
         if (this.bundleContents.getSelectedItemIndex() != -1) {
-            ItemStack itemStack = this.bundleContents.getSelectedItem().create();
+            ItemStack itemStack = bundleContents.getSelectedItem().create();
             Component text = itemStack.getStyledHoverName();
             int i = font.width(text.getVisualOrderText());
             int j = x + width / 2 - 12;

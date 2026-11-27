@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.templates.clones;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.systems.Units;
 import meteordevelopment.meteorclient.systems.Systems;
@@ -59,7 +61,7 @@ public class CloneUnits extends Units<CloneUnit>
     {
         units.clear();
 
-        for (Tag unitTag : tag.getListOrEmpty("units"))
+        for (Tag unitTag : Nbt.getListOrEmpty(tag, "units"))
         {
             units.add(new CloneUnit(unitTag));
         }

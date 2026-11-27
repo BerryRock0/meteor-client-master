@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.widgets.containers.WContainer;
 import meteordevelopment.meteorclient.systems.modules.Module;
@@ -170,12 +172,12 @@ public class Settings implements ISerializable<Settings>, Iterable<SettingGroup>
     public Settings fromTag(CompoundTag tag) {
         reset();
 
-        ListTag groupsTag = tag.getListOrEmpty("groups");
+        ListTag groupsTag = Nbt.getListOrEmpty(tag, "groups");
 
         for (Tag t : groupsTag) {
             CompoundTag groupTag = (CompoundTag) t;
 
-            SettingGroup sg = getGroup(groupTag.getStringOr("name", ""));
+            SettingGroup sg = getGroup(Nbt.getStringOr(groupTag, "name", ""));
             if (sg != null) sg.fromTag(groupTag);
         }
 

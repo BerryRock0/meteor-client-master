@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.List;
 
-import static net.minecraft.world.effect.MobEffects.HASTE;
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
 
 public class SpeedMine extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -98,10 +98,10 @@ public class SpeedMine extends Module {
         if (!Utils.canUpdate()) return;
 
         if (mode.get() == Mode.Haste) {
-            MobEffectInstance haste = mc.player.getEffect(HASTE);
+            MobEffectInstance haste = mc.player.getEffect(MobEffectUtils.get("HASTE"));
 
             if (haste == null || haste.getAmplifier() <= hasteAmplifier.get() - 1) {
-                mc.player.addEffect(new MobEffectInstance(HASTE, -1, hasteAmplifier.get() - 1, false, false, false), null);
+                mc.player.addEffect(new MobEffectInstance(MobEffectUtils.get("HASTE"), -1, hasteAmplifier.get() - 1, false, false, false), null);
             }
         } else if (mode.get() == Mode.Damage) {
             MultiPlayerGameModeAccessor im = (MultiPlayerGameModeAccessor) mc.gameMode;
@@ -127,8 +127,8 @@ public class SpeedMine extends Module {
     private void removeHaste() {
         if (!Utils.canUpdate()) return;
 
-        MobEffectInstance haste = mc.player.getEffect(HASTE);
-        if (haste != null && !haste.showIcon()) mc.player.removeEffect(HASTE);
+        MobEffectInstance haste = mc.player.getEffect(MobEffectUtils.get("HASTE"));
+        if (haste != null && !haste.showIcon()) mc.player.removeEffect(MobEffectUtils.get("HASTE"));
     }
 
     public boolean filter(Block block) {

@@ -467,7 +467,7 @@ public class BetterChat extends Module {
         GameProfile sender = getSender(line, text);
         if (sender == null) return;
 
-        PlayerInfo entry = mc.getConnection().getPlayerInfo(sender.id());
+        PlayerInfo entry = mc.getConnection().getPlayerInfo(Vanilla.gameProfileId(sender));
         if (entry == null) return;
 
         PlayerFaceExtractor.extractRenderState(graphics, entry.getSkin(), 0, y, 8, color);

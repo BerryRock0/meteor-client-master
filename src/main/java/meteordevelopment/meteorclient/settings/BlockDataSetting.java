@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.utils.misc.IChangeable;
 import meteordevelopment.meteorclient.utils.misc.ICopyable;
 import meteordevelopment.meteorclient.utils.misc.IGetter;
@@ -57,9 +59,9 @@ public class BlockDataSetting<T extends ICopyable<T> & ISerializable<T> & IChang
     protected Map<Block, T> load(CompoundTag tag) {
         get().clear();
 
-        CompoundTag valueTag = tag.getCompoundOrEmpty("value");
-        for (String key : valueTag.keySet()) {
-            get().put(BuiltInRegistries.BLOCK.getValue(Identifier.parse(key)), defaultData.get().copy().fromTag(valueTag.getCompoundOrEmpty(key)));
+        CompoundTag valueTag = Nbt.getCompoundOrEmpty(tag, "value");
+        for (String key : Nbt.keys(valueTag)) {
+            get().put(BuiltInRegistries.BLOCK.getValue(Identifier.parse(key)), defaultData.get().copy().fromTag(Nbt.getCompoundOrEmpty(valueTag, key)));
         }
 
         return get();

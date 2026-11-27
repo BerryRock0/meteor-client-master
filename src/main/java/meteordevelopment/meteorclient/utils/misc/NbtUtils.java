@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.utils.misc;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import meteordevelopment.meteorclient.MeteorClient;
@@ -39,7 +43,7 @@ public class NbtUtils {
 
     public static <K, V> Map<K, V> mapFromTag(CompoundTag tag, ToKey<K> toKey, ToValue<V> toValue) {
         Map<K, V> map = HashMap.newHashMap(tag.size());
-        for (String key : tag.keySet()) map.put(toKey.toKey(key), toValue.toValue(tag.get(key)));
+        for (String key : Nbt.keys(tag)) map.put(toKey.toKey(key), toValue.toValue(tag.get(key)));
         return map;
     }
 
@@ -52,7 +56,7 @@ public class NbtUtils {
         try {
             var byteArrayOutputStream = new FastByteArrayOutputStream();
             NbtIo.writeCompressed(tag, byteArrayOutputStream);
-            mc.keyboardHandler.setClipboard(Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
+            mc.keyboardHandler.setClipboard(Base64.getEncoder().encodeToString(Vanilla.fastByteArray(byteArrayOutputStream)));
             return true;
         } catch (Exception e) {
             MeteorClient.LOG.error("Error copying NBT to clipboard!", e);
@@ -66,7 +70,7 @@ public class NbtUtils {
         if (tag == null) return false;
 
         CompoundTag sourceTag = serializable.toTag();
-        for (String key : sourceTag.keySet()) {
+        for (String key : Nbt.keys(sourceTag)) {
             if (!tag.contains(key)) return false;
         }
 

@@ -5,6 +5,9 @@
 
 package meteordevelopment.meteorclient.systems.modules.render.blockesp;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.WidgetScreen;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
@@ -98,14 +101,14 @@ public class ESPBlockData implements IGeneric<ESPBlockData>, IChangeable, IBlock
 
     @Override
     public ESPBlockData fromTag(CompoundTag tag) {
-        shapeMode = ShapeMode.valueOf(tag.getStringOr("shapeMode", ""));
-        lineColor.fromTag(tag.getCompoundOrEmpty("lineColor"));
-        sideColor.fromTag(tag.getCompoundOrEmpty("sideColor"));
+        shapeMode = ShapeMode.valueOf(Nbt.getStringOr(tag, "shapeMode", ""));
+        lineColor.fromTag(Nbt.getCompoundOrEmpty(tag, "lineColor"));
+        sideColor.fromTag(Nbt.getCompoundOrEmpty(tag, "sideColor"));
 
-        tracer = tag.getBooleanOr("tracer", false);
-        tracerColor.fromTag(tag.getCompoundOrEmpty("tracerColor"));
+        tracer = Nbt.getBooleanOr(tag, "tracer", false);
+        tracerColor.fromTag(Nbt.getCompoundOrEmpty(tag, "tracerColor"));
 
-        changed = tag.getBooleanOr("changed", false);
+        changed = Nbt.getBooleanOr(tag, "changed", false);
 
         return this;
     }

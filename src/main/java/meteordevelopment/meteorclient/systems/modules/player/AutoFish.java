@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.player;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.mixin.FishingHookAccessor;
 import meteordevelopment.meteorclient.settings.BoolSetting;
@@ -94,7 +96,7 @@ public class AutoFish extends Module {
     private void onTick(TickEvent.Pre event) {
         int bestRodSlot = findBestRod();
 
-        if (autoSwitch.get() && bestRodSlot != -1 && mc.player.getInventory().getSelectedSlot() != bestRodSlot) {
+        if (autoSwitch.get() && bestRodSlot != -1 && InventoryUtils.getSelectedSlot(mc.player.getInventory()) != bestRodSlot) {
             InvUtils.swap(bestRodSlot, false);
         }
 

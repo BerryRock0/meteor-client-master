@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.world;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.DoubleSetting;
@@ -20,7 +21,7 @@ import meteordevelopment.orbit.EventHandler;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.sheep.Sheep;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 import net.minecraft.world.phys.EntityHitResult;
 
 public class AutoShearer extends Module {
@@ -84,7 +85,7 @@ public class AutoShearer extends Module {
 
     private void interact() {
         EntityHitResult location = new EntityHitResult(entity, entity.getBoundingBox().getCenter());
-        mc.gameMode.interact(mc.player, entity, location, hand);
+        Vanilla.interact(mc.player, entity, hand);
         InvUtils.swapBack();
     }
 }

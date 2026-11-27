@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.gui.GuiTheme;
 import meteordevelopment.meteorclient.gui.WidgetScreen;
 import net.minecraft.nbt.CompoundTag;
@@ -45,7 +47,7 @@ public class GenericSetting<T extends IGeneric<T>> extends Setting<T> {
 
     @Override
     public T load(CompoundTag tag) {
-        get().fromTag(tag.getCompoundOrEmpty("value"));
+        get().fromTag(Nbt.getCompoundOrEmpty(tag, "value"));
 
         return get();
     }

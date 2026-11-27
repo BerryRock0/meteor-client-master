@@ -10,7 +10,7 @@ import meteordevelopment.meteorclient.commands.Command;
 import meteordevelopment.meteorclient.utils.Utils;
 import net.minecraft.client.multiplayer.ClientSuggestionProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import meteordevelopment.meteorclient.mc.Items;
 
 public class EnderChestCommand extends Command {
     public EnderChestCommand() {

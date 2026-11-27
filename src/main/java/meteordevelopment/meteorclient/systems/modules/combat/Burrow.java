@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.modules.combat;
 
+import meteordevelopment.meteorclient.mc.InventoryUtils;
+
 import meteordevelopment.meteorclient.events.meteor.KeyInputEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.mc.Vanilla;
@@ -176,7 +178,7 @@ public class Burrow extends Module {
     @EventHandler
     private void onKey(KeyInputEvent event) {
         if (instant.get() && !shouldBurrow) {
-            if (event.action == KeyAction.Press && mc.options.keyJump.matches(event.input)) {
+            if (event.action == KeyAction.Press && Vanilla.matchesKey(mc.options.keyJump, event.input)) {
                 shouldBurrow = true;
             }
             blockPos.set(mc.player.blockPosition());
@@ -219,7 +221,7 @@ public class Burrow extends Module {
             case Anvil ->
                 InvUtils.findInHotbar(itemStack -> net.minecraft.world.level.block.Block.byItem(itemStack.getItem()) instanceof AnvilBlock);
             case Held ->
-                new FindItemResult(mc.player.getInventory().getSelectedSlot(), mc.player.getMainHandItem().getCount());
+                new FindItemResult(InventoryUtils.getSelectedSlot(mc.player.getInventory()), mc.player.getMainHandItem().getCount());
             default -> InvUtils.findInHotbar(Items.OBSIDIAN, Items.CRYING_OBSIDIAN);
         };
     }

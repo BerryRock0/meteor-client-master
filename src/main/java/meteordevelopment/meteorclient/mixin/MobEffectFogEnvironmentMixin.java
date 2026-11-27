@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.mixin;
 
+import meteordevelopment.meteorclient.mc.MobEffectUtils;
+
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
@@ -24,8 +26,8 @@ public abstract class MobEffectFogEnvironmentMixin {
     @ModifyReturnValue(method = "isApplicable", at = @At("RETURN"))
     private boolean modifyShouldApply(boolean original) {
         NoRender noRender = Modules.get().get(NoRender.class);
-        if (getMobEffect() == MobEffects.BLINDNESS) return original && !noRender.noBlindness();
-        if (getMobEffect() == MobEffects.DARKNESS) return original && !noRender.noDarkness();
+        if (getMobEffect() == MobEffectUtils.get("BLINDNESS")) return original && !noRender.noBlindness();
+        if (getMobEffect() == MobEffectUtils.get("DARKNESS")) return original && !noRender.noDarkness();
         return original;
     }
 }

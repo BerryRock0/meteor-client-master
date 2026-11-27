@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.utils.render;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.BetterTooltips;
 import meteordevelopment.meteorclient.utils.Utils;
@@ -33,7 +34,6 @@ public class PeekScreen extends ShulkerBoxScreen {
         this.storageBlock = storageBlock;
     }
 
-    @Override
     public boolean mouseClicked(@NonNull MouseButtonEvent click, boolean doubled) {
         BetterTooltips tooltips = Modules.get().get(BetterTooltips.class);
 
@@ -45,12 +45,10 @@ public class PeekScreen extends ShulkerBoxScreen {
         return false;
     }
 
-    @Override
     public boolean mouseReleased(@NonNull MouseButtonEvent click) {
         return false;
     }
 
-    @Override
     public boolean keyPressed(@NonNull KeyEvent input) {
         BetterTooltips tooltips = Modules.get().get(BetterTooltips.class);
 
@@ -61,7 +59,7 @@ public class PeekScreen extends ShulkerBoxScreen {
             }
         }
 
-        if (input.key() == InputConstants.KEY_ESCAPE || mc.options.keyInventory.matches(input)) {
+        if (input.key() == InputConstants.KEY_ESCAPE || Vanilla.matchesKey(mc.options.keyInventory, input)) {
             onClose();
             return true;
         }
@@ -69,7 +67,6 @@ public class PeekScreen extends ShulkerBoxScreen {
         return false;
     }
 
-    @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         Color color = Utils.getShulkerColor(storageBlock);
 

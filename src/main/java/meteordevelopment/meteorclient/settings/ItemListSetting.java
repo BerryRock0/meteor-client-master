@@ -5,6 +5,10 @@
 
 package meteordevelopment.meteorclient.settings;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
+import meteordevelopment.meteorclient.mc.Vanilla;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -58,7 +62,7 @@ public class ItemListSetting extends Setting<List<Item>> {
 
     @Override
     public Iterable<Identifier> getIdentifierSuggestions() {
-        return BuiltInRegistries.ITEM.keySet();
+        return Vanilla.identifiers(BuiltInRegistries.ITEM.keySet());
     }
 
     @Override
@@ -77,9 +81,9 @@ public class ItemListSetting extends Setting<List<Item>> {
     public List<Item> load(CompoundTag tag) {
         get().clear();
 
-        ListTag valueTag = tag.getListOrEmpty("value");
+        ListTag valueTag = Nbt.getListOrEmpty(tag, "value");
         for (Tag tagI : valueTag) {
-            Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(tagI.asString().orElse("")));
+            Item item = BuiltInRegistries.ITEM.getValue(Identifier.parse(Nbt.asString(tagI).orElse("")));
 
             if (bypassFilterWhenSavingAndLoading || (filter == null || filter.test(item))) get().add(item);
         }

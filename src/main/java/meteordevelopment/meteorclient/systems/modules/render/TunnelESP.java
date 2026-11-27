@@ -5,6 +5,7 @@
 
 package meteordevelopment.meteorclient.systems.modules.render;
 
+import meteordevelopment.meteorclient.mc.Vanilla;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -27,7 +28,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import meteordevelopment.meteorclient.mc.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -209,11 +210,11 @@ public class TunnelESP extends Module {
             int added = 0;
 
             for (ChunkAccess chunk : Utils.chunks(true)) {
-                long key = ChunkPos.pack(chunk.getPos().x(), chunk.getPos().z());
+                long key = Vanilla.chunkKey(Vanilla.chunkX(chunk.getPos()), Vanilla.chunkZ(chunk.getPos()));
 
                 if (chunks.containsKey(key)) chunks.get(key).marked = true;
                 else if (added < 48) {
-                    TChunk tChunk = new TChunk(chunk.getPos().x(), chunk.getPos().z());
+                    TChunk tChunk = new TChunk(Vanilla.chunkX(chunk.getPos()), Vanilla.chunkZ(chunk.getPos()));
                     chunks.put(tChunk.getKey(), tChunk);
 
                     MeteorExecutor.execute(() -> searchChunk(chunk, tChunk));
@@ -236,16 +237,16 @@ public class TunnelESP extends Module {
         int key;
 
         if (x == -1) {
-            chunk = chunks.get(ChunkPos.pack(chunk.x - 1, chunk.z));
+            chunk = chunks.get(Vanilla.chunkKey(chunk.x - 1, chunk.z));
             key = pack(15, y, z);
         } else if (x == 16) {
-            chunk = chunks.get(ChunkPos.pack(chunk.x + 1, chunk.z));
+            chunk = chunks.get(Vanilla.chunkKey(chunk.x + 1, chunk.z));
             key = pack(0, y, z);
         } else if (z == -1) {
-            chunk = chunks.get(ChunkPos.pack(chunk.x, chunk.z - 1));
+            chunk = chunks.get(Vanilla.chunkKey(chunk.x, chunk.z - 1));
             key = pack(x, y, 15);
         } else if (z == 16) {
-            chunk = chunks.get(ChunkPos.pack(chunk.x, chunk.z + 1));
+            chunk = chunks.get(Vanilla.chunkKey(chunk.x, chunk.z + 1));
             key = pack(x, y, 0);
         } else key = pack(x, y, z);
 
@@ -292,7 +293,7 @@ public class TunnelESP extends Module {
         }
 
         public long getKey() {
-            return ChunkPos.pack(x, z);
+            return Vanilla.chunkKey(x, z);
         }
     }
 
@@ -313,7 +314,7 @@ public class TunnelESP extends Module {
 
             ChunkAccess chunk;
 
-            if (lastChunk != null && lastChunk.getPos().x() == cx && lastChunk.getPos().z() == cz) chunk = lastChunk;
+            if (lastChunk != null && Vanilla.chunkX(lastChunk.getPos()) == cx && Vanilla.chunkZ(lastChunk.getPos()) == cz) chunk = lastChunk;
             else chunk = world.getChunk(cx, cz, ChunkStatus.FULL, false);
 
             if (chunk == null) return Blocks.VOID_AIR.defaultBlockState();

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.gui;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.gui.themes.meteor.MeteorGuiTheme;
 import meteordevelopment.meteorclient.utils.PostInit;
@@ -40,7 +42,7 @@ public class GuiThemes {
             try {
                 CompoundTag tag = NbtIo.read(FILE.toPath());
 
-                if (tag != null) select(tag.getStringOr("currentTheme", ""));
+                if (tag != null) select(Nbt.getStringOr(tag, "currentTheme", ""));
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.config;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.renderer.Fonts;
 import meteordevelopment.meteorclient.renderer.text.FontFace;
@@ -205,7 +207,7 @@ public class Config extends System<Config> {
 
     @Override
     public Config fromTag(CompoundTag tag) {
-        if (tag.contains("settings")) settings.fromTag(tag.getCompoundOrEmpty("settings"));
+        if (tag.contains("settings")) settings.fromTag(Nbt.getCompoundOrEmpty(tag, "settings"));
         if (tag.contains("dontShowAgainPrompts")) dontShowAgainPrompts = listFromTag(tag, "dontShowAgainPrompts");
 
         return this;
@@ -219,7 +221,7 @@ public class Config extends System<Config> {
 
     private List<String> listFromTag(CompoundTag tag, String key) {
         List<String> list = new ArrayList<>();
-        for (Tag item : tag.getListOrEmpty(key)) list.add(item.asString().orElse(""));
+        for (Tag item : Nbt.getListOrEmpty(tag, key)) list.add(Nbt.asString(item).orElse(""));
         return list;
     }
 

@@ -5,6 +5,8 @@
 
 package meteordevelopment.meteorclient.systems.accounts;
 
+import meteordevelopment.meteorclient.mc.Nbt;
+
 import meteordevelopment.meteorclient.mc.Vanilla;
 import meteordevelopment.meteorclient.mixin.FileCacheAccessor;
 import meteordevelopment.meteorclient.mixin.MinecraftAccessor;
@@ -74,10 +76,10 @@ public abstract class Account<T extends Account<?>> implements ISerializable<T> 
     @SuppressWarnings("unchecked")
     @Override
     public T fromTag(CompoundTag tag) {
-        if (tag.getString("name").isEmpty() || tag.getCompound("cache").isEmpty()) throw new NbtException();
+        if (Nbt.string(tag, "name").isEmpty() || Nbt.compound(tag, "cache").isEmpty()) throw new NbtException();
 
-        name = tag.getString("name").get();
-        cache.fromTag(tag.getCompound("cache").get());
+        name = Nbt.string(tag, "name").get();
+        cache.fromTag(Nbt.compound(tag, "cache").get());
 
         return (T) this;
     }
