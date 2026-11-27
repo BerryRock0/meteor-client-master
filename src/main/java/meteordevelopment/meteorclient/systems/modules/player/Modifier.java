@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.*;
 
 import meteordevelopment.orbit.EventHandler;
 
+import meteordevelopment.meteorclient.mc.AttributeUtils;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.systems.modules.Categories;
@@ -96,7 +97,7 @@ public class Modifier extends Module
         setAttribute(Attributes.BLOCK_BREAK_SPEED, blockBreakSpeed.get());
         setAttribute(Attributes.BLOCK_INTERACTION_RANGE, blockInteractionRange.get());
         setAttribute(Attributes.BURNING_TIME, burningTime.get());
-        setAttribute(Attributes.CAMERA_DISTANCE, cameraDistance.get());
+        setAttribute(AttributeUtils.get("CAMERA_DISTANCE"), cameraDistance.get());
         setAttribute(Attributes.ENTITY_INTERACTION_RANGE, entityInteractionRange.get());
         setAttribute(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, explosionKnockbackResistance.get());
         setAttribute(Attributes.FALL_DAMAGE_MULTIPLIER, fallDamageMultiplier.get());
@@ -121,8 +122,8 @@ public class Modifier extends Module
         setAttribute(Attributes.SWEEPING_DAMAGE_RATIO, sweepingDamageRatio.get());
         setAttribute(Attributes.TEMPT_RANGE, temptRange.get());
         setAttribute(Attributes.WATER_MOVEMENT_EFFICIENCY, waterMovementEfficiency.get());
-        setAttribute(Attributes.WAYPOINT_RECEIVE_RANGE, waypointReceiveRange.get());
-        setAttribute(Attributes.WAYPOINT_TRANSMIT_RANGE, waypointTransmitRange.get());
+        setAttribute(AttributeUtils.get("WAYPOINT_RECEIVE_RANGE"), waypointReceiveRange.get());
+        setAttribute(AttributeUtils.get("WAYPOINT_TRANSMIT_RANGE"), waypointTransmitRange.get());
     }
 
     private void saveOriginalAttributeValues()
@@ -136,7 +137,7 @@ public class Modifier extends Module
         saveAttribute(Attributes.BLOCK_BREAK_SPEED);
         saveAttribute(Attributes.BLOCK_INTERACTION_RANGE);
         saveAttribute(Attributes.BURNING_TIME);
-        saveAttribute(Attributes.CAMERA_DISTANCE);
+        saveAttribute(AttributeUtils.get("CAMERA_DISTANCE"));
         saveAttribute(Attributes.ENTITY_INTERACTION_RANGE);
         saveAttribute(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE);
         saveAttribute(Attributes.FALL_DAMAGE_MULTIPLIER);
@@ -161,13 +162,15 @@ public class Modifier extends Module
         saveAttribute(Attributes.SWEEPING_DAMAGE_RATIO);
         saveAttribute(Attributes.TEMPT_RANGE);
         saveAttribute(Attributes.WATER_MOVEMENT_EFFICIENCY);
-        saveAttribute(Attributes.WAYPOINT_RECEIVE_RANGE);
-        saveAttribute(Attributes.WAYPOINT_TRANSMIT_RANGE);
+        saveAttribute(AttributeUtils.get("WAYPOINT_RECEIVE_RANGE"));
+        saveAttribute(AttributeUtils.get("WAYPOINT_TRANSMIT_RANGE"));
         
     }
 
     private void setAttribute(Holder<Attribute> attribute, double value)
     {
+        if (attribute == null || mc.player == null)
+            return;
         AttributeInstance instance = mc.player.getAttribute(attribute);
         if (instance != null)
             instance.setBaseValue((float) value);
@@ -175,6 +178,8 @@ public class Modifier extends Module
 
     private void saveAttribute(Holder<Attribute> attribute)
     {
+        if (attribute == null || mc.player == null)
+            return;
         AttributeInstance instance = mc.player.getAttribute(attribute);
         if (instance != null)
             originalAttributeValues.put(attribute, instance.getBaseValue());
